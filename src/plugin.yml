@@ -1,0 +1,13 @@
+name: WarGear
+version: 0.2
+description: Postremus Wargear Arena Plugin
+website: http://www.bukkit.org
+author: postremus
+main: me.Postremus.WarGear.WarGear
+
+commands:
+  wgk:
+    description: Startet/Stoppt einen Fight
+    usage: /wgk setup
+    permission: wgk.wargear
+    permission-message: 'Dazu fehlt dir die Berechtigung!'

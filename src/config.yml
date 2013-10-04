@@ -1,0 +1,16 @@
+wgk:
+    defaults:
+        arena: wgarena_1
+    arenas:
+        wgarena_1:
+            world:
+            arenaRegion:
+            mode:
+            groundHeight:
+            regions:
+                Team1:
+                Team2:
+            warpFightStart:
+                Team1:
+                Team2:
+            warpFightEnd:
