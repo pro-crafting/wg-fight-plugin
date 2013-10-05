@@ -7,6 +7,8 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -33,19 +35,30 @@ public class WgkRepository {
 		return this.plugin.config.getString("wgk.arenas."+arena.getArenaName()+".world");
 	}
 	
-	public String getEndWarpPointName(Arena arena)
+	public Location getEndWarpPoint(Arena arena)
 	{
-		return this.plugin.config.getString("wgk.arenas."+arena.getArenaName()+".warpFightEnd");
+		World world = this.plugin.getServer().getWorld(this.getWorldName(arena));
+		return this.loadLocationFromConfig("wgk.arenas."+arena.getArenaName()+".warpFightEnd", world);
 	}
 	
-	public String getFightStartWarpPointTeam1(Arena arena)
+	public Location getFightStartWarpPointTeam1(Arena arena)
 	{
-		return this.plugin.config.getString("wgk.arenas."+arena.getArenaName()+".warpFightStart.Team1");
+		World world = this.plugin.getServer().getWorld(this.getWorldName(arena));
+		return this.loadLocationFromConfig("wgk.arenas."+arena.getArenaName()+".warpFightStart.Team1", world);
 	}
 	
-	public String getFightStartWarpPointTeam2(Arena arena)
+	public Location getFightStartWarpPointTeam2(Arena arena)
 	{
-		return this.plugin.config.getString("wgk.arenas."+arena.getArenaName()+".warpFightStart.Team2");
+		World world = this.plugin.getServer().getWorld(this.getWorldName(arena));
+		return this.loadLocationFromConfig("wgk.arenas."+arena.getArenaName()+".warpFightStart.Team2", world);
+	}
+	
+	private Location loadLocationFromConfig(String node, World world)
+	{
+		int x = this.plugin.config.getInt(node+".x");
+		int y = this.plugin.config.getInt(node+".y");
+		int z = this.plugin.config.getInt(node+".z");
+		return new Location(world, x, y, z);
 	}
 	
 	public String getRegionNameTeam1(Arena arena)
@@ -101,7 +114,7 @@ public class WgkRepository {
 		return false;
 	}
 	
-	public String getRegionForTeam(TeamNames team, Arena arena)
+	public Location getWarpForTeam(TeamNames team, Arena arena)
 	{
 		if (team == TeamNames.Team1)
 		{
@@ -166,7 +179,7 @@ public class WgkRepository {
 		for (String arenaName : arenas)
 		{
 			ProtectedRegion r = manager.getRegion(arenaName);
-			if (r.contains(BukkitUtil.toVector(player.getLocation())))
+			if (r != null && r.contains(BukkitUtil.toVector(player.getLocation())))
 			{
 				return arenaName;
 			}

@@ -14,5 +14,6 @@
 			<attribute name="javadoc_location" value="http://docs.sk89q.com/worldedit/apidocs/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/Martin/Essentials.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
