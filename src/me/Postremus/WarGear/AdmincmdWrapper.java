@@ -1,44 +1,29 @@
 package me.Postremus.WarGear;
 
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
+import me.Postremus.KitApi.API;
 
-import be.Balor.Kit.KitInstance;
-import be.Balor.Tools.Warp;
-import be.Balor.World.ACWorld;
-import be.Balor.bukkit.AdminCmd.ACHelper;
+import org.bukkit.Server;
+import org.bukkit.entity.Player;
 
 public class AdmincmdWrapper {
-
-	public static void teleportToWarp(Player player, String warpPoint, String worldName)
+	public static Boolean existsKit(String kitName, Server server)
 	{
-		System.out.print("World: "+worldName);
-		System.out.print("Warp: "+warpPoint);
-		ACWorld world = ACWorld.getWorld(worldName);
-		Warp warpPointac = world.getWarp(warpPoint);
-		player.teleport(warpPointac.loc);
+		API kitApi = new API(server);
+		//KitInstance kit = ACHelper.getInstance().getKit(kitName);
+		//return kit != null;
+		return kitApi.existsKit(kitName);
 	}
 	
-	public static Location getWarpLocation(String warpPoint, String worldName)
+	public static void giveKit(String kitName, Player player, Server server)
 	{
-		ACWorld world = ACWorld.getWorld(worldName);
-		Warp warpPointac = world.getWarp(warpPoint);
-		return warpPointac.loc;
+		API kitApi = new API(server);
+		//KitInstance kit = ACHelper.getInstance().getKit(kitName);
+	    //ItemStack[] items = kit.getItemStacks().toArray(new ItemStack[] {});
+	    //player.getInventory().addItem(items);
+		kitApi.giveKit(kitName, player);
 	}
 	
-	public static Boolean existsKit(String kitName)
-	{
-		KitInstance kit = ACHelper.getInstance().getKit(kitName);
-		return kit != null;
-	}
 	
-	public static void giveKit(String kitName, Player player)
-	{
-		KitInstance kit = ACHelper.getInstance().getKit(kitName);
-	    ItemStack[] items = kit.getItemStacks().toArray(new ItemStack[] {});
-	    player.getInventory().addItem(items);
-	}
 	
 	public static void heal(Player player)
 	{

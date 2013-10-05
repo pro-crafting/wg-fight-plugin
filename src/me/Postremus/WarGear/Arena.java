@@ -66,7 +66,6 @@ public class Arena {
 			region.setFlag(flag, flag.parseInput(worldGuard, this.plugin.getServer().getConsoleSender(), value));
 		} catch (InvalidFlagFormat e) {
 			// TODO Auto-generated catch block
-			this.plugin.getServer().broadcastMessage("drinne");
 			e.printStackTrace();
 		}
     }

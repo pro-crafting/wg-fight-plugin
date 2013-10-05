@@ -56,8 +56,8 @@ public class WgkCommandLogik {
 		{
 			this.plugin.getRepo().init();
 			this.plugin.getRepo().setFightRunning(true);
-			this.teams.setArena(this.arena);
 			this.arena.setArenaName(arenaName);
+			this.teams.setArena(this.arena);
 			//fightmode muss wieder auf standard gesetzt werden
 			//damit der TeamManager aktualisiert wird
 			this.fightMode = new KitMode(this.teams, this.plugin, this.arena);
@@ -135,7 +135,7 @@ public class WgkCommandLogik {
 			sender.sendMessage("Es muss zuerst ein fight setup gestartet werden.");
 			return;
 		}
-		if (!AdmincmdWrapper.existsKit(kitName))
+		if (!AdmincmdWrapper.existsKit(kitName, this.plugin.getServer()))
 		{
 			sender.sendMessage("Das Kit " + kitName + " gibt es nicht.");
 		}

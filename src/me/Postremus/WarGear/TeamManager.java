@@ -10,6 +10,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 public class TeamManager implements Listener{
 
@@ -40,7 +41,7 @@ public class TeamManager implements Listener{
 		for (TeamMember player : this.players)
 		{
 			player.getPlayer().getInventory().clear();
-			AdmincmdWrapper.teleportToWarp(player.getPlayer(), this.plugin.getRepo().getEndWarpPointName(this.arena), this.plugin.getRepo().getWorldName(this.arena));
+			player.getPlayer().teleport(this.plugin.getRepo().getEndWarpPoint(this.arena), TeleportCause.PLUGIN);
 		}
 		this.players = new ArrayList<TeamMember>();
 	}
@@ -146,7 +147,7 @@ public class TeamManager implements Listener{
 		 {
 			 return;
 		 }
-		 event.setRespawnLocation(AdmincmdWrapper.getWarpLocation(this.plugin.getRepo().getEndWarpPointName(this.arena), this.plugin.getRepo().getWorldName(this.arena)));
+		 event.setRespawnLocation(this.plugin.getRepo().getEndWarpPoint(this.arena));
 	 }
 	 
 	 public Boolean checkAlives(TeamNames team)

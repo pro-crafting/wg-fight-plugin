@@ -6,6 +6,7 @@ import java.util.TimerTask;
 import org.bukkit.ChatColor;
 import org.bukkit.Difficulty;
 import org.bukkit.GameMode;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 import me.Postremus.WarGear.AdmincmdWrapper;
 import me.Postremus.WarGear.Arena;
@@ -34,7 +35,7 @@ public class PVPMode implements IFightMode{
 		for (TeamMember player : this.teams.getTeamMembers())
 		{
 			player.getPlayer().getInventory().clear();
-		    AdmincmdWrapper.teleportToWarp(player.getPlayer(), this.plugin.getRepo().getRegionForTeam(player.getTeam(), this.arena), this.plugin.getRepo().getWorldName(this.arena));
+		    player.getPlayer().teleport(this.plugin.getRepo().getWarpForTeam(player.getTeam(), this.arena), TeleportCause.PLUGIN);
 		    player.getPlayer().setGameMode(GameMode.CREATIVE);
 		}
 		this.arena.open();
@@ -97,9 +98,9 @@ public class PVPMode implements IFightMode{
 			{
 				player.getPlayer().getInventory().clear();
 				player.getPlayer().getInventory().setArmorContents(null);
-			    AdmincmdWrapper.giveKit(this.plugin.getRepo().getKit(), player.getPlayer());
+			    AdmincmdWrapper.giveKit(this.plugin.getRepo().getKit(), player.getPlayer(), this.plugin.getServer());
 			    
-			    AdmincmdWrapper.teleportToWarp(player.getPlayer(), this.plugin.getRepo().getRegionForTeam(player.getTeam(), this.arena), this.plugin.getRepo().getWorldName(this.arena));
+			    player.getPlayer().teleport(this.plugin.getRepo().getWarpForTeam(player.getTeam(), this.arena), TeleportCause.PLUGIN);
 			    player.getPlayer().setGameMode(GameMode.SURVIVAL);
 				AdmincmdWrapper.disableFly(player.getPlayer());
 				AdmincmdWrapper.heal(player.getPlayer());
