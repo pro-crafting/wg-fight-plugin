@@ -25,7 +25,7 @@ public class WarGear extends JavaPlugin {
 	public void loadConfig()
 	{
 		config = getConfig();
-		config.options().copyDefaults(true);
+		config.options().copyDefaults(false);
 		if(new File("plugins/WarGear/config.yml").exists()){			
 			System.out.println("[WarGear] config.yml geladen.");	
 		}else{
