@@ -157,15 +157,14 @@ public class WgkRepository {
 	    return (WorldGuardPlugin) wgPlugin;
 	}
 	
-	public List<String> getArenaRegions()
+	public List<String> getArenaNames()
 	{
 		List<String> ret = new ArrayList<String>();
 		for (String arenaName : this.plugin.config.getConfigurationSection("wgk.arenas").getKeys(false)) 
 		{
-			String toAdd = this.plugin.config.getString("wgk.arenas."+arenaName+".arenaRegion");
-			if (toAdd != null)
+			if (arenaName != null)
 			{
-				ret.add(toAdd);
+				ret.add(arenaName);
 			}
 		}
 		return ret;
@@ -173,12 +172,13 @@ public class WgkRepository {
 	
 	public String getArenaOfPlayer(Player player)
 	{
-		List<String> arenas = this.getArenaRegions();
+		List<String> arenas = this.getArenaNames();
 		WorldGuardPlugin wgPlugin = this.getWorldGuard();
 		RegionManager manager = wgPlugin.getRegionManager(player.getWorld());
 		for (String arenaName : arenas)
 		{
-			ProtectedRegion r = manager.getRegion(arenaName);
+			String arenaRegion = this.plugin.config.getString("wgk.arenas."+arenaName+".arenaRegion");
+			ProtectedRegion r = manager.getRegion(arenaRegion);
 			if (r != null && r.contains(BukkitUtil.toVector(player.getLocation())))
 			{
 				return arenaName;
