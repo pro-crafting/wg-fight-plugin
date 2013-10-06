@@ -40,7 +40,6 @@ public class WgkCommandLogik {
 		if (arenaName == "")
 		{
 			arenaName = this.plugin.getRepo().getDefaultArenaName();
-			return;
 		}
 		this.setup(sender, arenaName);
 	}
