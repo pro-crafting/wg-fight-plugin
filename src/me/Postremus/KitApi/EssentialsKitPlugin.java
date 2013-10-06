@@ -24,16 +24,7 @@ public class EssentialsKitPlugin implements IKitPlugin
 	@Override
 	public boolean existsKit(String kitName) {
 		kitName = kitName.toLowerCase();
-		User u = this.getPlugin().getOfflineUser("eskit");
-		String kits;
-		try {
-			kits = Kit.listKits(this.getPlugin(), u);
-			return kits.contains(kitName);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return false;
+		return this.getPlugin().getSettings().getKit(kitName) != null;
 	}
 
 	@Override
