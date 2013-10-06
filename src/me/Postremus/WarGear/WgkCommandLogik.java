@@ -137,6 +137,7 @@ public class WgkCommandLogik {
 		if (!AdmincmdWrapper.existsKit(kitName, this.plugin.getServer()))
 		{
 			sender.sendMessage("Das Kit " + kitName + " gibt es nicht.");
+			return;
 		}
 		this.plugin.getRepo().setKit(kitName);
 	}
