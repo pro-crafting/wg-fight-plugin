@@ -52,9 +52,13 @@ public class Arena {
 		setFlag(this.plugin.getRepo().getRegionNameTeam1(this), DefaultFlag.TNT, value);
 		setFlag(this.plugin.getRepo().getRegionNameTeam1(this), DefaultFlag.BUILD, value);
 		setFlag(this.plugin.getRepo().getRegionNameTeam1(this), DefaultFlag.PVP, value);
+		setFlag(this.plugin.getRepo().getRegionNameTeam1(this), DefaultFlag.FIRE_SPREAD, value);
+		setFlag(this.plugin.getRepo().getRegionNameTeam1(this), DefaultFlag.GHAST_FIREBALL, value);
 		setFlag(this.plugin.getRepo().getRegionNameTeam2(this), DefaultFlag.TNT, value);
 		setFlag(this.plugin.getRepo().getRegionNameTeam2(this), DefaultFlag.BUILD, value);
 		setFlag(this.plugin.getRepo().getRegionNameTeam2(this), DefaultFlag.PVP, value);
+		setFlag(this.plugin.getRepo().getRegionNameTeam2(this), DefaultFlag.FIRE_SPREAD, value);
+		setFlag(this.plugin.getRepo().getRegionNameTeam2(this), DefaultFlag.GHAST_FIREBALL, value);
 	}
 	
 	public void setFlag(String RegionName, StateFlag flag, String value)
