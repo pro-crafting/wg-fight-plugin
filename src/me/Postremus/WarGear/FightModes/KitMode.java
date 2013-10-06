@@ -110,6 +110,7 @@ public class KitMode implements IFightMode, Listener{
 
 	@Override
 	public void stop() {
+		timer.cancel();
 		this.plugin.getServer().getWorld(this.plugin.getRepo().getWorldName(this.arena)).setDifficulty(Difficulty.PEACEFUL);
 		PlayerMoveEvent.getHandlerList().unregister(this);
 	}

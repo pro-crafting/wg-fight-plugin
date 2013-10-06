@@ -165,6 +165,7 @@ public class PVPMode implements IFightMode{
 	@Override
 	public void stop() {
 		// TODO Auto-generated method stub
+		timer.cancel();
 		this.plugin.getServer().getWorld(this.plugin.getRepo().getWorldName(this.arena)).setDifficulty(Difficulty.PEACEFUL);
 	}
 	
