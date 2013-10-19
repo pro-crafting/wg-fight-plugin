@@ -18,16 +18,14 @@ public class WgkCommandLogik {
 	WarGear plugin;
 	Timer manuelTimer;
 	int manuelCounter;
-	TeamManager teams;
 	IFightMode fightMode;
 	Arena arena;
 	
 	public WgkCommandLogik(WarGear plugin)
 	{
 		this.plugin = plugin;
-		this.teams = new TeamManager(this.plugin, this.arena);
 		this.arena = new Arena(this.plugin);
-		this.fightMode = new KitMode(this.teams, this.plugin, this.arena);
+		this.fightMode = new KitMode(this.plugin, this.arena);
 	}
 	
 	public void setup(CommandSender sender)
@@ -56,10 +54,10 @@ public class WgkCommandLogik {
 			this.plugin.getRepo().init();
 			this.plugin.getRepo().setFightRunning(true);
 			this.arena.setArenaName(arenaName);
-			this.teams.setArena(this.arena);
+			this.arena.getTeam().setArena(this.arena);
 			//fightmode muss wieder auf standard gesetzt werden
 			//damit der TeamManager aktualisiert wird
-			this.fightMode = new KitMode(this.teams, this.plugin, this.arena);
+			this.fightMode = new KitMode(this.plugin, this.arena);
 			sender.sendMessage("Setup für "+arenaName+" gestartet.");
 			return;
 		}
@@ -78,7 +76,7 @@ public class WgkCommandLogik {
 			sender.sendMessage("Es wurde kein Kit ausgewählt.");
 			return;
 		}
-		if (this.teams.getTeamMembers().size() == 0)
+		if (this.arena.getTeam().getTeamMembers().size() == 0)
 		{
 			sender.sendMessage("Es muss mindestens 1 Team geben.");
 			return;
@@ -87,15 +85,15 @@ public class WgkCommandLogik {
 		{
 			if (this.plugin.getRepo().getFightMode(this.arena).equalsIgnoreCase("pvp"))
 			{
-				this.fightMode = new PVPMode(this.teams, this.plugin, this.arena);
+				this.fightMode = new PVPMode(this.plugin, this.arena);
 			}
 			else if (this.plugin.getRepo().getFightMode(this.arena).equalsIgnoreCase("kit"))
 			{
-				this.fightMode = new KitMode(this.teams, this.plugin, this.arena);
+				this.fightMode = new KitMode(this.plugin, this.arena);
 			}
 		}
 		this.arena.setArenaOpeningFlags(false);
-		this.teams.GenerateTeamOutput();
+		this.arena.getTeam().GenerateTeamOutput();
 		this.fightMode.start();
 	}
 	
@@ -119,11 +117,11 @@ public class WgkCommandLogik {
 		}
 		if (teamName == "team1")
 		{
-			this.teams.setTeam(team, TeamNames.Team1);
+			this.arena.getTeam().setTeam(team, TeamNames.Team1);
 		}
 		else if (teamName == "team2")
 		{
-			this.teams.setTeam(team, TeamNames.Team2);
+			this.arena.getTeam().setTeam(team, TeamNames.Team2);
 		}
 	}
 	
@@ -146,11 +144,11 @@ public class WgkCommandLogik {
 	{
 		if (mode.equalsIgnoreCase("pvp"))
 		{
-			this.fightMode = new PVPMode(this.teams, this.plugin, this.arena);
+			this.fightMode = new PVPMode(this.plugin, this.arena);
 		}
 		else if (mode.equalsIgnoreCase("kit"))
 		{
-			this.fightMode = new KitMode(this.teams, this.plugin, this.arena);
+			this.fightMode = new KitMode(this.plugin, this.arena);
 		}
 	}
 	
@@ -166,14 +164,14 @@ public class WgkCommandLogik {
 		this.fightMode.stop();
 		if (siegerTeam.equalsIgnoreCase("Team1"))
 		{
-			this.teams.GenerateWinnerTeamOutput(TeamNames.Team1);
+			this.arena.getTeam().GenerateWinnerTeamOutput(TeamNames.Team1);
 		}
 		else
 		{
-			this.teams.GenerateWinnerTeamOutput(TeamNames.Team2);
+			this.arena.getTeam().GenerateWinnerTeamOutput(TeamNames.Team2);
 		}
-		this.teams.quitFight();
-		this.fightMode = new KitMode(this.teams, this.plugin, this.arena);
+		this.arena.getTeam().quitFight();
+		this.fightMode = new KitMode(this.plugin, this.arena);
 	}
 	
 	public Arena getArena()

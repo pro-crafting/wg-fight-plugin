@@ -13,11 +13,13 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 public class Arena {
 	WarGear plugin;
 	String name;
+	private TeamManager team;
 	
 	public Arena(WarGear plugin)
 	{
 		this.plugin = plugin;
 		this.name = this.plugin.getRepo().getDefaultArenaName();
+		this.team = new TeamManager(plugin, this);
 	}
 
 	public String getArenaName()
@@ -80,5 +82,9 @@ public class Arena {
 		{
 			player.sendMessage(message);
 		}
+	}
+
+	public TeamManager getTeam() {
+		return team;
 	}
 }

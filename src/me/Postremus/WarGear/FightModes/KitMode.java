@@ -12,7 +12,6 @@ import org.bukkit.potion.PotionEffect;
 import me.Postremus.WarGear.AdmincmdWrapper;
 import me.Postremus.WarGear.Arena;
 import me.Postremus.WarGear.IFightMode;
-import me.Postremus.WarGear.TeamManager;
 import me.Postremus.WarGear.TeamMember;
 import me.Postremus.WarGear.TeamNames;
 import me.Postremus.WarGear.WarGear;
@@ -20,17 +19,15 @@ import me.Postremus.WarGear.WarGear;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class KitMode implements IFightMode, Listener{
+ public class KitMode implements IFightMode, Listener{
 
-	TeamManager teams;
 	WarGear plugin;
 	Arena arena;
 	Timer timer;
 	int counter;
 	
-	public KitMode(TeamManager teams, WarGear plugin, Arena arena)
+	public KitMode(WarGear plugin, Arena arena)
 	{
-		this.teams = teams;
 		this.plugin = plugin;
 		this.arena = arena;
 	}
@@ -38,7 +35,7 @@ public class KitMode implements IFightMode, Listener{
 	@Override
 	public void start() {
 		this.plugin.getServer().broadcastMessage(ChatColor.YELLOW+"Gleich: WarGear-Kampf in der "+this.arena.getArenaName()+" Arena");
-		for (TeamMember player : this.teams.getTeamMembers())
+		for (TeamMember player : this.arena.getTeam().getTeamMembers())
 		{
 			player.getPlayer().getInventory().clear();
 			player.getPlayer().getInventory().setArmorContents(null);
@@ -127,7 +124,7 @@ public class KitMode implements IFightMode, Listener{
 		{
 			return;
 		}
-		if (this.teams.isPlayerInTeam(event.getPlayer().getName(), TeamNames.Team1) || this.teams.isPlayerInTeam(event.getPlayer().getName(), TeamNames.Team2))
+		if (this.arena.getTeam().isPlayerInTeam(event.getPlayer().getName(), TeamNames.Team1) || this.arena.getTeam().isPlayerInTeam(event.getPlayer().getName(), TeamNames.Team2))
 		{
 			event.getPlayer().damage(1);
 		}

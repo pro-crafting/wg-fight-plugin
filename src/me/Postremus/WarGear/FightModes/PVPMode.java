@@ -11,20 +11,17 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import me.Postremus.WarGear.AdmincmdWrapper;
 import me.Postremus.WarGear.Arena;
 import me.Postremus.WarGear.IFightMode;
-import me.Postremus.WarGear.TeamManager;
 import me.Postremus.WarGear.TeamMember;
 import me.Postremus.WarGear.WarGear;
 
 public class PVPMode implements IFightMode{
-	TeamManager teams;
 	WarGear plugin;
 	Arena arena;
 	Timer timer;
 	int counter;
 	
-	public PVPMode(TeamManager teams, WarGear plugin, Arena arena)
+	public PVPMode(WarGear plugin, Arena arena)
 	{
-		this.teams = teams;
 		this.plugin = plugin;
 		this.arena = arena;
 	}
@@ -32,7 +29,7 @@ public class PVPMode implements IFightMode{
 	@Override
 	public void start() {
 		this.plugin.getServer().broadcastMessage(ChatColor.YELLOW+"Gleich: PVP-Kampf in der "+this.arena.getArenaName()+" Arena");
-		for (TeamMember player : this.teams.getTeamMembers())
+		for (TeamMember player : this.arena.getTeam().getTeamMembers())
 		{
 			player.getPlayer().getInventory().clear();
 		    player.getPlayer().teleport(this.plugin.getRepo().getWarpForTeam(player.getTeam(), this.arena), TeleportCause.PLUGIN);
@@ -94,7 +91,7 @@ public class PVPMode implements IFightMode{
 		else if (300-counter == 0)
 		{
 			timer.cancel();
-			for (TeamMember player : this.teams.getTeamMembers())
+			for (TeamMember player : this.arena.getTeam().getTeamMembers())
 			{
 				player.getPlayer().getInventory().clear();
 				player.getPlayer().getInventory().setArmorContents(null);
