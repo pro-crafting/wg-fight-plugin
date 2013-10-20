@@ -179,6 +179,16 @@ public class WgkCommandLogik {
 		this.arena.setArenaName(arena);
 	}
 	
+	public void showArenaNames(CommandSender sender)
+	{
+		sender.sendMessage("Verfügbare Arenen");
+		List<String> arenas = this.plugin.getRepo().getArenaNames();
+		for (String arenaName : arenas)
+		{
+			sender.sendMessage(arenaName);
+		}
+	}
+	
 	public void StartManuelCountdown()
 	{
 		this.manuelCounter = 0;

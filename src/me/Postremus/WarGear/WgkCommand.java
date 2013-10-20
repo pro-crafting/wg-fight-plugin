@@ -115,6 +115,10 @@ public class WgkCommand implements CommandExecutor{
 						this.logik.getArena().setArenaName(arenaName);
 						this.logik.getArena().close();
 					}
+					else if (args[1].equalsIgnoreCase("list"))
+					{
+						this.logik.showArenaNames(sender);
+					}
 					else
 					{
 						Help(sender);
