@@ -15,7 +15,6 @@ import org.bukkit.plugin.Plugin;
 public class WgkRepository {
 	
 	private WarGear plugin;
-	private String kitName;
 	
 	public WgkRepository(WarGear plugin)
 	{
@@ -25,7 +24,6 @@ public class WgkRepository {
 
 	public void init()
 	{
-		kitName = "";
 	}
 	
 	public String getWorldName(Arena arena)
@@ -121,16 +119,6 @@ public class WgkRepository {
 		{
 			return this.getFightStartWarpPointTeam2(arena);
 		}
-	}
-	
-	public void setKit(String kitName)
-	{
-		this.kitName = kitName;
-	}
-	
-	public String getKit()
-	{
-		return this.kitName;
 	}
 	
 	public WorldGuardPlugin getWorldGuard() {

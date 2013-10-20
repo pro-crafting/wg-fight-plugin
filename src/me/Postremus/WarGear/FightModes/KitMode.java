@@ -39,7 +39,7 @@ import java.util.TimerTask;
 		{
 			player.getPlayer().getInventory().clear();
 			player.getPlayer().getInventory().setArmorContents(null);
-		    AdmincmdWrapper.giveKit(this.plugin.getRepo().getKit(), player.getPlayer(), this.plugin.getServer());
+		    AdmincmdWrapper.giveKit(this.arena.getKit(), player.getPlayer(), this.plugin.getServer());
 		    
 		    //AdmincmdWrapper.teleportToWarp(player.getPlayer(), this.plugin.getRepo().getRegionForTeam(player.getTeam(), this.arena), this.plugin.getRepo().getWorldName(this.arena));
 		    player.getPlayer().teleport(this.plugin.getRepo().getWarpForTeam(player.getTeam(), this.arena), TeleportCause.PLUGIN);

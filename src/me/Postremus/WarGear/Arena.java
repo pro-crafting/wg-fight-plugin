@@ -1,5 +1,7 @@
 package me.Postremus.WarGear;
 
+import me.Postremus.WarGear.FightModes.KitMode;
+
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -15,6 +17,8 @@ public class Arena {
 	private String name;
 	private TeamManager team;
 	private boolean fightRunning;
+	private String kitname;
+	private IFightMode fightMode;
 	
 	public Arena(WarGear plugin)
 	{
@@ -22,6 +26,8 @@ public class Arena {
 		this.name = this.plugin.getRepo().getDefaultArenaName();
 		this.team = new TeamManager(plugin, this);
 		this.fightRunning = false;
+		this.kitname = "";
+		this.setFightMode(new KitMode(plugin, this));
 	}
 
 	public String getArenaName()
@@ -98,5 +104,21 @@ public class Arena {
 		{
 			player.sendMessage(message);
 		}
+	}
+
+	public String getKit() {
+		return kitname;
+	}
+
+	public void setKit(String kitname) {
+		this.kitname = kitname;
+	}
+
+	public IFightMode getFightMode() {
+		return fightMode;
+	}
+
+	public void setFightMode(IFightMode fightMode) {
+		this.fightMode = fightMode;
 	}
 }

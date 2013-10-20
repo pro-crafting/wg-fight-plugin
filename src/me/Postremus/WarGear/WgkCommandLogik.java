@@ -18,14 +18,12 @@ public class WgkCommandLogik {
 	WarGear plugin;
 	Timer manuelTimer;
 	int manuelCounter;
-	IFightMode fightMode;
 	Arena arena;
 	
 	public WgkCommandLogik(WarGear plugin)
 	{
 		this.plugin = plugin;
 		this.arena = new Arena(this.plugin);
-		this.fightMode = new KitMode(this.plugin, this.arena);
 	}
 	
 	public void setup(CommandSender sender)
@@ -55,9 +53,6 @@ public class WgkCommandLogik {
 			this.arena.setFightRunning(true);
 			this.arena.setArenaName(arenaName);
 			this.arena.getTeam().setArena(this.arena);
-			//fightmode muss wieder auf standard gesetzt werden
-			//damit der TeamManager aktualisiert wird
-			this.fightMode = new KitMode(this.plugin, this.arena);
 			sender.sendMessage("Setup für "+arenaName+" gestartet.");
 			return;
 		}
@@ -71,7 +66,7 @@ public class WgkCommandLogik {
 			sender.sendMessage("Es muss zuerst ein fight setup gestartet werden.");
 			return;
 		}
-		if (this.plugin.getRepo().getKit() == null || this.plugin.getRepo().getKit().length() == 0)
+		if (this.arena.getKit() == null || this.arena.getKit().length() == 0)
 		{
 			sender.sendMessage("Es wurde kein Kit ausgewählt.");
 			return;
@@ -81,20 +76,20 @@ public class WgkCommandLogik {
 			sender.sendMessage("Es muss mindestens 1 Team geben.");
 			return;
 		}
-		if (!this.fightMode.getName().equalsIgnoreCase(this.plugin.getRepo().getFightMode(this.arena)))
+		if (!this.arena.getFightMode().getName().equalsIgnoreCase(this.plugin.getRepo().getFightMode(this.arena)))
 		{
 			if (this.plugin.getRepo().getFightMode(this.arena).equalsIgnoreCase("pvp"))
 			{
-				this.fightMode = new PVPMode(this.plugin, this.arena);
+				this.arena.setFightMode(new PVPMode(this.plugin, this.arena));
 			}
 			else if (this.plugin.getRepo().getFightMode(this.arena).equalsIgnoreCase("kit"))
 			{
-				this.fightMode = new KitMode(this.plugin, this.arena);
+				this.arena.setFightMode(new KitMode(this.plugin, this.arena));
 			}
 		}
 		this.arena.setArenaOpeningFlags(false);
 		this.arena.getTeam().GenerateTeamOutput();
-		this.fightMode.start();
+		this.arena.getFightMode().start();
 	}
 	
 	public void setTeam(CommandSender sender, String teamName, List<String> teamMember)
@@ -137,18 +132,18 @@ public class WgkCommandLogik {
 			sender.sendMessage("Das Kit " + kitName + " gibt es nicht.");
 			return;
 		}
-		this.plugin.getRepo().setKit(kitName);
+		this.arena.setKit(kitName);
 	}
     
 	public void setMode(String mode)
 	{
 		if (mode.equalsIgnoreCase("pvp"))
 		{
-			this.fightMode = new PVPMode(this.plugin, this.arena);
+			this.arena.setFightMode(new PVPMode(this.plugin, this.arena));
 		}
 		else if (mode.equalsIgnoreCase("kit"))
 		{
-			this.fightMode = new KitMode(this.plugin, this.arena);
+			this.arena.setFightMode(new KitMode(this.plugin, this.arena));
 		}
 	}
 	
@@ -161,7 +156,7 @@ public class WgkCommandLogik {
 		}
 		this.arena.close();
 		this.arena.setFightRunning(false);
-		this.fightMode.stop();
+		this.arena.getFightMode().stop();
 		if (siegerTeam.equalsIgnoreCase("Team1"))
 		{
 			this.arena.getTeam().GenerateWinnerTeamOutput(TeamNames.Team1);
@@ -171,7 +166,7 @@ public class WgkCommandLogik {
 			this.arena.getTeam().GenerateWinnerTeamOutput(TeamNames.Team2);
 		}
 		this.arena.getTeam().quitFight();
-		this.fightMode = new KitMode(this.plugin, this.arena);
+		this.arena.setFightMode(new KitMode(this.plugin, this.arena));
 	}
 	
 	public Arena getArena()
