@@ -7,8 +7,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class WarGear extends JavaPlugin {
 
-	FileConfiguration config;
-	WgkRepository repo;
+	private FileConfiguration config;
+	private WgkRepository repo;
 	
 	@Override
 	public void onEnable() {
@@ -37,5 +37,10 @@ public class WarGear extends JavaPlugin {
 	public WgkRepository getRepo()
 	{
 		return this.repo;
+	}
+	
+	public FileConfiguration getConfig()
+	{
+		return this.config;
 	}
 }

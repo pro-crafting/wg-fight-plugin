@@ -30,7 +30,7 @@ public class WgkRepository {
 	
 	public String getWorldName(Arena arena)
 	{
-		return this.plugin.config.getString("wgk.arenas."+arena.getArenaName()+".world");
+		return this.plugin.getConfig().getString("wgk.arenas."+arena.getArenaName()+".world");
 	}
 	
 	public Location getEndWarpPoint(Arena arena)
@@ -53,25 +53,25 @@ public class WgkRepository {
 	
 	private Location loadLocationFromConfig(String node, World world)
 	{
-		int x = this.plugin.config.getInt(node+".x");
-		int y = this.plugin.config.getInt(node+".y");
-		int z = this.plugin.config.getInt(node+".z");
+		int x = this.plugin.getConfig().getInt(node+".x");
+		int y = this.plugin.getConfig().getInt(node+".y");
+		int z = this.plugin.getConfig().getInt(node+".z");
 		return new Location(world, x, y, z);
 	}
 	
 	public String getRegionNameTeam1(Arena arena)
 	{
-		return this.plugin.config.getString("wgk.arenas."+arena.getArenaName()+".regions.Team1");
+		return this.plugin.getConfig().getString("wgk.arenas."+arena.getArenaName()+".regions.Team1");
 	}
 	
 	public String getRegionNameTeam2(Arena arena)
 	{
-		return this.plugin.config.getString("wgk.arenas."+arena.getArenaName()+".regions.Team2");
+		return this.plugin.getConfig().getString("wgk.arenas."+arena.getArenaName()+".regions.Team2");
 	}
 	
 	public String getFightMode(Arena arena)
 	{
-		return this.plugin.config.getString("wgk.arenas."+arena.getArenaName()+".mode");
+		return this.plugin.getConfig().getString("wgk.arenas."+arena.getArenaName()+".mode");
 	}
 	
 	public int getGroundHeight(Arena arena)
@@ -79,30 +79,29 @@ public class WgkRepository {
 		int ret = 4;
 		try
 		{
-			ret = Integer.parseInt(this.plugin.config.getString("wgk.arenas."+arena.getArenaName()+".groundHeight"));
+			ret = Integer.parseInt(this.plugin.getConfig().getString("wgk.arenas."+arena.getArenaName()+".groundHeight"));
 			return ret;
 		}
 		catch(NumberFormatException ex)
 		{
 			System.out.println("[WarGear]Die Grounheight Option in der Config muss eine Ganzzahl sein für die Arena" + arena.getArenaName());
-			System.out.println("[WarGear]Benutze 4 als GroundHeight");
 			return 4;
 		}
 	}
 	
 	public String getDefaultArenaName()
 	{
-		return this.plugin.config.getString("wgk.defaults.arena");
+		return this.plugin.getConfig().getString("wgk.defaults.arena");
 	}
 	
 	public String getArenaRegion(Arena arena)
 	{
-		return this.plugin.config.getString("wgk.arenas."+arena.getArenaName()+".arenaRegion");
+		return this.plugin.getConfig().getString("wgk.arenas."+arena.getArenaName()+".arenaRegion");
 	}
 	
 	public Boolean existsArena(String arena)
 	{
-		for (String arenaName : this.plugin.config.getConfigurationSection("wgk.arenas").getKeys(false)) 
+		for (String arenaName : this.plugin.getConfig().getConfigurationSection("wgk.arenas").getKeys(false)) 
 		{
 			if (arenaName.equalsIgnoreCase(arena))
 			{
@@ -148,7 +147,7 @@ public class WgkRepository {
 	public List<String> getArenaNames()
 	{
 		List<String> ret = new ArrayList<String>();
-		for (String arenaName : this.plugin.config.getConfigurationSection("wgk.arenas").getKeys(false)) 
+		for (String arenaName : this.plugin.getConfig().getConfigurationSection("wgk.arenas").getKeys(false)) 
 		{
 			if (arenaName != null)
 			{
@@ -165,7 +164,7 @@ public class WgkRepository {
 		RegionManager manager = wgPlugin.getRegionManager(player.getWorld());
 		for (String arenaName : arenas)
 		{
-			String arenaRegion = this.plugin.config.getString("wgk.arenas."+arenaName+".arenaRegion");
+			String arenaRegion = this.plugin.getConfig().getString("wgk.arenas."+arenaName+".arenaRegion");
 			ProtectedRegion r = manager.getRegion(arenaRegion);
 			if (r != null && r.contains(BukkitUtil.toVector(player.getLocation())))
 			{
