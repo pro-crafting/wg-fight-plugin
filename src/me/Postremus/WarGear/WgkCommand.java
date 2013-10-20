@@ -6,6 +6,7 @@ import java.util.List;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class WgkCommand implements CommandExecutor{
 
@@ -90,15 +91,19 @@ public class WgkCommand implements CommandExecutor{
 				}
 				else if (args[0].equalsIgnoreCase("arena"))
 				{
-					String arenaName = this.plugin.getRepo().getDefaultArenaName();
-					if (args.length == 3)
+					String arenaName = args[2];
+					if (args.length == 2)
 					{
-						arenaName = args[2];
-						if (!this.plugin.getRepo().existsArena(arenaName))
+						arenaName = this.plugin.getRepo().getArenaOfPlayer((Player)sender);
+						if (arenaName == "")
 						{
-							sender.sendMessage("Die Arena "+ arenaName+" existiert nicht.");
-							return true;
+							arenaName = this.plugin.getRepo().getDefaultArenaName();
 						}
+					}
+					if (!this.plugin.getRepo().existsArena(arenaName))
+					{
+						sender.sendMessage("Die Arena "+ arenaName+" existiert nicht.");
+						return true;
 					}
 					if (args[1].equalsIgnoreCase("open"))
 					{
