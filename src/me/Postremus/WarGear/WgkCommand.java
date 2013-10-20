@@ -41,6 +41,13 @@ public class WgkCommand implements CommandExecutor{
 				{
 					this.logik.setup(sender);
 				}
+				else if (args[0].equalsIgnoreCase("reload"))
+				{
+					this.plugin.reloadConfig();
+					this.plugin.getServer().getPluginManager().disablePlugin(plugin);
+					this.plugin.getServer().getPluginManager().enablePlugin(plugin);
+					sender.sendMessage("Plugin wurde gereloadet.");
+				}
 				else
 				{
 					Help(sender);
@@ -128,5 +135,6 @@ public class WgkCommand implements CommandExecutor{
 		sender.sendMessage("/wgk kit kitName");
 		sender.sendMessage("/wgk arena open/close");
 		sender.sendMessage("/wgk count");
+		sender.sendMessage("/wgk reload");
 	}
 }
