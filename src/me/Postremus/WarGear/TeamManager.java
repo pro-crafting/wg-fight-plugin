@@ -140,7 +140,7 @@ public class TeamManager implements Listener{
 		 }
 	 }
 	 
-	 @EventHandler (priority = EventPriority.HIGH)
+	 @EventHandler (priority = EventPriority.HIGHEST)
 	 public void playerRespwanHandler(PlayerRespawnEvent event)
 	 {
 		 if (arena == null)
