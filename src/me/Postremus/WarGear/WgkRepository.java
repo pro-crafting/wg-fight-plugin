@@ -16,7 +16,6 @@ public class WgkRepository {
 	
 	private WarGear plugin;
 	private String kitName;
-	private Boolean fightRunning;
 	
 	public WgkRepository(WarGear plugin)
 	{
@@ -27,7 +26,6 @@ public class WgkRepository {
 	public void init()
 	{
 		kitName = "";
-		fightRunning = false;
 	}
 	
 	public String getWorldName(Arena arena)
@@ -124,16 +122,6 @@ public class WgkRepository {
 		{
 			return this.getFightStartWarpPointTeam2(arena);
 		}
-	}
-	
-	public void setFightRunning(Boolean state)
-	{
-		this.fightRunning = state;
-	}
-	
-	public Boolean getFightRunning()
-	{
-		return this.fightRunning;
 	}
 	
 	public void setKit(String kitName)

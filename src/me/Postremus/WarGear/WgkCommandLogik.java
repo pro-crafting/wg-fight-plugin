@@ -49,10 +49,10 @@ public class WgkCommandLogik {
 			sender.sendMessage("Die Arena "+ arenaName+" existiert nicht.");
 			return;
 		}
-		if (!this.plugin.getRepo().getFightRunning())
+		if (!this.arena.getFightRunning())
 		{
 			this.plugin.getRepo().init();
-			this.plugin.getRepo().setFightRunning(true);
+			this.arena.setFightRunning(true);
 			this.arena.setArenaName(arenaName);
 			this.arena.getTeam().setArena(this.arena);
 			//fightmode muss wieder auf standard gesetzt werden
@@ -66,7 +66,7 @@ public class WgkCommandLogik {
 	
 	public void start(CommandSender sender)
 	{
-		if (!this.plugin.getRepo().getFightRunning())
+		if (!this.arena.getFightRunning())
 		{
 			sender.sendMessage("Es muss zuerst ein fight setup gestartet werden.");
 			return;
@@ -99,7 +99,7 @@ public class WgkCommandLogik {
 	
 	public void setTeam(CommandSender sender, String teamName, List<String> teamMember)
 	{
-		if (!this.plugin.getRepo().getFightRunning())
+		if (!this.arena.getFightRunning())
 		{
 			sender.sendMessage("Es muss zuerst ein fight setup gestartet werden.");
 			return;
@@ -127,7 +127,7 @@ public class WgkCommandLogik {
 	
 	public void setKit(CommandSender sender, String kitName)
 	{
-		if (!this.plugin.getRepo().getFightRunning())
+		if (!this.arena.getFightRunning())
 		{
 			sender.sendMessage("Es muss zuerst ein fight setup gestartet werden.");
 			return;
@@ -154,13 +154,13 @@ public class WgkCommandLogik {
 	
 	public void quit(CommandSender sender, String siegerTeam)
 	{
-		if (!this.plugin.getRepo().getFightRunning())
+		if (!this.arena.getFightRunning())
 		{
 			sender.sendMessage("Es muss zuerst ein fight setup gestartet werden.");
 			return;
 		}
 		this.arena.close();
-		this.plugin.getRepo().setFightRunning(false);
+		this.arena.setFightRunning(false);
 		this.fightMode.stop();
 		if (siegerTeam.equalsIgnoreCase("Team1"))
 		{

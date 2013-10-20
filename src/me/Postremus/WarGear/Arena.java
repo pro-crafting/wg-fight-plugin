@@ -11,15 +11,17 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 public class Arena {
-	WarGear plugin;
-	String name;
+	private WarGear plugin;
+	private String name;
 	private TeamManager team;
+	private boolean fightRunning;
 	
 	public Arena(WarGear plugin)
 	{
 		this.plugin = plugin;
 		this.name = this.plugin.getRepo().getDefaultArenaName();
 		this.team = new TeamManager(plugin, this);
+		this.fightRunning = false;
 	}
 
 	public String getArenaName()
@@ -30,6 +32,20 @@ public class Arena {
 	public void setArenaName(String arena)
 	{
 		this.name = arena;
+	}
+
+	public TeamManager getTeam() {
+		return team;
+	}
+	
+	public boolean getFightRunning()
+	{
+		return this.fightRunning;
+	}
+	
+	public void setFightRunning(boolean state)
+	{
+		this.fightRunning = state;
 	}
 	
 	public void open()
@@ -82,9 +98,5 @@ public class Arena {
 		{
 			player.sendMessage(message);
 		}
-	}
-
-	public TeamManager getTeam() {
-		return team;
 	}
 }
