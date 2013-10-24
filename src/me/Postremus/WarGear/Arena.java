@@ -57,13 +57,13 @@ public class Arena {
 	public void open()
 	{
 		this.setArenaOpeningFlags(true);
-		this.broadcastMessage(ChatColor.GREEN + "Arena "+this.name+" Freigegeben!");
+		this.broadcastMessage(ChatColor.GREEN + "Arena Freigegeben!");
 	}
 	
 	public void close()
 	{
 		this.setArenaOpeningFlags(false);
-		this.broadcastMessage(ChatColor.GREEN + "Arena "+this.name+" gesperrt!");
+		this.broadcastMessage(ChatColor.GREEN + "Arena gesperrt!");
 	}
 	
 	public void setArenaOpeningFlags(Boolean allowed)
