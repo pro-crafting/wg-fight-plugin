@@ -18,12 +18,17 @@ public class WgkCommandLogik {
 	WarGear plugin;
 	Timer manuelTimer;
 	int manuelCounter;
-	Arena arena;
+	ArenaManager arena;
 	
 	public WgkCommandLogik(WarGear plugin)
 	{
 		this.plugin = plugin;
-		this.arena = new Arena(this.plugin);
+		this.arena = new ArenaManager(this.plugin);
+	}
+	
+	public ArenaManager getArenaManager()
+	{
+		return this.arena;
 	}
 	
 	public void setup(CommandSender sender)
@@ -47,12 +52,10 @@ public class WgkCommandLogik {
 			sender.sendMessage("Die Arena "+ arenaName+" existiert nicht.");
 			return;
 		}
-		if (!this.arena.getFightRunning())
+		if (!this.arena.getArena(arenaName).getFightRunning())
 		{
 			this.plugin.getRepo().init();
-			this.arena.setFightRunning(true);
-			this.arena.setArenaName(arenaName);
-			this.arena.getTeam().setArena(this.arena);
+			this.arena.getArena(arenaName).setFightRunning(true);
 			sender.sendMessage("Setup für "+arenaName+" gestartet.");
 			return;
 		}
@@ -61,40 +64,68 @@ public class WgkCommandLogik {
 	
 	public void start(CommandSender sender)
 	{
-		if (!this.arena.getFightRunning())
+		String arenaName = "";
+		if (!(sender instanceof ConsoleCommandSender))
+		{
+			arenaName = this.plugin.getRepo().getArenaOfPlayer((Player)sender);
+		}
+		if (arenaName == "")
+		{
+			arenaName = this.plugin.getRepo().getDefaultArenaName();
+		}
+		this.start(sender, arenaName);
+	}
+	
+	public void start(CommandSender sender, String arenaName)
+	{
+		if (!this.plugin.getRepo().existsArena(arenaName))
+		{
+			sender.sendMessage("Die Arena "+ arenaName+" existiert nicht.");
+			return;
+		}
+		if (!this.arena.getArena(arenaName).getFightRunning())
 		{
 			sender.sendMessage("Es muss zuerst ein fight setup gestartet werden.");
 			return;
 		}
-		if (this.arena.getKit() == null || this.arena.getKit().length() == 0)
+		if (this.arena.getArena(arenaName).getKit() == null || this.arena.getArena(arenaName).getKit().length() == 0)
 		{
 			sender.sendMessage("Es wurde kein Kit ausgewählt.");
 			return;
 		}
-		if (this.arena.getTeam().getTeamMembers().size() == 0)
+		if (this.arena.getArena(arenaName).getTeam().getTeamMembers().size() == 0)
 		{
 			sender.sendMessage("Es muss mindestens 1 Team geben.");
 			return;
 		}
-		if (!this.arena.getFightMode().getName().equalsIgnoreCase(this.plugin.getRepo().getFightMode(this.arena)))
+		if (!this.arena.getArena(arenaName).getFightMode().getName().equalsIgnoreCase(this.plugin.getRepo().getFightMode(this.arena.getArena(arenaName))))
 		{
-			if (this.plugin.getRepo().getFightMode(this.arena).equalsIgnoreCase("pvp"))
+			if (this.plugin.getRepo().getFightMode(this.arena.getArena(arenaName)).equalsIgnoreCase("pvp"))
 			{
-				this.arena.setFightMode(new PVPMode(this.plugin, this.arena));
+				this.arena.getArena(arenaName).setFightMode(new PVPMode(this.plugin, this.arena.getArena(arenaName)));
 			}
-			else if (this.plugin.getRepo().getFightMode(this.arena).equalsIgnoreCase("kit"))
+			else if (this.plugin.getRepo().getFightMode(this.arena.getArena(arenaName)).equalsIgnoreCase("kit"))
 			{
-				this.arena.setFightMode(new KitMode(this.plugin, this.arena));
+				this.arena.getArena(arenaName).setFightMode(new KitMode(this.plugin, this.arena.getArena(arenaName)));
 			}
 		}
-		this.arena.setArenaOpeningFlags(false);
-		this.arena.getTeam().GenerateTeamOutput();
-		this.arena.getFightMode().start();
+		this.arena.getArena(arenaName).setArenaOpeningFlags(false);
+		this.arena.getArena(arenaName).getTeam().GenerateTeamOutput();
+		this.arena.getArena(arenaName).getFightMode().start();
 	}
 	
 	public void setTeam(CommandSender sender, String teamName, List<String> teamMember)
 	{
-		if (!this.arena.getFightRunning())
+		String arenaName = "";
+		if (!(sender instanceof ConsoleCommandSender))
+		{
+			arenaName = this.plugin.getRepo().getArenaOfPlayer((Player)sender);
+		}
+		if (arenaName == "")
+		{
+			arenaName = this.plugin.getRepo().getDefaultArenaName();
+		}
+		if (!this.arena.getArena(arenaName).getFightRunning())
 		{
 			sender.sendMessage("Es muss zuerst ein fight setup gestartet werden.");
 			return;
@@ -112,17 +143,26 @@ public class WgkCommandLogik {
 		}
 		if (teamName == "team1")
 		{
-			this.arena.getTeam().setTeam(team, TeamNames.Team1);
+			this.arena.getArena(arenaName).getTeam().setTeam(team, TeamNames.Team1);
 		}
 		else if (teamName == "team2")
 		{
-			this.arena.getTeam().setTeam(team, TeamNames.Team2);
+			this.arena.getArena(arenaName).getTeam().setTeam(team, TeamNames.Team2);
 		}
 	}
 	
 	public void setKit(CommandSender sender, String kitName)
 	{
-		if (!this.arena.getFightRunning())
+		String arenaName = "";
+		if (!(sender instanceof ConsoleCommandSender))
+		{
+			arenaName = this.plugin.getRepo().getArenaOfPlayer((Player)sender);
+		}
+		if (arenaName == "")
+		{
+			arenaName = this.plugin.getRepo().getDefaultArenaName();
+		}
+		if (!this.arena.getArena(arenaName).getFightRunning())
 		{
 			sender.sendMessage("Es muss zuerst ein fight setup gestartet werden.");
 			return;
@@ -132,51 +172,59 @@ public class WgkCommandLogik {
 			sender.sendMessage("Das Kit " + kitName + " gibt es nicht.");
 			return;
 		}
-		this.arena.setKit(kitName);
+		this.arena.getArena(arenaName).setKit(kitName);
 	}
     
-	public void setMode(String mode)
+	public void setMode(CommandSender sender, String mode)
 	{
+		String arenaName = "";
+		if (!(sender instanceof ConsoleCommandSender))
+		{
+			arenaName = this.plugin.getRepo().getArenaOfPlayer((Player)sender);
+		}
+		if (arenaName == "")
+		{
+			arenaName = this.plugin.getRepo().getDefaultArenaName();
+		}
 		if (mode.equalsIgnoreCase("pvp"))
 		{
-			this.arena.setFightMode(new PVPMode(this.plugin, this.arena));
+			this.arena.getArena(arenaName).setFightMode(new PVPMode(this.plugin, this.arena.getArena(arenaName)));
 		}
 		else if (mode.equalsIgnoreCase("kit"))
 		{
-			this.arena.setFightMode(new KitMode(this.plugin, this.arena));
+			this.arena.getArena(arenaName).setFightMode(new KitMode(this.plugin, this.arena.getArena(arenaName)));
 		}
 	}
 	
 	public void quit(CommandSender sender, String siegerTeam)
 	{
-		if (!this.arena.getFightRunning())
+		String arenaName = "";
+		if (!(sender instanceof ConsoleCommandSender))
+		{
+			arenaName = this.plugin.getRepo().getArenaOfPlayer((Player)sender);
+		}
+		if (arenaName == "")
+		{
+			arenaName = this.plugin.getRepo().getDefaultArenaName();
+		}
+		if (!this.arena.getArena(arenaName).getFightRunning())
 		{
 			sender.sendMessage("Es muss zuerst ein fight setup gestartet werden.");
 			return;
 		}
-		this.arena.close();
-		this.arena.setFightRunning(false);
-		this.arena.getFightMode().stop();
+		this.arena.getArena(arenaName).close();
+		this.arena.getArena(arenaName).setFightRunning(false);
+		this.arena.getArena(arenaName).getFightMode().stop();
 		if (siegerTeam.equalsIgnoreCase("Team1"))
 		{
-			this.arena.getTeam().GenerateWinnerTeamOutput(TeamNames.Team1);
+			this.arena.getArena(arenaName).getTeam().GenerateWinnerTeamOutput(TeamNames.Team1);
 		}
 		else
 		{
-			this.arena.getTeam().GenerateWinnerTeamOutput(TeamNames.Team2);
+			this.arena.getArena(arenaName).getTeam().GenerateWinnerTeamOutput(TeamNames.Team2);
 		}
-		this.arena.getTeam().quitFight();
-		this.arena.setFightMode(new KitMode(this.plugin, this.arena));
-	}
-	
-	public Arena getArena()
-	{
-		return this.arena;
-	}
-	
-	public void setArenaName(String arena)
-	{
-		this.arena.setArenaName(arena);
+		this.arena.getArena(arenaName).getTeam().quitFight();
+		this.arena.getArena(arenaName).setFightMode(new KitMode(this.plugin, this.arena.getArena(arenaName)));
 	}
 	
 	public void showArenaNames(CommandSender sender)
@@ -237,7 +285,6 @@ public class WgkCommandLogik {
 		{
 			this.manuelTimer.cancel();
 			this.plugin.getServer().broadcastMessage(ChatColor.DARK_GREEN + "GO!");
-			this.arena.setArenaOpeningFlags(true);
 		}
 		this.manuelCounter++;
 	}

@@ -87,7 +87,7 @@ public class WgkCommand implements CommandExecutor{
 				}
 				else if (args[0].equalsIgnoreCase("mode"))
 				{
-					this.logik.setMode(args[1]);
+					this.logik.setMode(sender, args[1]);
 				}
 				else if (args[0].equalsIgnoreCase("arena"))
 				{
@@ -107,13 +107,11 @@ public class WgkCommand implements CommandExecutor{
 					}
 					if (args[1].equalsIgnoreCase("open"))
 					{
-						this.logik.getArena().setArenaName(arenaName);
-						this.logik.getArena().open();
+						this.logik.getArenaManager().getArena(arenaName).open();
 					}
 					else if (args[1].equalsIgnoreCase("close"))
 					{
-						this.logik.getArena().setArenaName(arenaName);
-						this.logik.getArena().close();
+						this.logik.getArenaManager().getArena(arenaName).close();
 					}
 					else if (args[1].equalsIgnoreCase("list"))
 					{
