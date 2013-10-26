@@ -26,12 +26,25 @@ public class API
 			foundImpl.setServer(this.server);
 			this.kitPlugins.add(foundImpl);
 		}*/ //TODO:Reflection benutzen für das auslesen der KitPlugins
-		IKitPlugin toAdd = new AdminCmdKitPlugin();
-		toAdd.setServer(this.server);
-		this.kitPlugins.add(toAdd);
-		toAdd = new EssentialsKitPlugin();
-		toAdd.setServer(this.server);
-		this.kitPlugins.add(toAdd);
+		try
+		{
+			IKitPlugin toAdd = new AdminCmdKitPlugin();
+			toAdd.setServer(this.server);
+			this.kitPlugins.add(toAdd);
+		}
+		catch (NoClassDefFoundError ex)
+		{
+		}
+		try
+		{
+			IKitPlugin toAdd = new EssentialsKitPlugin();
+			toAdd.setServer(this.server);
+			this.kitPlugins.add(toAdd);
+		}
+		catch (NoClassDefFoundError ex)
+		{
+			
+		}
 	}
 	
 	public boolean existsKit(String kitName)
