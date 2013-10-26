@@ -78,6 +78,7 @@ public class WgkCommandLogik {
 	
 	public void start(CommandSender sender, String arenaName)
 	{
+		
 		if (!this.plugin.getRepo().existsArena(arenaName))
 		{
 			sender.sendMessage("Die Arena "+ arenaName+" existiert nicht.");
@@ -229,7 +230,7 @@ public class WgkCommandLogik {
 	
 	public void showArenaNames(CommandSender sender)
 	{
-		sender.sendMessage("Verfügbare Arenen");
+		sender.sendMessage("Verfügbare Arenen:");
 		List<String> arenas = this.plugin.getRepo().getArenaNames();
 		for (String arenaName : arenas)
 		{
