@@ -91,8 +91,12 @@ public class WgkCommand implements CommandExecutor{
 				}
 				else if (args[0].equalsIgnoreCase("arena"))
 				{
-					String arenaName = args[2];
-					if (args.length == 2)
+					String arenaName = "";
+					if (args.length == 3)
+					{
+						arenaName = args[2];
+					}
+					else
 					{
 						arenaName = this.plugin.getRepo().getArenaOfPlayer((Player)sender);
 						if (arenaName == "")
