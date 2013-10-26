@@ -7,7 +7,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class WarGear extends JavaPlugin {
 
-	private FileConfiguration config;
 	private WgkRepository repo;
 	
 	@Override
@@ -24,11 +23,7 @@ public class WarGear extends JavaPlugin {
 	
 	public void loadConfig()
 	{
-		config = getConfig();
-		config.options().copyDefaults(false);
-		if(new File("plugins/WarGear/config.yml").exists()){			
-			System.out.println("[WarGear] config.yml geladen.");	
-		}else{
+		if(!new File("plugins/WarGear/config.yml").exists()){			
 			saveDefaultConfig();
 			System.out.println("[WarGear] config.yml erstellt und geladen.");
 		}
@@ -37,10 +32,5 @@ public class WarGear extends JavaPlugin {
 	public WgkRepository getRepo()
 	{
 		return this.repo;
-	}
-	
-	public FileConfiguration getConfig()
-	{
-		return this.config;
 	}
 }
