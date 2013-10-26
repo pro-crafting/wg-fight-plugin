@@ -22,14 +22,24 @@ public class Arena {
 	
 	public Arena(WarGear plugin)
 	{
+		this.init(plugin, this.plugin.getRepo().getDefaultArenaName());
+	}
+
+	public Arena(WarGear plugin, String arenaName)
+	{
+		this.init(plugin, arenaName);
+	}
+	
+	private void init(WarGear plugin, String arenaName)
+	{
 		this.plugin = plugin;
-		this.name = this.plugin.getRepo().getDefaultArenaName();
+		this.name = arenaName;
 		this.team = new TeamManager(plugin, this);
 		this.fightRunning = false;
 		this.kitname = "";
 		this.setFightMode(new KitMode(plugin, this));
 	}
-
+	
 	public String getArenaName()
 	{
 		return this.name;
