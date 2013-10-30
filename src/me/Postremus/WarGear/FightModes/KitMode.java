@@ -124,6 +124,10 @@ import java.util.TimerTask;
 		{
 			return;
 		}
+		if (!this.plugin.getRepo().getArenaAtLocation(event.getTo()).equalsIgnoreCase(this.arena.getArenaName()))
+		{
+			return;
+		}
 		if (this.arena.getTeam().isPlayerInTeam(event.getPlayer().getName(), TeamNames.Team1) || this.arena.getTeam().isPlayerInTeam(event.getPlayer().getName(), TeamNames.Team2))
 		{
 			event.getPlayer().damage(1);
