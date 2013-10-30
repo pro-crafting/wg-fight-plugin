@@ -44,7 +44,7 @@ public class WgkCommandLogik {
 			sender.sendMessage("Setup für "+arenaName+" gestartet.");
 			return;
 		}
-		sender.sendMessage("Es ist bereits ein fight setup gestartet worden.");
+		sender.sendMessage("Es ist bereits ein Fight Setup in der Arena "+ arenaName + " gestartet worden.");
 	}
 	
 	public void start(CommandSender sender, String arenaName)
