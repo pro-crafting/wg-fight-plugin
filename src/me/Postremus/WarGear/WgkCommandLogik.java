@@ -10,7 +10,6 @@ import me.Postremus.WarGear.FightModes.PVPMode;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 public class WgkCommandLogik {
@@ -31,20 +30,6 @@ public class WgkCommandLogik {
 		return this.arena;
 	}
 	
-	public void setup(CommandSender sender)
-	{
-		String arenaName = "";
-		if (!(sender instanceof ConsoleCommandSender))
-		{
-			arenaName = this.plugin.getRepo().getArenaOfPlayer((Player)sender);
-		}
-		if (arenaName == "")
-		{
-			arenaName = this.plugin.getRepo().getDefaultArenaName();
-		}
-		this.setup(sender, arenaName);
-	}
-	
 	public void setup(CommandSender sender, String arenaName)
 	{
 		if (!this.plugin.getRepo().existsArena(arenaName))
@@ -60,20 +45,6 @@ public class WgkCommandLogik {
 			return;
 		}
 		sender.sendMessage("Es ist bereits ein fight setup gestartet worden.");
-	}
-	
-	public void start(CommandSender sender)
-	{
-		String arenaName = "";
-		if (!(sender instanceof ConsoleCommandSender))
-		{
-			arenaName = this.plugin.getRepo().getArenaOfPlayer((Player)sender);
-		}
-		if (arenaName == "")
-		{
-			arenaName = this.plugin.getRepo().getDefaultArenaName();
-		}
-		this.start(sender, arenaName);
 	}
 	
 	public void start(CommandSender sender, String arenaName)
@@ -115,17 +86,8 @@ public class WgkCommandLogik {
 		this.arena.getArena(arenaName).getFightMode().start();
 	}
 	
-	public void setTeam(CommandSender sender, String teamName, List<String> teamMember)
+	public void setTeam(CommandSender sender, String teamName, List<String> teamMember, String arenaName)
 	{
-		String arenaName = "";
-		if (!(sender instanceof ConsoleCommandSender))
-		{
-			arenaName = this.plugin.getRepo().getArenaOfPlayer((Player)sender);
-		}
-		if (arenaName == "")
-		{
-			arenaName = this.plugin.getRepo().getDefaultArenaName();
-		}
 		if (!this.arena.getArena(arenaName).getFightRunning())
 		{
 			sender.sendMessage("Es muss zuerst ein fight setup gestartet werden.");
@@ -152,17 +114,8 @@ public class WgkCommandLogik {
 		}
 	}
 	
-	public void setKit(CommandSender sender, String kitName)
+	public void setKit(CommandSender sender, String kitName, String arenaName)
 	{
-		String arenaName = "";
-		if (!(sender instanceof ConsoleCommandSender))
-		{
-			arenaName = this.plugin.getRepo().getArenaOfPlayer((Player)sender);
-		}
-		if (arenaName == "")
-		{
-			arenaName = this.plugin.getRepo().getDefaultArenaName();
-		}
 		if (!this.arena.getArena(arenaName).getFightRunning())
 		{
 			sender.sendMessage("Es muss zuerst ein fight setup gestartet werden.");
@@ -176,17 +129,8 @@ public class WgkCommandLogik {
 		this.arena.getArena(arenaName).setKit(kitName);
 	}
     
-	public void setMode(CommandSender sender, String mode)
+	public void setMode(CommandSender sender, String mode, String arenaName)
 	{
-		String arenaName = "";
-		if (!(sender instanceof ConsoleCommandSender))
-		{
-			arenaName = this.plugin.getRepo().getArenaOfPlayer((Player)sender);
-		}
-		if (arenaName == "")
-		{
-			arenaName = this.plugin.getRepo().getDefaultArenaName();
-		}
 		if (mode.equalsIgnoreCase("pvp"))
 		{
 			this.arena.getArena(arenaName).setFightMode(new PVPMode(this.plugin, this.arena.getArena(arenaName)));
@@ -197,17 +141,8 @@ public class WgkCommandLogik {
 		}
 	}
 	
-	public void quit(CommandSender sender, String siegerTeam)
+	public void quit(CommandSender sender, String siegerTeam, String arenaName)
 	{
-		String arenaName = "";
-		if (!(sender instanceof ConsoleCommandSender))
-		{
-			arenaName = this.plugin.getRepo().getArenaOfPlayer((Player)sender);
-		}
-		if (arenaName == "")
-		{
-			arenaName = this.plugin.getRepo().getDefaultArenaName();
-		}
 		if (!this.arena.getArena(arenaName).getFightRunning())
 		{
 			sender.sendMessage("Es muss zuerst ein fight setup gestartet werden.");

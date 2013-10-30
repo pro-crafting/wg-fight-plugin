@@ -1,11 +1,14 @@
 package me.Postremus.WarGear;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 public class WgkCommand implements CommandExecutor{
@@ -28,19 +31,18 @@ public class WgkCommand implements CommandExecutor{
 		}
 		if (args.length > 0)
 		{
+			String arenaName = this.getArenaOfCommand(sender, args);
+			if (arenaName.equals("") || !this.plugin.getRepo().existsArena(arenaName))
+			{
+				sender.sendMessage("Die Arena "+ arenaName+" existiert nicht.");
+				return true;
+			}
+			args = this.removeFlagsFromArgs(args);
 			if (args.length == 1)
 			{
-				if (args[0].equalsIgnoreCase("start") && sender.hasPermission("wargear.fight.start"))
-				{
-					this.logik.start(sender);
-				}
-				else if (args[0].equalsIgnoreCase("count") && sender.hasPermission("wargear.count"))
+				if (args[0].equalsIgnoreCase("count") && sender.hasPermission("wargear.count"))
 				{
 					this.logik.StartManuelCountdown();
-				}
-				else if (args[0].equalsIgnoreCase("setup") && sender.hasPermission("wargear.fight.setup"))
-				{
-					this.logik.setup(sender);
 				}
 				else if (args[0].equalsIgnoreCase("reload") && sender.hasPermission("wargear.reload"))
 				{
@@ -49,6 +51,14 @@ public class WgkCommand implements CommandExecutor{
 					this.plugin.getServer().getPluginManager().enablePlugin(plugin);
 					sender.sendMessage("Plugin wurde gereloadet.");
 				}
+				if (args[0].equalsIgnoreCase("setup") && sender.hasPermission("wargear.fight.setup"))
+				{
+					this.logik.setup(sender, arenaName);
+				}
+				else if (args[0].equalsIgnoreCase("start") && sender.hasPermission("wargear.fight.start"))
+				{
+					this.logik.start(sender, arenaName);
+				}
 				else
 				{
 					help(sender);
@@ -56,25 +66,21 @@ public class WgkCommand implements CommandExecutor{
 			}
 			if (args.length > 1)
 			{
-				if (args[0].equalsIgnoreCase("setup") && args.length == 2 && sender.hasPermission("wargear.fight.start"))
-				{
-					this.logik.setup(sender, args[1]);
-				}
-				else if (args[0].equalsIgnoreCase("team1") && sender.hasPermission("wargear.fight.team1"))
+				if (args[0].equalsIgnoreCase("team1") && sender.hasPermission("wargear.fight.team1"))
 				{
 					List<String> teamMember = Arrays.asList(args);
 					teamMember = teamMember.subList(1, teamMember.size());
-					this.logik.setTeam(sender, "team1", teamMember);	
+					this.logik.setTeam(sender, "team1", teamMember, arenaName);	
 				}
 				else if (args[0].equalsIgnoreCase("team2") && sender.hasPermission("wargear.fight.team2"))
 				{
 					List<String> teamMember = Arrays.asList(args);
 					teamMember = teamMember.subList(1, teamMember.size());
-					this.logik.setTeam(sender, "team2", teamMember);	
+					this.logik.setTeam(sender, "team2", teamMember, arenaName);	
 				}
 				else if (args[0].equalsIgnoreCase("kit") && sender.hasPermission("wargear.fight.kit"))
 				{
-					this.logik.setKit(sender, args[1]);
+					this.logik.setKit(sender, args[1], arenaName);
 				}
 				else if (args[0].equalsIgnoreCase("quit") && sender.hasPermission("wargear.fight.quit"))
 				{
@@ -85,33 +91,15 @@ public class WgkCommand implements CommandExecutor{
 					}
 					else
 					{
-						this.logik.quit(sender, args[1]);
+						this.logik.quit(sender, args[1], arenaName);
 					}
 				}
 				else if (args[0].equalsIgnoreCase("mode") && sender.hasPermission("wargear.fight.start"))
 				{
-					this.logik.setMode(sender, args[1]);
+					this.logik.setMode(sender, args[1], arenaName);
 				}
 				else if (args[0].equalsIgnoreCase("arena"))
 				{
-					String arenaName = "";
-					if (args.length == 3)
-					{
-						arenaName = args[2];
-					}
-					else
-					{
-						arenaName = this.plugin.getRepo().getArenaOfPlayer((Player)sender);
-						if (arenaName == "")
-						{
-							arenaName = this.plugin.getRepo().getDefaultArenaName();
-						}
-					}
-					if (!this.plugin.getRepo().existsArena(arenaName))
-					{
-						sender.sendMessage("Die Arena "+ arenaName+" existiert nicht.");
-						return true;
-					}
 					if (args[1].equalsIgnoreCase("open") && sender.hasPermission("wargear.arena.open"))
 					{
 						this.logik.getArenaManager().getArena(arenaName).open();
@@ -153,5 +141,61 @@ public class WgkCommand implements CommandExecutor{
 		sender.sendMessage("/wgk arena list");
 		sender.sendMessage("/wgk count");
 		sender.sendMessage("/wgk reload");
+	}
+	
+	private String getArenaOfCommand(CommandSender sender, String[] args)
+	{
+		boolean hasFoundArenaFlag = false;
+		String ret = "";
+		for (String argument : args)
+		{
+			if (hasFoundArenaFlag)
+			{
+				ret = argument;
+			}
+			hasFoundArenaFlag = argument.equalsIgnoreCase("-a");
+		}
+		if (ret != "")
+		{
+			return ret;
+		}
+		if (!(sender instanceof ConsoleCommandSender))
+		{
+			if (sender instanceof Player)
+			{
+				ret = this.plugin.getRepo().getArenaAtLocation(((Player)sender).getLocation());
+			}
+			else if (sender instanceof BlockCommandSender)
+			{
+				ret = this.plugin.getRepo().getArenaAtLocation(((BlockCommandSender)sender).getBlock().getLocation());
+			}
+		}
+		if (ret == "")
+		{
+			return this.plugin.getRepo().getDefaultArenaName();
+		}
+		return ret;
+	}
+	
+	private String[] removeFlagsFromArgs(String[] args)
+	{
+		List<String> ret = new ArrayList<String>();
+		boolean removeNextArg = false;
+		for (String argument : args)
+		{
+			if (argument.equals("-a"))
+			{
+				removeNextArg = true;
+				continue;
+			}
+			if (removeNextArg)
+			{
+				removeNextArg = false;
+				continue;
+			}
+			ret.add(argument);
+		}
+		String[] retType = new String[0];
+		return ret.toArray(retType);
 	}
 }
