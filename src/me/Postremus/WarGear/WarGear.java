@@ -2,7 +2,6 @@ package me.Postremus.WarGear;
 
 import java.io.File;
 
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class WarGear extends JavaPlugin {
