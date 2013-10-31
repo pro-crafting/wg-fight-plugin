@@ -40,22 +40,22 @@ public class WgkCommand implements CommandExecutor{
 			args = this.removeFlagsFromArgs(args);
 			if (args.length == 1)
 			{
-				if (args[0].equalsIgnoreCase("count") && sender.hasPermission("wargear.count"))
+				if (args[0].equalsIgnoreCase("count") && this.hasPermissionWrapper(sender, "wargear.count"))
 				{
 					this.logik.StartManuelCountdown();
 				}
-				else if (args[0].equalsIgnoreCase("reload") && sender.hasPermission("wargear.reload"))
+				else if (args[0].equalsIgnoreCase("reload") && this.hasPermissionWrapper(sender, "wargear.reload"))
 				{
 					this.plugin.reloadConfig();
 					this.plugin.getServer().getPluginManager().disablePlugin(plugin);
 					this.plugin.getServer().getPluginManager().enablePlugin(plugin);
 					sender.sendMessage("Plugin wurde gereloadet.");
 				}
-				if (args[0].equalsIgnoreCase("setup") && sender.hasPermission("wargear.fight.setup"))
+				if (args[0].equalsIgnoreCase("setup") && this.hasPermissionWrapper(sender, "wargear.fight.setup"))
 				{
 					this.logik.setup(sender, arenaName);
 				}
-				else if (args[0].equalsIgnoreCase("start") && sender.hasPermission("wargear.fight.start"))
+				else if (args[0].equalsIgnoreCase("start") && this.hasPermissionWrapper(sender, "wargear.fight.start"))
 				{
 					this.logik.start(sender, arenaName);
 				}
@@ -66,23 +66,23 @@ public class WgkCommand implements CommandExecutor{
 			}
 			if (args.length > 1)
 			{
-				if (args[0].equalsIgnoreCase("team1") && sender.hasPermission("wargear.fight.team1"))
+				if (args[0].equalsIgnoreCase("team1") && this.hasPermissionWrapper(sender, "wargear.fight.team1"))
 				{
 					List<String> teamMember = Arrays.asList(args);
 					teamMember = teamMember.subList(1, teamMember.size());
 					this.logik.setTeam(sender, "team1", teamMember, arenaName);	
 				}
-				else if (args[0].equalsIgnoreCase("team2") && sender.hasPermission("wargear.fight.team2"))
+				else if (args[0].equalsIgnoreCase("team2") && this.hasPermissionWrapper(sender, "wargear.fight.team2"))
 				{
 					List<String> teamMember = Arrays.asList(args);
 					teamMember = teamMember.subList(1, teamMember.size());
 					this.logik.setTeam(sender, "team2", teamMember, arenaName);	
 				}
-				else if (args[0].equalsIgnoreCase("kit") && sender.hasPermission("wargear.fight.kit"))
+				else if (args[0].equalsIgnoreCase("kit") && this.hasPermissionWrapper(sender, "wargear.fight.kit"))
 				{
 					this.logik.setKit(sender, args[1], arenaName);
 				}
-				else if (args[0].equalsIgnoreCase("quit") && sender.hasPermission("wargear.fight.quit"))
+				else if (args[0].equalsIgnoreCase("quit") && this.hasPermissionWrapper(sender, "wargear.fight.quit"))
 				{
 					if  ((!args[1].equalsIgnoreCase("team1")) && (!args[1].equalsIgnoreCase("team2")))
 					{
@@ -94,21 +94,21 @@ public class WgkCommand implements CommandExecutor{
 						this.logik.quit(sender, args[1], arenaName);
 					}
 				}
-				else if (args[0].equalsIgnoreCase("mode") && sender.hasPermission("wargear.fight.start"))
+				else if (args[0].equalsIgnoreCase("mode") && this.hasPermissionWrapper(sender, "wargear.fight.start"))
 				{
 					this.logik.setMode(sender, args[1], arenaName);
 				}
 				else if (args[0].equalsIgnoreCase("arena"))
 				{
-					if (args[1].equalsIgnoreCase("open") && sender.hasPermission("wargear.arena.open"))
+					if (args[1].equalsIgnoreCase("open") && this.hasPermissionWrapper(sender, "wargear.arena.open"))
 					{
 						this.logik.getArenaManager().getArena(arenaName).open();
 					}
-					else if (args[1].equalsIgnoreCase("close") && sender.hasPermission("wargear.arena.close"))
+					else if (args[1].equalsIgnoreCase("close") && this.hasPermissionWrapper(sender, "wargear.arena.close"))
 					{
 						this.logik.getArenaManager().getArena(arenaName).close();
 					}
-					else if (args[1].equalsIgnoreCase("list") && sender.hasPermission("wargear.arena.list"))
+					else if (args[1].equalsIgnoreCase("list") && this.hasPermissionWrapper(sender, "wargear.arena.list"))
 					{
 						this.logik.showArenaNames(sender);
 					}
@@ -197,5 +197,18 @@ public class WgkCommand implements CommandExecutor{
 		}
 		String[] retType = new String[0];
 		return ret.toArray(retType);
+	}
+	
+	private boolean hasPermissionWrapper(CommandSender sender, String permission)
+	{
+		if (sender.hasPermission(permission))
+		{
+			return true;
+		}
+		else
+		{
+			sender.sendMessage("Dir fehlt die " + permission + " Berechtigung.");
+			return false;
+		}
 	}
 }
