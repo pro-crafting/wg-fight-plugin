@@ -10,5 +10,3 @@ commands:
   wgk:
     description: Startet/Stoppt einen Fight
     usage: /wgk setup
-    permission: wgk.wargear
-    permission-message: 'Dazu fehlt dir die Berechtigung!'
