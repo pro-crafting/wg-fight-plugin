@@ -6,7 +6,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import me.Postremus.WarGear.FightModes.KitMode;
-import me.Postremus.WarGear.FightModes.PVPMode;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -72,11 +71,7 @@ public class WgkCommandLogik {
 		}
 		if (!this.arena.getArena(arenaName).getFightMode().getName().equalsIgnoreCase(this.plugin.getRepo().getFightMode(this.arena.getArena(arenaName))))
 		{
-			if (this.plugin.getRepo().getFightMode(this.arena.getArena(arenaName)).equalsIgnoreCase("pvp"))
-			{
-				this.arena.getArena(arenaName).setFightMode(new PVPMode(this.plugin, this.arena.getArena(arenaName)));
-			}
-			else if (this.plugin.getRepo().getFightMode(this.arena.getArena(arenaName)).equalsIgnoreCase("kit"))
+			if (this.plugin.getRepo().getFightMode(this.arena.getArena(arenaName)).equalsIgnoreCase("kit"))
 			{
 				this.arena.getArena(arenaName).setFightMode(new KitMode(this.plugin, this.arena.getArena(arenaName)));
 			}
@@ -129,18 +124,6 @@ public class WgkCommandLogik {
 		this.arena.getArena(arenaName).setKit(kitName);
 	}
     
-	public void setMode(CommandSender sender, String mode, String arenaName)
-	{
-		if (mode.equalsIgnoreCase("pvp"))
-		{
-			this.arena.getArena(arenaName).setFightMode(new PVPMode(this.plugin, this.arena.getArena(arenaName)));
-		}
-		else if (mode.equalsIgnoreCase("kit"))
-		{
-			this.arena.getArena(arenaName).setFightMode(new KitMode(this.plugin, this.arena.getArena(arenaName)));
-		}
-	}
-	
 	public void quit(CommandSender sender, String siegerTeam, String arenaName)
 	{
 		if (!this.arena.getArena(arenaName).getFightRunning())

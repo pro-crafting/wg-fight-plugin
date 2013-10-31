@@ -94,10 +94,6 @@ public class WgkCommand implements CommandExecutor{
 						this.logik.quit(sender, args[1], arenaName);
 					}
 				}
-				else if (args[0].equalsIgnoreCase("mode") && this.hasPermissionWrapper(sender, "wargear.fight.start"))
-				{
-					this.logik.setMode(sender, args[1], arenaName);
-				}
 				else if (args[0].equalsIgnoreCase("arena"))
 				{
 					if (args[1].equalsIgnoreCase("open") && this.hasPermissionWrapper(sender, "wargear.arena.open"))
