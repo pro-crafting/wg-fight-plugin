@@ -30,6 +30,7 @@ import java.util.TimerTask;
 	{
 		this.plugin = plugin;
 		this.arena = arena;
+		timer = new Timer();
 	}
 	
 	@Override
