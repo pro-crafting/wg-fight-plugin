@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public class API 
 {
@@ -85,5 +86,25 @@ public class API
 				ex.printStackTrace();
 			}
 		}
+	}
+	
+	public ItemStack[] getKitItems(String kitName)
+	{
+		for (IKitPlugin curr : this.kitPlugins)
+		{
+			try
+			{
+				return curr.getKitItems(kitName);
+			}
+			catch(NoClassDefFoundError ex)
+			{
+				
+			}
+			catch(Exception ex)
+			{
+				ex.printStackTrace();
+			}
+		}
+		return new ItemStack[0];
 	}
 }

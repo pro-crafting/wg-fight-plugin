@@ -25,8 +25,12 @@ public class AdminCmdKitPlugin implements IKitPlugin
 
 	@Override
 	public void giveKit(String kitName, Player p) {
+	    p.getInventory().addItem(getKitItems(kitName));
+	}
+
+	@Override
+	public ItemStack[] getKitItems(String kitName) {
 		KitInstance kit = ACHelper.getInstance().getKit(kitName);
-	    ItemStack[] items = kit.getItemStacks().toArray(new ItemStack[] {});
-	    p.getInventory().addItem(items);
+		return kit.getItemStacks().toArray(new ItemStack[] {});
 	}
 }
