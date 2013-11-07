@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import me.Postremus.WarGear.FightModes.ChestMode;
 import me.Postremus.WarGear.FightModes.KitMode;
 
 import org.bukkit.ChatColor;
@@ -74,6 +75,10 @@ public class WgkCommandLogik {
 			if (this.plugin.getRepo().getFightMode(this.arena.getArena(arenaName)).equalsIgnoreCase("kit"))
 			{
 				this.arena.getArena(arenaName).setFightMode(new KitMode(this.plugin, this.arena.getArena(arenaName)));
+			}
+			else
+			{
+				this.arena.getArena(arenaName).setFightMode(new ChestMode(this.plugin, this.arena.getArena(arenaName)));
 			}
 		}
 		this.arena.getArena(arenaName).setArenaOpeningFlags(false);
