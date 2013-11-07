@@ -76,6 +76,11 @@ public class Arena {
 		this.broadcastMessage(ChatColor.GREEN + "Arena gesperrt!");
 	}
 	
+	public void clear()
+	{
+		
+	}
+	
 	public void setArenaOpeningFlags(Boolean allowed)
 	{
 		String value = "allow";
@@ -88,11 +93,13 @@ public class Arena {
 		setFlag(this.plugin.getRepo().getRegionNameTeam1(this), DefaultFlag.PVP, value);
 		setFlag(this.plugin.getRepo().getRegionNameTeam1(this), DefaultFlag.FIRE_SPREAD, value);
 		setFlag(this.plugin.getRepo().getRegionNameTeam1(this), DefaultFlag.GHAST_FIREBALL, value);
+		setFlag(this.plugin.getRepo().getRegionNameTeam1(this), DefaultFlag.CHEST_ACCESS, value);
 		setFlag(this.plugin.getRepo().getRegionNameTeam2(this), DefaultFlag.TNT, value);
 		setFlag(this.plugin.getRepo().getRegionNameTeam2(this), DefaultFlag.BUILD, value);
 		setFlag(this.plugin.getRepo().getRegionNameTeam2(this), DefaultFlag.PVP, value);
 		setFlag(this.plugin.getRepo().getRegionNameTeam2(this), DefaultFlag.FIRE_SPREAD, value);
 		setFlag(this.plugin.getRepo().getRegionNameTeam2(this), DefaultFlag.GHAST_FIREBALL, value);
+		setFlag(this.plugin.getRepo().getRegionNameTeam2(this), DefaultFlag.CHEST_ACCESS, value);
 	}
 	
 	public void setFlag(String RegionName, StateFlag flag, String value)
