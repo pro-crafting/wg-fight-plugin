@@ -232,7 +232,10 @@ public class ChestMode  implements IFightMode, Listener{
 		{
 			return;
 		}
-		Chest b = ((Chest)event.getClickedBlock().getState());
+		if (event.getPlayer().hasPermission("wargear.chest.open"))
+		{
+			return;
+		}
 		if (this.areChestsOpen)
 		{
 			return;
@@ -242,7 +245,7 @@ public class ChestMode  implements IFightMode, Listener{
 		{
 			return;
 		}
-		
+		Chest b = ((Chest)event.getClickedBlock().getState());
 		Location clickedChest = b.getLocation();
 		if (!compareChestLocation(clickedChest, this.plugin.getRepo().getFightStartWarpPointTeam1(arena)) && !compareChestLocation(clickedChest, this.plugin.getRepo().getFightStartWarpPointTeam2(arena)))
 		{
