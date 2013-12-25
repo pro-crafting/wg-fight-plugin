@@ -162,7 +162,7 @@ public class TeamManager implements Listener{
 		 }
 		 if (!someoneAlived)
 		 {
-			 this.arena.broadcastMessage(ChatColor.DARK_GREEN + "Jeder aus dem ["+team.toString().toUpperCase()+"] ist Tod.");
+			 this.arena.broadcastMessage(ChatColor.DARK_GREEN + "Jeder aus dem ["+team.toString().toUpperCase()+"] ist tot.");
 			 if (team == TeamNames.Team1)
 			 {
 				 this.plugin.getServer().dispatchCommand(this.plugin.getServer().getConsoleSender(), "wgk quit team2");
