@@ -57,13 +57,20 @@ public class WgkCommandLogik {
 		}
 		if (!this.arena.getArena(arenaName).getFightRunning())
 		{
-			sender.sendMessage("Es muss zuerst ein fight setup gestartet werden.");
+			sender.sendMessage("Es muss zuerst ein Fight Setup gestartet werden.");
 			return;
 		}
 		if (this.arena.getArena(arenaName).getKit() == null || this.arena.getArena(arenaName).getKit().length() == 0)
 		{
-			sender.sendMessage("Es wurde kein Kit ausgewählt.");
-			return;
+			if (this.plugin.getRepo().getDefaultKitName() == null || this.plugin.getRepo().getDefaultKitName().length() == 0)
+			{
+				sender.sendMessage("Es wurde kein Kit ausgewählt oder ein standard Kit angegeben.");
+				return;
+			}
+			else
+			{
+				this.arena.getArena(arenaName).setKit(this.plugin.getRepo().getDefaultKitName());
+			}
 		}
 		if (this.arena.getArena(arenaName).getTeam().getTeamMembers().size() == 0)
 		{
@@ -90,7 +97,7 @@ public class WgkCommandLogik {
 	{
 		if (!this.arena.getArena(arenaName).getFightRunning())
 		{
-			sender.sendMessage("Es muss zuerst ein fight setup gestartet werden.");
+			sender.sendMessage("Es muss zuerst ein Fight Setup gestartet werden.");
 			return;
 		}
 		List<Player> team = new ArrayList<Player>();
@@ -118,7 +125,7 @@ public class WgkCommandLogik {
 	{
 		if (!this.arena.getArena(arenaName).getFightRunning())
 		{
-			sender.sendMessage("Es muss zuerst ein fight setup gestartet werden.");
+			sender.sendMessage("Es muss zuerst ein Fight Setup gestartet werden.");
 			return;
 		}
 		if (!AdmincmdWrapper.existsKit(kitName, this.plugin.getServer()))
@@ -133,7 +140,7 @@ public class WgkCommandLogik {
 	{
 		if (!this.arena.getArena(arenaName).getFightRunning())
 		{
-			sender.sendMessage("Es muss zuerst ein fight setup gestartet werden.");
+			sender.sendMessage("Es muss zuerst ein Fight Setup gestartet werden.");
 			return;
 		}
 		this.arena.getArena(arenaName).close();

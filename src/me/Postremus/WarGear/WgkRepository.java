@@ -92,6 +92,11 @@ public class WgkRepository {
 		return this.plugin.getConfig().getString("wgk.defaults.arena");
 	}
 	
+	public String getDefaultKitName()
+	{
+		return this.plugin.getConfig().getString("wgk.defaults.kit");
+	}
+	
 	public String getArenaRegion(Arena arena)
 	{
 		return this.plugin.getConfig().getString("wgk.arenas."+arena.getArenaName()+".arenaRegion");
