@@ -108,6 +108,10 @@ public class WgkCommand implements CommandExecutor{
 					{
 						this.logik.showArenaNames(sender);
 					}
+					else if (args[1].equalsIgnoreCase("info")  && this.hasPermissionWrapper(sender, "wargear.arena.info"))
+					{
+						this.logik.showArenaInfo(sender, arenaName);
+					}
 					else
 					{
 						help(sender);

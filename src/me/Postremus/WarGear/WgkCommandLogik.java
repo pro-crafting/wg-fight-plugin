@@ -9,6 +9,7 @@ import me.Postremus.WarGear.FightModes.ChestMode;
 import me.Postremus.WarGear.FightModes.KitMode;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -166,6 +167,32 @@ public class WgkCommandLogik {
 		{
 			sender.sendMessage(arenaName);
 		}
+	}
+	
+	public void showArenaInfo(CommandSender sender, String arenaName)
+	{
+		Arena arena = this.arena.getArena(arenaName);
+		if (arena == null)
+		{
+			sender.sendMessage("Die Arena "+ arenaName+" existiert nicht.");
+			return;
+		}
+		sender.sendMessage("---Arena Info---");
+		sender.sendMessage("Arena Name: " + arena.getArenaName());
+		sender.sendMessage("Welt: " + this.plugin.getRepo().getWorldName(arena));
+		sender.sendMessage("Fight Modus: " + this.plugin.getRepo().getFightMode(arena));
+		sender.sendMessage("Bodenhöhe: " + this.plugin.getRepo().getGroundHeight(arena));
+		sender.sendMessage("Region Team1: " + this.plugin.getRepo().getRegionNameTeam1(arena));
+		sender.sendMessage("Region Team2: " + this.plugin.getRepo().getRegionNameTeam2(arena));
+		sender.sendMessage("Warp Team1: " + getStringFromLocation(this.plugin.getRepo().getFightStartWarpPointTeam1(arena)));
+		sender.sendMessage("Warp Team2: " + getStringFromLocation(this.plugin.getRepo().getFightStartWarpPointTeam2(arena)));
+		sender.sendMessage("Warp Fight Ende: " + getStringFromLocation(this.plugin.getRepo().getEndWarpPoint(arena)));
+	}
+	
+	private String getStringFromLocation(Location loc)
+	{
+		String ret = "x: %d; y: %d; z: %d";
+		return String.format(ret, new Object[]{loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()});
 	}
 	
 	public void StartManuelCountdown()

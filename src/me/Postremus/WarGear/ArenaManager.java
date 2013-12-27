@@ -32,7 +32,7 @@ public class ArenaManager {
 				return element;
 			}
 		}
-		return getDefaultArena();
+		return null;
 	}
 	
 	public Arena getDefaultArena()
