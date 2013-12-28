@@ -112,6 +112,10 @@ public class WgkCommand implements CommandExecutor{
 					{
 						this.logik.showArenaInfo(sender, arenaName);
 					}
+					else if (args[1].equalsIgnoreCase("reset") && this.hasPermissionWrapper(sender, "wargear.arena.reset"))
+					{
+						this.logik.resetArena(sender, arenaName);
+					}
 					else
 					{
 						help(sender);

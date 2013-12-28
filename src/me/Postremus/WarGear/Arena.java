@@ -1,10 +1,29 @@
 package me.Postremus.WarGear;
 
+import java.io.File;
+import java.io.IOException;
+
 import me.Postremus.WarGear.FightModes.KitMode;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import com.sk89q.worldedit.CuboidClipboard;
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.FilenameException;
+import com.sk89q.worldedit.LocalConfiguration;
+import com.sk89q.worldedit.LocalSession;
+import com.sk89q.worldedit.MaxChangedBlocksException;
+import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.bukkit.BukkitPlayer;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
+import com.sk89q.worldedit.bukkit.BukkitWorld;
+import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+import com.sk89q.worldedit.data.DataException;
+import com.sk89q.worldedit.schematic.MCEditSchematicFormat;
+import com.sk89q.worldedit.schematic.SchematicFormat;
+import com.sk89q.worldedit.LocalPlayer;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.flags.InvalidFlagFormat;
@@ -76,9 +95,22 @@ public class Arena {
 		this.broadcastMessage(ChatColor.GREEN + "Arena gesperrt!");
 	}
 	
-	public void clear()
+	public void reset() throws FilenameException, IOException, DataException, MaxChangedBlocksException
 	{
-		
+		WorldEditPlugin wePlugin = this.plugin.getRepo().getWorldEdit();
+	    LocalConfiguration config = wePlugin.getLocalConfiguration();
+	    LocalPlayer player = wePlugin.wrapCommandSender(this.plugin.getServer().getConsoleSender());
+	    
+	    File dir = wePlugin.getWorldEdit().getWorkingDirectoryFile(config.saveDir);
+	    String schemName = this.plugin.getRepo().getGroundSchematicName(this);
+	    File f = wePlugin.getWorldEdit().getSafeOpenFile(player, dir, schemName, "schematic", "schematic");
+        
+	    EditSession es = new EditSession(new BukkitWorld(this.plugin.getServer().getWorld(this.plugin.getRepo().getWorldName(this))), 999999999);
+	    CuboidClipboard cc = MCEditSchematicFormat.MCEDIT.load(f);
+	    Vector calculatedOrigin = cc.getOrigin();
+	    calculatedOrigin.add(cc.getOffset());
+	    cc.setOffset(new Vector());
+	    cc.paste(es, calculatedOrigin, false, true);
 	}
 	
 	public void setArenaOpeningFlags(Boolean allowed)

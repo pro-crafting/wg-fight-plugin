@@ -189,6 +189,25 @@ public class WgkCommandLogik {
 		sender.sendMessage("Warp Fight Ende: " + getStringFromLocation(this.plugin.getRepo().getEndWarpPoint(arena)));
 	}
 	
+	public void resetArena(CommandSender sender, String arenaName)
+	{
+		Arena arena = this.arena.getArena(arenaName);
+		if (arena == null)
+		{
+			sender.sendMessage("Die Arena "+ arenaName+" existiert nicht.");
+			return;
+		}
+		try
+		{
+			arena.reset();
+		}
+		catch(Exception ex)
+		{
+			sender.sendMessage("Arena " + arenaName + " konnte nicht geresetet werden.");
+			ex.printStackTrace();
+		}
+	}
+	
 	private String getStringFromLocation(Location loc)
 	{
 		String ret = "x: %d; y: %d; z: %d";

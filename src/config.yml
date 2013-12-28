@@ -8,6 +8,7 @@ wgk:
             arenaRegion:
             mode: kit
             groundHeight:
+            groundschematic:
             regions:
                 Team1:
                 Team2:

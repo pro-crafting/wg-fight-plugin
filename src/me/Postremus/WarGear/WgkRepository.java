@@ -2,6 +2,7 @@ package me.Postremus.WarGear;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldguard.bukkit.BukkitUtil;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.managers.RegionManager;
@@ -47,6 +48,11 @@ public class WgkRepository {
 	{
 		World world = this.plugin.getServer().getWorld(this.getWorldName(arena));
 		return this.loadLocationFromConfig("wgk.arenas."+arena.getArenaName()+".warpFightStart.Team2", world);
+	}
+	
+	public String getGroundSchematicName(Arena arena)
+	{
+		return this.plugin.getConfig().getString("wgk.arenas."+arena.getArenaName()+".groundschematic");
 	}
 	
 	private Location loadLocationFromConfig(String node, World world)
@@ -135,6 +141,18 @@ public class WgkRepository {
 	    }
 	 
 	    return (WorldGuardPlugin) wgPlugin;
+	}
+	
+	public WorldEditPlugin getWorldEdit()
+	{
+		Plugin wgPlugin = this.plugin.getServer().getPluginManager().getPlugin("WorldEdit");
+		 
+	    // WorldGuard may not be loaded
+	    if (wgPlugin == null || !(wgPlugin instanceof WorldEditPlugin)) {
+	        return null; // Maybe you want throw an exception instead
+	    }
+	 
+	    return (WorldEditPlugin) wgPlugin;
 	}
 	
 	public List<String> getArenaNames()
