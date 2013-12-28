@@ -3,6 +3,7 @@ package me.Postremus.WarGear.FightModes;
 import org.bukkit.ChatColor;
 import org.bukkit.Difficulty;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -120,7 +121,7 @@ import java.util.TimerTask;
 	@EventHandler
 	public void playerMoveHandler(PlayerMoveEvent event)
 	{
-		if (event.getTo().getBlockY() > this.plugin.getRepo().getGroundHeight(this.arena))
+		if (event.getTo().getY() > this.plugin.getRepo().getGroundHeight(this.arena))
 		{
 			return;
 		}
