@@ -1,29 +1,11 @@
 package me.Postremus.WarGear;
 
-import java.io.File;
-import java.io.IOException;
-
 import me.Postremus.WarGear.FightModes.KitMode;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 
-import com.sk89q.worldedit.CuboidClipboard;
-import com.sk89q.worldedit.EditSession;
-import com.sk89q.worldedit.FilenameException;
-import com.sk89q.worldedit.LocalConfiguration;
-import com.sk89q.worldedit.LocalSession;
-import com.sk89q.worldedit.MaxChangedBlocksException;
-import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.bukkit.BukkitPlayer;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
-import com.sk89q.worldedit.bukkit.BukkitWorld;
-import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-import com.sk89q.worldedit.data.DataException;
-import com.sk89q.worldedit.schematic.MCEditSchematicFormat;
-import com.sk89q.worldedit.schematic.SchematicFormat;
-import com.sk89q.worldedit.LocalPlayer;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.flags.InvalidFlagFormat;
@@ -38,6 +20,7 @@ public class Arena {
 	private boolean fightRunning;
 	private String kitname;
 	private IFightMode fightMode;
+	private ArenaReseter reseter;
 	
 	public Arena(WarGear plugin)
 	{
@@ -57,6 +40,7 @@ public class Arena {
 		this.fightRunning = false;
 		this.kitname = "";
 		this.setFightMode(new KitMode(plugin, this));
+		this.reseter = new ArenaReseter(plugin, this);
 	}
 	
 	public String getArenaName()
@@ -78,6 +62,11 @@ public class Arena {
 		return this.fightRunning;
 	}
 	
+	public ArenaReseter getReseter()
+	{
+		return this.reseter;
+	}
+	
 	public void setFightRunning(boolean state)
 	{
 		this.fightRunning = state;
@@ -93,24 +82,6 @@ public class Arena {
 	{
 		this.setArenaOpeningFlags(false);
 		this.broadcastMessage(ChatColor.GREEN + "Arena gesperrt!");
-	}
-	
-	public void reset() throws FilenameException, IOException, DataException, MaxChangedBlocksException
-	{
-		WorldEditPlugin wePlugin = this.plugin.getRepo().getWorldEdit();
-	    LocalConfiguration config = wePlugin.getLocalConfiguration();
-	    LocalPlayer player = wePlugin.wrapCommandSender(this.plugin.getServer().getConsoleSender());
-	    
-	    File dir = wePlugin.getWorldEdit().getWorkingDirectoryFile(config.saveDir);
-	    String schemName = this.plugin.getRepo().getGroundSchematicName(this);
-	    File f = wePlugin.getWorldEdit().getSafeOpenFile(player, dir, schemName, "schematic", "schematic");
-        
-	    EditSession es = new EditSession(new BukkitWorld(this.plugin.getServer().getWorld(this.plugin.getRepo().getWorldName(this))), 999999999);
-	    CuboidClipboard cc = MCEditSchematicFormat.MCEDIT.load(f);
-	    Vector calculatedOrigin = cc.getOrigin();
-	    calculatedOrigin.add(cc.getOffset());
-	    cc.setOffset(new Vector());
-	    cc.paste(es, calculatedOrigin, false, true);
 	}
 	
 	public void setArenaOpeningFlags(Boolean allowed)
@@ -134,11 +105,10 @@ public class Arena {
 		setFlag(this.plugin.getRepo().getRegionNameTeam2(this), DefaultFlag.CHEST_ACCESS, value);
 	}
 	
-	public void setFlag(String RegionName, StateFlag flag, String value)
+	public void setFlag(String regionName, StateFlag flag, String value)
     {
-    	WorldGuardPlugin worldGuard = this.plugin.getRepo().getWorldGuard();
-		RegionManager regionManager = worldGuard.getRegionManager(this.plugin.getServer().getWorld(this.plugin.getRepo().getWorldName(this)));
-		ProtectedRegion region = regionManager.getRegion(RegionName);
+		WorldGuardPlugin worldGuard = this.plugin.getRepo().getWorldGuard();
+		ProtectedRegion region = getRegion(worldGuard, regionName, this.plugin.getServer().getWorld(this.plugin.getRepo().getWorldName(this)));
 	    try {
 			region.setFlag(flag, flag.parseInput(worldGuard, this.plugin.getServer().getConsoleSender(), value));
 		} catch (InvalidFlagFormat e) {
@@ -146,6 +116,12 @@ public class Arena {
 			e.printStackTrace();
 		}
     }
+	
+	private ProtectedRegion getRegion(WorldGuardPlugin worldGuard, String regionName, World world)
+	{
+		RegionManager regionManager = worldGuard.getRegionManager(world);
+		return regionManager.getRegion(regionName);
+	}
 	
 	public void broadcastMessage(String message)
 	{

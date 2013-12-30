@@ -157,6 +157,7 @@ public class WgkCommandLogik {
 		}
 		this.arena.getArena(arenaName).getTeam().quitFight();
 		this.arena.getArena(arenaName).setFightMode(new KitMode(this.plugin, this.arena.getArena(arenaName)));
+		this.arena.getArena(arenaName).getReseter().reset();
 	}
 	
 	public void showArenaNames(CommandSender sender)
@@ -199,7 +200,7 @@ public class WgkCommandLogik {
 		}
 		try
 		{
-			arena.reset();
+			this.arena.getArena(arenaName).getReseter().reset();
 		}
 		catch(Exception ex)
 		{
