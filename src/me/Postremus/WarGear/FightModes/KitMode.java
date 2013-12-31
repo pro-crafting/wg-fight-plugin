@@ -3,7 +3,6 @@ package me.Postremus.WarGear.FightModes;
 import org.bukkit.ChatColor;
 import org.bukkit.Difficulty;
 import org.bukkit.GameMode;
-import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -11,11 +10,11 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.potion.PotionEffect;
 
 import me.Postremus.WarGear.AdmincmdWrapper;
-import me.Postremus.WarGear.Arena;
 import me.Postremus.WarGear.IFightMode;
 import me.Postremus.WarGear.TeamMember;
 import me.Postremus.WarGear.TeamNames;
 import me.Postremus.WarGear.WarGear;
+import me.Postremus.WarGear.Arena.Arena;
 
 import java.util.Timer;
 import java.util.TimerTask;

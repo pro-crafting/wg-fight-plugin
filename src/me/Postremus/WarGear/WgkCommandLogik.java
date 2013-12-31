@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import me.Postremus.WarGear.Arena.Arena;
+import me.Postremus.WarGear.Arena.ArenaManager;
 import me.Postremus.WarGear.FightModes.ChestMode;
 import me.Postremus.WarGear.FightModes.KitMode;
 

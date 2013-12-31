@@ -1,13 +1,11 @@
-package me.Postremus.WarGear;
+package me.Postremus.WarGear.Arena;
 
-import java.util.AbstractMap;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.bukkit.ChatColor;
+import me.Postremus.WarGear.WarGear;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -15,10 +13,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.entity.ExplosionPrimeEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
 
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
@@ -64,7 +59,7 @@ public class WaterRemover implements Listener
 	}
 	
 	@EventHandler (priority = EventPriority.HIGH)
-    public void blockBreakHandler(EntityExplodeEvent event)
+    public void entityExplodeHandler(EntityExplodeEvent event)
 	{
 		for (Block b : event.blockList())
 		{

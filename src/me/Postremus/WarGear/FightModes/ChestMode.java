@@ -5,11 +5,11 @@ import java.util.TimerTask;
 
 import me.Postremus.KitApi.API;
 import me.Postremus.WarGear.AdmincmdWrapper;
-import me.Postremus.WarGear.Arena;
 import me.Postremus.WarGear.IFightMode;
 import me.Postremus.WarGear.TeamMember;
 import me.Postremus.WarGear.TeamNames;
 import me.Postremus.WarGear.WarGear;
+import me.Postremus.WarGear.Arena.Arena;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Difficulty;
@@ -33,7 +33,6 @@ public class ChestMode  implements IFightMode, Listener{
 	private Timer timer;
 	private int counter;
 	private boolean areChestsOpen;
-	private boolean fightRunning;
 	
 	public ChestMode(WarGear plugin, Arena arena)
 	{
@@ -41,7 +40,6 @@ public class ChestMode  implements IFightMode, Listener{
 		this.arena = arena;
 		timer = new Timer();
 		areChestsOpen = false;
-		fightRunning = false;
 	}
 	
 	@Override
@@ -188,7 +186,6 @@ public class ChestMode  implements IFightMode, Listener{
 			PlayerInteractEvent.getHandlerList().unregister(this);
 			this.plugin.getServer().getPluginManager().registerEvents(this, this.plugin);
 			this.arena.open();
-			fightRunning = true;
 			return;
 		}
 		counter++;

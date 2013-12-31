@@ -1,5 +1,8 @@
-package me.Postremus.WarGear;
+package me.Postremus.WarGear.Arena;
 
+import me.Postremus.WarGear.IFightMode;
+import me.Postremus.WarGear.TeamManager;
+import me.Postremus.WarGear.WarGear;
 import me.Postremus.WarGear.FightModes.KitMode;
 
 import org.bukkit.ChatColor;

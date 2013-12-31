@@ -1,7 +1,9 @@
-package me.Postremus.WarGear;
+package me.Postremus.WarGear.Arena;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import me.Postremus.WarGear.WarGear;
 
 public class ArenaManager {
 

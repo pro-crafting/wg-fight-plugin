@@ -3,6 +3,8 @@ package me.Postremus.WarGear;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.Postremus.WarGear.Arena.Arena;
+
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

@@ -8,6 +8,8 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
+import me.Postremus.WarGear.Arena.Arena;
+
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;

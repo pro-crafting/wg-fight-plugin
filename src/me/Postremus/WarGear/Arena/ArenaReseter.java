@@ -1,9 +1,11 @@
-package me.Postremus.WarGear;
+package me.Postremus.WarGear.Arena;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import me.Postremus.WarGear.WarGear;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -24,8 +26,6 @@ import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.data.DataException;
 import com.sk89q.worldedit.schematic.MCEditSchematicFormat;
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 public class ArenaReseter 
