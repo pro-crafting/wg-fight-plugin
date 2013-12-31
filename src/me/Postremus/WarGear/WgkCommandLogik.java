@@ -185,6 +185,7 @@ public class WgkCommandLogik {
 		sender.sendMessage("Welt: " + this.plugin.getRepo().getWorldName(arena));
 		sender.sendMessage("Fight Modus: " + this.plugin.getRepo().getFightMode(arena));
 		sender.sendMessage("Bodenhöhe: " + this.plugin.getRepo().getGroundHeight(arena));
+		sender.sendMessage("BodenSchematic: " + this.plugin.getRepo().getGroundSchematicName(arena));
 		sender.sendMessage("Region Team1: " + this.plugin.getRepo().getRegionNameTeam1(arena));
 		sender.sendMessage("Region Team2: " + this.plugin.getRepo().getRegionNameTeam2(arena));
 		sender.sendMessage("Warp Team1: " + getStringFromLocation(this.plugin.getRepo().getFightStartWarpPointTeam1(arena)));
