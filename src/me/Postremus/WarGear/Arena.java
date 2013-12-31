@@ -21,6 +21,10 @@ public class Arena {
 	private String kitname;
 	private IFightMode fightMode;
 	private ArenaReseter reseter;
+	private WaterRemover remover;
+	private ProtectedRegion regionTeam1;
+	private ProtectedRegion regionTeam2;
+	private ProtectedRegion arenaRegion;
 	
 	public Arena(WarGear plugin)
 	{
@@ -34,13 +38,27 @@ public class Arena {
 	
 	private void init(WarGear plugin, String arenaName)
 	{
-		this.plugin = plugin;
+		this.plugin = plugin;	
 		this.name = arenaName;
+		
+		loadRegions();
+		
 		this.team = new TeamManager(plugin, this);
 		this.fightRunning = false;
 		this.kitname = "";
-		this.setFightMode(new KitMode(plugin, this));
-		this.reseter = new ArenaReseter(plugin, this);
+		this.setFightMode(new KitMode(this.plugin, this));
+		this.reseter = new ArenaReseter(this.plugin, this);
+		this.remover = new WaterRemover(this.plugin, this);
+	}
+	
+	private void loadRegions()
+	{
+		WorldGuardPlugin worldGuard = this.plugin.getRepo().getWorldGuard();
+		World arenaWorld = this.plugin.getServer().getWorld(this.plugin.getRepo().getWorldName(this));
+		
+		this.arenaRegion = this.getRegion(worldGuard, this.plugin.getRepo().getArenaRegion(this), arenaWorld);
+		this.regionTeam1 = this.getRegion(worldGuard, this.plugin.getRepo().getRegionNameTeam1(this), arenaWorld);
+		this.regionTeam2 = this.getRegion(worldGuard, this.plugin.getRepo().getRegionNameTeam2(this), arenaWorld);
 	}
 	
 	public String getArenaName()
@@ -67,20 +85,58 @@ public class Arena {
 		return this.reseter;
 	}
 	
+	public WaterRemover getRemover()
+	{
+		return this.remover;
+	}
+	
 	public void setFightRunning(boolean state)
 	{
 		this.fightRunning = state;
 	}
 	
+	public String getKit() {
+		return kitname;
+	}
+
+	public void setKit(String kitname) {
+		this.kitname = kitname;
+	}
+
+	public IFightMode getFightMode() {
+		return fightMode;
+	}
+
+	public void setFightMode(IFightMode fightMode) {
+		this.fightMode = fightMode;
+	}
+	
+	public ProtectedRegion getRegionTeam1()
+	{
+		return this.regionTeam1;
+	}
+	
+	public ProtectedRegion getRegionTeam2()
+	{
+		return this.regionTeam2;
+	}
+	
+	public ProtectedRegion getArenaRegion()
+	{
+		return this.arenaRegion;
+	}
+	
 	public void open()
 	{
 		this.setArenaOpeningFlags(true);
+		this.remover.start();
 		this.broadcastMessage(ChatColor.GREEN + "Arena Freigegeben!");
 	}
 	
 	public void close()
 	{
 		this.setArenaOpeningFlags(false);
+		this.remover.stop();
 		this.broadcastMessage(ChatColor.GREEN + "Arena gesperrt!");
 	}
 	
@@ -91,24 +147,24 @@ public class Arena {
 		{
 			value = "deny";
 		}
-		setFlag(this.plugin.getRepo().getRegionNameTeam1(this), DefaultFlag.TNT, value);
-		setFlag(this.plugin.getRepo().getRegionNameTeam1(this), DefaultFlag.BUILD, value);
-		setFlag(this.plugin.getRepo().getRegionNameTeam1(this), DefaultFlag.PVP, value);
-		setFlag(this.plugin.getRepo().getRegionNameTeam1(this), DefaultFlag.FIRE_SPREAD, value);
-		setFlag(this.plugin.getRepo().getRegionNameTeam1(this), DefaultFlag.GHAST_FIREBALL, value);
-		setFlag(this.plugin.getRepo().getRegionNameTeam1(this), DefaultFlag.CHEST_ACCESS, value);
-		setFlag(this.plugin.getRepo().getRegionNameTeam2(this), DefaultFlag.TNT, value);
-		setFlag(this.plugin.getRepo().getRegionNameTeam2(this), DefaultFlag.BUILD, value);
-		setFlag(this.plugin.getRepo().getRegionNameTeam2(this), DefaultFlag.PVP, value);
-		setFlag(this.plugin.getRepo().getRegionNameTeam2(this), DefaultFlag.FIRE_SPREAD, value);
-		setFlag(this.plugin.getRepo().getRegionNameTeam2(this), DefaultFlag.GHAST_FIREBALL, value);
-		setFlag(this.plugin.getRepo().getRegionNameTeam2(this), DefaultFlag.CHEST_ACCESS, value);
+		
+		setFlag(this.getRegionTeam1(), DefaultFlag.TNT, value);
+		setFlag(this.getRegionTeam1(), DefaultFlag.BUILD, value);
+		setFlag(this.getRegionTeam1(), DefaultFlag.PVP, value);
+		setFlag(this.getRegionTeam1(), DefaultFlag.FIRE_SPREAD, value);
+		setFlag(this.getRegionTeam1(), DefaultFlag.GHAST_FIREBALL, value);
+		setFlag(this.getRegionTeam1(), DefaultFlag.CHEST_ACCESS, value);
+		setFlag(this.getRegionTeam2(), DefaultFlag.TNT, value);
+		setFlag(this.getRegionTeam2(), DefaultFlag.BUILD, value);
+		setFlag(this.getRegionTeam2(), DefaultFlag.PVP, value);
+		setFlag(this.getRegionTeam2(), DefaultFlag.FIRE_SPREAD, value);
+		setFlag(this.getRegionTeam2(), DefaultFlag.GHAST_FIREBALL, value);
+		setFlag(this.getRegionTeam2(), DefaultFlag.CHEST_ACCESS, value);
 	}
 	
-	public void setFlag(String regionName, StateFlag flag, String value)
+	public void setFlag(ProtectedRegion region, StateFlag flag, String value)
     {
 		WorldGuardPlugin worldGuard = this.plugin.getRepo().getWorldGuard();
-		ProtectedRegion region = getRegion(worldGuard, regionName, this.plugin.getServer().getWorld(this.plugin.getRepo().getWorldName(this)));
 	    try {
 			region.setFlag(flag, flag.parseInput(worldGuard, this.plugin.getServer().getConsoleSender(), value));
 		} catch (InvalidFlagFormat e) {
@@ -129,21 +185,5 @@ public class Arena {
 		{
 			player.sendMessage(message);
 		}
-	}
-
-	public String getKit() {
-		return kitname;
-	}
-
-	public void setKit(String kitname) {
-		this.kitname = kitname;
-	}
-
-	public IFightMode getFightMode() {
-		return fightMode;
-	}
-
-	public void setFightMode(IFightMode fightMode) {
-		this.fightMode = fightMode;
 	}
 }
