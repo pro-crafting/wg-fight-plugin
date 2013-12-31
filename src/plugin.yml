@@ -1,5 +1,5 @@
 name: WarGear
-version: 0.6.0
+version: 0.7.0
 description: Postremus Wargear Arena Plugin
 website: http://dev.bukkit.org/bukkit-plugins/wargear-fight/
 author: postremus
@@ -8,5 +8,5 @@ depend: [WorldGuard]
 
 commands:
   wgk:
-    description: Startet/Stoppt einen Fight
-    usage: /wgk setup
+    description: Alle Commands dieses Plugins
+    usage: /wgk subcommand
