@@ -133,16 +133,18 @@ public class WgkCommand implements CommandExecutor{
 	private void help(CommandSender sender)
 	{
 		sender.sendMessage("Kein passender Befehl gefunden!");
-		sender.sendMessage("/wgk setup [arena]");
+		sender.sendMessage("/wgk setup");
 		sender.sendMessage("/wgk start");
 		sender.sendMessage("/wgk quit team1");
 		sender.sendMessage("/wgk quit team2");
 		sender.sendMessage("/wgk team1 <User1> [User2] [Userx]");
 		sender.sendMessage("/wgk team2 <User1> [User2] [Userx]");
 		sender.sendMessage("/wgk kit <kitName>");
-		sender.sendMessage("/wgk arena open [arena]");
-		sender.sendMessage("/wgk arena close [arena]");
+		sender.sendMessage("/wgk arena open");
+		sender.sendMessage("/wgk arena close");
 		sender.sendMessage("/wgk arena list");
+		sender.sendMessage("/wgk arena info");
+		sender.sendMessage("/wgk arena reset");
 		sender.sendMessage("/wgk count");
 		sender.sendMessage("/wgk reload");
 	}
