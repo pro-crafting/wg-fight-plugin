@@ -44,6 +44,8 @@ public class WaterRemover implements Listener
 	public void start()
 	{
 		stop();
+		explodedBlocks = new ArrayList<SimpleEntry<Location, Integer>>();
+		waterList = new ArrayList<Location>();
 		this.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(this.plugin, new Runnable(){
 			public void run()
 			{
@@ -147,6 +149,7 @@ public class WaterRemover implements Listener
 		return ret;
 	}
 	
+	
 	/* code by: andf54
 	 * https://forums.bukkit.org/threads/get-the-whole-stream-of-water-or-lava.110156/
 	 * Einige kleinere änderungen vorgenommen
@@ -158,9 +161,10 @@ public class WaterRemover implements Listener
 		   if(collected.contains(anchor)) return;
 		   collected.add(anchor);
 
-		   for (BlockFace face : BlockFace.values())
-		   {
-			   collectBlocks(anchor.getRelative(face), collected);
-		   }
+		   collectBlocks(anchor.getRelative(BlockFace.UP), collected);
+		   collectBlocks(anchor.getRelative(BlockFace.NORTH), collected);
+		   collectBlocks(anchor.getRelative(BlockFace.EAST), collected);
+		   collectBlocks(anchor.getRelative(BlockFace.SOUTH), collected);
+		   collectBlocks(anchor.getRelative(BlockFace.WEST), collected);
 		}
 }
