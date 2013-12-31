@@ -136,18 +136,29 @@ public class TeamManager implements Listener{
 				 player.setAlive(false);
 				 event.setDeathMessage(ChatColor.DARK_GREEN + player.getPlayer().getName() + "["+player.getTeam().toString()+"] ist gestorben.");
 				 this.checkAlives(player.getTeam());
+				 event.getDrops().clear();
 			 }
 		 }
 	 }
 	 
 	 @EventHandler (priority = EventPriority.HIGHEST)
-	 public void playerRespwanHandler(PlayerRespawnEvent event)
+	 public void playerRespwanHandler(final PlayerRespawnEvent event)
 	 {
 		 if (arena == null)
 		 {
 			 return;
 		 }
 		 event.setRespawnLocation(this.plugin.getRepo().getEndWarpPoint(this.arena));
+		 
+		 this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable(){
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				event.getPlayer().getInventory().clear();
+			}
+			 
+		 }, 60);
 	 }
 	 
 	 public Boolean checkAlives(TeamNames team)
