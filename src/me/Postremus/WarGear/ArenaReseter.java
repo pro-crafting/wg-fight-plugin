@@ -49,17 +49,17 @@ public class ArenaReseter
 		taskid = -1;
 		groundHeight = this.plugin.getRepo().getGroundHeight(arena);
 		arenaWorld = this.plugin.getServer().getWorld(this.plugin.getRepo().getWorldName(arena));
+		
+		regionsList = new ArrayList<ProtectedRegion>();
+
+		regionsList.add(this.arena.getRegionTeam1());
+		regionsList.add(this.arena.getRegionTeam2());
+		
 	}
 	
 	public void reset()
 	{
 		regionIdx = 0;
-		regionsList = new ArrayList<ProtectedRegion>();
-		
-		WorldGuardPlugin worldGuard = this.plugin.getRepo().getWorldGuard();
-		regionsList.add(getRegion(worldGuard, this.plugin.getRepo().getRegionNameTeam1(arena), arenaWorld));
-		regionsList.add(getRegion(worldGuard, this.plugin.getRepo().getRegionNameTeam2(arena), arenaWorld));
-		
 		if (taskid != -1)
 		{
 			this.plugin.getServer().getScheduler().cancelTask(taskid);
@@ -89,13 +89,13 @@ public class ArenaReseter
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		removeItems(arenaWorld, regionsList.get(0), regionsList.get(1));
+		removeItems(arenaWorld);
 	}
 	
 	private void stopClear()
 	{
 		this.plugin.getServer().getScheduler().cancelTask(taskid);
-		removeItems(arenaWorld, regionsList.get(0), regionsList.get(1));
+		removeItems(arenaWorld);
 	}
 	
 	private boolean clear(World arenaWorld, ProtectedRegion region)
@@ -145,19 +145,13 @@ public class ArenaReseter
         cc.paste(es, calculatedOrigin, false, true);
 	}
 	
-	private ProtectedRegion getRegion(WorldGuardPlugin worldGuard, String regionName, World world)
-	{
-		RegionManager regionManager = worldGuard.getRegionManager(world);
-		return regionManager.getRegion(regionName);
-	}
-	
-	private void removeItems(World arenaWorld, ProtectedRegion regionTeam1, ProtectedRegion regionTeam2)
+	private void removeItems(World arenaWorld)
 	{
 		List<BlockVector> vectors = new ArrayList<BlockVector>();
-		vectors.add(regionTeam1.getMinimumPoint());
-		vectors.add(regionTeam2.getMinimumPoint());
-		vectors.add(regionTeam1.getMaximumPoint());
-		vectors.add(regionTeam2.getMaximumPoint());
+		vectors.add(arena.getRegionTeam1().getMinimumPoint());
+		vectors.add(arena.getRegionTeam2().getMinimumPoint());
+		vectors.add(arena.getRegionTeam1().getMaximumPoint());
+		vectors.add(arena.getRegionTeam2().getMaximumPoint());
 		BlockVector min = getMinBlockVec(vectors);
 		BlockVector max = getMaxBlockVec(vectors);
 		for (Entity curr : arenaWorld.getEntitiesByClass(Item.class))
