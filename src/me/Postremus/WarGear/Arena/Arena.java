@@ -1,5 +1,6 @@
 package me.Postremus.WarGear.Arena;
 
+import me.Postremus.WarGear.FightState;
 import me.Postremus.WarGear.IFightMode;
 import me.Postremus.WarGear.TeamManager;
 import me.Postremus.WarGear.WarGear;
@@ -20,7 +21,6 @@ public class Arena {
 	private WarGear plugin;
 	private String name;
 	private TeamManager team;
-	private boolean fightRunning;
 	private String kitname;
 	private IFightMode fightMode;
 	private ArenaReseter reseter;
@@ -28,6 +28,7 @@ public class Arena {
 	private ProtectedRegion regionTeam1;
 	private ProtectedRegion regionTeam2;
 	private ProtectedRegion arenaRegion;
+	private FightState arenaState;
 	
 	public Arena(WarGear plugin)
 	{
@@ -45,9 +46,8 @@ public class Arena {
 		this.name = arenaName;
 		
 		loadRegions();
-		
+		this.setFightState(FightState.Idle);
 		this.team = new TeamManager(plugin, this);
-		this.fightRunning = false;
 		this.kitname = "";
 		this.setFightMode(new KitMode(this.plugin, this));
 		this.reseter = new ArenaReseter(this.plugin, this);
@@ -78,11 +78,6 @@ public class Arena {
 		return team;
 	}
 	
-	public boolean getFightRunning()
-	{
-		return this.fightRunning;
-	}
-	
 	public ArenaReseter getReseter()
 	{
 		return this.reseter;
@@ -93,15 +88,20 @@ public class Arena {
 		return this.remover;
 	}
 	
-	public void setFightRunning(boolean state)
+	public FightState getFightState()
 	{
-		this.fightRunning = state;
+		return this.arenaState;
+	}
+	
+	public void setFightState(FightState state)
+	{
+		this.arenaState = state;
 	}
 	
 	public String getKit() {
 		return kitname;
 	}
-
+	
 	public void setKit(String kitname) {
 		this.kitname = kitname;
 	}

@@ -40,10 +40,10 @@ public class WgkCommandLogik {
 			sender.sendMessage("Die Arena "+ arenaName+" existiert nicht.");
 			return;
 		}
-		if (!this.arena.getArena(arenaName).getFightRunning())
+		if (this.arena.getArena(arenaName).getFightState()!= FightState.Idle)
 		{
 			this.plugin.getRepo().init();
-			this.arena.getArena(arenaName).setFightRunning(true);
+			this.arena.getArena(arenaName).setFightState(FightState.Setup);
 			sender.sendMessage("Setup für "+arenaName+" gestartet.");
 			return;
 		}
@@ -58,7 +58,7 @@ public class WgkCommandLogik {
 			sender.sendMessage("Die Arena "+ arenaName+" existiert nicht.");
 			return;
 		}
-		if (!this.arena.getArena(arenaName).getFightRunning())
+		if (this.arena.getArena(arenaName).getFightState() != FightState.Setup)
 		{
 			sender.sendMessage("Es muss zuerst ein Fight Setup gestartet werden.");
 			return;
@@ -94,11 +94,12 @@ public class WgkCommandLogik {
 		this.arena.getArena(arenaName).setArenaOpeningFlags(false);
 		this.arena.getArena(arenaName).getTeam().GenerateTeamOutput();
 		this.arena.getArena(arenaName).getFightMode().start();
+		this.arena.getArena(arenaName).setFightState(FightState.Running);
 	}
 	
 	public void setTeam(CommandSender sender, String teamName, List<String> teamMember, String arenaName)
 	{
-		if (!this.arena.getArena(arenaName).getFightRunning())
+		if (this.arena.getArena(arenaName).getFightState() != FightState.Setup)
 		{
 			sender.sendMessage("Es muss zuerst ein Fight Setup gestartet werden.");
 			return;
@@ -126,7 +127,7 @@ public class WgkCommandLogik {
 	
 	public void setKit(CommandSender sender, String kitName, String arenaName)
 	{
-		if (!this.arena.getArena(arenaName).getFightRunning())
+		if (this.arena.getArena(arenaName).getFightState() != FightState.Setup)
 		{
 			sender.sendMessage("Es muss zuerst ein Fight Setup gestartet werden.");
 			return;
@@ -141,13 +142,13 @@ public class WgkCommandLogik {
     
 	public void quit(CommandSender sender, String siegerTeam, String arenaName)
 	{
-		if (!this.arena.getArena(arenaName).getFightRunning())
+		if (this.arena.getArena(arenaName).getFightState() != FightState.Setup)
 		{
 			sender.sendMessage("Es muss zuerst ein Fight Setup gestartet werden.");
 			return;
 		}
 		this.arena.getArena(arenaName).close();
-		this.arena.getArena(arenaName).setFightRunning(false);
+		this.arena.getArena(arenaName).setFightState(FightState.Idle);
 		this.arena.getArena(arenaName).getFightMode().stop();
 		if (siegerTeam.equalsIgnoreCase("Team1"))
 		{
