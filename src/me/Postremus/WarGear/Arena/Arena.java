@@ -4,6 +4,7 @@ import me.Postremus.WarGear.FightState;
 import me.Postremus.WarGear.IFightMode;
 import me.Postremus.WarGear.TeamManager;
 import me.Postremus.WarGear.WarGear;
+import me.Postremus.WarGear.Events.FightStateChangedEvent;
 import me.Postremus.WarGear.FightModes.KitMode;
 
 import org.bukkit.ChatColor;
@@ -187,6 +188,8 @@ public class Arena {
 	
 	public void updateFightState(FightState state)
 	{
+		FightStateChangedEvent fightStateEvent = new FightStateChangedEvent(this.name, this.arenaState, state);
+		this.plugin.getServer().getPluginManager().callEvent(fightStateEvent);
 		if (this.arenaState == FightState.Running && state == FightState.Idle)
 		{
 			this.arenaState = FightState.Reseting;
@@ -194,4 +197,6 @@ public class Arena {
 		}
 		this.arenaState = state;
 	}
+	
+	
 }
