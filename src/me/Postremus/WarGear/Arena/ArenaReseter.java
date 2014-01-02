@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.Postremus.WarGear.FightState;
 import me.Postremus.WarGear.WarGear;
 
 import org.bukkit.Location;
@@ -96,6 +97,7 @@ public class ArenaReseter
 	{
 		this.plugin.getServer().getScheduler().cancelTask(taskid);
 		removeItems(arenaWorld);
+		this.arena.updateFightState(FightState.Idle);
 	}
 	
 	private boolean clear(World arenaWorld, ProtectedRegion region)
