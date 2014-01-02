@@ -179,7 +179,7 @@ public class Arena {
 	
 	public void broadcastMessage(String message)
 	{
-		for (Player player : this.plugin.getRepo().getPlayerOfRegion(this.plugin.getRepo().getArenaRegion(this), this.plugin.getRepo().getWorldName(this)))
+		for (Player player : this.plugin.getRepo().getPlayerOfRegion(this.getArenaRegion()))
 		{
 			player.sendMessage(message);
 		}

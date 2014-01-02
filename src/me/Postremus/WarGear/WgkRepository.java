@@ -187,15 +187,12 @@ public class WgkRepository {
 		return "";
 	}
 	
-	public List<Player> getPlayerOfRegion(String regionName, String worldName)
+	public List<Player> getPlayerOfRegion(ProtectedRegion region)
 	{
-		WorldGuardPlugin wgPlugin = this.getWorldGuard();
-		RegionManager manager = wgPlugin.getRegionManager(this.plugin.getServer().getWorld(worldName));
 		List<Player> ret = new ArrayList<Player>();
-		ProtectedRegion r = manager.getRegion(regionName);
 		for (Player player : this.plugin.getServer().getOnlinePlayers())
 		{
-			if (r.contains(BukkitUtil.toVector(player.getLocation())))
+			if (region.contains(BukkitUtil.toVector(player.getLocation())))
 			{
 				ret.add(player);
 			}
