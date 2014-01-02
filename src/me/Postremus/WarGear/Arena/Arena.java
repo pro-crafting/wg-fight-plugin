@@ -1,15 +1,21 @@
 package me.Postremus.WarGear.Arena;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import me.Postremus.WarGear.FightState;
 import me.Postremus.WarGear.IFightMode;
 import me.Postremus.WarGear.TeamManager;
 import me.Postremus.WarGear.WarGear;
+import me.Postremus.WarGear.Arena.ui.ScoreBoardDisplay;
 import me.Postremus.WarGear.Events.FightStateChangedEvent;
 import me.Postremus.WarGear.FightModes.KitMode;
 
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.PlayerMoveEvent;
 
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
@@ -30,18 +36,10 @@ public class Arena {
 	private ProtectedRegion regionTeam2;
 	private ProtectedRegion arenaRegion;
 	private FightState arenaState;
+	private List<Player> playersInArena;
+	private ScoreBoardDisplay scores;
 	
-	public Arena(WarGear plugin)
-	{
-		this.init(plugin, this.plugin.getRepo().getDefaultArenaName());
-	}
-
 	public Arena(WarGear plugin, String arenaName)
-	{
-		this.init(plugin, arenaName);
-	}
-	
-	private void init(WarGear plugin, String arenaName)
 	{
 		this.plugin = plugin;	
 		this.name = arenaName;
@@ -53,6 +51,15 @@ public class Arena {
 		this.setFightMode(new KitMode(this.plugin, this));
 		this.reseter = new ArenaReseter(this.plugin, this);
 		this.remover = new WaterRemover(this.plugin, this);
+		scores = new ScoreBoardDisplay(this.plugin, this);
+		this.playersInArena = new ArrayList<Player>();
+		this.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(this.plugin, new Runnable(){
+			public void run()
+			{
+				Arena.this.playersInArena = Arena.this.plugin.getRepo().getPlayerOfRegion(Arena.this.arenaRegion);
+				Arena.this.scores.update();
+			}
+		}, 0, 20);
 	}
 	
 	private void loadRegions()
@@ -123,6 +130,11 @@ public class Arena {
 	public ProtectedRegion getArenaRegion()
 	{
 		return this.arenaRegion;
+	}
+	
+	public List<Player> getPlayersInArena()
+	{
+		return this.playersInArena;
 	}
 	
 	public void open()
@@ -196,7 +208,6 @@ public class Arena {
 			this.reseter.reset();
 		}
 		this.arenaState = state;
+		this.scores.fightStateChanged();
 	}
-	
-	
 }
