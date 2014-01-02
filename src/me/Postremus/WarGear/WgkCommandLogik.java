@@ -40,10 +40,10 @@ public class WgkCommandLogik {
 			sender.sendMessage("Die Arena "+ arenaName+" existiert nicht.");
 			return;
 		}
-		if (this.arena.getArena(arenaName).getFightState()!= FightState.Idle)
+		if (this.arena.getArena(arenaName).getFightState() == FightState.Idle)
 		{
 			this.plugin.getRepo().init();
-			this.arena.getArena(arenaName).setFightState(FightState.Setup);
+			this.arena.getArena(arenaName).updateFightState(FightState.Setup);
 			sender.sendMessage("Setup für "+arenaName+" gestartet.");
 			return;
 		}
@@ -94,7 +94,7 @@ public class WgkCommandLogik {
 		this.arena.getArena(arenaName).setArenaOpeningFlags(false);
 		this.arena.getArena(arenaName).getTeam().GenerateTeamOutput();
 		this.arena.getArena(arenaName).getFightMode().start();
-		this.arena.getArena(arenaName).setFightState(FightState.Running);
+		this.arena.getArena(arenaName).updateFightState(FightState.Running);
 	}
 	
 	public void setTeam(CommandSender sender, String teamName, List<String> teamMember, String arenaName)
@@ -142,13 +142,13 @@ public class WgkCommandLogik {
     
 	public void quit(CommandSender sender, String siegerTeam, String arenaName)
 	{
-		if (this.arena.getArena(arenaName).getFightState() != FightState.Setup)
+		if (this.arena.getArena(arenaName).getFightState() != FightState.Running)
 		{
-			sender.sendMessage("Es muss zuerst ein Fight Setup gestartet werden.");
+			sender.sendMessage("Es muss zuerst ein Fight gestartet werden.");
 			return;
 		}
 		this.arena.getArena(arenaName).close();
-		this.arena.getArena(arenaName).setFightState(FightState.Idle);
+		this.arena.getArena(arenaName).updateFightState(FightState.Idle);
 		this.arena.getArena(arenaName).getFightMode().stop();
 		if (siegerTeam.equalsIgnoreCase("Team1"))
 		{
@@ -160,7 +160,6 @@ public class WgkCommandLogik {
 		}
 		this.arena.getArena(arenaName).getTeam().quitFight();
 		this.arena.getArena(arenaName).setFightMode(new KitMode(this.plugin, this.arena.getArena(arenaName)));
-		this.arena.getArena(arenaName).getReseter().reset();
 	}
 	
 	public void showArenaNames(CommandSender sender)

@@ -46,7 +46,7 @@ public class Arena {
 		this.name = arenaName;
 		
 		loadRegions();
-		this.setFightState(FightState.Idle);
+		this.arenaState = FightState.Idle;
 		this.team = new TeamManager(plugin, this);
 		this.kitname = "";
 		this.setFightMode(new KitMode(this.plugin, this));
@@ -91,11 +91,6 @@ public class Arena {
 	public FightState getFightState()
 	{
 		return this.arenaState;
-	}
-	
-	public void setFightState(FightState state)
-	{
-		this.arenaState = state;
 	}
 	
 	public String getKit() {
@@ -188,5 +183,15 @@ public class Arena {
 		{
 			player.sendMessage(message);
 		}
+	}
+	
+	public void updateFightState(FightState state)
+	{
+		if (this.arenaState == FightState.Running && state == FightState.Idle)
+		{
+			this.arenaState = FightState.Reseting;
+			this.reseter.reset();
+		}
+		this.arenaState = state;
 	}
 }
