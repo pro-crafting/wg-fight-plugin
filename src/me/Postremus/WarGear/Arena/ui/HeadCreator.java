@@ -1,4 +1,4 @@
-package me.Postremus.Arena.ui;
+package me.Postremus.WarGear.Arena.ui;
 
 import java.util.ArrayList;
 import java.util.List;
