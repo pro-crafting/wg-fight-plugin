@@ -187,4 +187,16 @@ public class TeamManager implements Listener{
 		 }
 		 return someoneAlived;
 	 }
+	 
+	 public TeamNames getTeamOfPlayer(Player p)
+	 {
+		 for (TeamMember player : this.players)
+		 {
+			 if (player.getPlayer().getName().equalsIgnoreCase(p.getName()))
+			 {
+				 return player.getTeam();
+			 }
+		 }
+		 return TeamNames.None;
+	 }
 }
