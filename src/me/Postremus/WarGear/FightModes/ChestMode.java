@@ -1,5 +1,7 @@
 package me.Postremus.WarGear.FightModes;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -26,7 +28,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.block.Chest;
 
-public class ChestMode  implements IFightMode, Listener{
+public class ChestMode extends FightBase implements IFightMode, Listener{
 
 	private WarGear plugin;
 	private Arena arena;
@@ -36,8 +38,7 @@ public class ChestMode  implements IFightMode, Listener{
 	
 	public ChestMode(WarGear plugin, Arena arena)
 	{
-		this.plugin = plugin;
-		this.arena = arena;
+		super(plugin, arena);
 		timer = new Timer();
 		areChestsOpen = false;
 	}
@@ -45,26 +46,13 @@ public class ChestMode  implements IFightMode, Listener{
 	@Override
 	public void start() {
 		// TODO Auto-generated method stub
+		super.start();
 		this.fillChest(this.plugin.getRepo().getFightStartWarpPointTeam1(this.arena));
 		this.fillChest(this.plugin.getRepo().getFightStartWarpPointTeam2(this.arena));
 		
-		this.plugin.getServer().broadcastMessage(ChatColor.YELLOW+"Gleich: WarGear-Kampf in der "+this.arena.getArenaName()+" Arena");
 		this.plugin.getServer().getPluginManager().registerEvents(this, this.plugin);
 		PlayerMoveEvent.getHandlerList().unregister(this);
-		for (TeamMember player : this.arena.getTeam().getTeamMembers())
-		{
-			player.getPlayer().getInventory().clear();
-			player.getPlayer().getInventory().setArmorContents(null);
-			
-		    player.getPlayer().teleport(this.plugin.getRepo().getWarpForTeam(player.getTeam(), this.arena), TeleportCause.PLUGIN);
-		    player.getPlayer().setGameMode(GameMode.SURVIVAL);
-			AdmincmdWrapper.disableFly(player.getPlayer());
-			AdmincmdWrapper.heal(player.getPlayer());
-			for (PotionEffect effect : player.getPlayer().getActivePotionEffects())
-			{
-				player.getPlayer().removePotionEffect(effect.getType());
-			}
-		}
+		
 		counter = 0;
 		timer = new Timer();
 		timer.schedule(new TimerTask(){
@@ -90,8 +78,21 @@ public class ChestMode  implements IFightMode, Listener{
 		fillWithTnt(((Chest)loc.getBlock().getState()).getBlockInventory());
 		loc.setX(loc.getX()-1);
 		((Chest)loc.getBlock().getState()).getBlockInventory().clear();
-		((Chest)loc.getBlock().getState()).getBlockInventory().setContents(kitapi.getKitItems(this.arena.getKit()));
+		((Chest)loc.getBlock().getState()).getBlockInventory().setContents(removeTNTStacks(kitapi.getKitItems(this.arena.getKit())));
 		fillWithTnt(((Chest)loc.getBlock().getState()).getBlockInventory());
+	}
+	
+	private ItemStack[] removeTNTStacks(ItemStack[] withtnt)
+	{
+		List<ItemStack> ret = new ArrayList<ItemStack>();
+		for (ItemStack stack : withtnt)
+		{
+			if (stack.getType() != Material.TNT)
+			{
+				ret.add(stack);
+			}
+		}
+		return ret.toArray(new ItemStack[0]);
 	}
 	
 	private void fillWithTnt(Inventory v)
@@ -193,9 +194,8 @@ public class ChestMode  implements IFightMode, Listener{
 	
 	@Override
 	public void stop() {
-		// TODO Auto-generated method stub
+		super.stop();
 		timer.cancel();
-		this.plugin.getServer().getWorld(this.plugin.getRepo().getWorldName(this.arena)).setDifficulty(Difficulty.PEACEFUL);
 		PlayerMoveEvent.getHandlerList().unregister(this);
 		PlayerInteractEvent.getHandlerList().unregister(this);
 	}
@@ -203,23 +203,6 @@ public class ChestMode  implements IFightMode, Listener{
 	@Override
 	public String getName() {
 		return "chest";
-	}
-
-	@EventHandler
-	public void playerMoveHandler(PlayerMoveEvent event)
-	{
-		if (event.getTo().getBlockY() > this.plugin.getRepo().getGroundHeight(this.arena))
-		{
-			return;
-		}
-		if (!this.plugin.getRepo().getArenaAtLocation(event.getTo()).equalsIgnoreCase(this.arena.getArenaName()))
-		{
-			return;
-		}
-		if (this.arena.getTeam().isPlayerInTeam(event.getPlayer().getName(), TeamNames.Team1) || this.arena.getTeam().isPlayerInTeam(event.getPlayer().getName(), TeamNames.Team2))
-		{
-			event.getPlayer().damage(1);
-		}
 	}
 	
 	@EventHandler
@@ -233,22 +216,22 @@ public class ChestMode  implements IFightMode, Listener{
 		{
 			return;
 		}
-		if (this.areChestsOpen)
+		
+		if (this.arena.getTeam().getTeamOfPlayer(event.getPlayer()) == null)
 		{
-			return;
+			event.setCancelled(true);
 		}
 		
-		if (!this.arena.getTeam().isPlayerInTeam(event.getPlayer().getName(), TeamNames.Team1) || this.arena.getTeam().isPlayerInTeam(event.getPlayer().getName(), TeamNames.Team2))
+		if (this.areChestsOpen)
 		{
 			return;
 		}
 		Chest b = ((Chest)event.getClickedBlock().getState());
 		Location clickedChest = b.getLocation();
-		if (!compareChestLocation(clickedChest, this.plugin.getRepo().getFightStartWarpPointTeam1(arena)) && !compareChestLocation(clickedChest, this.plugin.getRepo().getFightStartWarpPointTeam2(arena)))
+		if (compareChestLocation(clickedChest, this.plugin.getRepo().getFightStartWarpPointTeam1(arena)) || compareChestLocation(clickedChest, this.plugin.getRepo().getFightStartWarpPointTeam2(arena)))
 		{
-			return;
+			event.setCancelled(this.areChestsOpen);
 		}
-		event.setCancelled(true);
 	}
 	
 	private boolean compareChestLocation(Location loc, Location chestLoc)

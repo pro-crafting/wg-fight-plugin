@@ -19,7 +19,7 @@ import me.Postremus.WarGear.Arena.Arena;
 import java.util.Timer;
 import java.util.TimerTask;
 
- public class KitMode implements IFightMode, Listener{
+ public class KitMode extends FightBase{
 
 	WarGear plugin;
 	Arena arena;
@@ -28,29 +28,13 @@ import java.util.TimerTask;
 	
 	public KitMode(WarGear plugin, Arena arena)
 	{
-		this.plugin = plugin;
-		this.arena = arena;
+		super(plugin, arena);
 		timer = new Timer();
 	}
 	
 	@Override
 	public void start() {
-		this.plugin.getServer().broadcastMessage(ChatColor.YELLOW+"Gleich: WarGear-Kampf in der "+this.arena.getArenaName()+" Arena");
-		for (TeamMember player : this.arena.getTeam().getTeamMembers())
-		{
-			player.getPlayer().getInventory().clear();
-			player.getPlayer().getInventory().setArmorContents(null);
-		    AdmincmdWrapper.giveKit(this.arena.getKit(), player.getPlayer(), this.plugin.getServer());
-		    
-		    player.getPlayer().teleport(this.plugin.getRepo().getWarpForTeam(player.getTeam(), this.arena), TeleportCause.PLUGIN);
-		    player.getPlayer().setGameMode(GameMode.SURVIVAL);
-			AdmincmdWrapper.disableFly(player.getPlayer());
-			AdmincmdWrapper.heal(player.getPlayer());
-			for (PotionEffect effect : player.getPlayer().getActivePotionEffects())
-			{
-				player.getPlayer().removePotionEffect(effect.getType());
-			}
-		}
+		super.start();
 		counter = 0;
 		timer = new Timer();
 		timer.schedule(new TimerTask(){
@@ -115,30 +99,12 @@ import java.util.TimerTask;
 
 	@Override
 	public void stop() {
+		super.stop();
 		timer.cancel();
-		this.plugin.getServer().getWorld(this.plugin.getRepo().getWorldName(this.arena)).setDifficulty(Difficulty.PEACEFUL);
-		PlayerMoveEvent.getHandlerList().unregister(this);
 	}
 
 	@Override
 	public String getName() {
 		return "kit";
-	}
-	
-	@EventHandler
-	public void playerMoveHandler(PlayerMoveEvent event)
-	{
-		if (event.getTo().getY() > this.plugin.getRepo().getGroundHeight(this.arena))
-		{
-			return;
-		}
-		if (!this.plugin.getRepo().getArenaAtLocation(event.getTo()).equalsIgnoreCase(this.arena.getArenaName()))
-		{
-			return;
-		}
-		if (this.arena.getTeam().isPlayerInTeam(event.getPlayer().getName(), TeamNames.Team1) || this.arena.getTeam().isPlayerInTeam(event.getPlayer().getName(), TeamNames.Team2))
-		{
-			event.getPlayer().damage(1);
-		}
 	}
 }
