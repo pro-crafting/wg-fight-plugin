@@ -79,7 +79,7 @@ public class WaterRemover implements Listener
 	{
 		for (int i= this.explodedBlocks.size()-1;i>-1;i--)
 		{
-			if (this.explodedBlocks.get(i).getValue() == 30)
+			if (this.explodedBlocks.get(i).getValue() == 35)
 			{
 				Location loc = this.explodedBlocks.get(i).getKey();
 				Block b = loc.getBlock();
@@ -122,7 +122,7 @@ public class WaterRemover implements Listener
 				b.getChunk().load();
 				continue;
 			}
-			if (b.getType() == Material.WATER || b.getType() == Material.STATIONARY_WATER)
+			if (b.getType() == Material.AIR)
 			{
 				this.waterList.remove(i);
 			}
@@ -155,11 +155,11 @@ public class WaterRemover implements Listener
 		 
 		   if(collected.contains(anchor)) return;
 		   collected.add(anchor);
-
-		   collectBlocks(anchor.getRelative(BlockFace.UP), collected);
+		   
 		   collectBlocks(anchor.getRelative(BlockFace.NORTH), collected);
 		   collectBlocks(anchor.getRelative(BlockFace.EAST), collected);
 		   collectBlocks(anchor.getRelative(BlockFace.SOUTH), collected);
 		   collectBlocks(anchor.getRelative(BlockFace.WEST), collected);
+		   collectBlocks(anchor.getRelative(BlockFace.UP), collected);
 		}
 }
