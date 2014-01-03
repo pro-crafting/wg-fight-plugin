@@ -52,10 +52,10 @@ public class ScoreBoardDisplay
 		teamBlue = board.registerNewTeam("team_blue");
 		teamBlue.setDisplayName("teamblue");
 		teamBlue.setPrefix(ChatColor.BLUE+"");
-		registerPlayers();
+		//registerPlayers();
 	}
 	
-	private void registerPlayers()
+	/*private void registerPlayers()
 	{
 		for (TeamMember player : this.arena.getTeam().getTeamMembers())
 		{
@@ -69,7 +69,7 @@ public class ScoreBoardDisplay
 			}
 			board.getObjective("Lebensanzeige").getScore(player.getPlayer()).setScore(20);
 		}
-	}
+	}*/
 	
 	private void clearScoreboard()
 	{
@@ -102,16 +102,23 @@ public class ScoreBoardDisplay
 		{
 			p.setScoreboard(board);
 		}
-		updateHealth();
+		//updateHealth();
 	}
 	
-	private void updateHealth()
+	/*private void updateHealth()
 	{
 		for (TeamMember player : this.arena.getTeam().getTeamMembers())
 		{
-			board.getObjective("Lebensanzeige").getScore(player.getPlayer()).setScore(player.getPlayer().getHealth());
+			if (player.getAlive())
+			{
+				board.getObjective("Lebensanzeige").getScore(player.getPlayer()).setScore(player.getPlayer().getHealth());
+			}
+			else
+			{
+				board.resetScores(player.getPlayer());
+			}
 		}
-	}
+	}*/
 	
 	public void fightStateChanged()
 	{

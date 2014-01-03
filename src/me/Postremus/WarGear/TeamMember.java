@@ -5,14 +5,14 @@ import org.bukkit.entity.Player;
 public class TeamMember{
 
 	private Player player;
-	private TeamNames team;
 	private Boolean alive;
+	private Boolean isTeamLeader;
 	
-	public TeamMember(Player player, TeamNames team)
+	public TeamMember(Player player, boolean isTeamLeader)
 	{
 		this.player = player;
-		this.team = team;
 		this.alive = true;
+		this.isTeamLeader = isTeamLeader;
 	}
 	
 	public Player getPlayer()
@@ -20,14 +20,14 @@ public class TeamMember{
 		return this.player;
 	}
 	
-	public TeamNames getTeam()
-	{
-		return this.team;
-	}
-	
 	public Boolean getAlive()
 	{
 		return this.alive;
+	}
+	
+	public Boolean getIsTeamLeader()
+	{
+		return this.isTeamLeader;
 	}
 	
 	public void setAlive(Boolean alive)

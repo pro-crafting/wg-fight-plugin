@@ -1,11 +1,9 @@
 package me.Postremus.WarGear;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import me.Postremus.WarGear.Arena.Arena;
 
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -13,24 +11,22 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+import org.bukkit.potion.PotionEffect;
 
-public class TeamManager implements Listener{
-
-	List<TeamMember> players;
+public class TeamManager implements Listener
+{
 	WarGear plugin;
 	Arena arena;
+	private WgTeam team1;
+	private WgTeam team2;
 	
 	public TeamManager(WarGear plugin, Arena arena)
 	{
 		this.plugin = plugin;
-		this.players = new ArrayList<TeamMember>();
+		this.team1 = new WgTeam(TeamNames.Team1);
+		this.team2 = new WgTeam(TeamNames.Team2);
 		this.plugin.getServer().getPluginManager().registerEvents(this, this.plugin);
 		this.arena = arena;
-	}
-	
-	public List<TeamMember> getTeamMembers()
-	{
-		return this.players;
 	}
 	
 	public void setArena(Arena arena)
@@ -38,14 +34,45 @@ public class TeamManager implements Listener{
 		this.arena = arena;
 	}
 	
+	public void prepareFightTeams()
+	{
+		this.prepareFightForTeam(team1);
+		this.prepareFightForTeam(team2);
+	}
+	
+	private void prepareFightForTeam(WgTeam team)
+	{
+		for (TeamMember player : team.getTeamMembers())
+		{
+			player.getPlayer().getInventory().clear();
+			player.getPlayer().getInventory().setArmorContents(null);
+			
+		    player.getPlayer().teleport(this.plugin.getRepo().getWarpForTeam(team.getTeamName(), this.arena), TeleportCause.PLUGIN);
+		    player.getPlayer().setGameMode(GameMode.SURVIVAL);
+			AdmincmdWrapper.disableFly(player.getPlayer());
+			AdmincmdWrapper.heal(player.getPlayer());
+			for (PotionEffect effect : player.getPlayer().getActivePotionEffects())
+			{
+				player.getPlayer().removePotionEffect(effect.getType());
+			}
+		}
+	}
+	
 	public void quitFight()
 	{
-		for (TeamMember player : this.players)
+		quiteFightForTeam(this.team1);
+		quiteFightForTeam(this.team2);
+		this.team1 = new WgTeam(TeamNames.Team1);
+		this.team2 = new WgTeam(TeamNames.Team2);
+	}
+	
+	private void quiteFightForTeam(WgTeam team)
+	{
+		for (TeamMember player : team.getTeamMembers())
 		{
 			player.getPlayer().getInventory().clear();
 			player.getPlayer().teleport(this.plugin.getRepo().getEndWarpPoint(this.arena), TeleportCause.PLUGIN);
 		}
-		this.players = new ArrayList<TeamMember>();
 	}
 	
 	public void GenerateWinnerTeamOutput(TeamNames teamName)
@@ -54,23 +81,17 @@ public class TeamManager implements Listener{
 		if (teamName == TeamNames.Team1)
 		{
 			team = "[Team1]";
-			for (TeamMember player : this.players)
+			for (TeamMember player : this.team1.getTeamMembers())
 			{
-				if (player.getTeam() == TeamNames.Team1)
-				{
-					team += " "+ player.getPlayer().getName();
-				}
+				team += " "+ player.getPlayer().getName();
 			}
 		}
 		else if (teamName == TeamNames.Team2)
 		{
 			team = "[Team2]";
-			for (TeamMember player : this.players)
+			for (TeamMember player : this.team2.getTeamMembers())
 			{
-				if (player.getTeam() == TeamNames.Team2)
-				{
-					team += " "+ player.getPlayer().getName();
-				}
+				team += " "+ player.getPlayer().getName();
 			}
 		}
 		this.arena.broadcastMessage(ChatColor.DARK_GREEN + team + " hat gewonnen!");
@@ -78,69 +99,32 @@ public class TeamManager implements Listener{
 	
 	public void GenerateTeamOutput()
 	{
-		String team1 = "[Team 1]";
-		for (TeamMember player : this.players)
+		String team1 = "[Team1]";
+		for (TeamMember player : this.team1.getTeamMembers())
 		{
-			if (player.getTeam() == TeamNames.Team1)
-			{
-				team1 += " "+ player.getPlayer().getName();
-			}
+			team1 += " "+ player.getPlayer().getName();
 		}
 		
-		String team2 = "[Team 2]";
-		for (TeamMember player : this.players)
+		String team2 = "[Team2]";
+		for (TeamMember player : this.team2.getTeamMembers())
 		{
-			if (player.getTeam() == TeamNames.Team2)
-			{
-				team2 += " "+ player.getPlayer().getName();
-			}
+			team2 += " "+ player.getPlayer().getName();
 		}
 		
 		this.arena.broadcastMessage(ChatColor.YELLOW +""+ ChatColor.ITALIC+team1 + " vs. " + team2);
 	}
 	
-	public void setTeam(List<Player> teamMembers, TeamNames team)
-	{
-		List<TeamMember> toRemove = new ArrayList<TeamMember>();
-		for(TeamMember player : this.players)
-		{
-			if (player.getTeam() == team)
-			{
-				toRemove.add(player);
-			}
-		}
-		this.players.removeAll(toRemove);
-		for(Player player : teamMembers)
-		{
-			this.players.add(new TeamMember(player, team));
-		}
-	}
-	
-	public Boolean isPlayerInTeam(String player, TeamNames team)
-	{
-		for(TeamMember member : this.players)
-		{
-			if (member.getPlayer().getName().equalsIgnoreCase(player) && member.getTeam() == team)
-			{
-				return true;
-			}
-		}
-		return false;
-	}
-	
 	@EventHandler (priority = EventPriority.HIGH)
      public void deathEventHandler(PlayerDeathEvent event)
 	 {
-		 for (TeamMember player : this.players)
-		 {
-			 if (event.getEntity().getPlayer().getName().equalsIgnoreCase(player.getPlayer().getName()) && player.getAlive())
-			 {
-				 player.setAlive(false);
-				 event.setDeathMessage(ChatColor.DARK_GREEN + player.getPlayer().getName() + "["+player.getTeam().toString()+"] ist gestorben.");
-				 this.checkAlives(player.getTeam());
-				 event.getDrops().clear();
-			 }
-		 }
+		Player died = event.getEntity().getPlayer();
+		WgTeam team = this.getTeamOfPlayer(died);
+		if (team != null && team.getTeamMember(died).getAlive())
+		{
+			team.getTeamMember(died).setAlive(false);
+			event.setDeathMessage(ChatColor.DARK_GREEN + died.getName() + "["+team.getTeamName().toString()+"] ist gestorben.");
+			this.checkAlives(team);
+		}
 	 }
 	 
 	 @EventHandler (priority = EventPriority.HIGHEST)
@@ -156,27 +140,43 @@ public class TeamManager implements Listener{
 
 			@Override
 			public void run() {
-				// TODO Auto-generated method stub
 				event.getPlayer().getInventory().clear();
 			}
 			 
 		 }, 60);
 	 }
 	 
-	 public Boolean checkAlives(TeamNames team)
+	 public WgTeam getTeamOfName(TeamNames name)
 	 {
-		 Boolean someoneAlived = false;
-		 for (TeamMember player : this.players)
+		 if (name == TeamNames.Team1)
 		 {
-			 if (player.getTeam() == team && player.getAlive())
-			 {
-				 someoneAlived = true;
-			 }
+			 return this.team1;
 		 }
-		 if (!someoneAlived)
+		 else
+		 {
+			 return this.team2;
+		 }
+	 }
+	 
+	 public WgTeam getTeamOfPlayer(Player p)
+	 {
+		 if (this.team1.getTeamMember(p) != null)
+		 {
+			 return this.team1;
+		 }
+		 else if (this.team2.getTeamMember(p) != null)
+		 {
+			 return this.team2;
+		 }
+		 return null;
+	 }
+	 
+	 private void checkAlives(WgTeam team)
+	 {
+		 if (!team.isSomoneAlive())
 		 {
 			 this.arena.broadcastMessage(ChatColor.DARK_GREEN + "Jeder aus dem ["+team.toString().toUpperCase()+"] ist tot.");
-			 if (team == TeamNames.Team1)
+			 if (team.getTeamName() == TeamNames.Team1)
 			 {
 				 this.plugin.getServer().dispatchCommand(this.plugin.getServer().getConsoleSender(), "wgk quit team2");
 			 }
@@ -185,18 +185,18 @@ public class TeamManager implements Listener{
 				 this.plugin.getServer().dispatchCommand(this.plugin.getServer().getConsoleSender(), "wgk quit team1");
 			 }
 		 }
-		 return someoneAlived;
 	 }
 	 
-	 public TeamNames getTeamOfPlayer(Player p)
+	 public WgTeam getTeamWithOutLeader()
 	 {
-		 for (TeamMember player : this.players)
+		 if (!this.team1.hasTeamLeader())
 		 {
-			 if (player.getPlayer().getName().equalsIgnoreCase(p.getName()))
-			 {
-				 return player.getTeam();
-			 }
+			 return this.team1;
 		 }
-		 return TeamNames.None;
+		 else if (!this.team1.hasTeamLeader()))
+		 {
+			 return this.team2;
+		 }
+		 return null;
 	 }
 }
