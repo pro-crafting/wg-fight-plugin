@@ -6,6 +6,7 @@ import java.util.List;
 import me.Postremus.WarGear.FightState;
 import me.Postremus.WarGear.IFightMode;
 import me.Postremus.WarGear.TeamManager;
+import me.Postremus.WarGear.TeamMember;
 import me.Postremus.WarGear.WarGear;
 import me.Postremus.WarGear.Arena.ui.ScoreBoardDisplay;
 import me.Postremus.WarGear.Events.FightStateChangedEvent;
@@ -202,7 +203,7 @@ public class Arena {
 	{
 		FightStateChangedEvent fightStateEvent = new FightStateChangedEvent(this.name, this.arenaState, state);
 		this.plugin.getServer().getPluginManager().callEvent(fightStateEvent);
-		if (this.arenaState == FightState.Running && state == FightState.Idle)
+		if (this.arenaState == FightState.Running && state == FightState.Idle && this.plugin.getRepo().getAutoReset(this))
 		{
 			this.arenaState = FightState.Reseting;
 			this.reseter.reset();

@@ -110,6 +110,11 @@ public class WgkRepository {
 		return this.plugin.getConfig().getString("wgk.arenas."+arena.getArenaName()+".arenaRegion");
 	}
 	
+	public boolean getAutoReset(Arena arena)
+	{
+		return this.plugin.getConfig().getBoolean("wgk.arenas."+arena.getArenaName()+".auto-reset", true);
+	}
+	
 	public Boolean existsArena(String arena)
 	{
 		for (String arenaName : this.plugin.getConfig().getConfigurationSection("wgk.arenas").getKeys(false)) 

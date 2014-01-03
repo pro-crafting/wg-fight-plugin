@@ -9,6 +9,7 @@ wgk:
             mode: kit
             groundHeight:
             groundschematic:
+            auto-reset: true
             regions:
                 Team1:
                 Team2:
