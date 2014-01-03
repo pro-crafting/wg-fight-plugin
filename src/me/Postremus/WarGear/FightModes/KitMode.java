@@ -67,35 +67,43 @@ import java.util.TimerTask;
 		{
 			this.arena.broadcastMessage(ChatColor.YELLOW+"Bitte alle Teilnehmer in ihre Wargears");
 			this.arena.broadcastMessage(ChatColor.YELLOW+"Fight startet in:");
-			this.arena.broadcastMessage(ChatColor.DARK_GREEN + "40 Sekunden");
+			this.arena.broadcastMessage(ChatColor.DARK_GREEN + "60 Sekunden");
 		}
 		else if (counter == 10)
 		{
-			this.arena.broadcastMessage(ChatColor.DARK_GREEN + "30 Sekunden");
+			this.arena.broadcastMessage(ChatColor.DARK_GREEN + "50 Sekunden");
 		}
 		else if (counter == 20)
 		{
-			this.arena.broadcastMessage(ChatColor.DARK_GREEN + "20 Sekunden");
-		}
-		else if (counter == 25)
-		{
-			this.arena.broadcastMessage(ChatColor.DARK_GREEN + "15 Sekunden");
+			this.arena.broadcastMessage(ChatColor.DARK_GREEN + "40 Sekunden");
 		}
 		else if (counter == 30)
 		{
+			this.arena.broadcastMessage(ChatColor.DARK_GREEN + "30 Sekunden");
+		}
+		else if (counter == 40)
+		{
+			this.arena.broadcastMessage(ChatColor.DARK_GREEN + "20 Sekunden");
+		}
+		else if (counter == 45)
+		{
+			this.arena.broadcastMessage(ChatColor.DARK_GREEN + "15 Sekunden");
+		}
+		else if (counter == 50)
+		{
 			this.arena.broadcastMessage(ChatColor.DARK_GREEN + "10 Sekunden");
 		}
-		else if (counter > 30 && 40-counter > 3)
+		else if (counter > 50 && 60-counter > 3)
 		{
-			int diff = 40-counter;
+			int diff = 60-counter;
 			this.arena.broadcastMessage(ChatColor.DARK_GREEN + "" + diff +" Sekunden");
 		}
-		else if (counter > 36 && 40-counter > 0)
+		else if (counter > 56 && 60-counter > 0)
 		{
-			int diff = 40-counter;
+			int diff = 60-counter;
 			this.arena.broadcastMessage(ChatColor.AQUA + ""+ diff +" Sekunden");
 		}
-		else if (40-counter == 0)
+		else if (counter == 60)
 		{
 			timer.cancel();
 			this.plugin.getServer().getWorld(this.plugin.getRepo().getWorldName(this.arena)).setDifficulty(Difficulty.EASY);
