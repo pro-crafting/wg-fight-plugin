@@ -30,8 +30,6 @@ import org.bukkit.block.Chest;
 
 public class ChestMode extends FightBase implements IFightMode, Listener{
 
-	private WarGear plugin;
-	private Arena arena;
 	private Timer timer;
 	private int counter;
 	private boolean areChestsOpen;

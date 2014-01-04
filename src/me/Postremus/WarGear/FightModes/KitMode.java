@@ -21,28 +21,32 @@ import java.util.TimerTask;
 
  public class KitMode extends FightBase{
 
-	WarGear plugin;
-	Arena arena;
-	Timer timer;
 	int counter;
+	int taskId;
 	
 	public KitMode(WarGear plugin, Arena arena)
 	{
 		super(plugin, arena);
-		timer = new Timer();
 	}
 	
 	@Override
 	public void start() {
 		super.start();
 		counter = 0;
-		timer = new Timer();
-		timer.schedule(new TimerTask(){
+		for (TeamMember member : this.arena.getTeam().getTeam1().getTeamMembers())
+		{
+			AdmincmdWrapper.giveKit(this.arena.getKit(), member.getPlayer(), this.plugin.getServer());
+		}
+		for (TeamMember member : this.arena.getTeam().getTeam2().getTeamMembers())
+		{
+			AdmincmdWrapper.giveKit(this.arena.getKit(), member.getPlayer(), this.plugin.getServer());
+		}
+		taskId = this.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(this.plugin, new Runnable(){
 			@Override
-	         public void run() {
-				finalStartCountdown();          
-	         }
-		}, 0, 1000);
+			public void run() {
+				finalStartCountdown();
+			}          
+		}, 0, 20);
 	}
 	
 	public void finalStartCountdown()
@@ -89,7 +93,7 @@ import java.util.TimerTask;
 		}
 		else if (counter == 60)
 		{
-			timer.cancel();
+			this.plugin.getServer().getScheduler().cancelTask(taskId);
 			this.plugin.getServer().getWorld(this.plugin.getRepo().getWorldName(this.arena)).setDifficulty(Difficulty.EASY);
 			this.plugin.getServer().getPluginManager().registerEvents(this, this.plugin);
 			this.arena.open();
@@ -100,7 +104,6 @@ import java.util.TimerTask;
 	@Override
 	public void stop() {
 		super.stop();
-		timer.cancel();
 	}
 
 	@Override
