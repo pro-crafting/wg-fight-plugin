@@ -7,7 +7,7 @@ import me.Postremus.WarGear.FightState;
 
 public class FightStateChangedEvent extends Event
 {
-	 private static final HandlerList handlers = new HandlerList();
+	private static final HandlerList handlers = new HandlerList();
 	private String arenaName;
 	private FightState from;
 	private FightState to;

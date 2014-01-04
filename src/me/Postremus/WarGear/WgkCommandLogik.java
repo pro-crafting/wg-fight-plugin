@@ -7,6 +7,7 @@ import java.util.TimerTask;
 
 import me.Postremus.WarGear.Arena.Arena;
 import me.Postremus.WarGear.Arena.ArenaManager;
+import me.Postremus.WarGear.Events.FightQuitEvent;
 import me.Postremus.WarGear.FightModes.ChestMode;
 import me.Postremus.WarGear.FightModes.KitMode;
 
@@ -14,8 +15,11 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 
-public class WgkCommandLogik {
+public class WgkCommandLogik implements Listener{
 
 	WarGear plugin;
 	Timer manuelTimer;
@@ -75,7 +79,7 @@ public class WgkCommandLogik {
 		WgTeam team = this.arena.getArena(arenaName).getTeam().getTeamWithOutLeader();
 		if (team == null)
 		{
-			p.sendMessage("Beide Team haben einen Teamleiter.");
+			p.sendMessage("Beide Team's haben einen Teamleiter.");
 			return;
 		}
 		team.add(p, true);
@@ -158,6 +162,11 @@ public class WgkCommandLogik {
 		if (team.getTeamMember(p) == null)
 		{
 			senderPlayer.sendMessage(p.getName()+" ist nicht in deinem Team.");
+			return;
+		}
+		if (senderPlayer.getName().equalsIgnoreCase(playerName))
+		{
+			senderPlayer.sendMessage("Der Team Leiter kann sich nicht rauswerfen.");
 			return;
 		}
 		team.remove(p);
@@ -294,26 +303,15 @@ public class WgkCommandLogik {
 		this.arena.getArena(arenaName).setKit(kitName);
 	}
     
-	public void quit(CommandSender sender, String siegerTeam, String arenaName)
+	@EventHandler (priority = EventPriority.LOWEST)
+	public void quit(FightQuitEvent event)
 	{
-		if (this.arena.getArena(arenaName).getFightState() != FightState.Running)
-		{
-			sender.sendMessage("Es muss zuerst ein Fight gestartet werden.");
-			return;
-		}
-		this.arena.getArena(arenaName).close();
-		this.arena.getArena(arenaName).updateFightState(FightState.Idle);
-		this.arena.getArena(arenaName).getFightMode().stop();
-		if (siegerTeam.equalsIgnoreCase("Team1"))
-		{
-			this.arena.getArena(arenaName).getTeam().GenerateWinnerTeamOutput(TeamNames.Team1);
-		}
-		else
-		{
-			this.arena.getArena(arenaName).getTeam().GenerateWinnerTeamOutput(TeamNames.Team2);
-		}
-		this.arena.getArena(arenaName).getTeam().quitFight();
-		this.arena.getArena(arenaName).setFightMode(new KitMode(this.plugin, this.arena.getArena(arenaName)));
+		event.getArena().close();
+		event.getArena().updateFightState(FightState.Idle);
+		event.getArena().getFightMode().stop();
+		event.getArena().getTeam().GenerateWinnerTeamOutput(event.getWinnerTeam().getTeamName());
+		event.getArena().getTeam().quitFight();
+		event.getArena().setFightMode(new KitMode(this.plugin, event.getArena()));
 	}
 	
 	public void showArenaNames(CommandSender sender)

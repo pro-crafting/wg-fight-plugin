@@ -1,6 +1,7 @@
 package me.Postremus.WarGear;
 
 import me.Postremus.WarGear.Arena.Arena;
+import me.Postremus.WarGear.Events.FightQuitEvent;
 
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -175,15 +176,13 @@ public class TeamManager implements Listener
 	 {
 		 if (!team.isSomoneAlive())
 		 {
-			 this.arena.broadcastMessage(ChatColor.DARK_GREEN + "Jeder aus dem ["+team.toString().toUpperCase()+"] ist tot.");
+			 this.arena.broadcastMessage(ChatColor.DARK_GREEN + "Jeder aus dem ["+team.getTeamName().toString().toUpperCase()+"] ist tot.");
+			 WgTeam looserTeam = this.team1;
 			 if (team.getTeamName() == TeamNames.Team1)
 			 {
-				 this.plugin.getServer().dispatchCommand(this.plugin.getServer().getConsoleSender(), "wgk quit team2");
+				 looserTeam = this.team2;
 			 }
-			 else
-			 {
-				 this.plugin.getServer().dispatchCommand(this.plugin.getServer().getConsoleSender(), "wgk quit team1");
-			 }
+			 this.plugin.getServer().getPluginManager().callEvent(new FightQuitEvent(team, looserTeam, this.arena));
 		 }
 	 }
 	 
@@ -193,7 +192,7 @@ public class TeamManager implements Listener
 		 {
 			 return this.team1;
 		 }
-		 else if (!this.team1.hasTeamLeader())
+		 else if (!this.team2.hasTeamLeader())
 		 {
 			 return this.team2;
 		 }
