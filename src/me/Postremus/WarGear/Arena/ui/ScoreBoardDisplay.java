@@ -15,6 +15,7 @@ import me.Postremus.WarGear.FightState;
 import me.Postremus.WarGear.TeamMember;
 import me.Postremus.WarGear.TeamNames;
 import me.Postremus.WarGear.WarGear;
+import me.Postremus.WarGear.WgTeam;
 import me.Postremus.WarGear.Arena.Arena;
 import me.Postremus.WarGear.Events.FightStateChangedEvent;
 
@@ -52,24 +53,22 @@ public class ScoreBoardDisplay
 		teamBlue = board.registerNewTeam("team_blue");
 		teamBlue.setDisplayName("teamblue");
 		teamBlue.setPrefix(ChatColor.BLUE+"");
-		//registerPlayers();
+		registerPlayers();
 	}
 	
-	/*private void registerPlayers()
+	private void registerPlayers()
 	{
-		for (TeamMember player : this.arena.getTeam().getTeamMembers())
+		for (TeamMember player : this.arena.getTeam().getTeam1().getTeamMembers())
 		{
-			if (player.getTeam() == TeamNames.Team1)
-			{
-				teamRed.addPlayer(player.getPlayer());
-			}
-			else
-			{
-				teamBlue.addPlayer(player.getPlayer());
-			}
+			teamRed.addPlayer(player.getPlayer());
 			board.getObjective("Lebensanzeige").getScore(player.getPlayer()).setScore(20);
 		}
-	}*/
+		for (TeamMember player : this.arena.getTeam().getTeam2().getTeamMembers())
+		{
+			teamBlue.addPlayer(player.getPlayer());
+			board.getObjective("Lebensanzeige").getScore(player.getPlayer()).setScore(20);
+		}
+	}
 	
 	private void clearScoreboard()
 	{
@@ -102,12 +101,18 @@ public class ScoreBoardDisplay
 		{
 			p.setScoreboard(board);
 		}
-		//updateHealth();
+		updateHealth();
 	}
 	
-	/*private void updateHealth()
+	private void updateHealth()
 	{
-		for (TeamMember player : this.arena.getTeam().getTeamMembers())
+		updateTeamHealt(this.arena.getTeam().getTeam1());
+		updateTeamHealt(this.arena.getTeam().getTeam2());
+	}
+	
+	private void updateTeamHealt(WgTeam team)
+	{
+		for (TeamMember player : team.getTeamMembers())
 		{
 			if (player.getAlive())
 			{
@@ -118,7 +123,7 @@ public class ScoreBoardDisplay
 				board.resetScores(player.getPlayer());
 			}
 		}
-	}*/
+	}
 	
 	public void fightStateChanged()
 	{
