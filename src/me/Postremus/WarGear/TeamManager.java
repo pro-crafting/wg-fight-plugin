@@ -193,10 +193,25 @@ public class TeamManager implements Listener
 		 {
 			 return this.team1;
 		 }
-		 else if (!this.team1.hasTeamLeader()))
+		 else if (!this.team1.hasTeamLeader())
 		 {
 			 return this.team2;
 		 }
 		 return null;
+	 }
+	 
+	 public boolean areBothTeamsReady()
+	 {
+		 return this.team1.getIsReady() && this.team2.getIsReady();
+	 }
+	 
+	 public WgTeam getTeam1()
+	 {
+		 return this.team1;
+	 }
+	 
+	 public WgTeam getTeam2()
+	 {
+		 return this.team2;
 	 }
 }

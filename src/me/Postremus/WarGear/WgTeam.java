@@ -1,5 +1,6 @@
 package me.Postremus.WarGear;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.entity.Player;
@@ -13,11 +14,13 @@ public class WgTeam
 	public WgTeam(TeamNames teamName)
 	{
 		this.teamName = teamName;
+		isReady = false;
+		this.teamMember = new ArrayList<TeamMember>();
 	}
 	
 	public void add(Player p, boolean isLeader)
 	{
-		this.teamMember.add(new TeamMember(p, false));
+		this.teamMember.add(new TeamMember(p, isLeader));
 	}
 	
 	public void remove(Player p)

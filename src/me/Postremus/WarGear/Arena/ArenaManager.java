@@ -49,4 +49,9 @@ public class ArenaManager {
 		}
 		return null;
 	}
+	
+	public List<Arena> getArenas()
+	{
+		return this.arenas;
+	}
 }

@@ -51,14 +51,6 @@ public class WgkCommand implements CommandExecutor{
 					this.plugin.getServer().getPluginManager().enablePlugin(plugin);
 					sender.sendMessage("Plugin wurde gereloadet.");
 				}
-				if (args[0].equalsIgnoreCase("setup") && this.hasPermissionWrapper(sender, "wargear.fight.setup"))
-				{
-					this.logik.setup(sender, arenaName);
-				}
-				else if (args[0].equalsIgnoreCase("start") && this.hasPermissionWrapper(sender, "wargear.fight.start"))
-				{
-					this.logik.start(sender, arenaName);
-				}
 				else
 				{
 					help(sender);
@@ -66,33 +58,32 @@ public class WgkCommand implements CommandExecutor{
 			}
 			if (args.length > 1)
 			{
-				if (args[0].equalsIgnoreCase("team1") && this.hasPermissionWrapper(sender, "wargear.fight.team1"))
+				if (args[0].equalsIgnoreCase("team"))
 				{
-					List<String> teamMember = Arrays.asList(args);
-					teamMember = teamMember.subList(1, teamMember.size());
-					this.logik.setTeam(sender, "team1", teamMember, arenaName);	
-				}
-				else if (args[0].equalsIgnoreCase("team2") && this.hasPermissionWrapper(sender, "wargear.fight.team2"))
-				{
-					List<String> teamMember = Arrays.asList(args);
-					teamMember = teamMember.subList(1, teamMember.size());
-					this.logik.setTeam(sender, "team2", teamMember, arenaName);	
+					if (args[1].equalsIgnoreCase("leader"))
+					{
+						this.logik.addTeamLeader(sender, arenaName, args[2]);
+					}
+					else if (args[1].equalsIgnoreCase("leave"))
+					{
+						this.logik.leaveTeam(sender, arenaName);
+					}
+					else if (args[1].equalsIgnoreCase("add"))
+					{
+						this.logik.addTeamMember(sender, arenaName, args[2]);
+					}
+					else if (args[1].equalsIgnoreCase("remove"))
+					{
+						this.logik.removeTeamMember(sender, arenaName, args[2]);
+					}
+					else if (args[1].equalsIgnoreCase("ready"))
+					{
+						this.logik.readifyTeam(sender, arenaName);
+					}
 				}
 				else if (args[0].equalsIgnoreCase("kit") && this.hasPermissionWrapper(sender, "wargear.fight.kit"))
 				{
 					this.logik.setKit(sender, args[1], arenaName);
-				}
-				else if (args[0].equalsIgnoreCase("quit") && this.hasPermissionWrapper(sender, "wargear.fight.quit"))
-				{
-					if  ((!args[1].equalsIgnoreCase("team1")) && (!args[1].equalsIgnoreCase("team2")))
-					{
-						help(sender);
-						return true;
-					}
-					else
-					{
-						this.logik.quit(sender, args[1], arenaName);
-					}
 				}
 				else if (args[0].equalsIgnoreCase("arena"))
 				{
