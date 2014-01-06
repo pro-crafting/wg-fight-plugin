@@ -10,10 +10,10 @@ import org.bukkit.potion.PotionEffect;
 
 import me.Postremus.WarGear.AdmincmdWrapper;
 import me.Postremus.WarGear.IFightMode;
-import me.Postremus.WarGear.TeamMember;
-import me.Postremus.WarGear.TeamNames;
 import me.Postremus.WarGear.WarGear;
 import me.Postremus.WarGear.Arena.Arena;
+import me.Postremus.WarGear.Team.TeamMember;
+import me.Postremus.WarGear.Team.TeamNames;
 
 public abstract class FightBase implements IFightMode, Listener
 {
@@ -29,7 +29,6 @@ public abstract class FightBase implements IFightMode, Listener
 	@Override
 	public void start() {
 		this.plugin.getServer().broadcastMessage(ChatColor.YELLOW+"Gleich: WarGear-Kampf in der "+this.arena.getArenaName()+" Arena");
-		this.plugin.getServer().getPluginManager().registerEvents(this, this.plugin);
 		this.arena.getTeam().prepareFightTeams();
 	}
 
