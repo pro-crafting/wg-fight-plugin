@@ -179,12 +179,12 @@ public class TeamManager implements Listener
 		 if (!team.isSomoneAlive())
 		 {
 			 this.arena.broadcastMessage(ChatColor.DARK_GREEN + "Jeder aus dem ["+team.getTeamName().toString().toUpperCase()+"] ist tot.");
-			 WgTeam looserTeam = this.team1;
+			 WgTeam winnerTeam = this.team1;
 			 if (team.getTeamName() == TeamNames.Team1)
 			 {
-				 looserTeam = this.team2;
+				 winnerTeam = this.team2;
 			 }
-			 this.plugin.getServer().getPluginManager().callEvent(new FightQuitEvent(team, looserTeam, this.arena));
+			 this.plugin.getServer().getPluginManager().callEvent(new FightQuitEvent(winnerTeam, team, this.arena));
 		 }
 	 }
 	 
