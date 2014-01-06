@@ -14,17 +14,7 @@ import me.Postremus.WarGear.Team.TeamManager;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityRegainHealthEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerKickEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
-
-import com.sk89q.worldedit.bukkit.BukkitUtil;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.flags.InvalidFlagFormat;
@@ -61,6 +51,7 @@ public class Arena implements Listener{
 		this.remover = new WaterRemover(this.plugin, this);
 		scores = new ScoreBoardDisplay(this.plugin, this);
 		this.playersInArena = new ArrayList<Player>();
+		this.plugin.getServer().getPluginManager().registerEvents(new ArenaListener(this.plugin, this), this.plugin);
 	}
 	
 	private void loadRegions()
@@ -138,6 +129,11 @@ public class Arena implements Listener{
 		return this.playersInArena;
 	}
 	
+	public ScoreBoardDisplay getScore()
+	{
+		return this.scores;
+	}
+	
 	public void open()
 	{
 		this.setArenaOpeningFlags(true);
@@ -210,92 +206,5 @@ public class Arena implements Listener{
 		}
 		this.arenaState = state;
 		this.scores.fightStateChanged();
-	}
-	
-	@EventHandler
-	public void playerMoveHandler(PlayerMoveEvent event)
-	{
-		if (!event.getTo().getWorld().getName().equalsIgnoreCase(this.plugin.getRepo().getWorldName(this)))
-		{
-			return;
-		}
-		boolean isInArena = this.arenaRegion.contains(BukkitUtil.toVector(event.getTo()));
-		boolean isPlayerInArena = this.playersInArena.contains(event.getPlayer());
-		if (!isInArena && isPlayerInArena)
-		{
-			this.scores.leaveArena(event.getPlayer());
-			this.playersInArena.remove(event.getPlayer());
-		}
-		else if (isInArena && !isPlayerInArena)
-		{
-			this.scores.enterArena(event.getPlayer());
-			this.playersInArena.add(event.getPlayer());
-		}
-	}
-	
-	@EventHandler
-	public void playerJoinHandler(PlayerJoinEvent event)
-	{
-		if (this.arenaRegion.contains(BukkitUtil.toVector(event.getPlayer().getLocation())))
-		{
-			this.scores.enterArena(event.getPlayer());
-			this.playersInArena.add(event.getPlayer());
-		}
-	}
-	
-	@EventHandler
-	public void playerQuitHandler(PlayerQuitEvent event)
-	{
-		if (this.arenaRegion.contains(BukkitUtil.toVector(event.getPlayer().getLocation())))
-		{
-			this.scores.leaveArena(event.getPlayer());
-			this.playersInArena.remove(event.getPlayer());
-		}
-	}
-	
-	@EventHandler
-	public void playerKickHandler(PlayerKickEvent event)
-	{
-		if (this.arenaRegion.contains(BukkitUtil.toVector(event.getPlayer().getLocation())))
-		{
-			this.scores.leaveArena(event.getPlayer());
-			this.playersInArena.remove(event.getPlayer());
-		}
-	}
-	
-	@EventHandler
-	public void playerTeleportHandler(PlayerTeleportEvent event)
-	{
-		if (this.arenaRegion.contains(BukkitUtil.toVector(event.getTo())))
-		{
-			this.scores.enterArena(event.getPlayer());
-			this.playersInArena.add(event.getPlayer());
-		}
-	}
-	
-	@EventHandler
-	public void entityDamgeHandler(EntityDamageEvent event)
-	{
-		if (!(event.getEntity() instanceof Player))
-		{
-			return;
-		}
-		if (this.team.getTeamOfPlayer((Player)event.getEntity()) != null)
-		{
-			this.scores.update();
-		}
-	}
-	
-	@EventHandler
-	public void entityRegainHealthHandler(EntityRegainHealthEvent event)
-	{
-		if (!(event.getEntity() instanceof Player))
-		{
-			return;
-		}
-		if (this.team.getTeamOfPlayer((Player)event.getEntity()) != null)
-		{
-			this.scores.update();
-		}
 	}
 }
