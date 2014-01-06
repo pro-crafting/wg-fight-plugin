@@ -1,5 +1,7 @@
-package me.Postremus.WarGear;
+package me.Postremus.WarGear.Team;
 
+import me.Postremus.WarGear.AdmincmdWrapper;
+import me.Postremus.WarGear.WarGear;
 import me.Postremus.WarGear.Arena.Arena;
 import me.Postremus.WarGear.Events.FightQuitEvent;
 

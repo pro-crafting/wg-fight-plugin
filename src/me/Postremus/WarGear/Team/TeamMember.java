@@ -1,4 +1,4 @@
-package me.Postremus.WarGear;
+package me.Postremus.WarGear.Team;
 
 import org.bukkit.entity.Player;
 

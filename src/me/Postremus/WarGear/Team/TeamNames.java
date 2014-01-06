@@ -1,4 +1,4 @@
-package me.Postremus.WarGear;
+package me.Postremus.WarGear.Team;
 
 public enum TeamNames {
 

@@ -1,4 +1,4 @@
-package me.Postremus.WarGear;
+package me.Postremus.WarGear.Team;
 
 import java.util.ArrayList;
 import java.util.List;

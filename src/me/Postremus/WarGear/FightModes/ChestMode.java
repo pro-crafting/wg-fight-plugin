@@ -8,10 +8,10 @@ import java.util.TimerTask;
 import me.Postremus.KitApi.API;
 import me.Postremus.WarGear.AdmincmdWrapper;
 import me.Postremus.WarGear.IFightMode;
-import me.Postremus.WarGear.TeamMember;
-import me.Postremus.WarGear.TeamNames;
 import me.Postremus.WarGear.WarGear;
 import me.Postremus.WarGear.Arena.Arena;
+import me.Postremus.WarGear.Team.TeamMember;
+import me.Postremus.WarGear.Team.TeamNames;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Difficulty;

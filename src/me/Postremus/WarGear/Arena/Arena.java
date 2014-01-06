@@ -5,12 +5,12 @@ import java.util.List;
 
 import me.Postremus.WarGear.FightState;
 import me.Postremus.WarGear.IFightMode;
-import me.Postremus.WarGear.TeamManager;
-import me.Postremus.WarGear.TeamMember;
 import me.Postremus.WarGear.WarGear;
 import me.Postremus.WarGear.Arena.ui.ScoreBoardDisplay;
 import me.Postremus.WarGear.Events.FightStateChangedEvent;
 import me.Postremus.WarGear.FightModes.KitMode;
+import me.Postremus.WarGear.Team.TeamManager;
+import me.Postremus.WarGear.Team.TeamMember;
 
 import org.bukkit.ChatColor;
 import org.bukkit.World;

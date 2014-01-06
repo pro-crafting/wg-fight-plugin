@@ -10,6 +10,7 @@ import me.Postremus.WarGear.Arena.ArenaManager;
 import me.Postremus.WarGear.Events.FightQuitEvent;
 import me.Postremus.WarGear.FightModes.ChestMode;
 import me.Postremus.WarGear.FightModes.KitMode;
+import me.Postremus.WarGear.Team.WgTeam;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;

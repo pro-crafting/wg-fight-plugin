@@ -12,12 +12,12 @@ import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
 
 import me.Postremus.WarGear.FightState;
-import me.Postremus.WarGear.TeamMember;
-import me.Postremus.WarGear.TeamNames;
 import me.Postremus.WarGear.WarGear;
-import me.Postremus.WarGear.WgTeam;
 import me.Postremus.WarGear.Arena.Arena;
 import me.Postremus.WarGear.Events.FightStateChangedEvent;
+import me.Postremus.WarGear.Team.TeamMember;
+import me.Postremus.WarGear.Team.TeamNames;
+import me.Postremus.WarGear.Team.WgTeam;
 
 public class ScoreBoardDisplay 
 {
