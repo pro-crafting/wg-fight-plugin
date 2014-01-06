@@ -27,7 +27,8 @@ public class ScoreBoardDisplay
 	private Scoreboard board;
 	private Team teamRed;
 	private Team teamBlue;
-	private int seconds;
+	private int minutes;
+	private int taskId;
 	
 	public ScoreBoardDisplay(WarGear plugin, Arena arena)
 	{
@@ -83,25 +84,23 @@ public class ScoreBoardDisplay
 		{
 			return;
 		}
-		seconds += 1;
-		if ((seconds / 60) >= 1)
-		{
-			int minutes = (int)seconds/60;
-			board.getObjective("Lebensanzeige").getScore(this.plugin.getServer().getOfflinePlayer(ChatColor.GREEN+"Dauer (m):")).setScore(minutes);
-		}
-		else
-		{
-			board.getObjective("Lebensanzeige").getScore(this.plugin.getServer().getOfflinePlayer(ChatColor.GREEN+"Dauer (m):")).setScore(0);
-		}
-		for (Player p : this.plugin.getServer().getOnlinePlayers())
-		{
-			p.setScoreboard(manager.getNewScoreboard());
-		}
-		for (Player p : this.arena.getPlayersInArena())
-		{
-			p.setScoreboard(board);
-		}
 		updateHealth();
+	}
+	
+	private void minuteUpdater()
+	{
+		board.getObjective("Lebensanzeige").getScore(this.plugin.getServer().getOfflinePlayer(ChatColor.GREEN+"Dauer (m):")).setScore(minutes);
+		minutes += 1;
+	}
+	
+	public void enterArena(Player p)
+	{
+		p.setScoreboard(board);
+	}
+	
+	public void leaveArena(Player p)
+	{
+		p.setScoreboard(manager.getNewScoreboard());
 	}
 	
 	private void updateHealth()
@@ -129,12 +128,19 @@ public class ScoreBoardDisplay
 	{
 		if (this.arena.getFightState() == FightState.Running)
 		{
-			this.seconds = 0;
+			this.minutes = 0;
 			initScoreboard();
+			this.taskId = this.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(this.plugin, new Runnable(){
+				public void run()
+				{
+					minuteUpdater();
+				}
+			}, 0, 1200);
 		}
 		else if (this.arena.getFightState() == FightState.Idle)
 		{
 			clearScoreboard();
+			this.plugin.getServer().getScheduler().cancelTask(taskId);
 		}
 	}
 }
