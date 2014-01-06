@@ -30,6 +30,7 @@ public class WgkCommandLogik implements Listener{
 	{
 		this.plugin = plugin;
 		this.arena = new ArenaManager(this.plugin);
+		this.plugin.getServer().getPluginManager().registerEvents(this, this.plugin);
 	}
 	
 	public ArenaManager getArenaManager()
