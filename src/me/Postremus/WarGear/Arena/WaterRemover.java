@@ -79,7 +79,7 @@ public class WaterRemover implements Listener
 	{
 		for (int i= this.explodedBlocks.size()-1;i>-1;i--)
 		{
-			if (this.explodedBlocks.get(i).getValue() == 35)
+			if (this.explodedBlocks.get(i).getValue() == 300)
 			{
 				Location loc = this.explodedBlocks.get(i).getKey();
 				Block b = loc.getBlock();
