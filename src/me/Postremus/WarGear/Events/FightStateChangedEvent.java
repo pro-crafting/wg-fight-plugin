@@ -35,7 +35,7 @@ public class FightStateChangedEvent extends Event
 
 	@Override
 	public HandlerList getHandlers() {
-		return this.handlers;
+		return handlers;
 	}
 	
     public static HandlerList getHandlerList() {
