@@ -35,6 +35,7 @@ public class ArenaReseter
 	private WarGear plugin;
 	private int currXChange;
 	private int currZChange;
+	private Location currLoc;
 	private int taskid;
 	private List<ProtectedRegion> regionsList;
 	private int regionIdx;
@@ -50,6 +51,7 @@ public class ArenaReseter
 		taskid = -1;
 		groundHeight = this.plugin.getRepo().getGroundHeight(arena);
 		arenaWorld = this.plugin.getServer().getWorld(this.plugin.getRepo().getWorldName(arena));
+		this.currLoc = new Location(arenaWorld, 0, 0, 0);
 		
 		regionsList = new ArrayList<ProtectedRegion>();
 
@@ -114,9 +116,12 @@ public class ArenaReseter
 		}
 		for (currZChange = region.getMinimumPoint().getBlockZ();currZChange<=region.getMaximumPoint().getBlockZ();currZChange++)
 		{
-			for (int y=groundHeight;y<=region.getMaximumPoint().getBlockY();y++)
+			for (int y=region.getMaximumPoint().getBlockY();y>=this.groundHeight;y--)
 			{
-				Block b = new Location(arenaWorld, currXChange, y, currZChange).getBlock();
+				this.currLoc.setX(currXChange);
+				this.currLoc.setY(y);
+				this.currLoc.setZ(currZChange);
+				Block b = this.currLoc.getBlock();
 				if (!b.getChunk().isLoaded())
 				{
 					b.getChunk().load();
