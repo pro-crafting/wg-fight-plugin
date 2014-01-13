@@ -88,6 +88,7 @@ public class WgkCommandLogik implements Listener{
 		p.sendMessage("Mit \"/wgk team add <spieler>\" fügst du Spieler zu deinem Team hinzu.");
 		p.sendMessage("Mit \"/wgk team remove <spieler>\" entfernst du Spieler aus deinem Team.");
 		p.sendMessage("Mit \"/wgk team ready\" schaltest du dein Team bereit.");
+		this.arena.getArena(arenaName).getScore().refreshPlayers();
 	}
 	
 	public void addTeamMember(CommandSender sender, String arenaName, String playerName)
@@ -128,6 +129,7 @@ public class WgkCommandLogik implements Listener{
 		team.add(p, false);
 		p.sendMessage("Du bist jetzt im Team von "+senderPlayer.getName()+".");
 		p.sendMessage("Mit \"/wgk team leave\" verlässt du das Team.");
+		this.arena.getArena(arenaName).getScore().refreshPlayers();
 	}
 	
 	public void removeTeamMember(CommandSender sender, String arenaName, String playerName)
@@ -172,6 +174,7 @@ public class WgkCommandLogik implements Listener{
 		}
 		team.remove(p);
 		p.sendMessage("Du bist nicht mehr in einen Team.");
+		this.arena.getArena(arenaName).getScore().refreshPlayers();
 	}
 	
 	private boolean isAnywhereInTeam(Player p)
@@ -206,6 +209,7 @@ public class WgkCommandLogik implements Listener{
 		Player senderPlayer = (Player)sender;
 		WgTeam team = this.arena.getArena(arenaName).getTeam().getTeamOfPlayer(senderPlayer);
 		team.remove(senderPlayer);
+		this.arena.getArena(arenaName).getScore().refreshPlayers();
 	}
 	
 	public void readifyTeam(CommandSender sender, String arenaName)
