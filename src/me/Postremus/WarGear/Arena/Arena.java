@@ -14,7 +14,18 @@ import me.Postremus.WarGear.Team.TeamManager;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityRegainHealthEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerKickEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
+
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.flags.InvalidFlagFormat;
@@ -36,6 +47,7 @@ public class Arena implements Listener{
 	private FightState arenaState;
 	private List<Player> playersInArena;
 	private ScoreBoardDisplay scores;
+	private ArenaListener listener;
 	
 	public Arena(WarGear plugin, String arenaName)
 	{
@@ -51,7 +63,8 @@ public class Arena implements Listener{
 		this.remover = new WaterRemover(this.plugin, this);
 		scores = new ScoreBoardDisplay(this.plugin, this);
 		this.playersInArena = new ArrayList<Player>();
-		this.plugin.getServer().getPluginManager().registerEvents(new ArenaListener(this.plugin, this), this.plugin);
+		this.listener = new ArenaListener(this.plugin, this);
+		this.plugin.getServer().getPluginManager().registerEvents(this.listener, this.plugin);
 	}
 	
 	private void loadRegions()

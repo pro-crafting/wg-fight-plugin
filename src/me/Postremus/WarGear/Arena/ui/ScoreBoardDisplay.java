@@ -48,10 +48,10 @@ public class ScoreBoardDisplay
 		teamBlue = board.registerNewTeam("team_blue");
 		teamBlue.setDisplayName("teamblue");
 		teamBlue.setPrefix(ChatColor.BLUE+"");
-		registerPlayers();
+		refreshPlayers();
 	}
 	
-	private void registerPlayers()
+	public void refreshPlayers()
 	{
 		for (TeamMember player : this.arena.getTeam().getTeam1().getTeamMembers())
 		{
@@ -74,10 +74,6 @@ public class ScoreBoardDisplay
 	
 	public void update()
 	{
-		if (this.arena.getFightState() != FightState.Running)
-		{
-			return;
-		}
 		updateHealth();
 	}
 	
@@ -97,6 +93,20 @@ public class ScoreBoardDisplay
 		p.setScoreboard(manager.getNewScoreboard());
 	}
 	
+	public void updateHealthOfPlayer(Player p, int health)
+	{
+		TeamMember member = this.arena.getTeam().getTeamOfPlayer(p).getTeamMember(p);
+		if (member.getAlive())
+		{
+			System.out.println(member.getPlayer().getHealth());
+			board.getObjective("Lebensanzeige").getScore(member.getPlayer()).setScore(health);
+		}
+		else
+		{
+			board.resetScores(member.getPlayer());
+		}
+	}
+	
 	private void updateHealth()
 	{
 		updateTeamHealt(this.arena.getTeam().getTeam1());
@@ -109,6 +119,7 @@ public class ScoreBoardDisplay
 		{
 			if (player.getAlive())
 			{
+				System.out.println(player.getPlayer().getHealth());
 				board.getObjective("Lebensanzeige").getScore(player.getPlayer()).setScore(player.getPlayer().getHealth());
 			}
 			else
@@ -120,7 +131,7 @@ public class ScoreBoardDisplay
 	
 	public void fightStateChanged()
 	{
-		if (this.arena.getFightState() == FightState.Running)
+		if (this.arena.getFightState() == FightState.Setup)
 		{
 			this.minutes = 0;
 			initScoreboard();

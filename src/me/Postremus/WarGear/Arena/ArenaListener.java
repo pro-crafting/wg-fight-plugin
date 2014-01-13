@@ -4,6 +4,7 @@ import me.Postremus.WarGear.WarGear;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
@@ -15,7 +16,7 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 
-public class ArenaListener implements Listener 
+public class ArenaListener implements Listener
 {
 	Arena arena;
 	WarGear plugin;
@@ -26,7 +27,7 @@ public class ArenaListener implements Listener
 		this.arena = arena;
 	}
 	
-	@EventHandler
+	@EventHandler (priority = EventPriority.LOWEST)
 	public void playerMoveHandler(PlayerMoveEvent event)
 	{
 		if (!event.getTo().getWorld().getName().equalsIgnoreCase(this.plugin.getRepo().getWorldName(this.arena)))
@@ -47,7 +48,7 @@ public class ArenaListener implements Listener
 		}
 	}
 	
-	@EventHandler
+	@EventHandler (priority = EventPriority.LOWEST)
 	public void playerJoinHandler(PlayerJoinEvent event)
 	{
 		if (this.arena.getArenaRegion().contains(BukkitUtil.toVector(event.getPlayer().getLocation())))
@@ -57,7 +58,7 @@ public class ArenaListener implements Listener
 		}
 	}
 	
-	@EventHandler
+	@EventHandler (priority = EventPriority.LOWEST)
 	public void playerQuitHandler(PlayerQuitEvent event)
 	{
 		if (this.arena.getArenaRegion().contains(BukkitUtil.toVector(event.getPlayer().getLocation())))
@@ -67,7 +68,7 @@ public class ArenaListener implements Listener
 		}
 	}
 	
-	@EventHandler
+	@EventHandler (priority = EventPriority.LOWEST)
 	public void playerKickHandler(PlayerKickEvent event)
 	{
 		if (this.arena.getArenaRegion().contains(BukkitUtil.toVector(event.getPlayer().getLocation())))
@@ -77,7 +78,7 @@ public class ArenaListener implements Listener
 		}
 	}
 	
-	@EventHandler
+	@EventHandler (priority = EventPriority.LOWEST)
 	public void playerTeleportHandler(PlayerTeleportEvent event)
 	{
 		if (this.arena.getArenaRegion().contains(BukkitUtil.toVector(event.getTo())))
@@ -87,29 +88,31 @@ public class ArenaListener implements Listener
 		}
 	}
 	
-	@EventHandler
+	@EventHandler (priority = EventPriority.LOWEST)
 	public void entityDamgeHandler(EntityDamageEvent event)
 	{
 		if (!(event.getEntity() instanceof Player))
 		{
 			return;
 		}
-		if (this.arena.getTeam().getTeamOfPlayer((Player)event.getEntity()) != null)
+		Player player = (Player)event.getEntity();
+		if (this.arena.getTeam().getTeamOfPlayer(player) != null)
 		{
-			this.arena.getScore().update();
+			this.arena.getScore().updateHealthOfPlayer(player, player.getHealth()-event.getDamage());
 		}
 	}
 	
-	@EventHandler
+	@EventHandler (priority = EventPriority.LOWEST)
 	public void entityRegainHealthHandler(EntityRegainHealthEvent event)
 	{
 		if (!(event.getEntity() instanceof Player))
 		{
 			return;
 		}
-		if (this.arena.getTeam().getTeamOfPlayer((Player)event.getEntity()) != null)
+		Player player = (Player)event.getEntity();
+		if (this.arena.getTeam().getTeamOfPlayer(player) != null)
 		{
-			this.arena.getScore().update();
+			this.arena.getScore().updateHealthOfPlayer(player, player.getHealth()+event.getAmount());
 		}
 	}
 }
