@@ -6,7 +6,9 @@ import java.util.TimerTask;
 
 import me.Postremus.WarGear.Arena.Arena;
 import me.Postremus.WarGear.Arena.ArenaManager;
+import me.Postremus.WarGear.Events.DrawQuitEvent;
 import me.Postremus.WarGear.Events.FightQuitEvent;
+import me.Postremus.WarGear.Events.TeamWinQuitEvent;
 import me.Postremus.WarGear.FightModes.ChestMode;
 import me.Postremus.WarGear.FightModes.KitMode;
 import me.Postremus.WarGear.Team.WgTeam;
@@ -314,7 +316,25 @@ public class WgkCommandLogik implements Listener{
 		event.getArena().close();
 		event.getArena().updateFightState(FightState.Idle);
 		event.getArena().getFightMode().stop();
-		event.getArena().getTeam().GenerateWinnerTeamOutput(event.getWinnerTeam().getTeamName());
+		if (event instanceof TeamWinQuitEvent)
+		{
+			TeamWinQuitEvent winEvent = (TeamWinQuitEvent)event;
+			String toBroadcast = "";
+			if (winEvent.getReason() == TeamWinReason.Death)
+			{
+				toBroadcast = ChatColor.DARK_GREEN + "Jeder aus dem ["+winEvent.getLooserTeam().getTeamName().toString().toUpperCase()+"] ist tot.";
+			}
+			event.getArena().broadcastMessage(toBroadcast);
+			event.getArena().getTeam().GenerateWinnerTeamOutput(winEvent.getWinnerTeam().getTeamName());
+		}
+		else if (event instanceof DrawQuitEvent)
+		{
+			DrawQuitEvent drawEvent = (DrawQuitEvent)event;
+			if (drawEvent.getReason() == DrawReason.Time)
+			{
+				event.getArena().broadcastMessage(ChatColor.DARK_GREEN + "Zeit abgelaufen - Unentschieden");
+			}
+		}
 		event.getArena().getTeam().quitFight();
 		event.getArena().setFightMode(new KitMode(this.plugin, event.getArena()));
 	}
