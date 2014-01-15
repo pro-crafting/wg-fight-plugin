@@ -86,12 +86,6 @@ public class ArenaReseter
 			}
 		}, 0, 1);
 		
-		try {
-			this.pasteGround(arenaWorld);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		removeItems(arenaWorld);
 	}
 	
@@ -99,6 +93,12 @@ public class ArenaReseter
 	{
 		this.plugin.getServer().getScheduler().cancelTask(taskid);
 		removeItems(arenaWorld);
+		try {
+			this.pasteGround(arenaWorld);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		this.arena.updateFightState(FightState.Idle);
 	}
 	
