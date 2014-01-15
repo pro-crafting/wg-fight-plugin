@@ -1,6 +1,7 @@
 package me.Postremus.WarGear.Arena.ui;
 
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Scoreboard;
@@ -21,8 +22,7 @@ public class ScoreBoardDisplay
 	private Scoreboard board;
 	private Team teamRed;
 	private Team teamBlue;
-	private int minutes;
-	private int taskId;
+	private ArenaTimer timer;
 	
 	public ScoreBoardDisplay(WarGear plugin, Arena arena)
 	{
@@ -30,6 +30,7 @@ public class ScoreBoardDisplay
 		this.arena = arena;
 		manager = this.plugin.getServer().getScoreboardManager();
 		board = manager.getNewScoreboard();
+		timer = new ArenaTimer(this.plugin, this.arena);
 	}
 	
 	private void initScoreboard()
@@ -37,6 +38,7 @@ public class ScoreBoardDisplay
 		board.registerNewObjective("Lebensanzeige", "dummy");
 		board.getObjective("Lebensanzeige").setDisplaySlot(DisplaySlot.SIDEBAR);
 		initTeams();
+		board.getObjective("Lebensanzeige").getScore(this.plugin.getServer().getOfflinePlayer(ChatColor.GREEN+"Zeit (m):")).setScore(0);
 	}
 	
 	private void initTeams()
@@ -72,17 +74,6 @@ public class ScoreBoardDisplay
 		board.getObjective("Lebensanzeige").unregister();
 	}
 	
-	public void update()
-	{
-		updateHealth();
-	}
-	
-	private void minuteUpdater()
-	{
-		board.getObjective("Lebensanzeige").getScore(this.plugin.getServer().getOfflinePlayer(ChatColor.GREEN+"Dauer (m):")).setScore(minutes);
-		minutes += 1;
-	}
-	
 	public void enterArena(Player p)
 	{
 		p.setScoreboard(board);
@@ -107,45 +98,25 @@ public class ScoreBoardDisplay
 		}
 	}
 	
-	private void updateHealth()
+	public void updateTime(int time)
 	{
-		updateTeamHealt(this.arena.getTeam().getTeam1());
-		updateTeamHealt(this.arena.getTeam().getTeam2());
-	}
-	
-	private void updateTeamHealt(WgTeam team)
-	{
-		for (TeamMember player : team.getTeamMembers())
-		{
-			if (player.getAlive())
-			{
-				System.out.println(player.getPlayer().getHealth());
-				board.getObjective("Lebensanzeige").getScore(player.getPlayer()).setScore(player.getPlayer().getHealth());
-			}
-			else
-			{
-				board.resetScores(player.getPlayer());
-			}
-		}
+		board.getObjective("Lebensanzeige").getScore(this.plugin.getServer().getOfflinePlayer(ChatColor.GREEN+"Zeit (m):")).setScore(time);
 	}
 	
 	public void fightStateChanged()
 	{
 		if (this.arena.getFightState() == FightState.Setup)
 		{
-			this.minutes = 0;
 			initScoreboard();
-			this.taskId = this.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(this.plugin, new Runnable(){
-				public void run()
-				{
-					minuteUpdater();
-				}
-			}, 0, 1200);
+		}
+		else if (this.arena.getFightState() == FightState.Running)
+		{
+			this.timer.start();
 		}
 		else if (this.arena.getFightState() == FightState.Idle)
 		{
 			clearScoreboard();
-			this.plugin.getServer().getScheduler().cancelTask(taskId);
+			this.timer.stop();
 		}
 	}
 }
