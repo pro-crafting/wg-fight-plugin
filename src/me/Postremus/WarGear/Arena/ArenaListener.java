@@ -1,5 +1,6 @@
 package me.Postremus.WarGear.Arena;
 
+import me.Postremus.WarGear.FightState;
 import me.Postremus.WarGear.WarGear;
 
 import org.bukkit.entity.Player;
@@ -96,10 +97,15 @@ public class ArenaListener implements Listener
 			return;
 		}
 		Player player = (Player)event.getEntity();
-		if (this.arena.getTeam().getTeamOfPlayer(player) != null)
+		if (this.arena.getTeam().getTeamOfPlayer(player) == null)
 		{
-			this.arena.getScore().updateHealthOfPlayer(player, player.getHealth()-event.getDamage());
+			return;
 		}
+		if (this.arena.getFightState() != FightState.Running)
+		{
+			event.setCancelled(true);
+		}
+		this.arena.getScore().updateHealthOfPlayer(player, player.getHealth()-event.getDamage());
 	}
 	
 	@EventHandler (priority = EventPriority.LOWEST)
