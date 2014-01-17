@@ -1,6 +1,7 @@
 package me.Postremus.WarGear.Team;
 
 import me.Postremus.WarGear.AdmincmdWrapper;
+import me.Postremus.WarGear.FightState;
 import me.Postremus.WarGear.TeamWinReason;
 import me.Postremus.WarGear.WarGear;
 import me.Postremus.WarGear.Arena.Arena;
@@ -121,23 +122,23 @@ public class TeamManager implements Listener
 	@EventHandler (priority = EventPriority.HIGH)
      public void deathEventHandler(PlayerDeathEvent event)
 	 {
-		Player died = event.getEntity().getPlayer();
-		WgTeam team = this.getTeamOfPlayer(died);
-		if (team != null && team.getTeamMember(died).getAlive())
-		{
-			team.getTeamMember(died).setAlive(false);
-			event.setDeathMessage(ChatColor.DARK_GREEN + died.getName() + "["+team.getTeamName().toString()+"] ist gestorben.");
-			this.checkAlives(team);
-		}
+		 if (arena.getFightState() != FightState.Running)
+		 {
+			 return;
+		 }
+		 Player died = event.getEntity().getPlayer();
+		 WgTeam team = this.getTeamOfPlayer(died);
+		 if (team != null && team.getTeamMember(died).getAlive())
+		 {
+			 team.getTeamMember(died).setAlive(false);
+			 event.setDeathMessage(ChatColor.DARK_GREEN + died.getName() + "["+team.getTeamName().toString()+"] ist gestorben.");
+			 this.checkAlives(team);
+		 }
 	 }
 	 
 	 @EventHandler (priority = EventPriority.HIGHEST)
 	 public void playerRespwanHandler(final PlayerRespawnEvent event)
 	 {
-		 if (arena == null)
-		 {
-			 return;
-		 }
 		 event.setRespawnLocation(this.plugin.getRepo().getEndWarpPoint(this.arena));
 		 
 		 this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable(){
