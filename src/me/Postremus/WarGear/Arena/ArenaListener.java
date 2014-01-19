@@ -96,7 +96,7 @@ public class ArenaListener implements Listener
 		{
 			return;
 		}
-		Player player = (Player)event.getEntity();
+		final Player player = (Player)event.getEntity();
 		if (this.arena.getTeam().getTeamOfPlayer(player) == null)
 		{
 			return;
@@ -104,8 +104,14 @@ public class ArenaListener implements Listener
 		if (this.arena.getFightState() != FightState.Running)
 		{
 			event.setCancelled(true);
+			return;
 		}
-		this.arena.getScore().updateHealthOfPlayer(player, player.getHealth()-event.getDamage());
+		this.plugin.getServer().getScheduler().runTask(this.plugin, new Runnable(){
+			public void run()
+			{
+				ArenaListener.this.arena.getScore().updateHealthOfPlayer(player, player.getHealth());
+			}
+		});
 	}
 	
 	@EventHandler (priority = EventPriority.LOWEST)
@@ -115,10 +121,15 @@ public class ArenaListener implements Listener
 		{
 			return;
 		}
-		Player player = (Player)event.getEntity();
+		final Player player = (Player)event.getEntity();
 		if (this.arena.getTeam().getTeamOfPlayer(player) != null)
 		{
-			this.arena.getScore().updateHealthOfPlayer(player, player.getHealth()+event.getAmount());
+			this.plugin.getServer().getScheduler().runTask(this.plugin, new Runnable(){
+				public void run()
+				{
+					ArenaListener.this.arena.getScore().updateHealthOfPlayer(player, player.getHealth());
+				}
+			});
 		}
 	}
 }
