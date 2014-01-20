@@ -18,7 +18,7 @@ public class ArenaTimer
 		this.plugin = plugin;
 		this.arena = arena;
 		taskId = -1;
-		countdownStartTime = 30;
+		countdownStartTime = 60;
 	}
 	
 	public void start()
@@ -44,7 +44,7 @@ public class ArenaTimer
 	private void updateTime()
 	{
 		this.arena.getScore().updateTime(countdownStartTime-fightDuration);
-		if (fightDuration - countdownStartTime == 0)
+		if (fightDuration == countdownStartTime)
 		{
 			this.plugin.getServer().getPluginManager().callEvent(new DrawQuitEvent(this.arena, this.arena.getTeam().getTeam1(), this.arena.getTeam().getTeam2()));
 		}
