@@ -28,98 +28,93 @@ public class WgkCommand implements CommandExecutor{
 		{
 			help(sender);
 		}
-		if (args.length > 0)
+		args = this.removeFlagsFromArgs(args);
+		if (args.length == 1)
 		{
-			args = this.removeFlagsFromArgs(args);
-			if (args.length == 1)
+			if (args[0].equalsIgnoreCase("count") && this.hasPermissionWrapper(sender, "wargear.count"))
 			{
-				if (args[0].equalsIgnoreCase("count") && this.hasPermissionWrapper(sender, "wargear.count"))
-				{
-					this.logik.StartManuelCountdown();
-				}
-				else if (args[0].equalsIgnoreCase("reload") && this.hasPermissionWrapper(sender, "wargear.reload"))
-				{
-					this.plugin.reloadConfig();
-					this.plugin.getServer().getPluginManager().disablePlugin(plugin);
-					this.plugin.getServer().getPluginManager().enablePlugin(plugin);
-					sender.sendMessage("Plugin wurde gereloadet.");
-				}
-				else
-				{
-					help(sender);
-				}
+				this.logik.StartManuelCountdown();
 			}
-			String arenaName = this.getArenaOfCommand(sender, args);
-			if (arenaName.equals("") || !this.plugin.getRepo().existsArena(arenaName))
+			else if (args[0].equalsIgnoreCase("reload") && this.hasPermissionWrapper(sender, "wargear.reload"))
 			{
-				sender.sendMessage("Die Arena "+ arenaName+" existiert nicht.");
-				return true;
+				this.plugin.reloadConfig();
+				this.plugin.getServer().getPluginManager().disablePlugin(plugin);
+				this.plugin.getServer().getPluginManager().enablePlugin(plugin);
+				sender.sendMessage("Plugin wurde gereloadet.");
 			}
-			if (args.length > 1)
+			else
 			{
-				if (args[0].equalsIgnoreCase("team"))
-				{
-					if (args[1].equalsIgnoreCase("leader")  && this.hasPermissionWrapper(sender, "wargear.team.leader"))
-					{
-						this.logik.addTeamLeader(sender, arenaName, args[2]);
-					}
-					else if (args[1].equalsIgnoreCase("leave")  && this.hasPermissionWrapper(sender, "wargear.team.leave"))
-					{
-						this.logik.leaveTeam(sender, arenaName);
-					}
-					else if (args[1].equalsIgnoreCase("add")  && this.hasPermissionWrapper(sender, "wargear.team.add"))
-					{
-						this.logik.addTeamMember(sender, arenaName, args[2]);
-					}
-					else if (args[1].equalsIgnoreCase("remove")  && this.hasPermissionWrapper(sender, "wargear.team.remove"))
-					{
-						this.logik.removeTeamMember(sender, arenaName, args[2]);
-					}
-					else if (args[1].equalsIgnoreCase("ready")  && this.hasPermissionWrapper(sender, "wargear.team.ready"))
-					{
-						this.logik.readifyTeam(sender, arenaName);
-					}
-					else
-					{
-						help(sender);
-					}
-				}
-				else if (args[0].equalsIgnoreCase("kit") && this.hasPermissionWrapper(sender, "wargear.fight.kit"))
-				{
-					this.logik.setKit(sender, args[1], arenaName);
-				}
-				else if (args[0].equalsIgnoreCase("arena"))
-				{
-					if (args[1].equalsIgnoreCase("open") && this.hasPermissionWrapper(sender, "wargear.arena.open"))
-					{
-						this.logik.getArenaManager().getArena(arenaName).open();
-					}
-					else if (args[1].equalsIgnoreCase("close") && this.hasPermissionWrapper(sender, "wargear.arena.close"))
-					{
-						this.logik.getArenaManager().getArena(arenaName).close();
-					}
-					else if (args[1].equalsIgnoreCase("list") && this.hasPermissionWrapper(sender, "wargear.arena.list"))
-					{
-						this.logik.showArenaNames(sender);
-					}
-					else if (args[1].equalsIgnoreCase("info")  && this.hasPermissionWrapper(sender, "wargear.arena.info"))
-					{
-						this.logik.showArenaInfo(sender, arenaName);
-					}
-					else if (args[1].equalsIgnoreCase("reset") && this.hasPermissionWrapper(sender, "wargear.arena.reset"))
-					{
-						this.logik.resetArena(sender, arenaName);
-					}
-					else
-					{
-						help(sender);
-					}
-				}
-				else
-				{
-					help(sender);
-				}
+				help(sender);
 			}
+			return true;
+		}
+		String arenaName = this.getArenaOfCommand(sender, args);
+		if (arenaName.equals("") || !this.plugin.getRepo().existsArena(arenaName))
+		{
+			sender.sendMessage("Die Arena "+ arenaName+" existiert nicht.");
+			return true;
+		}
+		if (args[0].equalsIgnoreCase("team"))
+		{
+			if (args[1].equalsIgnoreCase("leader")  && this.hasPermissionWrapper(sender, "wargear.team.leader"))
+			{
+				this.logik.addTeamLeader(sender, arenaName, args[2]);
+			}
+			else if (args[1].equalsIgnoreCase("leave")  && this.hasPermissionWrapper(sender, "wargear.team.leave"))
+			{
+				this.logik.leaveTeam(sender, arenaName);
+			}
+			else if (args[1].equalsIgnoreCase("add")  && this.hasPermissionWrapper(sender, "wargear.team.add"))
+			{
+				this.logik.addTeamMember(sender, arenaName, args[2]);
+			}
+			else if (args[1].equalsIgnoreCase("remove")  && this.hasPermissionWrapper(sender, "wargear.team.remove"))
+			{
+				this.logik.removeTeamMember(sender, arenaName, args[2]);
+			}
+			else if (args[1].equalsIgnoreCase("ready")  && this.hasPermissionWrapper(sender, "wargear.team.ready"))
+			{
+				this.logik.readifyTeam(sender, arenaName);
+			}
+			else
+			{
+				help(sender);
+			}
+		}
+		else if (args[0].equalsIgnoreCase("kit") && this.hasPermissionWrapper(sender, "wargear.fight.kit"))
+		{
+			this.logik.setKit(sender, args[1], arenaName);
+		}
+		else if (args[0].equalsIgnoreCase("arena"))
+		{
+			if (args[1].equalsIgnoreCase("open") && this.hasPermissionWrapper(sender, "wargear.arena.open"))
+			{
+				this.logik.getArenaManager().getArena(arenaName).open();
+			}
+			else if (args[1].equalsIgnoreCase("close") && this.hasPermissionWrapper(sender, "wargear.arena.close"))
+			{
+				this.logik.getArenaManager().getArena(arenaName).close();
+			}
+			else if (args[1].equalsIgnoreCase("list") && this.hasPermissionWrapper(sender, "wargear.arena.list"))
+			{
+				this.logik.showArenaNames(sender);
+			}
+			else if (args[1].equalsIgnoreCase("info")  && this.hasPermissionWrapper(sender, "wargear.arena.info"))
+			{
+				this.logik.showArenaInfo(sender, arenaName);
+			}
+			else if (args[1].equalsIgnoreCase("reset") && this.hasPermissionWrapper(sender, "wargear.arena.reset"))
+			{
+				this.logik.resetArena(sender, arenaName);
+			}
+			else
+			{
+				help(sender);
+			}
+		}
+		else
+		{
+			help(sender);
 		}
 		return true;
 	}
@@ -127,12 +122,10 @@ public class WgkCommand implements CommandExecutor{
 	private void help(CommandSender sender)
 	{
 		sender.sendMessage("Kein passender Befehl gefunden!");
-		sender.sendMessage("/wgk setup");
-		sender.sendMessage("/wgk start");
-		sender.sendMessage("/wgk quit team1");
-		sender.sendMessage("/wgk quit team2");
-		sender.sendMessage("/wgk team1 <User1> [User2] [Userx]");
-		sender.sendMessage("/wgk team2 <User1> [User2] [Userx]");
+		sender.sendMessage("/wgk team leader <playername>");
+		sender.sendMessage("/wgk team add <playername>");
+		sender.sendMessage("/wgk team remove <playername>");
+		sender.sendMessage("/wgk team leave");
 		sender.sendMessage("/wgk kit <kitName>");
 		sender.sendMessage("/wgk arena open");
 		sender.sendMessage("/wgk arena close");
