@@ -209,9 +209,15 @@ public class WgkCommandLogik implements Listener{
 			return;
 		}
 		Player senderPlayer = (Player)sender;
+		if (!isAnywhereInTeam(senderPlayer))
+		{
+			senderPlayer.sendMessage("Du bist in keinem Team.");
+			return;
+		}
 		WgTeam team = this.arena.getArena(arenaName).getTeam().getTeamOfPlayer(senderPlayer);
 		team.remove(senderPlayer);
 		this.arena.getArena(arenaName).getScore().refreshPlayers();
+		senderPlayer.sendMessage("Du bist raus aus dem Team.");
 	}
 	
 	public void readifyTeam(CommandSender sender, String arenaName)
