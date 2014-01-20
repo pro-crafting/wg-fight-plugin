@@ -59,23 +59,23 @@ public class WgkCommand implements CommandExecutor{
 			{
 				if (args[0].equalsIgnoreCase("team"))
 				{
-					if (args[1].equalsIgnoreCase("leader"))
+					if (args[1].equalsIgnoreCase("leader")  && this.hasPermissionWrapper(sender, "wargear.team.leader"))
 					{
 						this.logik.addTeamLeader(sender, arenaName, args[2]);
 					}
-					else if (args[1].equalsIgnoreCase("leave"))
+					else if (args[1].equalsIgnoreCase("leave")  && this.hasPermissionWrapper(sender, "wargear.team.leave"))
 					{
 						this.logik.leaveTeam(sender, arenaName);
 					}
-					else if (args[1].equalsIgnoreCase("add"))
+					else if (args[1].equalsIgnoreCase("add")  && this.hasPermissionWrapper(sender, "wargear.team.add"))
 					{
 						this.logik.addTeamMember(sender, arenaName, args[2]);
 					}
-					else if (args[1].equalsIgnoreCase("remove"))
+					else if (args[1].equalsIgnoreCase("remove")  && this.hasPermissionWrapper(sender, "wargear.team.remove"))
 					{
 						this.logik.removeTeamMember(sender, arenaName, args[2]);
 					}
-					else if (args[1].equalsIgnoreCase("ready"))
+					else if (args[1].equalsIgnoreCase("ready")  && this.hasPermissionWrapper(sender, "wargear.team.ready"))
 					{
 						this.logik.readifyTeam(sender, arenaName);
 					}
