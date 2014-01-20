@@ -107,7 +107,10 @@ public class ScoreBoardDisplay
 	{
 		if (this.arena.getFightState() == FightState.Setup)
 		{
-			initScoreboard();
+			if (board.getObjective("Lebensanzeige") == null)
+			{
+				initScoreboard();
+			}
 		}
 		else if (this.arena.getFightState() == FightState.Running)
 		{
