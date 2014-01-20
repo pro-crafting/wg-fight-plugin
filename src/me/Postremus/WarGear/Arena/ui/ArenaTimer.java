@@ -37,8 +37,14 @@ public class ArenaTimer
 		if (taskId != -1)
 		{
 			this.plugin.getServer().getScheduler().cancelTask(taskId);
+			taskId = -1;
 		}
 		this.fightDuration = 0;
+	}
+	
+	public boolean getIsRunning()
+	{
+		return this.taskId != -1;
 	}
 	
 	private void updateTime()

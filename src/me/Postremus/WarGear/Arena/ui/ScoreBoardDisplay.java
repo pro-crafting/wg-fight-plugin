@@ -38,7 +38,7 @@ public class ScoreBoardDisplay
 		board.registerNewObjective("Lebensanzeige", "dummy");
 		board.getObjective("Lebensanzeige").setDisplaySlot(DisplaySlot.SIDEBAR);
 		initTeams();
-		board.getObjective("Lebensanzeige").getScore(this.plugin.getServer().getOfflinePlayer(ChatColor.GREEN+"Zeit (m):")).setScore(0);
+		board.getObjective("Lebensanzeige").getScore(this.plugin.getServer().getOfflinePlayer(ChatColor.GREEN+"Zeit (m):")).setScore(60);
 	}
 	
 	private void initTeams()
@@ -115,8 +115,11 @@ public class ScoreBoardDisplay
 		}
 		else if (this.arena.getFightState() == FightState.Idle)
 		{
-			clearScoreboard();
-			this.timer.stop();
+			if (this.timer.getIsRunning())
+			{
+				this.timer.stop();
+				clearScoreboard();
+			}
 		}
 	}
 }
