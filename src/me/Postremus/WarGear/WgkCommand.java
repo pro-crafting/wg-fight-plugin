@@ -30,12 +30,6 @@ public class WgkCommand implements CommandExecutor{
 		}
 		if (args.length > 0)
 		{
-			String arenaName = this.getArenaOfCommand(sender, args);
-			if (arenaName.equals("") || !this.plugin.getRepo().existsArena(arenaName))
-			{
-				sender.sendMessage("Die Arena "+ arenaName+" existiert nicht.");
-				return true;
-			}
 			args = this.removeFlagsFromArgs(args);
 			if (args.length == 1)
 			{
@@ -54,6 +48,12 @@ public class WgkCommand implements CommandExecutor{
 				{
 					help(sender);
 				}
+			}
+			String arenaName = this.getArenaOfCommand(sender, args);
+			if (arenaName.equals("") || !this.plugin.getRepo().existsArena(arenaName))
+			{
+				sender.sendMessage("Die Arena "+ arenaName+" existiert nicht.");
+				return true;
 			}
 			if (args.length > 1)
 			{
@@ -78,6 +78,10 @@ public class WgkCommand implements CommandExecutor{
 					else if (args[1].equalsIgnoreCase("ready")  && this.hasPermissionWrapper(sender, "wargear.team.ready"))
 					{
 						this.logik.readifyTeam(sender, arenaName);
+					}
+					else
+					{
+						help(sender);
 					}
 				}
 				else if (args[0].equalsIgnoreCase("kit") && this.hasPermissionWrapper(sender, "wargear.fight.kit"))
