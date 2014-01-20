@@ -87,18 +87,12 @@ public class WgkRepository {
 		try
 		{
 			ret = Integer.parseInt(this.plugin.getConfig().getString("wgk.arenas."+arena.getArenaName()+".groundHeight"));
-			return ret;
 		}
 		catch(NumberFormatException ex)
 		{
 			System.out.println("[WarGear]Die Grounheight Option in der Config muss eine Ganzzahl sein für die Arena" + arena.getArenaName());
-			return 4;
 		}
-	}
-	
-	public String getDefaultArenaName()
-	{
-		return this.plugin.getConfig().getString("wgk.defaults.arena");
+		return ret;
 	}
 	
 	public String getDefaultKitName()
@@ -116,7 +110,7 @@ public class WgkRepository {
 		return this.plugin.getConfig().getBoolean("wgk.arenas."+arena.getArenaName()+".auto-reset", true);
 	}
 	
-	public Boolean existsArena(String arena)
+	public boolean existsArena(String arena)
 	{
 		for (String arenaName : this.plugin.getConfig().getConfigurationSection("wgk.arenas").getKeys(false)) 
 		{

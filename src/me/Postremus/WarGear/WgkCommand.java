@@ -166,10 +166,6 @@ public class WgkCommand implements CommandExecutor{
 				ret = this.plugin.getRepo().getArenaAtLocation(((BlockCommandSender)sender).getBlock().getLocation());
 			}
 		}
-		if (ret == "")
-		{
-			return this.plugin.getRepo().getDefaultArenaName();
-		}
 		return ret;
 	}
 	

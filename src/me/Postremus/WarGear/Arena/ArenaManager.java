@@ -37,19 +37,6 @@ public class ArenaManager {
 		return null;
 	}
 	
-	public Arena getDefaultArena()
-	{
-		String defaultName = this.plugin.getRepo().getDefaultArenaName();
-		for (Arena element : arenas)
-		{
-			if (element.getArenaName().equalsIgnoreCase(defaultName))
-			{
-				return element;
-			}
-		}
-		return null;
-	}
-	
 	public List<Arena> getArenas()
 	{
 		return this.arenas;

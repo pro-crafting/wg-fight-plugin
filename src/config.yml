@@ -1,6 +1,5 @@
 wgk:
     defaults:
-        arena: wgarena_1
         kit: 
     arenas:
         wgarena_1:
