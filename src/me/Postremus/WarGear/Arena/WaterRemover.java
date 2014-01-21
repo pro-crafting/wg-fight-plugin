@@ -25,6 +25,7 @@ public class WaterRemover implements Listener
 	private List<SimpleEntry<Location, Integer>> explodedBlocks;
 	private List<Location> waterList;
 	private int taskId;
+	private	List<BlockFace> waterFlowCheckDirections;
 	
 	public WaterRemover(WarGear plugin, Arena arena)
 	{
@@ -34,6 +35,12 @@ public class WaterRemover implements Listener
 		waterList = new ArrayList<Location>();
 		taskId = -1;
 		this.plugin.getServer().getPluginManager().registerEvents(this, this.plugin);
+		this.waterFlowCheckDirections = new ArrayList<BlockFace>();
+		this.waterFlowCheckDirections.add(BlockFace.UP);
+		this.waterFlowCheckDirections.add(BlockFace.NORTH);
+		this.waterFlowCheckDirections.add(BlockFace.EAST);
+		this.waterFlowCheckDirections.add(BlockFace.SOUTH);
+		this.waterFlowCheckDirections.add(BlockFace.WEST);
 	}
 	
 	public void start()
@@ -105,15 +112,14 @@ public class WaterRemover implements Listener
 	{
 		for (int i=this.waterList.size()-1;i>-1;i--)
 		{
-			for (Location removeLoc : getSourceBlocksOfWater(this.waterList.get(i)))
+			for (Block removeBlock : getSourceBlocksOfWater(this.waterList.get(i)))
 			{
-				Block b = removeLoc.getBlock();
-				if (!b.getChunk().isLoaded())
+				if (!removeBlock.getChunk().isLoaded())
 				{
-					b.getChunk().load();
+					removeBlock.getChunk().load();
 					continue;
 				}
-				b.setType(Material.AIR);
+				removeBlock.setType(Material.AIR);
 			}
 			Location loc = this.waterList.get(i);
 			Block b = loc.getBlock();
@@ -129,19 +135,11 @@ public class WaterRemover implements Listener
 		}
 	}
 	
-	private List<Location> getSourceBlocksOfWater(Location loc)
+	private List<Block> getSourceBlocksOfWater(Location loc)
 	{
 		List<Block> water = new ArrayList<Block>();
-		collectBlocks(loc.getBlock(), water);
-		List<Location> ret = new ArrayList<Location>();
-		for (Block waterLoc : water)
-		{
-			if (waterLoc.getType() == Material.STATIONARY_WATER)
-			{
-				ret.add(waterLoc.getLocation());
-			}
-		}
-		return ret;
+		collectBlocks(loc.getBlock(), water, new ArrayList<Block>());
+		return water;
 	}
 	
 	
@@ -149,7 +147,8 @@ public class WaterRemover implements Listener
 	 * https://forums.bukkit.org/threads/get-the-whole-stream-of-water-or-lava.110156/
 	 * Einige kleinere änderungen vorgenommen
 	 */
-	public void collectBlocks(Block anchor, List<Block> collected){
+	public void collectBlocks(Block anchor, List<Block> collected, List<Block> visitedBlocks)
+	{
 		 
 		   if(!(anchor.getType() == Material.WATER || anchor.getType() == Material.STATIONARY_WATER)) return;
 		 
@@ -158,11 +157,19 @@ public class WaterRemover implements Listener
 		   {
 			   collected.add(anchor);
 		   }
+		   if (visitedBlocks.contains(anchor))return;
+		   visitedBlocks.add(anchor);
+			   
+		   collectBlocks(anchor.getRelative(BlockFace.UP), collected, visitedBlocks);
 		   
-		   collectBlocks(anchor.getRelative(BlockFace.NORTH), collected);
-		   collectBlocks(anchor.getRelative(BlockFace.EAST), collected);
-		   collectBlocks(anchor.getRelative(BlockFace.SOUTH), collected);
-		   collectBlocks(anchor.getRelative(BlockFace.WEST), collected);
-		   collectBlocks(anchor.getRelative(BlockFace.UP), collected);
+		   int currLevel = anchor.getData();
+		   for (BlockFace face : this.waterFlowCheckDirections)
+		   {
+			   Block b = anchor.getRelative(face);
+			   if (b.getData() <= currLevel && !visitedBlocks.contains(b))
+			   {
+				   collectBlocks(b, collected, visitedBlocks);
+			   }
+		   }
 		}
 }
