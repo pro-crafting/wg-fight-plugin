@@ -12,6 +12,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 
@@ -85,8 +86,6 @@ public class ArenaReseter
 				}
 			}
 		}, 0, 1);
-		
-		removeItems(arenaWorld);
 	}
 	
 	private void stopClear()
@@ -161,7 +160,7 @@ public class ArenaReseter
 		vectors.add(arena.getRegionTeam2().getMaximumPoint());
 		BlockVector min = getMinBlockVec(vectors);
 		BlockVector max = getMaxBlockVec(vectors);
-		for (Entity curr : arenaWorld.getEntitiesByClass(Item.class))
+		for (Entity curr : arenaWorld.getEntitiesByClasses(Item.class, Arrow.class))
 		{
 			if (curr.getLocation().getBlockX() > min.getBlockX() &&
 					curr.getLocation().getBlockX() < max.getBlockX() &&
