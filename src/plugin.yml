@@ -1,10 +1,10 @@
 name: WarGear
-version: 0.7.0
+version: 0.8.0
 description: Postremus Wargear Arena Plugin
 website: http://dev.bukkit.org/bukkit-plugins/wargear-fight/
 author: postremus
 main: me.Postremus.WarGear.WarGear
-depend: [WorldGuard]
+depend: [WorldEdit, WorldGuard]
 
 commands:
   wgk:
