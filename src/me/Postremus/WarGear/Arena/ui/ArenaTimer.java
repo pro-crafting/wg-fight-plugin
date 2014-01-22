@@ -24,7 +24,7 @@ public class ArenaTimer
 	public void start()
 	{
 		this.stop();
-		this.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(this.plugin, new Runnable(){
+		this.taskId = this.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(this.plugin, new Runnable(){
 			public void run()
 			{
 				updateTime();
