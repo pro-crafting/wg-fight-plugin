@@ -28,7 +28,6 @@ public class WgkCommand implements CommandExecutor{
 		{
 			help(sender);
 		}
-		args = this.removeFlagsFromArgs(args);
 		if (args.length == 1)
 		{
 			if (args[0].equalsIgnoreCase("count") && this.hasPermissionWrapper(sender, "wargear.count"))
@@ -49,6 +48,7 @@ public class WgkCommand implements CommandExecutor{
 			return true;
 		}
 		String arenaName = this.getArenaOfCommand(sender, args);
+		args = this.removeFlagsFromArgs(args);
 		if (arenaName.equals("") || !this.plugin.getRepo().existsArena(arenaName))
 		{
 			sender.sendMessage("Die Arena "+ arenaName+" existiert nicht.");
