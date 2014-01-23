@@ -36,7 +36,6 @@ public class WaterRemover implements Listener
 		taskId = -1;
 		this.plugin.getServer().getPluginManager().registerEvents(this, this.plugin);
 		this.waterFlowCheckDirections = new ArrayList<BlockFace>();
-		this.waterFlowCheckDirections.add(BlockFace.UP);
 		this.waterFlowCheckDirections.add(BlockFace.NORTH);
 		this.waterFlowCheckDirections.add(BlockFace.EAST);
 		this.waterFlowCheckDirections.add(BlockFace.SOUTH);
@@ -86,15 +85,10 @@ public class WaterRemover implements Listener
 	{
 		for (int i= this.explodedBlocks.size()-1;i>-1;i--)
 		{
-			if (this.explodedBlocks.get(i).getValue() == 35)
+			if (this.explodedBlocks.get(i).getValue() == 160)
 			{
 				Location loc = this.explodedBlocks.get(i).getKey();
 				Block b = loc.getBlock();
-				if (!b.getChunk().isLoaded())
-				{
-					b.getChunk().load();
-					return;
-				}
 				if (b.getType() == Material.WATER || b.getType() == Material.STATIONARY_WATER)
 				{
 					this.waterList.add(loc);
@@ -149,27 +143,24 @@ public class WaterRemover implements Listener
 	 */
 	public void collectBlocks(Block anchor, List<Block> collected, List<Block> visitedBlocks)
 	{
-		 
-		   if(!(anchor.getType() == Material.WATER || anchor.getType() == Material.STATIONARY_WATER)) return;
-		 
-		   if(collected.contains(anchor)) return;
-		   if(anchor.getType() == Material.STATIONARY_WATER)
-		   {
-			   collected.add(anchor);
-		   }
-		   if (visitedBlocks.contains(anchor))return;
-		   visitedBlocks.add(anchor);
-			   
-		   collectBlocks(anchor.getRelative(BlockFace.UP), collected, visitedBlocks);
-		   
-		   int currLevel = anchor.getData();
-		   for (BlockFace face : this.waterFlowCheckDirections)
-		   {
-			   Block b = anchor.getRelative(face);
-			   if (b.getData() <= currLevel && !visitedBlocks.contains(b))
-			   {
-				   collectBlocks(b, collected, visitedBlocks);
-			   }
-		   }
+		if(!(anchor.getType() == Material.WATER || anchor.getType() == Material.STATIONARY_WATER)) return;
+		
+		if(collected.contains(anchor)) return;
+		if(anchor.getType() == Material.STATIONARY_WATER)
+		{
+		   collected.add(anchor);
 		}
+		if (visitedBlocks.contains(anchor))return;
+		visitedBlocks.add(anchor);
+		
+		Block b = anchor.getRelative(BlockFace.UP);
+		collectBlocks(anchor.getRelative(BlockFace.UP), collected, visitedBlocks);
+		
+		int currLevel = anchor.getData();
+		for (BlockFace face : this.waterFlowCheckDirections)
+		{
+			b = anchor.getRelative(face);
+			collectBlocks(b, collected, visitedBlocks);
+		}
+	}
 }
