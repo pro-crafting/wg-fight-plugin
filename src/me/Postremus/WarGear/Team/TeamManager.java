@@ -127,12 +127,18 @@ public class TeamManager implements Listener
 			 return;
 		 }
 		 Player died = event.getEntity().getPlayer();
-		 WgTeam team = this.getTeamOfPlayer(died);
+		 final WgTeam team = this.getTeamOfPlayer(died);
 		 if (team != null && team.getTeamMember(died).getAlive())
 		 {
 			 team.getTeamMember(died).setAlive(false);
 			 event.setDeathMessage(ChatColor.DARK_GREEN + died.getName() + "["+team.getTeamName().toString()+"] ist gestorben.");
-			 this.checkAlives(team);
+			 this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable()
+			 {
+				 public void run()
+				 {
+					 TeamManager.this.checkAlives(team);
+				 }
+			 });
 		 }
 	 }
 	 
