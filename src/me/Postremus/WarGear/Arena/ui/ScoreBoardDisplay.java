@@ -12,6 +12,7 @@ import me.Postremus.WarGear.FightState;
 import me.Postremus.WarGear.WarGear;
 import me.Postremus.WarGear.Arena.Arena;
 import me.Postremus.WarGear.Team.TeamMember;
+import me.Postremus.WarGear.Team.TeamNames;
 import me.Postremus.WarGear.Team.WgTeam;
 
 public class ScoreBoardDisplay 
@@ -50,21 +51,32 @@ public class ScoreBoardDisplay
 		teamBlue = board.registerNewTeam("team_blue");
 		teamBlue.setDisplayName("teamblue");
 		teamBlue.setPrefix(ChatColor.BLUE+"");
-		refreshPlayers();
 	}
 	
-	public void refreshPlayers()
+	public void removeTeamMember(TeamMember member, TeamNames team)
 	{
-		for (TeamMember player : this.arena.getTeam().getTeam1().getTeamMembers())
+		if (team == TeamNames.Team1)
 		{
-			teamRed.addPlayer(player.getPlayer());
-			board.getObjective("Lebensanzeige").getScore(player.getPlayer()).setScore(20);
+			teamRed.removePlayer(member.getPlayer());
 		}
-		for (TeamMember player : this.arena.getTeam().getTeam2().getTeamMembers())
+		else if (team == TeamNames.Team2)
 		{
-			teamBlue.addPlayer(player.getPlayer());
-			board.getObjective("Lebensanzeige").getScore(player.getPlayer()).setScore(20);
+			teamBlue.removePlayer(member.getPlayer());
 		}
+		board.resetScores(member.getPlayer());
+	}
+	
+	public void addTeamMember(TeamMember member, TeamNames team)
+	{
+		if (team == TeamNames.Team1)
+		{
+			teamRed.addPlayer(member.getPlayer());
+		}
+		else if (team == TeamNames.Team2)
+		{
+			teamBlue.addPlayer(member.getPlayer());
+		}
+		board.getObjective("Lebensanzeige").getScore(member.getPlayer()).setScore(20);
 	}
 	
 	private void clearScoreboard()
