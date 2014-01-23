@@ -76,7 +76,7 @@ public class WgkCommandLogik implements Listener{
 		Player p = this.plugin.getServer().getPlayer(playerName);
 		if (p == null)
 		{
-			sender.sendMessage(playerName +"ist kein Spieler.");
+			sender.sendMessage(playerName +" ist kein Spieler.");
 			return;
 		}
 		WgTeam team = this.arena.getArena(arenaName).getTeam().getTeamWithOutLeader();
@@ -90,7 +90,7 @@ public class WgkCommandLogik implements Listener{
 		p.sendMessage("Mit \"/wgk team add <spieler>\" fügst du Spieler zu deinem Team hinzu.");
 		p.sendMessage("Mit \"/wgk team remove <spieler>\" entfernst du Spieler aus deinem Team.");
 		p.sendMessage("Mit \"/wgk team ready\" schaltest du dein Team bereit.");
-		this.arena.getArena(arenaName).getScore().refreshPlayers();
+		this.arena.getArena(arenaName).getScore().addTeamMember(team.getTeamMember(p), team.getTeamName());
 	}
 	
 	public void addTeamMember(CommandSender sender, String arenaName, String playerName)
@@ -108,7 +108,7 @@ public class WgkCommandLogik implements Listener{
 		Player p = this.plugin.getServer().getPlayer(playerName);
 		if (p == null)
 		{
-			sender.sendMessage(playerName +"ist kein Spieler.");
+			sender.sendMessage(playerName +" ist kein Spieler.");
 			return;
 		}
 		if (!(sender instanceof Player))
@@ -131,7 +131,7 @@ public class WgkCommandLogik implements Listener{
 		team.add(p, false);
 		p.sendMessage("Du bist jetzt im Team von "+senderPlayer.getName()+".");
 		p.sendMessage("Mit \"/wgk team leave\" verlässt du das Team.");
-		this.arena.getArena(arenaName).getScore().refreshPlayers();
+		this.arena.getArena(arenaName).getScore().addTeamMember(team.getTeamMember(p), team.getTeamName());
 	}
 	
 	public void removeTeamMember(CommandSender sender, String arenaName, String playerName)
@@ -149,7 +149,7 @@ public class WgkCommandLogik implements Listener{
 		Player p = this.plugin.getServer().getPlayer(playerName);
 		if (p == null)
 		{
-			sender.sendMessage(playerName +"ist kein Spieler.");
+			sender.sendMessage(playerName +" ist kein Spieler.");
 			return;
 		}
 		if (!(sender instanceof Player))
@@ -174,9 +174,9 @@ public class WgkCommandLogik implements Listener{
 			senderPlayer.sendMessage("Der Team Leiter kann sich nicht rauswerfen.");
 			return;
 		}
-		team.remove(p);
 		p.sendMessage("Du bist nicht mehr in einen Team.");
-		this.arena.getArena(arenaName).getScore().refreshPlayers();
+		this.arena.getArena(arenaName).getScore().removeTeamMember(team.getTeamMember(p), team.getTeamName());
+		team.remove(p);
 	}
 	
 	private boolean isAnywhereInTeam(Player p)
@@ -215,8 +215,8 @@ public class WgkCommandLogik implements Listener{
 			return;
 		}
 		WgTeam team = this.arena.getArena(arenaName).getTeam().getTeamOfPlayer(senderPlayer);
+		this.arena.getArena(arenaName).getScore().removeTeamMember(team.getTeamMember(senderPlayer), team.getTeamName());
 		team.remove(senderPlayer);
-		this.arena.getArena(arenaName).getScore().refreshPlayers();
 		senderPlayer.sendMessage("Du bist raus aus dem Team.");
 	}
 	
