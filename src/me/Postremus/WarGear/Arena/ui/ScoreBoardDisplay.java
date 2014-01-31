@@ -101,7 +101,6 @@ public class ScoreBoardDisplay
 		TeamMember member = this.arena.getTeam().getTeamOfPlayer(p).getTeamMember(p);
 		if (member.getAlive())
 		{
-			System.out.println(member.getPlayer().getHealth());
 			board.getObjective("Lebensanzeige").getScore(member.getPlayer()).setScore(health);
 		}
 		else

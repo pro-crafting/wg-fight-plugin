@@ -109,7 +109,7 @@ public class ArenaListener implements Listener
 		this.plugin.getServer().getScheduler().runTask(this.plugin, new Runnable(){
 			public void run()
 			{
-				ArenaListener.this.arena.getScore().updateHealthOfPlayer(player, player.getHealth());
+				ArenaListener.this.arena.getScore().updateHealthOfPlayer(player, (int)player.getHealth());
 			}
 		});
 	}
@@ -127,7 +127,7 @@ public class ArenaListener implements Listener
 			this.plugin.getServer().getScheduler().runTask(this.plugin, new Runnable(){
 				public void run()
 				{
-					ArenaListener.this.arena.getScore().updateHealthOfPlayer(player, player.getHealth());
+					ArenaListener.this.arena.getScore().updateHealthOfPlayer(player, (int)player.getHealth());
 				}
 			});
 		}
