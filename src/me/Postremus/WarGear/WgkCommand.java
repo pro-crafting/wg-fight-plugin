@@ -27,6 +27,7 @@ public class WgkCommand implements CommandExecutor{
 		if (args.length == 0)
 		{
 			help(sender);
+			return true;
 		}
 		if (args.length == 1)
 		{
@@ -54,7 +55,7 @@ public class WgkCommand implements CommandExecutor{
 			sender.sendMessage("Die Arena "+ arenaName+" existiert nicht.");
 			return true;
 		}
-		if (args[0].equalsIgnoreCase("team"))
+		if (args[0].equalsIgnoreCase("team") && args.length > 1)
 		{
 			if (args[1].equalsIgnoreCase("leader")  && this.hasPermissionWrapper(sender, "wargear.team.leader"))
 			{
@@ -81,11 +82,11 @@ public class WgkCommand implements CommandExecutor{
 				help(sender);
 			}
 		}
-		else if (args[0].equalsIgnoreCase("kit") && this.hasPermissionWrapper(sender, "wargear.fight.kit"))
+		else if (args[0].equalsIgnoreCase("kit") && this.hasPermissionWrapper(sender, "wargear.fight.kit")  && args.length > 1)
 		{
 			this.logik.setKit(sender, args[1], arenaName);
 		}
-		else if (args[0].equalsIgnoreCase("arena"))
+		else if (args[0].equalsIgnoreCase("arena")  && args.length > 1)
 		{
 			if (args[1].equalsIgnoreCase("open") && this.hasPermissionWrapper(sender, "wargear.arena.open"))
 			{
