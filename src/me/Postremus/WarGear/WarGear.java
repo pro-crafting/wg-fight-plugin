@@ -2,16 +2,20 @@ package me.Postremus.WarGear;
 
 import java.io.File;
 
+import me.Postremus.Generator.BlockGenerator;
+
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class WarGear extends JavaPlugin {
 
 	private WgkRepository repo;
+	private BlockGenerator generator;
 	
 	@Override
 	public void onEnable() {
 		this.loadConfig();
 		this.repo = new WgkRepository(this);
+		generator = new BlockGenerator(this);
 		this.getCommand("wgk").setExecutor(new WgkCommand(this));
 		System.out.println("[WarGear] Plugin erfolgreich geladen!");
 	}
@@ -31,5 +35,10 @@ public class WarGear extends JavaPlugin {
 	public WgkRepository getRepo()
 	{
 		return this.repo;
+	}
+	
+	public BlockGenerator getGenerator()
+	{
+		return this.generator;
 	}
 }
