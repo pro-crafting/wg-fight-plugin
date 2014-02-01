@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.Postremus.Generator.CuboidGeneratorJob;
+import me.Postremus.Generator.GeneratorJobState;
+import me.Postremus.Generator.JobStateChangedEvent;
 import me.Postremus.WarGear.FightState;
 import me.Postremus.WarGear.WarGear;
 
@@ -15,6 +18,9 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.CuboidClipboard;
@@ -32,16 +38,10 @@ import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.schematic.MCEditSchematicFormat;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
-public class ArenaReseter 
+public class ArenaReseter implements Listener
 {
 	private Arena arena;
 	private WarGear plugin;
-	private int currXChange;
-	private int currZChange;
-	private Location currLoc;
-	private int taskid;
-	private List<ProtectedRegion> regionsList;
-	private int regionIdx;
 	private int groundHeight;
 	private World arenaWorld;
 	
@@ -49,50 +49,22 @@ public class ArenaReseter
 	{
 		this.arena = arena;
 		this.plugin = plugin;
-		currXChange = Integer.MIN_VALUE+1;
-		currZChange = Integer.MIN_VALUE+1;
-		taskid = -1;
 		groundHeight = this.plugin.getRepo().getGroundHeight(arena);
 		arenaWorld = this.plugin.getServer().getWorld(this.plugin.getRepo().getWorldName(arena));
-		this.currLoc = new Location(arenaWorld, 0, 0, 0);
-		
-		regionsList = new ArrayList<ProtectedRegion>();
-
-		regionsList.add(this.arena.getRegionTeam1());
-		regionsList.add(this.arena.getRegionTeam2());
-		
+		this.plugin.getServer().getPluginManager().registerEvents(this, this.plugin);
 	}
 	
 	public void reset()
 	{
-		regionIdx = 0;
-		if (taskid != -1)
-		{
-			this.plugin.getServer().getScheduler().cancelTask(taskid);
-		}
-		
-		taskid = this.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(this.plugin, new Runnable()
-		{
-			public void run() 
-			{
-				if (clear(arenaWorld, ArenaReseter.this.regionsList.get(ArenaReseter.this.regionIdx)))
-				{
-					if (ArenaReseter.this.regionIdx == 1)
-					{
-						ArenaReseter.this.stopClear();
-					}
-					else
-					{
-						ArenaReseter.this.regionIdx = 1;
-					}
-				}
-			}
-		}, 0, 1);
+		CuboidRegion rg = getPlayGroundRegion();
+		Location min = BukkitUtil.toLocation(this.arenaWorld, rg.getMinimumPoint());
+		min.setY(groundHeight);
+		Location max = BukkitUtil.toLocation(this.arenaWorld, rg.getMaximumPoint());
+		this.plugin.getGenerator().addJob(new CuboidGeneratorJob(min, max, Material.AIR, "ArenaReseter:"+this.arena.getArenaName()));
 	}
 	
 	private void stopClear()
 	{
-		this.plugin.getServer().getScheduler().cancelTask(taskid);
 		removeItems(arenaWorld);
 		try {
 			this.pasteGround(arenaWorld);
@@ -101,38 +73,6 @@ public class ArenaReseter
 			e.printStackTrace();
 		}
 		this.arena.updateFightState(FightState.Idle);
-	}
-	
-	private boolean clear(World arenaWorld, ProtectedRegion region)
-	{	
-		if (currXChange > region.getMaximumPoint().getBlockX())
-		{
-			currXChange = Integer.MIN_VALUE +1;
-			currZChange = Integer.MIN_VALUE +1;
-			return true;
-		}
-		if (currXChange < region.getMinimumPoint().getBlockX())
-		{
-			currXChange = region.getMinimumPoint().getBlockX();
-		}
-		for (currZChange = region.getMinimumPoint().getBlockZ();currZChange<=region.getMaximumPoint().getBlockZ();currZChange++)
-		{
-			for (int y=region.getMaximumPoint().getBlockY();y>=this.groundHeight;y--)
-			{
-				this.currLoc.setX(currXChange);
-				this.currLoc.setY(y);
-				this.currLoc.setZ(currZChange);
-				Block b = this.currLoc.getBlock();
-				if (!b.getChunk().isLoaded())
-				{
-					b.getChunk().load();
-					return false;
-				}
-				b.setType(Material.AIR);
-			}
-		}
-		currXChange++;
-		return false;
 	}
 	
 	private void pasteGround(World arenaWorld) throws FilenameException, IOException, DataException, MaxChangedBlocksException
@@ -223,5 +163,22 @@ public class ArenaReseter
 		return ret;
 	}
 	
-	
+	@EventHandler (priority = EventPriority.LOWEST)
+	public void generatorJobStateChangedHandler(JobStateChangedEvent event)
+	{
+		if (event.getTo() != GeneratorJobState.Finished)
+		{
+			return;
+		}
+		String name = event.getJob().getJobName();
+		if (!name.startsWith("ArenaReseter"))
+		{
+			return;
+		}
+		String[] splited = name.split(":");
+		if (splited.length>1 && splited[1].equals(this.arena.getArenaName()))
+		{
+			ArenaReseter.this.stopClear();
+		}
+	}
 }
