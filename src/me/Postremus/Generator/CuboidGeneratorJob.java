@@ -19,7 +19,7 @@ public class CuboidGeneratorJob implements IGeneratorJob
 	
 	public CuboidGeneratorJob(Location min, Location max, Material type, String jobName)
 	{
-		this.maximumBlockChange = 2000;
+		this.maximumBlockChange = 3000;
 		this.type = type;
 		currLoc = new Location(min.getWorld(), 0, 0, 0);
 		jobState = GeneratorJobState.Unstarted;
@@ -37,7 +37,7 @@ public class CuboidGeneratorJob implements IGeneratorJob
 	public Location getBlockLocationToChange() {
 		if (this.currX == max.getBlockX() && this.currY == min.getBlockY() && this.currZ == max.getBlockZ())
 		{
-			this.jobState = GeneratorJobState.Finished;
+			this.setState(GeneratorJobState.Finished);
 		}
 		if (this.currX == 0 && this.currY == 0 && this.currZ == 0)
 		{

@@ -37,17 +37,11 @@ public class BlockGenerator
 			currIdx = this.jobs.size()-1;
 		}
 		IGeneratorJob job = this.jobs.get(currIdx);
-		if (job.getState() == GeneratorJobState.Finished)
-		{
-			this.jobs.remove(currIdx);
-			currIdx = 0;
-			return;
-		}
 		if (job.getState() == GeneratorJobState.Paused)
 		{
 			return;
 		}
-		for (int i=0;i<job.getMaximumBlockChange();i++)
+		for (int i=0;i<job.getMaximumBlockChange()&&job.getState()!=GeneratorJobState.Finished;i++)
 		{
 			Block b = job.getBlockLocationToChange().getBlock();
 			//Kisten werden so oder so drops liefern
@@ -58,6 +52,12 @@ public class BlockGenerator
 				((BlockState)b).update(true);
 			}
 			b.setType(job.getType());
+		}
+		if (job.getState() == GeneratorJobState.Finished)
+		{
+			this.jobs.remove(currIdx);
+			currIdx = 0;
+			return;
 		}
 		if (currIdx > 0)
 		{
