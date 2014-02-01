@@ -135,26 +135,12 @@ public class WgkRepository {
 	}
 	
 	public WorldGuardPlugin getWorldGuard() {
-	    Plugin wgPlugin = this.plugin.getServer().getPluginManager().getPlugin("WorldGuard");
-	 
-	    // WorldGuard may not be loaded
-	    if (wgPlugin == null || !(wgPlugin instanceof WorldGuardPlugin)) {
-	        return null; // Maybe you want throw an exception instead
-	    }
-	 
-	    return (WorldGuardPlugin) wgPlugin;
+		return (WorldGuardPlugin) this.plugin.getServer().getPluginManager().getPlugin("WorldGuard");
 	}
 	
 	public WorldEditPlugin getWorldEdit()
 	{
-		Plugin wgPlugin = this.plugin.getServer().getPluginManager().getPlugin("WorldEdit");
-		 
-	    // WorldGuard may not be loaded
-	    if (wgPlugin == null || !(wgPlugin instanceof WorldEditPlugin)) {
-	        return null; // Maybe you want throw an exception instead
-	    }
-	 
-	    return (WorldEditPlugin) wgPlugin;
+		return (WorldEditPlugin)this.plugin.getServer().getPluginManager().getPlugin("WorldEdit");
 	}
 	
 	public List<String> getArenaNames()

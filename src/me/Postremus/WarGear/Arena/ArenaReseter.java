@@ -24,9 +24,11 @@ import com.sk89q.worldedit.LocalConfiguration;
 import com.sk89q.worldedit.LocalPlayer;
 import com.sk89q.worldedit.MaxChangedBlocksException;
 import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.data.DataException;
+import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.schematic.MCEditSchematicFormat;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
@@ -153,23 +155,24 @@ public class ArenaReseter
 	
 	private void removeItems(World arenaWorld)
 	{
+		CuboidRegion rg = getPlayGroundRegion();
+		for (Entity curr : arenaWorld.getEntitiesByClasses(Item.class, Arrow.class))
+		{
+			if (rg.contains(BukkitUtil.toVector(curr.getLocation())))
+			{
+				curr.remove();
+			}
+		}
+	}
+	
+	private CuboidRegion getPlayGroundRegion()
+	{
 		List<BlockVector> vectors = new ArrayList<BlockVector>();
 		vectors.add(arena.getRegionTeam1().getMinimumPoint());
 		vectors.add(arena.getRegionTeam2().getMinimumPoint());
 		vectors.add(arena.getRegionTeam1().getMaximumPoint());
 		vectors.add(arena.getRegionTeam2().getMaximumPoint());
-		BlockVector min = getMinBlockVec(vectors);
-		BlockVector max = getMaxBlockVec(vectors);
-		for (Entity curr : arenaWorld.getEntitiesByClasses(Item.class, Arrow.class))
-		{
-			if (curr.getLocation().getBlockX() > min.getBlockX() &&
-					curr.getLocation().getBlockX() < max.getBlockX() &&
-					curr.getLocation().getBlockZ() > min.getBlockZ() &&
-					curr.getLocation().getBlockZ() < max.getBlockZ())
-			{
-				curr.remove();
-			}
-		}
+		return new CuboidRegion(getMinBlockVec(vectors), getMaxBlockVec(vectors));
 	}
 	
 	private BlockVector getMinBlockVec(List<BlockVector> toCheck)
@@ -219,4 +222,6 @@ public class ArenaReseter
 		ret.setY(maxY);
 		return ret;
 	}
+	
+	
 }
