@@ -61,4 +61,6 @@
         <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
         <antcall target="build"/>
     </target>
+	<target description="fake" name="test">
+    </target>
 </project>
