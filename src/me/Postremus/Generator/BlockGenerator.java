@@ -44,13 +44,6 @@ public class BlockGenerator
 		for (int i=0;i<job.getMaximumBlockChange()&&job.getState()!=GeneratorJobState.Finished;i++)
 		{
 			Block b = job.getBlockLocationToChange().getBlock();
-			//Kisten werden so oder so drops liefern
-			//Da die drops nicht gewünscht sind, werden kisten, dropper, etc. zuerst geleert.
-			if (b instanceof InventoryHolder)
-			{
-				((InventoryHolder)b).getInventory().clear();
-				((BlockState)b).update(true);
-			}
 			b.setType(job.getType());
 		}
 		if (job.getState() == GeneratorJobState.Finished)
