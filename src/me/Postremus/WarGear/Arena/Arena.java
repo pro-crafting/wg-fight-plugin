@@ -200,12 +200,13 @@ public class Arena{
 	{
 		FightStateChangedEvent fightStateEvent = new FightStateChangedEvent(this.name, this.arenaState, state);
 		this.plugin.getServer().getPluginManager().callEvent(fightStateEvent);
-		if (this.arenaState == FightState.Running && state == FightState.Idle && this.plugin.getRepo().getAutoReset(this))
+		
+		if (this.arenaState == FightState.Running && fightStateEvent.getTo() == FightState.Idle && this.plugin.getRepo().getAutoReset(this))
 		{
 			this.arenaState = FightState.Reseting;
 			this.reseter.reset();
 		}
-		this.arenaState = state;
+		this.arenaState = fightStateEvent.getTo();
 		this.scores.fightStateChanged();
 	}
 }

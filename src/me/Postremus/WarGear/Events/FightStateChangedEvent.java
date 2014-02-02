@@ -33,6 +33,11 @@ public class FightStateChangedEvent extends Event
 		return to;
 	}
 
+	public void setTo(FightState to)
+	{
+		this.to = to;
+	}
+	
 	@Override
 	public HandlerList getHandlers() {
 		return handlers;
