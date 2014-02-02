@@ -1,0 +1,27 @@
+wgk:
+    defaults:
+        kit: 
+    arenas:
+        wgarena_1:
+            world:
+            arenaRegion:
+            mode: kit
+            groundHeight:
+            groundschematic:
+            auto-reset: true
+            regions:
+                Team1:
+                Team2:
+            warpFightStart:
+                Team1:
+                    x:
+                    y:
+                    z:
+                Team2:
+                    x:
+                    y:
+                    z:
+            warpFightEnd:
+                x:
+                y:
+                z:
