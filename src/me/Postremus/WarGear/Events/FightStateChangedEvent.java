@@ -14,11 +14,12 @@ public class FightStateChangedEvent extends Event
 	
 	public FightStateChangedEvent(String arenaName, FightState from, FightState to)
 	{
+		this.arenaName = arenaName;
 		this.from = from;
 		this.to = to;
 	}
 	
-	public String arenaName()
+	public String getArenaName()
 	{
 		return arenaName;
 	}

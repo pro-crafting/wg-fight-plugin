@@ -3,6 +3,9 @@ package me.Postremus.WarGear.Arena.ui;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
@@ -11,11 +14,12 @@ import org.bukkit.scoreboard.Team;
 import me.Postremus.WarGear.FightState;
 import me.Postremus.WarGear.WarGear;
 import me.Postremus.WarGear.Arena.Arena;
+import me.Postremus.WarGear.Events.FightStateChangedEvent;
 import me.Postremus.WarGear.Team.TeamMember;
 import me.Postremus.WarGear.Team.TeamNames;
 import me.Postremus.WarGear.Team.WgTeam;
 
-public class ScoreBoardDisplay 
+public class ScoreBoardDisplay implements Listener
 {
 	private WarGear plugin;
 	private Arena arena;
@@ -32,6 +36,7 @@ public class ScoreBoardDisplay
 		manager = this.plugin.getServer().getScoreboardManager();
 		board = manager.getNewScoreboard();
 		timer = new ArenaTimer(this.plugin, this.arena);
+		this.plugin.getServer().getPluginManager().registerEvents(this, this.plugin);
 	}
 	
 	private void initScoreboard()
@@ -114,20 +119,26 @@ public class ScoreBoardDisplay
 		board.getObjective("Lebensanzeige").getScore(this.plugin.getServer().getOfflinePlayer(ChatColor.GREEN+"Zeit (m):")).setScore(time);
 	}
 	
-	public void fightStateChanged()
+	@EventHandler (priority = EventPriority.LOWEST)
+	public void fightStateChangedHandler(FightStateChangedEvent event)
 	{
-		if (this.arena.getFightState() == FightState.Setup)
+		if (!event.getArenaName().equalsIgnoreCase(this.arena.getArenaName()))
+		{
+			return;
+		}
+		
+		if (event.getTo() == FightState.Setup)
 		{
 			if (board.getObjective("Lebensanzeige") == null)
 			{
 				initScoreboard();
 			}
 		}
-		else if (this.arena.getFightState() == FightState.Running)
+		else if (event.getTo() == FightState.Running)
 		{
 			this.timer.start();
 		}
-		else if (this.arena.getFightState() == FightState.Idle)
+		else if (event.getTo() == FightState.Idle)
 		{
 			if (this.timer.getIsRunning())
 			{
