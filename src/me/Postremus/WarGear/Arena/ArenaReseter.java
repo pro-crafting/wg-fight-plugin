@@ -10,6 +10,7 @@ import me.Postremus.Generator.GeneratorJobState;
 import me.Postremus.Generator.JobStateChangedEvent;
 import me.Postremus.WarGear.FightState;
 import me.Postremus.WarGear.WarGear;
+import me.Postremus.WarGear.Events.FightStateChangedEvent;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -179,6 +180,28 @@ public class ArenaReseter implements Listener
 		if (splited.length>1 && splited[1].equals(this.arena.getArenaName()))
 		{
 			ArenaReseter.this.stopClear();
+		}
+	}
+	
+	@EventHandler (priority = EventPriority.LOWEST)
+	public void fightStateChangedHandler(FightStateChangedEvent event)
+	{
+		if (!event.getArenaName().equalsIgnoreCase(this.arena.getArenaName()))
+		{
+			return;
+		}
+		
+		if (event.getTo() == FightState.Running)
+		{
+			this.removeItems(arenaWorld);
+		}
+		else if (event.getTo() == FightState.Running)
+		{
+			if (this.plugin.getRepo().getAutoReset(this.arena))
+			{
+				event.setTo(FightState.Reseting);
+				this.reset();
+			}
 		}
 	}
 }
