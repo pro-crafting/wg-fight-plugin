@@ -44,36 +44,36 @@ import me.Postremus.WarGear.Team.TeamMember;
 		{
 			this.arena.broadcastMessage(ChatColor.YELLOW+"Bitte alle Teilnehmer in ihre Wargears");
 			this.arena.broadcastMessage(ChatColor.YELLOW+"Fight startet in:");
-			this.arena.broadcastMessage(ChatColor.DARK_GREEN + "60 Sekunden");
+			this.arena.broadcastMessage(ChatColor.GOLD + "60 Sekunden");
 		}
 		else if (counter == 10)
 		{
-			this.arena.broadcastMessage(ChatColor.DARK_GREEN + "50 Sekunden");
+			this.arena.broadcastMessage(ChatColor.GOLD + "50 Sekunden");
 		}
 		else if (counter == 20)
 		{
-			this.arena.broadcastMessage(ChatColor.DARK_GREEN + "40 Sekunden");
+			this.arena.broadcastMessage(ChatColor.GOLD + "40 Sekunden");
 		}
 		else if (counter == 30)
 		{
-			this.arena.broadcastMessage(ChatColor.DARK_GREEN + "30 Sekunden");
+			this.arena.broadcastMessage(ChatColor.GOLD + "30 Sekunden");
 		}
 		else if (counter == 40)
 		{
-			this.arena.broadcastMessage(ChatColor.DARK_GREEN + "20 Sekunden");
+			this.arena.broadcastMessage(ChatColor.GOLD + "20 Sekunden");
 		}
 		else if (counter == 45)
 		{
-			this.arena.broadcastMessage(ChatColor.DARK_GREEN + "15 Sekunden");
+			this.arena.broadcastMessage(ChatColor.GOLD + "15 Sekunden");
 		}
 		else if (counter == 50)
 		{
-			this.arena.broadcastMessage(ChatColor.DARK_GREEN + "10 Sekunden");
+			this.arena.broadcastMessage(ChatColor.GOLD + "10 Sekunden");
 		}
 		else if (counter > 50 && 60-counter > 3)
 		{
 			int diff = 60-counter;
-			this.arena.broadcastMessage(ChatColor.DARK_GREEN + "" + diff +" Sekunden");
+			this.arena.broadcastMessage(ChatColor.GOLD + "" + diff +" Sekunden");
 		}
 		else if (counter > 56 && 60-counter > 0)
 		{
