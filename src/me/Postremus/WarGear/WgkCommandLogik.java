@@ -40,23 +40,6 @@ public class WgkCommandLogik implements Listener{
 		return this.arena;
 	}
 	
-	public void setup(CommandSender sender, String arenaName)
-	{
-		if (!this.plugin.getRepo().existsArena(arenaName))
-		{
-			sender.sendMessage("Die Arena "+ arenaName+" existiert nicht.");
-			return;
-		}
-		if (this.arena.getArena(arenaName).getFightState() == FightState.Idle)
-		{
-			this.plugin.getRepo().init();
-			this.arena.getArena(arenaName).updateFightState(FightState.Setup);
-			sender.sendMessage("Setup für "+arenaName+" gestartet.");
-			return;
-		}
-		sender.sendMessage("Es ist bereits ein Fight Setup in der Arena "+ arenaName + " gestartet worden.");
-	}
-	
 	public void addTeamLeader(CommandSender sender, String arenaName, String playerName)
 	{
 		if (!this.plugin.getRepo().existsArena(arenaName))
@@ -66,7 +49,7 @@ public class WgkCommandLogik implements Listener{
 		}
 		if (this.arena.getArena(arenaName).getFightState() == FightState.Idle)
 		{
-			this.setup(sender, arenaName);
+			this.arena.getArena(arenaName).updateFightState(FightState.Setup);
 		}
 		if (this.arena.getArena(arenaName).getFightState() == FightState.Running)
 		{

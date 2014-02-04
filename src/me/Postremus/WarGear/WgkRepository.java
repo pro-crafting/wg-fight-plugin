@@ -23,11 +23,6 @@ public class WgkRepository {
 	public WgkRepository(WarGear plugin)
 	{
 		this.plugin = plugin;
-		this.init();
-	}
-
-	public void init()
-	{
 	}
 	
 	public String getWorldName(Arena arena)
