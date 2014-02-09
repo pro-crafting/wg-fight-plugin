@@ -39,13 +39,11 @@ public class ArenaListener implements Listener
 		boolean isPlayerInArena = this.arena.getPlayersInArena().contains(event.getPlayer());
 		if (!isInArena && isPlayerInArena)
 		{
-			this.arena.getScore().leaveArena(event.getPlayer());
-			this.arena.getPlayersInArena().remove(event.getPlayer());
+			this.removePlayer(event.getPlayer());
 		}
 		else if (isInArena && !isPlayerInArena)
 		{
-			this.arena.getScore().enterArena(event.getPlayer());
-			this.arena.getPlayersInArena().add(event.getPlayer());
+			this.addPlayer(event.getPlayer());
 		}
 	}
 	
@@ -54,8 +52,7 @@ public class ArenaListener implements Listener
 	{
 		if (this.arena.getRepo().getArenaRegion().contains(BukkitUtil.toVector(event.getPlayer().getLocation())))
 		{
-			this.arena.getScore().enterArena(event.getPlayer());
-			this.arena.getPlayersInArena().add(event.getPlayer());
+			this.addPlayer(event.getPlayer());
 		}
 	}
 	
@@ -64,8 +61,7 @@ public class ArenaListener implements Listener
 	{
 		if (this.arena.getRepo().getArenaRegion().contains(BukkitUtil.toVector(event.getPlayer().getLocation())))
 		{
-			this.arena.getScore().leaveArena(event.getPlayer());
-			this.arena.getPlayersInArena().remove(event.getPlayer());
+			this.removePlayer(event.getPlayer());
 		}
 	}
 	
@@ -74,8 +70,7 @@ public class ArenaListener implements Listener
 	{
 		if (this.arena.getRepo().getArenaRegion().contains(BukkitUtil.toVector(event.getPlayer().getLocation())))
 		{
-			this.arena.getScore().leaveArena(event.getPlayer());
-			this.arena.getPlayersInArena().remove(event.getPlayer());
+			this.removePlayer(event.getPlayer());
 		}
 	}
 	
@@ -84,9 +79,24 @@ public class ArenaListener implements Listener
 	{
 		if (this.arena.getRepo().getArenaRegion().contains(BukkitUtil.toVector(event.getTo())))
 		{
-			this.arena.getScore().enterArena(event.getPlayer());
-			this.arena.getPlayersInArena().add(event.getPlayer());
+			this.addPlayer(event.getPlayer());
 		}
+		else
+		{
+			this.removePlayer(event.getPlayer());
+		}
+	}
+	
+	private void addPlayer(Player p)
+	{
+		this.arena.getScore().enterArena(p);
+		this.arena.getPlayersInArena().add(p);
+	}
+	
+	private void removePlayer(Player p)
+	{
+		this.arena.getScore().leaveArena(p);
+		this.arena.getPlayersInArena().remove(p);
 	}
 	
 	@EventHandler (priority = EventPriority.LOWEST)
@@ -103,8 +113,8 @@ public class ArenaListener implements Listener
 		}
 		if (this.arena.getFightState() != FightState.Running)
 		{
-			//event.setCancelled(true);
-			//return;
+			event.setCancelled(true);
+			return;
 		}
 		this.plugin.getServer().getScheduler().runTask(this.plugin, new Runnable(){
 			public void run()
@@ -127,7 +137,6 @@ public class ArenaListener implements Listener
 			this.plugin.getServer().getScheduler().runTask(this.plugin, new Runnable(){
 				public void run()
 				{
-					System.out.println("Health: "+player.getHealth());
 					ArenaListener.this.arena.getScore().updateHealthOfPlayer(player, (int)player.getHealth());
 				}
 			});
