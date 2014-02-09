@@ -31,7 +31,7 @@ public class ArenaListener implements Listener
 	@EventHandler (priority = EventPriority.LOWEST)
 	public void playerMoveHandler(PlayerMoveEvent event)
 	{
-		if (!event.getTo().getWorld().getName().equalsIgnoreCase(this.arena.getRepo().getWorld().getName()))
+		if (!event.getTo().getWorld().equals(this.arena.getRepo().getWorld()))
 		{
 			return;
 		}
