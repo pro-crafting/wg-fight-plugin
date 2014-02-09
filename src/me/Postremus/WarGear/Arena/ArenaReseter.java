@@ -44,7 +44,6 @@ public class ArenaReseter implements Listener
 	private Arena arena;
 	private WarGear plugin;
 	private int groundHeight;
-	private World arenaWorld;
 	
 	public ArenaReseter(WarGear plugin, Arena arena)
 	{
@@ -57,17 +56,17 @@ public class ArenaReseter implements Listener
 	public void reset()
 	{
 		CuboidRegion rg = getPlayGroundRegion();
-		Location min = BukkitUtil.toLocation(this.arenaWorld, rg.getMinimumPoint());
+		Location min = BukkitUtil.toLocation(this.arena.getRepo().getWorld(), rg.getMinimumPoint());
 		min.setY(groundHeight);
-		Location max = BukkitUtil.toLocation(this.arenaWorld, rg.getMaximumPoint());
+		Location max = BukkitUtil.toLocation(this.arena.getRepo().getWorld(), rg.getMaximumPoint());
 		this.plugin.getGenerator().addJob(new CuboidGeneratorJob(min, max, Material.AIR, "ArenaReseter:"+this.arena.getArenaName()));
 	}
 	
 	private void stopClear()
 	{
-		removeItems(arenaWorld);
+		removeItems(this.arena.getRepo().getWorld());
 		try {
-			this.pasteGround(arenaWorld);
+			this.pasteGround(this.arena.getRepo().getWorld());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -192,7 +191,7 @@ public class ArenaReseter implements Listener
 		
 		if (event.getTo() == FightState.Running)
 		{
-			this.removeItems(arenaWorld);
+			this.removeItems(this.arena.getRepo().getWorld());
 		}
 		else if (event.getTo() == FightState.Running)
 		{
