@@ -39,8 +39,8 @@ public class ChestMode extends FightBase implements IFightMode, Listener{
 	public void start() {
 		// TODO Auto-generated method stub
 		super.start();
-		this.fillChest(this.plugin.getRepo().getFightStartWarpPointTeam1(this.arena));
-		this.fillChest(this.plugin.getRepo().getFightStartWarpPointTeam2(this.arena));
+		this.fillChest(this.arena.getRepo().getTeam1Warp());
+		this.fillChest(this.arena.getRepo().getTeam1Warp());
 		
 		this.plugin.getServer().getPluginManager().registerEvents(this, this.plugin);
 		PlayerMoveEvent.getHandlerList().unregister(this);
@@ -175,7 +175,7 @@ public class ChestMode extends FightBase implements IFightMode, Listener{
 		{
 			this.timer.cancel();
 			this.arena.broadcastMessage(ChatColor.AQUA + "Fight beginnt. Viel Spaﬂ. :)");
-			this.plugin.getServer().getWorld(this.plugin.getRepo().getWorldName(this.arena)).setDifficulty(Difficulty.EASY);
+			this.arena.getRepo().getWorld().setDifficulty(Difficulty.EASY);
 			PlayerInteractEvent.getHandlerList().unregister(this);
 			this.plugin.getServer().getPluginManager().registerEvents(this, this.plugin);
 			this.arena.open();
@@ -220,7 +220,7 @@ public class ChestMode extends FightBase implements IFightMode, Listener{
 		}
 		Chest b = ((Chest)event.getClickedBlock().getState());
 		Location clickedChest = b.getLocation();
-		if (compareChestLocation(clickedChest, this.plugin.getRepo().getFightStartWarpPointTeam1(arena)) || compareChestLocation(clickedChest, this.plugin.getRepo().getFightStartWarpPointTeam2(arena)))
+		if (compareChestLocation(clickedChest, arena.getRepo().getTeam1Warp()) || compareChestLocation(clickedChest, arena.getRepo().getTeam2Warp()))
 		{
 			event.setCancelled(this.areChestsOpen);
 		}

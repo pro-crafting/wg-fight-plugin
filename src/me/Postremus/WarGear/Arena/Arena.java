@@ -14,6 +14,7 @@ import me.Postremus.WarGear.Team.TeamManager;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.flags.InvalidFlagFormat;
@@ -29,40 +30,21 @@ public class Arena{
 	private IFightMode fightMode;
 	private ArenaReseter reseter;
 	private WaterRemover remover;
-	private ProtectedRegion regionTeam1;
-	private ProtectedRegion regionTeam2;
-	private ProtectedRegion arenaRegion;
 	private FightState arenaState;
 	private List<Player> playersInArena;
 	private ScoreBoardDisplay scores;
 	private ArenaListener listener;
+	private ArenaRepository repo;
 	
 	public Arena(WarGear plugin, String arenaName)
 	{
 		this.plugin = plugin;	
 		this.name = arenaName;
 		
-		loadRegions();
 		this.arenaState = FightState.Idle;
-		this.team = new TeamManager(plugin, this);
 		this.kitname = "";
-		this.setFightMode(new KitMode(this.plugin, this));
-		this.reseter = new ArenaReseter(this.plugin, this);
-		this.remover = new WaterRemover(this.plugin, this);
-		scores = new ScoreBoardDisplay(this.plugin, this);
 		this.playersInArena = new ArrayList<Player>();
-		this.listener = new ArenaListener(this.plugin, this);
-		this.plugin.getServer().getPluginManager().registerEvents(this.listener, this.plugin);
-	}
-	
-	private void loadRegions()
-	{
-		WorldGuardPlugin worldGuard = this.plugin.getRepo().getWorldGuard();
-		World arenaWorld = this.plugin.getServer().getWorld(this.plugin.getRepo().getWorldName(this));
-		
-		this.arenaRegion = this.getRegion(worldGuard, this.plugin.getRepo().getArenaRegion(this), arenaWorld);
-		this.regionTeam1 = this.getRegion(worldGuard, this.plugin.getRepo().getRegionNameTeam1(this), arenaWorld);
-		this.regionTeam2 = this.getRegion(worldGuard, this.plugin.getRepo().getRegionNameTeam2(this), arenaWorld);
+		this.repo = new ArenaRepository(this.plugin, this);
 	}
 	
 	public String getArenaName()
@@ -110,21 +92,6 @@ public class Arena{
 		this.fightMode = fightMode;
 	}
 	
-	public ProtectedRegion getRegionTeam1()
-	{
-		return this.regionTeam1;
-	}
-	
-	public ProtectedRegion getRegionTeam2()
-	{
-		return this.regionTeam2;
-	}
-	
-	public ProtectedRegion getArenaRegion()
-	{
-		return this.arenaRegion;
-	}
-	
 	public List<Player> getPlayersInArena()
 	{
 		return this.playersInArena;
@@ -133,6 +100,11 @@ public class Arena{
 	public ScoreBoardDisplay getScore()
 	{
 		return this.scores;
+	}
+	
+	public ArenaRepository getRepo()
+	{
+		return this.repo;
 	}
 	
 	public void open()
@@ -149,6 +121,32 @@ public class Arena{
 		this.broadcastMessage(ChatColor.GREEN + "Arena gesperrt!");
 	}
 	
+	public boolean load()
+	{
+		if (this.repo.load())
+		{
+		this.team = new TeamManager(plugin, this);
+		this.setFightMode(new KitMode(this.plugin, this));
+		this.reseter = new ArenaReseter(this.plugin, this);
+		this.remover = new WaterRemover(this.plugin, this);
+		scores = new ScoreBoardDisplay(this.plugin, this);
+		this.listener = new ArenaListener(this.plugin, this);
+		this.plugin.getServer().getPluginManager().registerEvents(this.listener, this.plugin);
+		return true;
+		}
+		return false;
+	}
+	
+	public void unload()
+	{
+		this.team = null;
+		this.fightMode = null;
+		this.reseter = null;
+		this.remover = null;
+		this.scores = null;
+		this.listener = null;
+	}
+	
 	public void setArenaOpeningFlags(Boolean allowed)
 	{
 		String value = "allow";
@@ -157,18 +155,18 @@ public class Arena{
 			value = "deny";
 		}
 		
-		setFlag(this.getRegionTeam1(), DefaultFlag.TNT, value);
-		setFlag(this.getRegionTeam1(), DefaultFlag.BUILD, value);
-		setFlag(this.getRegionTeam1(), DefaultFlag.PVP, value);
-		setFlag(this.getRegionTeam1(), DefaultFlag.FIRE_SPREAD, value);
-		setFlag(this.getRegionTeam1(), DefaultFlag.GHAST_FIREBALL, value);
-		setFlag(this.getRegionTeam1(), DefaultFlag.CHEST_ACCESS, value);
-		setFlag(this.getRegionTeam2(), DefaultFlag.TNT, value);
-		setFlag(this.getRegionTeam2(), DefaultFlag.BUILD, value);
-		setFlag(this.getRegionTeam2(), DefaultFlag.PVP, value);
-		setFlag(this.getRegionTeam2(), DefaultFlag.FIRE_SPREAD, value);
-		setFlag(this.getRegionTeam2(), DefaultFlag.GHAST_FIREBALL, value);
-		setFlag(this.getRegionTeam2(), DefaultFlag.CHEST_ACCESS, value);
+		setFlag(this.repo.getTeam1Region(), DefaultFlag.TNT, value);
+		setFlag(this.repo.getTeam1Region(), DefaultFlag.BUILD, value);
+		setFlag(this.repo.getTeam1Region(), DefaultFlag.PVP, value);
+		setFlag(this.repo.getTeam1Region(), DefaultFlag.FIRE_SPREAD, value);
+		setFlag(this.repo.getTeam1Region(), DefaultFlag.GHAST_FIREBALL, value);
+		setFlag(this.repo.getTeam1Region(), DefaultFlag.CHEST_ACCESS, value);
+		setFlag(this.repo.getTeam2Region(), DefaultFlag.TNT, value);
+		setFlag(this.repo.getTeam2Region(), DefaultFlag.BUILD, value);
+		setFlag(this.repo.getTeam2Region(), DefaultFlag.PVP, value);
+		setFlag(this.repo.getTeam2Region(), DefaultFlag.FIRE_SPREAD, value);
+		setFlag(this.repo.getTeam2Region(), DefaultFlag.GHAST_FIREBALL, value);
+		setFlag(this.repo.getTeam2Region(), DefaultFlag.CHEST_ACCESS, value);
 	}
 	
 	public void setFlag(ProtectedRegion region, StateFlag flag, String value)
@@ -182,15 +180,9 @@ public class Arena{
 		}
     }
 	
-	private ProtectedRegion getRegion(WorldGuardPlugin worldGuard, String regionName, World world)
-	{
-		RegionManager regionManager = worldGuard.getRegionManager(world);
-		return regionManager.getRegion(regionName);
-	}
-	
 	public void broadcastMessage(String message)
 	{
-		for (Player player : this.plugin.getRepo().getPlayerOfRegion(this.getArenaRegion()))
+		for (Player player : this.plugin.getRepo().getPlayerOfRegion(this.repo.getArenaRegion()))
 		{
 			player.sendMessage(message);
 		}
@@ -201,5 +193,30 @@ public class Arena{
 		FightStateChangedEvent fightStateEvent = new FightStateChangedEvent(this.name, this.arenaState, state);
 		this.plugin.getServer().getPluginManager().callEvent(fightStateEvent);
 		this.arenaState = fightStateEvent.getTo();
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Arena other = (Arena) obj;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		return true;
 	}
 }

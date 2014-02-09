@@ -73,7 +73,7 @@ public class WaterRemover implements Listener
 			if (b.getType() != Material.WATER || b.getType() != Material.STATIONARY_WATER)
 			{
 				BlockVector vec = BukkitUtil.toVector(b);
-				if (this.arena.getRegionTeam1().contains(vec) || this.arena.getRegionTeam2().contains(vec))
+				if (this.arena.getRepo().getTeam1Region().contains(vec) || this.arena.getRepo().getTeam2Region().contains(vec))
 				{
 					this.explodedBlocks.add(new SimpleEntry<Location, Integer>(b.getLocation(), 0));
 				}

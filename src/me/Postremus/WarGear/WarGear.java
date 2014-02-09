@@ -3,6 +3,7 @@ package me.Postremus.WarGear;
 import java.io.File;
 
 import me.Postremus.Generator.BlockGenerator;
+import me.Postremus.WarGear.Arena.ArenaManager;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -10,12 +11,14 @@ public class WarGear extends JavaPlugin {
 
 	private WgkRepository repo;
 	private BlockGenerator generator;
+	private ArenaManager arenaManager;
 	
 	@Override
 	public void onEnable() {
 		this.loadConfig();
 		this.repo = new WgkRepository(this);
-		generator = new BlockGenerator(this);
+		this.generator = new BlockGenerator(this);
+		this.arenaManager = new ArenaManager(this);
 		this.getCommand("wgk").setExecutor(new WgkCommand(this));
 		System.out.println("[WarGear] Plugin erfolgreich geladen!");
 	}
@@ -40,5 +43,10 @@ public class WarGear extends JavaPlugin {
 	public BlockGenerator getGenerator()
 	{
 		return this.generator;
+	}
+	
+	public ArenaManager getArenaManager()
+	{
+		return this.arenaManager;
 	}
 }

@@ -26,32 +26,26 @@ public class WgkCommandLogik implements Listener{
 	WarGear plugin;
 	Timer manuelTimer;
 	int manuelCounter;
-	ArenaManager arena;
 	
 	public WgkCommandLogik(WarGear plugin)
 	{
 		this.plugin = plugin;
-		this.arena = new ArenaManager(this.plugin);
 		this.plugin.getServer().getPluginManager().registerEvents(this, this.plugin);
-	}
-	
-	public ArenaManager getArenaManager()
-	{
-		return this.arena;
 	}
 	
 	public void addTeamLeader(CommandSender sender, String arenaName, String playerName)
 	{
-		if (!this.plugin.getRepo().existsArena(arenaName))
+		Arena arena = this.plugin.getArenaManager().getArena(arenaName);
+		if (arena == null)
 		{
 			sender.sendMessage("Die Arena "+ arenaName+" existiert nicht.");
 			return;
 		}
-		if (this.arena.getArena(arenaName).getFightState() == FightState.Idle)
+		if (arena.getFightState() == FightState.Idle)
 		{
-			this.arena.getArena(arenaName).updateFightState(FightState.Setup);
+			arena.updateFightState(FightState.Setup);
 		}
-		if (this.arena.getArena(arenaName).getFightState() == FightState.Running)
+		if (arena.getFightState() == FightState.Running)
 		{
 			sender.sendMessage("Hier läuft bereits ein Fight.");
 			return;
@@ -62,28 +56,29 @@ public class WgkCommandLogik implements Listener{
 			sender.sendMessage(playerName +" ist kein Spieler.");
 			return;
 		}
-		WgTeam team = this.arena.getArena(arenaName).getTeam().getTeamWithOutLeader();
+		WgTeam team =arena.getTeam().getTeamWithOutLeader();
 		if (team == null)
 		{
 			p.sendMessage("Beide Team's haben einen Teamleiter.");
 			return;
 		}
 		team.add(p, true);
-		p.teleport(this.plugin.getRepo().getWarpForTeam(team.getTeamName(), this.arena.getArena(arenaName)));
+		p.teleport(this.plugin.getRepo().getWarpForTeam(team.getTeamName(), arena));
 		p.sendMessage("§7 Mit §8\"/wgk team add <spieler>\" §7fügst du Spieler zu deinem Team hinzu.");
 		p.sendMessage("§7 Mit §8\"/wgk team remove <spieler>\" §7entfernst du Spieler aus deinem Team.");
 		p.sendMessage("§7 Mit §8\"/wgk team ready\" §7schaltest du dein Team bereit.");
-		this.arena.getArena(arenaName).getScore().addTeamMember(team.getTeamMember(p), team.getTeamName());
+		arena.getScore().addTeamMember(team.getTeamMember(p), team.getTeamName());
 	}
 	
 	public void addTeamMember(CommandSender sender, String arenaName, String playerName)
 	{
-		if (!this.plugin.getRepo().existsArena(arenaName))
+		Arena arena = this.plugin.getArenaManager().getArena(arenaName);
+		if (arena == null)
 		{
 			sender.sendMessage("Die Arena "+ arenaName+" existiert nicht.");
 			return;
 		}
-		if (this.arena.getArena(arenaName).getFightState() == FightState.Running)
+		if (arena.getFightState() == FightState.Running)
 		{
 			sender.sendMessage("Während eines Fights kannst du keine Mitglieder hinzufügen.");
 			return;
@@ -100,7 +95,7 @@ public class WgkCommandLogik implements Listener{
 			return;
 		}
 		Player senderPlayer = (Player)sender;
-		WgTeam team = this.arena.getArena(arenaName).getTeam().getTeamOfPlayer(senderPlayer);
+		WgTeam team = arena.getTeam().getTeamOfPlayer(senderPlayer);
 		if (!team.getTeamMember(senderPlayer).getIsTeamLeader())
 		{
 			senderPlayer.sendMessage("Der Command muss vom Teamleiter ausgeführt werden.");
@@ -114,17 +109,18 @@ public class WgkCommandLogik implements Listener{
 		team.add(p, false);
 		p.sendMessage("§7Du bist jetzt im Team von §8"+senderPlayer.getName()+".");
 		p.sendMessage("§7Mit §8\"/wgk team leave\" §7verlässt du das Team.");
-		this.arena.getArena(arenaName).getScore().addTeamMember(team.getTeamMember(p), team.getTeamName());
+		arena.getScore().addTeamMember(team.getTeamMember(p), team.getTeamName());
 	}
 	
 	public void removeTeamMember(CommandSender sender, String arenaName, String playerName)
 	{
-		if (!this.plugin.getRepo().existsArena(arenaName))
+		Arena arena = this.plugin.getArenaManager().getArena(arenaName);
+		if (arena == null)
 		{
 			sender.sendMessage("Die Arena "+ arenaName+" existiert nicht.");
 			return;
 		}
-		if (this.arena.getArena(arenaName).getFightState() == FightState.Running)
+		if (arena.getFightState() == FightState.Running)
 		{
 			sender.sendMessage("Während eines Fights kannst du keine Mitglieder entfernen.");
 			return;
@@ -141,7 +137,7 @@ public class WgkCommandLogik implements Listener{
 			return;
 		}
 		Player senderPlayer = (Player)sender;
-		WgTeam team = this.arena.getArena(arenaName).getTeam().getTeamOfPlayer(senderPlayer);
+		WgTeam team = arena.getTeam().getTeamOfPlayer(senderPlayer);
 		if (!team.getTeamMember(senderPlayer).getIsTeamLeader())
 		{
 			senderPlayer.sendMessage("Der Command muss vom Teamleiter ausgeführt werden.");
@@ -158,13 +154,13 @@ public class WgkCommandLogik implements Listener{
 			return;
 		}
 		p.sendMessage("§7Du bist nicht mehr im Team von §8."+senderPlayer.getName());
-		this.arena.getArena(arenaName).getScore().removeTeamMember(team.getTeamMember(p), team.getTeamName());
+		arena.getScore().removeTeamMember(team.getTeamMember(p), team.getTeamName());
 		team.remove(p);
 	}
 	
 	private boolean isAnywhereInTeam(Player p)
 	{
-		for (Arena currArena : this.arena.getArenas())
+		for (Arena currArena : this.plugin.getArenaManager().getArenas())
 		{
 			if (currArena.getTeam().getTeamOfPlayer(p)!= null)
 			{
@@ -176,12 +172,13 @@ public class WgkCommandLogik implements Listener{
 	
 	public void leaveTeam(CommandSender sender, String arenaName)
 	{
-		if (!this.plugin.getRepo().existsArena(arenaName))
+		Arena arena = this.plugin.getArenaManager().getArena(arenaName);
+		if (arena == null)
 		{
 			sender.sendMessage("Die Arena "+ arenaName+" existiert nicht.");
 			return;
 		}
-		if (this.arena.getArena(arenaName).getFightState() == FightState.Running)
+		if (arena.getFightState() == FightState.Running)
 		{
 			sender.sendMessage("Während eines Fights kannst du nicht aus deinem Team raus.");
 			return;
@@ -197,20 +194,21 @@ public class WgkCommandLogik implements Listener{
 			senderPlayer.sendMessage("Du bist in keinem Team.");
 			return;
 		}
-		WgTeam team = this.arena.getArena(arenaName).getTeam().getTeamOfPlayer(senderPlayer);
-		this.arena.getArena(arenaName).getScore().removeTeamMember(team.getTeamMember(senderPlayer), team.getTeamName());
+		WgTeam team = arena.getTeam().getTeamOfPlayer(senderPlayer);
+		arena.getScore().removeTeamMember(team.getTeamMember(senderPlayer), team.getTeamName());
 		team.remove(senderPlayer);
 		senderPlayer.sendMessage("§7Du bist raus aus dem Team.");
 	}
 	
 	public void readifyTeam(CommandSender sender, String arenaName)
 	{
-		if (!this.plugin.getRepo().existsArena(arenaName))
+		Arena arena = this.plugin.getArenaManager().getArena(arenaName);
+		if (arena == null)
 		{
 			sender.sendMessage("Die Arena "+ arenaName+" existiert nicht.");
 			return;
 		}
-		if (this.arena.getArena(arenaName).getFightState() == FightState.Running)
+		if (arena.getFightState() == FightState.Running)
 		{
 			sender.sendMessage("Während eines Fights kannst du keine Mitglieder entfernen.");
 			return;
@@ -221,7 +219,7 @@ public class WgkCommandLogik implements Listener{
 			return;
 		}
 		Player senderPlayer = (Player)sender;
-		WgTeam team = this.arena.getArena(arenaName).getTeam().getTeamOfPlayer(senderPlayer);
+		WgTeam team = arena.getTeam().getTeamOfPlayer(senderPlayer);
 		if (!team.getTeamMember(senderPlayer).getIsTeamLeader())
 		{
 			senderPlayer.sendMessage("Der Command muss vom Teamleiter ausgeführt werden.");
@@ -231,7 +229,7 @@ public class WgkCommandLogik implements Listener{
 		if (team.getIsReady())
 		{
 			senderPlayer.sendMessage("§7Dein Team ist bereit.");
-			if (this.arena.getArena(arenaName).getTeam().areBothTeamsReady())
+			if (arena.getTeam().areBothTeamsReady())
 			{
 				this.start(sender, arenaName);
 			}
@@ -244,18 +242,18 @@ public class WgkCommandLogik implements Listener{
 	
 	public void start(CommandSender sender, String arenaName)
 	{
-		
-		if (!this.plugin.getRepo().existsArena(arenaName))
+		Arena arena = this.plugin.getArenaManager().getArena(arenaName);
+		if (arena == null)
 		{
 			sender.sendMessage("Die Arena "+ arenaName+" existiert nicht.");
 			return;
 		}
-		if (this.arena.getArena(arenaName).getFightState() != FightState.Setup)
+		if (arena.getFightState() != FightState.Setup)
 		{
 			sender.sendMessage("Es muss zuerst ein Fight Setup gestartet werden.");
 			return;
 		}
-		if (this.arena.getArena(arenaName).getKit() == null || this.arena.getArena(arenaName).getKit().length() == 0)
+		if (arena.getKit() == null || arena.getKit().length() == 0)
 		{
 			if (this.plugin.getRepo().getDefaultKitName() == null || this.plugin.getRepo().getDefaultKitName().length() == 0)
 			{
@@ -264,29 +262,35 @@ public class WgkCommandLogik implements Listener{
 			}
 			else
 			{
-				this.arena.getArena(arenaName).setKit(this.plugin.getRepo().getDefaultKitName());
+				arena.setKit(this.plugin.getRepo().getDefaultKitName());
 			}
 		}
-		if (!this.arena.getArena(arenaName).getFightMode().getName().equalsIgnoreCase(this.plugin.getRepo().getFightMode(this.arena.getArena(arenaName))))
+		if (!arena.getFightMode().getName().equalsIgnoreCase(arena.getRepo().getFightMode()))
 		{
-			if (this.plugin.getRepo().getFightMode(this.arena.getArena(arenaName)).equalsIgnoreCase("kit"))
+			if (arena.getRepo().getFightMode().equalsIgnoreCase("kit"))
 			{
-				this.arena.getArena(arenaName).setFightMode(new KitMode(this.plugin, this.arena.getArena(arenaName)));
+				arena.setFightMode(new KitMode(this.plugin, arena));
 			}
 			else
 			{
-				this.arena.getArena(arenaName).setFightMode(new ChestMode(this.plugin, this.arena.getArena(arenaName)));
+				arena.setFightMode(new ChestMode(this.plugin, arena));
 			}
 		}
-		this.arena.getArena(arenaName).setArenaOpeningFlags(false);
-		this.arena.getArena(arenaName).getTeam().GenerateTeamOutput();
-		this.arena.getArena(arenaName).getFightMode().start();
-		this.arena.getArena(arenaName).updateFightState(FightState.Running);
+		arena.setArenaOpeningFlags(false);
+		arena.getTeam().GenerateTeamOutput();
+		arena.getFightMode().start();
+		arena.updateFightState(FightState.Running);
 	}
 	
 	public void setKit(CommandSender sender, String kitName, String arenaName)
 	{
-		if (this.arena.getArena(arenaName).getFightState() != FightState.Setup)
+		Arena arena = this.plugin.getArenaManager().getArena(arenaName);
+		if (arena == null)
+		{
+			sender.sendMessage("Die Arena "+ arenaName+" existiert nicht.");
+			return;
+		}
+		if (arena.getFightState() != FightState.Setup)
 		{
 			sender.sendMessage("Es muss zuerst ein Fight Setup gestartet werden.");
 			return;
@@ -296,7 +300,7 @@ public class WgkCommandLogik implements Listener{
 			sender.sendMessage("Das Kit " + kitName + " gibt es nicht.");
 			return;
 		}
-		this.arena.getArena(arenaName).setKit(kitName);
+		arena.setKit(kitName);
 	}
     
 	@EventHandler (priority = EventPriority.LOWEST)
@@ -340,7 +344,7 @@ public class WgkCommandLogik implements Listener{
 	
 	public void showArenaInfo(CommandSender sender, String arenaName)
 	{
-		Arena arena = this.arena.getArena(arenaName);
+		Arena arena = this.plugin.getArenaManager().getArena(arenaName);
 		if (arena == null)
 		{
 			sender.sendMessage("Die Arena "+ arenaName+" existiert nicht.");
@@ -348,21 +352,21 @@ public class WgkCommandLogik implements Listener{
 		}
 		sender.sendMessage(ChatColor.GREEN + "---Arena Info---");
 		sender.sendMessage(ChatColor.GRAY+"Arena Name: " + ChatColor.AQUA + arena.getArenaName());
-		sender.sendMessage(ChatColor.GRAY+"Welt: " + ChatColor.AQUA + this.plugin.getRepo().getWorldName(arena));
-		sender.sendMessage(ChatColor.GRAY+"Fight Modus: " + ChatColor.AQUA + this.plugin.getRepo().getFightMode(arena));
-		sender.sendMessage(ChatColor.GRAY+"Bodenhöhe: " + ChatColor.AQUA + this.plugin.getRepo().getGroundHeight(arena));
-		sender.sendMessage(ChatColor.GRAY+"BodenSchematic: " + ChatColor.AQUA + this.plugin.getRepo().getGroundSchematicName(arena));
-		sender.sendMessage(ChatColor.GRAY+"Auto Reset: " + ChatColor.AQUA + this.plugin.getRepo().getAutoReset(arena));
-		sender.sendMessage(ChatColor.GRAY+"Region Team1: " + ChatColor.AQUA + this.plugin.getRepo().getRegionNameTeam1(arena));
-		sender.sendMessage(ChatColor.GRAY+"Region Team2: " + ChatColor.AQUA + this.plugin.getRepo().getRegionNameTeam2(arena));
-		sender.sendMessage(ChatColor.GRAY+"Warp Team1: " + ChatColor.AQUA + getStringFromLocation(this.plugin.getRepo().getFightStartWarpPointTeam1(arena)));
-		sender.sendMessage(ChatColor.GRAY+"Warp Team2: " + ChatColor.AQUA + getStringFromLocation(this.plugin.getRepo().getFightStartWarpPointTeam2(arena)));
-		sender.sendMessage(ChatColor.GRAY+"Warp Fight Ende: " + ChatColor.AQUA + getStringFromLocation(this.plugin.getRepo().getEndWarpPoint(arena)));
+		sender.sendMessage(ChatColor.GRAY+"Welt: " + ChatColor.AQUA + arena.getRepo().getWorld().getName());
+		sender.sendMessage(ChatColor.GRAY+"Fight Modus: " + ChatColor.AQUA + arena.getRepo().getFightMode());
+		sender.sendMessage(ChatColor.GRAY+"Bodenhöhe: " + ChatColor.AQUA + arena.getRepo().getGroundHeight());
+		sender.sendMessage(ChatColor.GRAY+"BodenSchematic: " + ChatColor.AQUA + arena.getRepo().getGroundSchematic());
+		sender.sendMessage(ChatColor.GRAY+"Auto Reset: " + ChatColor.AQUA + arena.getRepo().getAutoReset());
+		sender.sendMessage(ChatColor.GRAY+"Region Team1: " + ChatColor.AQUA + arena.getRepo().getTeam1Region().getId());
+		sender.sendMessage(ChatColor.GRAY+"Region Team2: " + ChatColor.AQUA + arena.getRepo().getTeam2Region().getId());
+		sender.sendMessage(ChatColor.GRAY+"Warp Team1: " + ChatColor.AQUA + getStringFromLocation(arena.getRepo().getTeam1Warp()));
+		sender.sendMessage(ChatColor.GRAY+"Warp Team2: " + ChatColor.AQUA + getStringFromLocation(arena.getRepo().getTeam2Warp()));
+		sender.sendMessage(ChatColor.GRAY+"Warp Fight Ende: " + ChatColor.AQUA + getStringFromLocation(arena.getRepo().getFightEndWarp()));
 	}
 	
 	public void resetArena(CommandSender sender, String arenaName)
 	{
-		Arena arena = this.arena.getArena(arenaName);
+		Arena arena = this.plugin.getArenaManager().getArena(arenaName);
 		if (arena == null)
 		{
 			sender.sendMessage("Die Arena "+ arenaName+" existiert nicht.");
@@ -370,7 +374,7 @@ public class WgkCommandLogik implements Listener{
 		}
 		try
 		{
-			this.arena.getArena(arenaName).getReseter().reset();
+			arena.getReseter().reset();
 		}
 		catch(Exception ex)
 		{

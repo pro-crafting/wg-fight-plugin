@@ -50,8 +50,7 @@ public class ArenaReseter implements Listener
 	{
 		this.arena = arena;
 		this.plugin = plugin;
-		groundHeight = this.plugin.getRepo().getGroundHeight(arena);
-		arenaWorld = this.plugin.getServer().getWorld(this.plugin.getRepo().getWorldName(arena));
+		groundHeight = arena.getRepo().getGroundHeight();
 		this.plugin.getServer().getPluginManager().registerEvents(this, this.plugin);
 	}
 	
@@ -83,7 +82,7 @@ public class ArenaReseter implements Listener
         LocalPlayer player = wePlugin.wrapCommandSender(this.plugin.getServer().getConsoleSender());
         
         File dir = wePlugin.getWorldEdit().getWorkingDirectoryFile(config.saveDir);
-        String schemName = this.plugin.getRepo().getGroundSchematicName(this.arena);
+        String schemName = this.arena.getRepo().getGroundSchematic();
         File f = wePlugin.getWorldEdit().getSafeOpenFile(player, dir, schemName, "schematic", "schematic");
     
         EditSession es = new EditSession(new BukkitWorld(arenaWorld), 999999999);
@@ -109,10 +108,10 @@ public class ArenaReseter implements Listener
 	private CuboidRegion getPlayGroundRegion()
 	{
 		List<BlockVector> vectors = new ArrayList<BlockVector>();
-		vectors.add(arena.getRegionTeam1().getMinimumPoint());
-		vectors.add(arena.getRegionTeam2().getMinimumPoint());
-		vectors.add(arena.getRegionTeam1().getMaximumPoint());
-		vectors.add(arena.getRegionTeam2().getMaximumPoint());
+		vectors.add(arena.getRepo().getTeam1Region().getMinimumPoint());
+		vectors.add(arena.getRepo().getTeam2Region().getMinimumPoint());
+		vectors.add(arena.getRepo().getTeam1Region().getMaximumPoint());
+		vectors.add(arena.getRepo().getTeam2Region().getMaximumPoint());
 		return new CuboidRegion(getMinBlockVec(vectors), getMaxBlockVec(vectors));
 	}
 	
@@ -197,7 +196,7 @@ public class ArenaReseter implements Listener
 		}
 		else if (event.getTo() == FightState.Running)
 		{
-			if (this.plugin.getRepo().getAutoReset(this.arena))
+			if (this.arena.getRepo().getAutoReset())
 			{
 				event.setTo(FightState.Reseting);
 				this.reset();

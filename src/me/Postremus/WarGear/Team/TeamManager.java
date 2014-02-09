@@ -76,7 +76,7 @@ public class TeamManager implements Listener
 		for (TeamMember player : team.getTeamMembers())
 		{
 			player.getPlayer().getInventory().clear();
-			player.getPlayer().teleport(this.plugin.getRepo().getEndWarpPoint(this.arena), TeleportCause.PLUGIN);
+			player.getPlayer().teleport(this.arena.getRepo().getFightEndWarp(), TeleportCause.PLUGIN);
 		}
 	}
 	
@@ -145,7 +145,7 @@ public class TeamManager implements Listener
 	 @EventHandler (priority = EventPriority.HIGHEST)
 	 public void playerRespwanHandler(final PlayerRespawnEvent event)
 	 {
-		 event.setRespawnLocation(this.plugin.getRepo().getEndWarpPoint(this.arena));
+		 event.setRespawnLocation(this.arena.getRepo().getFightEndWarp());
 		 
 		 this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable(){
 
@@ -206,6 +206,11 @@ public class TeamManager implements Listener
 			 return this.team2;
 		 }
 		 return null;
+	 }
+	 
+	 public void addTeamMember(TeamNames team, TeamMember member)
+	 {
+		 
 	 }
 	 
 	 public boolean areBothTeamsReady()

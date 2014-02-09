@@ -31,11 +31,11 @@ public class ArenaListener implements Listener
 	@EventHandler (priority = EventPriority.LOWEST)
 	public void playerMoveHandler(PlayerMoveEvent event)
 	{
-		if (!event.getTo().getWorld().getName().equalsIgnoreCase(this.plugin.getRepo().getWorldName(this.arena)))
+		if (!event.getTo().getWorld().getName().equalsIgnoreCase(this.arena.getRepo().getWorld().getName()))
 		{
 			return;
 		}
-		boolean isInArena = this.arena.getArenaRegion().contains(BukkitUtil.toVector(event.getTo()));
+		boolean isInArena = this.arena.getRepo().getArenaRegion().contains(BukkitUtil.toVector(event.getTo()));
 		boolean isPlayerInArena = this.arena.getPlayersInArena().contains(event.getPlayer());
 		if (!isInArena && isPlayerInArena)
 		{
@@ -52,7 +52,7 @@ public class ArenaListener implements Listener
 	@EventHandler (priority = EventPriority.LOWEST)
 	public void playerJoinHandler(PlayerJoinEvent event)
 	{
-		if (this.arena.getArenaRegion().contains(BukkitUtil.toVector(event.getPlayer().getLocation())))
+		if (this.arena.getRepo().getArenaRegion().contains(BukkitUtil.toVector(event.getPlayer().getLocation())))
 		{
 			this.arena.getScore().enterArena(event.getPlayer());
 			this.arena.getPlayersInArena().add(event.getPlayer());
@@ -62,7 +62,7 @@ public class ArenaListener implements Listener
 	@EventHandler (priority = EventPriority.LOWEST)
 	public void playerQuitHandler(PlayerQuitEvent event)
 	{
-		if (this.arena.getArenaRegion().contains(BukkitUtil.toVector(event.getPlayer().getLocation())))
+		if (this.arena.getRepo().getArenaRegion().contains(BukkitUtil.toVector(event.getPlayer().getLocation())))
 		{
 			this.arena.getScore().leaveArena(event.getPlayer());
 			this.arena.getPlayersInArena().remove(event.getPlayer());
@@ -72,7 +72,7 @@ public class ArenaListener implements Listener
 	@EventHandler (priority = EventPriority.LOWEST)
 	public void playerKickHandler(PlayerKickEvent event)
 	{
-		if (this.arena.getArenaRegion().contains(BukkitUtil.toVector(event.getPlayer().getLocation())))
+		if (this.arena.getRepo().getArenaRegion().contains(BukkitUtil.toVector(event.getPlayer().getLocation())))
 		{
 			this.arena.getScore().leaveArena(event.getPlayer());
 			this.arena.getPlayersInArena().remove(event.getPlayer());
@@ -82,7 +82,7 @@ public class ArenaListener implements Listener
 	@EventHandler (priority = EventPriority.LOWEST)
 	public void playerTeleportHandler(PlayerTeleportEvent event)
 	{
-		if (this.arena.getArenaRegion().contains(BukkitUtil.toVector(event.getTo())))
+		if (this.arena.getRepo().getArenaRegion().contains(BukkitUtil.toVector(event.getTo())))
 		{
 			this.arena.getScore().enterArena(event.getPlayer());
 			this.arena.getPlayersInArena().add(event.getPlayer());
@@ -103,8 +103,8 @@ public class ArenaListener implements Listener
 		}
 		if (this.arena.getFightState() != FightState.Running)
 		{
-			event.setCancelled(true);
-			return;
+			//event.setCancelled(true);
+			//return;
 		}
 		this.plugin.getServer().getScheduler().runTask(this.plugin, new Runnable(){
 			public void run()
@@ -127,9 +127,14 @@ public class ArenaListener implements Listener
 			this.plugin.getServer().getScheduler().runTask(this.plugin, new Runnable(){
 				public void run()
 				{
+					System.out.println("Health: "+player.getHealth());
 					ArenaListener.this.arena.getScore().updateHealthOfPlayer(player, (int)player.getHealth());
 				}
 			});
+		}
+		else
+		{
+			System.out.println("Kein Team");
 		}
 	}
 }

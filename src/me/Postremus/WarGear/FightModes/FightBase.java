@@ -40,11 +40,11 @@ public abstract class FightBase implements IFightMode, Listener
 	@EventHandler
 	public void playerMoveHandler(PlayerMoveEvent event)
 	{
-		if (event.getTo().getY() > this.plugin.getRepo().getGroundHeight(this.arena))
+		if (event.getTo().getY() > this.arena.getRepo().getGroundHeight())
 		{
 			return;
 		}
-		if (!this.plugin.getRepo().getArenaAtLocation(event.getTo()).equalsIgnoreCase(this.arena.getArenaName()))
+		if (!this.plugin.getArenaManager().getArenaAtLocation(event.getTo()).equals(arena))
 		{
 			return;
 		}

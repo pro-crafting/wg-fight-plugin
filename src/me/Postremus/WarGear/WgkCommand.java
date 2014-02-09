@@ -3,6 +3,8 @@ package me.Postremus.WarGear;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.Postremus.WarGear.Arena.Arena;
+
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -50,7 +52,7 @@ public class WgkCommand implements CommandExecutor{
 		}
 		String arenaName = this.getArenaOfCommand(sender, args);
 		args = this.removeFlagsFromArgs(args);
-		if (arenaName.equals("") || !this.plugin.getRepo().existsArena(arenaName))
+		if (arenaName.equals("") || !this.plugin.getArenaManager().isArenaLoaded(arenaName))
 		{
 			sender.sendMessage("Die Arena "+ arenaName+" existiert nicht.");
 			return true;
@@ -90,11 +92,11 @@ public class WgkCommand implements CommandExecutor{
 		{
 			if (args[1].equalsIgnoreCase("open") && this.hasPermissionWrapper(sender, "wargear.arena.open"))
 			{
-				this.logik.getArenaManager().getArena(arenaName).open();
+				this.plugin.getArenaManager().getArena(arenaName).open();
 			}
 			else if (args[1].equalsIgnoreCase("close") && this.hasPermissionWrapper(sender, "wargear.arena.close"))
 			{
-				this.logik.getArenaManager().getArena(arenaName).close();
+				this.plugin.getArenaManager().getArena(arenaName).close();
 			}
 			else if (args[1].equalsIgnoreCase("list") && this.hasPermissionWrapper(sender, "wargear.arena.list"))
 			{
@@ -155,13 +157,18 @@ public class WgkCommand implements CommandExecutor{
 		}
 		if (!(sender instanceof ConsoleCommandSender))
 		{
+			Arena arena = null;
 			if (sender instanceof Player)
 			{
-				ret = this.plugin.getRepo().getArenaAtLocation(((Player)sender).getLocation());
+				arena = this.plugin.getArenaManager().getArenaAtLocation(((Player)sender).getLocation());
 			}
 			else if (sender instanceof BlockCommandSender)
 			{
-				ret = this.plugin.getRepo().getArenaAtLocation(((BlockCommandSender)sender).getBlock().getLocation());
+				arena = this.plugin.getArenaManager().getArenaAtLocation(((BlockCommandSender)sender).getBlock().getLocation());
+			}
+			if (arena != null)
+			{
+				return arena.getArenaName();
 			}
 		}
 		return ret;

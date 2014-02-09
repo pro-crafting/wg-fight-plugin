@@ -25,107 +25,20 @@ public class WgkRepository {
 		this.plugin = plugin;
 	}
 	
-	public String getWorldName(Arena arena)
-	{
-		return this.plugin.getConfig().getString("wgk.arenas."+arena.getArenaName()+".world");
-	}
-	
-	public Location getEndWarpPoint(Arena arena)
-	{
-		World world = this.plugin.getServer().getWorld(this.getWorldName(arena));
-		return this.loadLocationFromConfig("wgk.arenas."+arena.getArenaName()+".warpFightEnd", world);
-	}
-	
-	public Location getFightStartWarpPointTeam1(Arena arena)
-	{
-		World world = this.plugin.getServer().getWorld(this.getWorldName(arena));
-		return this.loadLocationFromConfig("wgk.arenas."+arena.getArenaName()+".warpFightStart.Team1", world);
-	}
-	
-	public Location getFightStartWarpPointTeam2(Arena arena)
-	{
-		World world = this.plugin.getServer().getWorld(this.getWorldName(arena));
-		return this.loadLocationFromConfig("wgk.arenas."+arena.getArenaName()+".warpFightStart.Team2", world);
-	}
-	
-	public String getGroundSchematicName(Arena arena)
-	{
-		return this.plugin.getConfig().getString("wgk.arenas."+arena.getArenaName()+".groundschematic");
-	}
-	
-	private Location loadLocationFromConfig(String node, World world)
-	{
-		int x = this.plugin.getConfig().getInt(node+".x");
-		int y = this.plugin.getConfig().getInt(node+".y");
-		int z = this.plugin.getConfig().getInt(node+".z");
-		return new Location(world, x, y, z);
-	}
-	
-	public String getRegionNameTeam1(Arena arena)
-	{
-		return this.plugin.getConfig().getString("wgk.arenas."+arena.getArenaName()+".regions.Team1");
-	}
-	
-	public String getRegionNameTeam2(Arena arena)
-	{
-		return this.plugin.getConfig().getString("wgk.arenas."+arena.getArenaName()+".regions.Team2");
-	}
-	
-	public String getFightMode(Arena arena)
-	{
-		return this.plugin.getConfig().getString("wgk.arenas."+arena.getArenaName()+".mode");
-	}
-	
-	public int getGroundHeight(Arena arena)
-	{
-		int ret = 4;
-		try
-		{
-			ret = Integer.parseInt(this.plugin.getConfig().getString("wgk.arenas."+arena.getArenaName()+".groundHeight"));
-		}
-		catch(NumberFormatException ex)
-		{
-			System.out.println("[WarGear]Die Grounheight Option in der Config muss eine Ganzzahl sein für die Arena" + arena.getArenaName());
-		}
-		return ret;
-	}
-	
 	public String getDefaultKitName()
 	{
 		return this.plugin.getConfig().getString("wgk.defaults.kit");
-	}
-	
-	public String getArenaRegion(Arena arena)
-	{
-		return this.plugin.getConfig().getString("wgk.arenas."+arena.getArenaName()+".arenaRegion");
-	}
-	
-	public boolean getAutoReset(Arena arena)
-	{
-		return this.plugin.getConfig().getBoolean("wgk.arenas."+arena.getArenaName()+".auto-reset", true);
-	}
-	
-	public boolean existsArena(String arena)
-	{
-		for (String arenaName : this.plugin.getConfig().getConfigurationSection("wgk.arenas").getKeys(false)) 
-		{
-			if (arenaName.equalsIgnoreCase(arena))
-			{
-				return true;
-			}
-		}
-		return false;
 	}
 	
 	public Location getWarpForTeam(TeamNames team, Arena arena)
 	{
 		if (team == TeamNames.Team1)
 		{
-			return this.getFightStartWarpPointTeam1(arena);
+			return arena.getRepo().getTeam1Warp();
 		}
 		else
 		{
-			return this.getFightStartWarpPointTeam2(arena);
+			return arena.getRepo().getTeam2Warp();
 		}
 	}
 	
@@ -151,22 +64,6 @@ public class WgkRepository {
 		return ret;
 	}
 	
-	public String getArenaAtLocation(Location loc)
-	{
-		List<String> arenas = this.getArenaNames();
-		WorldGuardPlugin wgPlugin = this.getWorldGuard();
-		RegionManager manager = wgPlugin.getRegionManager(loc.getWorld());
-		for (String arenaName : arenas)
-		{
-			String arenaRegion = this.plugin.getConfig().getString("wgk.arenas."+arenaName+".arenaRegion");
-			ProtectedRegion r = manager.getRegion(arenaRegion);
-			if (r != null && r.contains(BukkitUtil.toVector(loc)))
-			{
-				return arenaName;
-			}
-		}
-		return "";
-	}
 	
 	public List<Player> getPlayerOfRegion(ProtectedRegion region)
 	{

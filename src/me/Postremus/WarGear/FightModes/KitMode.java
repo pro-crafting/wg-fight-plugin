@@ -83,7 +83,7 @@ import me.Postremus.WarGear.Team.TeamMember;
 		else if (counter == 60)
 		{
 			this.plugin.getServer().getScheduler().cancelTask(taskId);
-			this.plugin.getServer().getWorld(this.plugin.getRepo().getWorldName(this.arena)).setDifficulty(Difficulty.EASY);
+			this.arena.getRepo().getWorld().setDifficulty(Difficulty.EASY);
 			this.plugin.getServer().getPluginManager().registerEvents(this, this.plugin);
 			this.arena.open();
 		}
