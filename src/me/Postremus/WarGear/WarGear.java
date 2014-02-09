@@ -24,6 +24,7 @@ public class WarGear extends JavaPlugin {
 	}
 	@Override
 	public void onDisable() {
+		this.arenaManager.unloadArenas();
 		System.out.println("[WarGear] Plugin erfolgreich deaktiviert!");
 	}
 	
