@@ -25,7 +25,6 @@ public class WaterRemover implements Listener
 	private List<SimpleEntry<Location, Integer>> explodedBlocks;
 	private List<Location> waterList;
 	private int taskId;
-	private	List<BlockFace> waterFlowCheckDirections;
 	
 	public WaterRemover(WarGear plugin, Arena arena)
 	{
@@ -35,11 +34,6 @@ public class WaterRemover implements Listener
 		waterList = new ArrayList<Location>();
 		taskId = -1;
 		this.plugin.getServer().getPluginManager().registerEvents(this, this.plugin);
-		this.waterFlowCheckDirections = new ArrayList<BlockFace>();
-		this.waterFlowCheckDirections.add(BlockFace.NORTH);
-		this.waterFlowCheckDirections.add(BlockFace.EAST);
-		this.waterFlowCheckDirections.add(BlockFace.SOUTH);
-		this.waterFlowCheckDirections.add(BlockFace.WEST);
 	}
 	
 	public void start()
@@ -145,22 +139,17 @@ public class WaterRemover implements Listener
 	{
 		if(!(anchor.getType() == Material.WATER || anchor.getType() == Material.STATIONARY_WATER)) return;
 		
-		if(collected.contains(anchor)) return;
+		if (visitedBlocks.contains(anchor))return;
+		visitedBlocks.add(anchor);
 		if(anchor.getType() == Material.STATIONARY_WATER)
 		{
 		   collected.add(anchor);
 		}
-		if (visitedBlocks.contains(anchor))return;
-		visitedBlocks.add(anchor);
 		
-		Block b = anchor.getRelative(BlockFace.UP);
 		collectBlocks(anchor.getRelative(BlockFace.UP), collected, visitedBlocks);
-		
-		int currLevel = anchor.getData();
-		for (BlockFace face : this.waterFlowCheckDirections)
-		{
-			b = anchor.getRelative(face);
-			collectBlocks(b, collected, visitedBlocks);
-		}
+		collectBlocks(anchor.getRelative(BlockFace.NORTH), collected, visitedBlocks);
+		collectBlocks(anchor.getRelative(BlockFace.EAST), collected, visitedBlocks);
+		collectBlocks(anchor.getRelative(BlockFace.SOUTH), collected, visitedBlocks);
+		collectBlocks(anchor.getRelative(BlockFace.WEST), collected, visitedBlocks);
 	}
 }
