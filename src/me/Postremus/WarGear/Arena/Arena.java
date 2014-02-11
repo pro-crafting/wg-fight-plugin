@@ -12,9 +12,11 @@ import me.Postremus.WarGear.FightModes.KitMode;
 import me.Postremus.WarGear.Team.TeamManager;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
+import com.sk89q.worldguard.bukkit.BukkitUtil;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.flags.InvalidFlagFormat;
@@ -195,6 +197,11 @@ public class Arena{
 		this.arenaState = fightStateEvent.getTo();
 	}
 
+	public boolean contains(Location loc)
+	{
+		return this.repo.getArenaRegion().contains(BukkitUtil.toVector(loc));
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
