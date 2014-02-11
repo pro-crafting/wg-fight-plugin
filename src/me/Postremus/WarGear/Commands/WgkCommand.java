@@ -55,7 +55,7 @@ public class WgkCommand implements CommandExecutor{
 		args = this.removeFlagsFromArgs(args);
 		if (arenaName.equals("") || !this.plugin.getArenaManager().isArenaLoaded(arenaName))
 		{
-			sender.sendMessage("Die Arena "+ arenaName+" existiert nicht.");
+			sender.sendMessage("§cDie Arena "+ arenaName+" existiert nicht.");
 			return true;
 		}
 		if (args[0].equalsIgnoreCase("team") && args.length > 1)
@@ -125,19 +125,19 @@ public class WgkCommand implements CommandExecutor{
 	
 	private void help(CommandSender sender)
 	{
-		sender.sendMessage("Kein passender Befehl gefunden!");
-		sender.sendMessage("/wgk team leader <playername>");
-		sender.sendMessage("/wgk team add <playername>");
-		sender.sendMessage("/wgk team remove <playername>");
-		sender.sendMessage("/wgk team leave");
-		sender.sendMessage("/wgk kit <kitName>");
-		sender.sendMessage("/wgk arena open");
-		sender.sendMessage("/wgk arena close");
-		sender.sendMessage("/wgk arena list");
-		sender.sendMessage("/wgk arena info");
-		sender.sendMessage("/wgk arena reset");
-		sender.sendMessage("/wgk count");
-		sender.sendMessage("/wgk reload");
+		sender.sendMessage("§c§LKein passender Befehl gefunden!");
+		sender.sendMessage("§B/wgk team leader <playername>");
+		sender.sendMessage("§B/wgk team add <playername>");
+		sender.sendMessage("§B/wgk team remove <playername>");
+		sender.sendMessage("§B/wgk team leave");
+		sender.sendMessage("§B/wgk kit <kitName>");
+		sender.sendMessage("§B/wgk arena open");
+		sender.sendMessage("§B/wgk arena close");
+		sender.sendMessage("§B/wgk arena list");
+		sender.sendMessage("§B/wgk arena info");
+		sender.sendMessage("§B/wgk arena reset");
+		sender.sendMessage("§B/wgk count");
+		sender.sendMessage("§B/wgk reload");
 	}
 	
 	private String getArenaOfCommand(CommandSender sender, String[] args)
@@ -205,7 +205,7 @@ public class WgkCommand implements CommandExecutor{
 		}
 		else
 		{
-			sender.sendMessage("Dir fehlt die " + permission + " Berechtigung.");
+			sender.sendMessage("§c§LDir fehlt die " + permission + " Berechtigung.");
 			return false;
 		}
 	}
