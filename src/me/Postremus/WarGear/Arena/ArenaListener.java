@@ -50,7 +50,7 @@ public class ArenaListener implements Listener
 	@EventHandler (priority = EventPriority.LOWEST)
 	public void playerJoinHandler(PlayerJoinEvent event)
 	{
-		if (this.arena.getRepo().getArenaRegion().contains(BukkitUtil.toVector(event.getPlayer().getLocation())))
+		if (this.arena.contains(event.getPlayer().getLocation()))
 		{
 			this.addPlayer(event.getPlayer());
 		}
@@ -59,7 +59,7 @@ public class ArenaListener implements Listener
 	@EventHandler (priority = EventPriority.LOWEST)
 	public void playerQuitHandler(PlayerQuitEvent event)
 	{
-		if (this.arena.getRepo().getArenaRegion().contains(BukkitUtil.toVector(event.getPlayer().getLocation())))
+		if (this.arena.contains(event.getPlayer().getLocation()))
 		{
 			this.removePlayer(event.getPlayer());
 		}
@@ -68,7 +68,7 @@ public class ArenaListener implements Listener
 	@EventHandler (priority = EventPriority.LOWEST)
 	public void playerKickHandler(PlayerKickEvent event)
 	{
-		if (this.arena.getRepo().getArenaRegion().contains(BukkitUtil.toVector(event.getPlayer().getLocation())))
+		if (this.arena.contains(event.getPlayer().getLocation()))
 		{
 			this.removePlayer(event.getPlayer());
 		}
@@ -77,7 +77,7 @@ public class ArenaListener implements Listener
 	@EventHandler (priority = EventPriority.LOWEST)
 	public void playerTeleportHandler(PlayerTeleportEvent event)
 	{
-		if (this.arena.getRepo().getArenaRegion().contains(BukkitUtil.toVector(event.getTo())))
+		if (this.arena.contains(event.getPlayer().getLocation()))
 		{
 			this.addPlayer(event.getPlayer());
 		}
@@ -140,10 +140,6 @@ public class ArenaListener implements Listener
 					ArenaListener.this.arena.getScore().updateHealthOfPlayer(player, (int)player.getHealth());
 				}
 			});
-		}
-		else
-		{
-			System.out.println("Kein Team");
 		}
 	}
 }

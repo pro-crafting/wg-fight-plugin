@@ -44,7 +44,7 @@ public abstract class FightBase implements IFightMode, Listener
 		{
 			return;
 		}
-		if (!this.plugin.getArenaManager().getArenaAtLocation(event.getTo()).equals(arena))
+		if (!arena.contains(event.getTo()))
 		{
 			return;
 		}

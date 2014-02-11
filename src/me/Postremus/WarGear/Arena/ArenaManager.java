@@ -113,7 +113,7 @@ public class ArenaManager {
 	{
 		for (Arena arena : this.arenas)
 		{
-			if (arena.getRepo().getArenaRegion().contains(BukkitUtil.toVector(loc)))
+			if (arena.contains(loc))
 			{
 				return arena;
 			}

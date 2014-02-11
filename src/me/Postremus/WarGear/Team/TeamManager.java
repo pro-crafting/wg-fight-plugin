@@ -20,8 +20,8 @@ import org.bukkit.potion.PotionEffect;
 
 public class TeamManager implements Listener
 {
-	WarGear plugin;
-	Arena arena;
+	private WarGear plugin;
+	private Arena arena;
 	private WgTeam team1;
 	private WgTeam team2;
 	
@@ -145,6 +145,7 @@ public class TeamManager implements Listener
 	 @EventHandler (priority = EventPriority.HIGHEST)
 	 public void playerRespwanHandler(final PlayerRespawnEvent event)
 	 {
+		 Player respawned = event.getPlayer();
 		 event.setRespawnLocation(this.arena.getRepo().getFightEndWarp());
 		 
 		 this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable(){
