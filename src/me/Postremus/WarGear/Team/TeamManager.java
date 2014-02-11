@@ -143,16 +143,21 @@ public class TeamManager implements Listener
 	 }
 	 
 	 @EventHandler (priority = EventPriority.HIGHEST)
-	 public void playerRespwanHandler(final PlayerRespawnEvent event)
+	 public void playerRespwanHandler(PlayerRespawnEvent event)
 	 {
-		 Player respawned = event.getPlayer();
+		 final Player respawned = event.getPlayer();
+		 if (!this.arena.contains(respawned.getLocation()))
+		 {
+			 return;
+		 }
+		 
 		 event.setRespawnLocation(this.arena.getRepo().getFightEndWarp());
 		 
 		 this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable(){
 
 			@Override
 			public void run() {
-				event.getPlayer().getInventory().clear();
+				respawned.getInventory().clear();
 			}
 			 
 		 }, 60);
