@@ -1,9 +1,14 @@
-package me.Postremus.WarGear;
+package me.Postremus.WarGear.Commands;
 
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import me.Postremus.WarGear.AdmincmdWrapper;
+import me.Postremus.WarGear.DrawReason;
+import me.Postremus.WarGear.FightState;
+import me.Postremus.WarGear.TeamWinReason;
+import me.Postremus.WarGear.WarGear;
 import me.Postremus.WarGear.Arena.Arena;
 import me.Postremus.WarGear.Arena.ArenaManager;
 import me.Postremus.WarGear.Events.DrawQuitEvent;
@@ -36,11 +41,6 @@ public class WgkCommandLogik implements Listener{
 	public void addTeamLeader(CommandSender sender, String arenaName, String playerName)
 	{
 		Arena arena = this.plugin.getArenaManager().getArena(arenaName);
-		if (arena == null)
-		{
-			sender.sendMessage("Die Arena "+ arenaName+" existiert nicht.");
-			return;
-		}
 		if (arena.getFightState() == FightState.Idle)
 		{
 			arena.updateFightState(FightState.Setup);
@@ -64,20 +64,15 @@ public class WgkCommandLogik implements Listener{
 		}
 		team.add(p, true);
 		p.teleport(this.plugin.getRepo().getWarpForTeam(team.getTeamName(), arena));
-		p.sendMessage("§7 Mit §8\"/wgk team add <spieler>\" §7fügst du Spieler zu deinem Team hinzu.");
-		p.sendMessage("§7 Mit §8\"/wgk team remove <spieler>\" §7entfernst du Spieler aus deinem Team.");
-		p.sendMessage("§7 Mit §8\"/wgk team ready\" §7schaltest du dein Team bereit.");
+		p.sendMessage("§7Mit §8\"/wgk team add <spieler>\" §7fügst du Spieler zu deinem Team hinzu.");
+		p.sendMessage("§7Mit §8\"/wgk team remove <spieler>\" §7entfernst du Spieler aus deinem Team.");
+		p.sendMessage("§7Mit §8\"/wgk team ready\" §7schaltest du dein Team bereit.");
 		arena.getScore().addTeamMember(team.getTeamMember(p), team.getTeamName());
 	}
 	
 	public void addTeamMember(CommandSender sender, String arenaName, String playerName)
 	{
 		Arena arena = this.plugin.getArenaManager().getArena(arenaName);
-		if (arena == null)
-		{
-			sender.sendMessage("Die Arena "+ arenaName+" existiert nicht.");
-			return;
-		}
 		if (arena.getFightState() == FightState.Running)
 		{
 			sender.sendMessage("Während eines Fights kannst du keine Mitglieder hinzufügen.");
@@ -115,11 +110,6 @@ public class WgkCommandLogik implements Listener{
 	public void removeTeamMember(CommandSender sender, String arenaName, String playerName)
 	{
 		Arena arena = this.plugin.getArenaManager().getArena(arenaName);
-		if (arena == null)
-		{
-			sender.sendMessage("Die Arena "+ arenaName+" existiert nicht.");
-			return;
-		}
 		if (arena.getFightState() == FightState.Running)
 		{
 			sender.sendMessage("Während eines Fights kannst du keine Mitglieder entfernen.");
@@ -173,11 +163,6 @@ public class WgkCommandLogik implements Listener{
 	public void leaveTeam(CommandSender sender, String arenaName)
 	{
 		Arena arena = this.plugin.getArenaManager().getArena(arenaName);
-		if (arena == null)
-		{
-			sender.sendMessage("Die Arena "+ arenaName+" existiert nicht.");
-			return;
-		}
 		if (arena.getFightState() == FightState.Running)
 		{
 			sender.sendMessage("Während eines Fights kannst du nicht aus deinem Team raus.");
@@ -203,11 +188,6 @@ public class WgkCommandLogik implements Listener{
 	public void readifyTeam(CommandSender sender, String arenaName)
 	{
 		Arena arena = this.plugin.getArenaManager().getArena(arenaName);
-		if (arena == null)
-		{
-			sender.sendMessage("Die Arena "+ arenaName+" existiert nicht.");
-			return;
-		}
 		if (arena.getFightState() == FightState.Running)
 		{
 			sender.sendMessage("Während eines Fights kannst du keine Mitglieder entfernen.");
@@ -243,11 +223,6 @@ public class WgkCommandLogik implements Listener{
 	public void start(CommandSender sender, String arenaName)
 	{
 		Arena arena = this.plugin.getArenaManager().getArena(arenaName);
-		if (arena == null)
-		{
-			sender.sendMessage("Die Arena "+ arenaName+" existiert nicht.");
-			return;
-		}
 		if (arena.getFightState() != FightState.Setup)
 		{
 			sender.sendMessage("Es muss zuerst ein Fight Setup gestartet werden.");
@@ -285,11 +260,6 @@ public class WgkCommandLogik implements Listener{
 	public void setKit(CommandSender sender, String kitName, String arenaName)
 	{
 		Arena arena = this.plugin.getArenaManager().getArena(arenaName);
-		if (arena == null)
-		{
-			sender.sendMessage("Die Arena "+ arenaName+" existiert nicht.");
-			return;
-		}
 		if (arena.getFightState() != FightState.Setup)
 		{
 			sender.sendMessage("Es muss zuerst ein Fight Setup gestartet werden.");
@@ -345,11 +315,6 @@ public class WgkCommandLogik implements Listener{
 	public void showArenaInfo(CommandSender sender, String arenaName)
 	{
 		Arena arena = this.plugin.getArenaManager().getArena(arenaName);
-		if (arena == null)
-		{
-			sender.sendMessage("Die Arena "+ arenaName+" existiert nicht.");
-			return;
-		}
 		sender.sendMessage(ChatColor.GREEN + "---Arena Info---");
 		sender.sendMessage(ChatColor.GRAY+"Arena Name: " + ChatColor.AQUA + arena.getArenaName());
 		sender.sendMessage(ChatColor.GRAY+"Welt: " + ChatColor.AQUA + arena.getRepo().getWorld().getName());
@@ -367,11 +332,6 @@ public class WgkCommandLogik implements Listener{
 	public void resetArena(CommandSender sender, String arenaName)
 	{
 		Arena arena = this.plugin.getArenaManager().getArena(arenaName);
-		if (arena == null)
-		{
-			sender.sendMessage("Die Arena "+ arenaName+" existiert nicht.");
-			return;
-		}
 		try
 		{
 			arena.getReseter().reset();

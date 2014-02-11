@@ -1,8 +1,9 @@
-package me.Postremus.WarGear;
+package me.Postremus.WarGear.Commands;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import me.Postremus.WarGear.WarGear;
 import me.Postremus.WarGear.Arena.Arena;
 
 import org.bukkit.command.BlockCommandSender;
