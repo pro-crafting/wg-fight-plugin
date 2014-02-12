@@ -12,6 +12,7 @@ import me.Postremus.WarGear.FightState;
 import me.Postremus.WarGear.WarGear;
 import me.Postremus.WarGear.Events.FightStateChangedEvent;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -86,10 +87,9 @@ public class ArenaReseter implements Listener
     
         EditSession es = new EditSession(new BukkitWorld(arenaWorld), 999999999);
         CuboidClipboard cc = MCEditSchematicFormat.MCEDIT.load(f);
-        Vector calculatedOrigin = cc.getOrigin();
-        calculatedOrigin.add(cc.getOffset());
-        cc.setOffset(new Vector());
-        cc.paste(es, calculatedOrigin, false, true);
+        es.enableQueue();
+        cc.place(es, cc.getOrigin(), false);
+        es.flushQueue();
 	}
 	
 	private void removeItems(World arenaWorld)
