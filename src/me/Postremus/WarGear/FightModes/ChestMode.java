@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import me.Postremus.KitApi.API;
+import me.Postremus.KitApi.KitAPI;
 import me.Postremus.WarGear.IFightMode;
 import me.Postremus.WarGear.WarGear;
 import me.Postremus.WarGear.Arena.Arena;
@@ -57,7 +57,7 @@ public class ChestMode extends FightBase implements IFightMode, Listener{
 
 	private void fillChest(Location loc)
 	{
-		API kitapi = new API(this.plugin.getServer());
+		KitAPI kitapi = new KitAPI(this.plugin.getServer());
 		loc.setY(loc.getY()-1); //Die kiste liegt unterhalb des spielers
 		if (loc.getBlock().getType() != Material.CHEST)
 		{

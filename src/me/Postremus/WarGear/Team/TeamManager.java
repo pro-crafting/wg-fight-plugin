@@ -1,6 +1,5 @@
 package me.Postremus.WarGear.Team;
 
-import me.Postremus.WarGear.AdmincmdWrapper;
 import me.Postremus.WarGear.FightState;
 import me.Postremus.WarGear.TeamWinReason;
 import me.Postremus.WarGear.WarGear;

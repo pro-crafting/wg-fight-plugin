@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import me.Postremus.WarGear.AdmincmdWrapper;
 import me.Postremus.WarGear.DrawReason;
 import me.Postremus.WarGear.FightState;
 import me.Postremus.WarGear.TeamWinReason;
@@ -265,7 +264,7 @@ public class WgkCommandLogik implements Listener{
 			sender.sendMessage("§cEs muss zuerst ein Fight Setup gestartet werden.");
 			return;
 		}
-		if (!AdmincmdWrapper.existsKit(kitName, this.plugin.getServer()))
+		if (!this.plugin.getKitApi().existsKit(kitName))
 		{
 			sender.sendMessage("§cDas Kit " + kitName + " gibt es nicht.");
 			return;

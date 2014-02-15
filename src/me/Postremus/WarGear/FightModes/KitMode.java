@@ -3,7 +3,6 @@ package me.Postremus.WarGear.FightModes;
 import org.bukkit.ChatColor;
 import org.bukkit.Difficulty;
 
-import me.Postremus.WarGear.AdmincmdWrapper;
 import me.Postremus.WarGear.WarGear;
 import me.Postremus.WarGear.Arena.Arena;
 import me.Postremus.WarGear.Team.TeamMember;
@@ -24,11 +23,11 @@ import me.Postremus.WarGear.Team.TeamMember;
 		counter = 0;
 		for (TeamMember member : this.arena.getTeam().getTeam1().getTeamMembers())
 		{
-			AdmincmdWrapper.giveKit(this.arena.getKit(), member.getPlayer(), this.plugin.getServer());
+			this.plugin.getKitApi().giveKit(this.arena.getKit(), member.getPlayer());
 		}
 		for (TeamMember member : this.arena.getTeam().getTeam2().getTeamMembers())
 		{
-			AdmincmdWrapper.giveKit(this.arena.getKit(), member.getPlayer(), this.plugin.getServer());
+			this.plugin.getKitApi().giveKit(this.arena.getKit(), member.getPlayer());
 		}
 		taskId = this.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(this.plugin, new Runnable(){
 			@Override

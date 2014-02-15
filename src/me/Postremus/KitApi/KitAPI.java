@@ -7,12 +7,12 @@ import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class API 
+public class KitAPI 
 {
 	private Server server;
 	private List<IKitPlugin> kitPlugins;
 	
-	public API(Server server)
+	public KitAPI(Server server)
 	{
 		this.server = server;
 		this.kitPlugins = new ArrayList<IKitPlugin>();
