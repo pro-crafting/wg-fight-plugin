@@ -1,23 +1,24 @@
 package me.Postremus.WarGear.Team;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class TeamMember{
 
-	private Player player;
+	private String playerName;
 	private Boolean alive;
 	private Boolean isTeamLeader;
 	
 	public TeamMember(Player player, boolean isTeamLeader)
 	{
-		this.player = player;
+		this.playerName = player.getName();
 		this.alive = true;
 		this.isTeamLeader = isTeamLeader;
 	}
 	
 	public Player getPlayer()
 	{
-		return this.player;
+		return Bukkit.getServer().getPlayer(playerName);
 	}
 	
 	public Boolean getAlive()
