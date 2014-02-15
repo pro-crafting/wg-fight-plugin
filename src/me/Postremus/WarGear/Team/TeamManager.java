@@ -4,6 +4,7 @@ import me.Postremus.WarGear.AdmincmdWrapper;
 import me.Postremus.WarGear.FightState;
 import me.Postremus.WarGear.TeamWinReason;
 import me.Postremus.WarGear.WarGear;
+import me.Postremus.WarGear.WarGearUtil;
 import me.Postremus.WarGear.Arena.Arena;
 import me.Postremus.WarGear.Events.TeamWinQuitEvent;
 
@@ -54,8 +55,8 @@ public class TeamManager implements Listener
 			
 		    player.getPlayer().teleport(this.plugin.getRepo().getWarpForTeam(team.getTeamName(), this.arena), TeleportCause.PLUGIN);
 		    player.getPlayer().setGameMode(GameMode.SURVIVAL);
-			AdmincmdWrapper.disableFly(player.getPlayer());
-			AdmincmdWrapper.heal(player.getPlayer());
+			WarGearUtil.disableFly(player.getPlayer());
+			WarGearUtil.heal(player.getPlayer());
 			for (PotionEffect effect : player.getPlayer().getActivePotionEffects())
 			{
 				player.getPlayer().removePotionEffect(effect.getType());
