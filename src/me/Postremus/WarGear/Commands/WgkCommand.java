@@ -58,7 +58,7 @@ public class WgkCommand implements CommandExecutor{
 			sender.sendMessage("§cDie Arena "+ arenaName+" existiert nicht.");
 			return true;
 		}
-		if (args[0].equalsIgnoreCase("team") && args.length > 1)
+		if (args[0].equalsIgnoreCase("team"))
 		{
 			if (args[1].equalsIgnoreCase("leader")  && this.hasPermissionWrapper(sender, "wargear.team.leader"))
 			{
@@ -85,11 +85,45 @@ public class WgkCommand implements CommandExecutor{
 				help(sender);
 			}
 		}
-		else if (args[0].equalsIgnoreCase("kit") && this.hasPermissionWrapper(sender, "wargear.fight.kit")  && args.length > 1)
+		else if (args[0].equalsIgnoreCase("kit") && this.hasPermissionWrapper(sender, "wargear.fight.kit"))
 		{
 			this.logik.setKit(sender, args[1], arenaName);
 		}
-		else if (args[0].equalsIgnoreCase("arena")  && args.length > 1)
+		else if (args[0].equalsIgnoreCase("warp"))
+		{
+			if (args.length < 2)
+			{
+				help(sender);
+				return true;
+			}
+			arenaName = args[1];
+			if (!this.plugin.getArenaManager().isArenaLoaded(arenaName))
+			{
+				sender.sendMessage("§cDie Arena "+ arenaName+" existiert nicht.");
+				return true;
+			}
+			Arena arena = this.plugin.getArenaManager().getArena(arenaName);
+			if (args.length == 2  && this.hasPermissionWrapper(sender, "wargear.warp"))
+			{
+				if (!(sender instanceof Player))
+				{
+					sender.sendMessage("§cDu musst ein Spieler sein.");
+					return true;
+				}
+				arena.teleport((Player)sender);
+			}
+			if (args.length == 3  && this.hasPermissionWrapper(sender, "wargear.warp.other"))
+			{
+				Player p = this.plugin.getServer().getPlayer(args[2]);
+				if (p == null)
+				{
+					sender.sendMessage("§cIst nicht online.");
+					return true;
+				}
+				arena.teleport(p);
+			}
+		}
+		else if (args[0].equalsIgnoreCase("arena"))
 		{
 			if (args[1].equalsIgnoreCase("open") && this.hasPermissionWrapper(sender, "wargear.arena.open"))
 			{
@@ -136,6 +170,7 @@ public class WgkCommand implements CommandExecutor{
 		sender.sendMessage("§B/wgk arena list");
 		sender.sendMessage("§B/wgk arena info");
 		sender.sendMessage("§B/wgk arena reset");
+		sender.sendMessage("§B/wgk warp <arenaname> [playernname]");
 		sender.sendMessage("§B/wgk count");
 		sender.sendMessage("§B/wgk reload");
 	}

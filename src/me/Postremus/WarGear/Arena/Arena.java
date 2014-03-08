@@ -14,7 +14,9 @@ import me.Postremus.WarGear.Team.TeamManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 import com.sk89q.worldguard.bukkit.BukkitUtil;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
@@ -200,6 +202,11 @@ public class Arena{
 	public boolean contains(Location loc)
 	{
 		return this.repo.getArenaRegion().contains(BukkitUtil.toVector(loc));
+	}
+	
+	public void teleport(Entity entity)
+	{
+		entity.teleport(this.getRepo().getFightEndWarp(), TeleportCause.PLUGIN);
 	}
 	
 	@Override
