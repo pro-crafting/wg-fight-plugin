@@ -40,10 +40,6 @@ public class WgkCommandLogik implements Listener{
 	public void addTeamLeader(CommandSender sender, String arenaName, String playerName)
 	{
 		Arena arena = this.plugin.getArenaManager().getArena(arenaName);
-		if (arena.getFightState() == FightState.Idle)
-		{
-			arena.updateFightState(FightState.Setup);
-		}
 		if (arena.getFightState() == FightState.Running)
 		{
 			sender.sendMessage("§cHier läuft bereits ein Fight.");
@@ -55,10 +51,19 @@ public class WgkCommandLogik implements Listener{
 			sender.sendMessage("§c"+playerName +" ist kein Spieler.");
 			return;
 		}
-		WgTeam team =arena.getTeam().getTeamWithOutLeader();
+		WgTeam team = arena.getTeam().getTeamWithOutLeader();
 		if (team == null)
 		{
 			p.sendMessage("§cBeide Team's haben einen Teamleiter.");
+			return;
+		}
+		if (arena.getFightState() == FightState.Idle)
+		{
+			arena.updateFightState(FightState.Setup);
+		}
+		if (isAnywhereInTeam(p))
+		{
+			p.sendMessage("§c"+p.getName()+" ist bereits in einen Team.");
 			return;
 		}
 		team.add(p, true);
