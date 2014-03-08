@@ -51,6 +51,47 @@ public class WgkCommand implements CommandExecutor{
 			}
 			return true;
 		}
+		else if (args[0].equalsIgnoreCase("arena") && args[1].equalsIgnoreCase("list") && this.hasPermissionWrapper(sender, "wargear.arena.list"))
+		{
+			this.logik.showArenaNames(sender);
+			return true;
+		}
+		else if (args[0].equalsIgnoreCase("warp"))
+		{
+			if (args.length < 2)
+			{
+				help(sender);
+				return true;
+			}
+			String arenaName = args[1];
+			if (!this.plugin.getArenaManager().isArenaLoaded(arenaName))
+			{
+				sender.sendMessage("§cDie Arena "+ arenaName+" existiert nicht.");
+				return true;
+			}
+			Arena arena = this.plugin.getArenaManager().getArena(arenaName);
+			if (args.length == 2  && this.hasPermissionWrapper(sender, "wargear.warp"))
+			{
+				if (!(sender instanceof Player))
+				{
+					sender.sendMessage("§cDu musst ein Spieler sein.");
+					return true;
+				}
+				arena.teleport((Player)sender);
+			}
+			if (args.length == 3  && this.hasPermissionWrapper(sender, "wargear.warp.other"))
+			{
+				Player p = this.plugin.getServer().getPlayer(args[2]);
+				if (p == null)
+				{
+					sender.sendMessage("§cIst nicht online.");
+					return true;
+				}
+				arena.teleport(p);
+			}
+			return true;
+		}
+		
 		String arenaName = this.getArenaOfCommand(sender, args);
 		args = this.removeFlagsFromArgs(args);
 		if (arenaName.equals("") || !this.plugin.getArenaManager().isArenaLoaded(arenaName))
@@ -89,40 +130,6 @@ public class WgkCommand implements CommandExecutor{
 		{
 			this.logik.setKit(sender, args[1], arenaName);
 		}
-		else if (args[0].equalsIgnoreCase("warp"))
-		{
-			if (args.length < 2)
-			{
-				help(sender);
-				return true;
-			}
-			arenaName = args[1];
-			if (!this.plugin.getArenaManager().isArenaLoaded(arenaName))
-			{
-				sender.sendMessage("§cDie Arena "+ arenaName+" existiert nicht.");
-				return true;
-			}
-			Arena arena = this.plugin.getArenaManager().getArena(arenaName);
-			if (args.length == 2  && this.hasPermissionWrapper(sender, "wargear.warp"))
-			{
-				if (!(sender instanceof Player))
-				{
-					sender.sendMessage("§cDu musst ein Spieler sein.");
-					return true;
-				}
-				arena.teleport((Player)sender);
-			}
-			if (args.length == 3  && this.hasPermissionWrapper(sender, "wargear.warp.other"))
-			{
-				Player p = this.plugin.getServer().getPlayer(args[2]);
-				if (p == null)
-				{
-					sender.sendMessage("§cIst nicht online.");
-					return true;
-				}
-				arena.teleport(p);
-			}
-		}
 		else if (args[0].equalsIgnoreCase("arena"))
 		{
 			if (args[1].equalsIgnoreCase("open") && this.hasPermissionWrapper(sender, "wargear.arena.open"))
@@ -132,10 +139,6 @@ public class WgkCommand implements CommandExecutor{
 			else if (args[1].equalsIgnoreCase("close") && this.hasPermissionWrapper(sender, "wargear.arena.close"))
 			{
 				this.plugin.getArenaManager().getArena(arenaName).close();
-			}
-			else if (args[1].equalsIgnoreCase("list") && this.hasPermissionWrapper(sender, "wargear.arena.list"))
-			{
-				this.logik.showArenaNames(sender);
 			}
 			else if (args[1].equalsIgnoreCase("info")  && this.hasPermissionWrapper(sender, "wargear.arena.info"))
 			{
