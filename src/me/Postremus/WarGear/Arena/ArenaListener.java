@@ -13,6 +13,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
 import com.sk89q.worldedit.bukkit.BukkitUtil;
@@ -28,14 +29,14 @@ public class ArenaListener implements Listener
 		this.arena = arena;
 	}
 	
-	@EventHandler (priority = EventPriority.LOWEST)
+	@EventHandler (priority = EventPriority.MONITOR, ignoreCancelled=true)
 	public void playerMoveHandler(PlayerMoveEvent event)
 	{
 		if (!event.getTo().getWorld().equals(this.arena.getRepo().getWorld()))
 		{
 			return;
 		}
-		boolean isInArena = this.arena.getRepo().getArenaRegion().contains(BukkitUtil.toVector(event.getTo()));
+		boolean isInArena = this.arena.contains(event.getTo());
 		if (!isInArena)
 		{
 			this.removePlayer(event.getPlayer());
@@ -46,7 +47,7 @@ public class ArenaListener implements Listener
 		}
 	}
 	
-	@EventHandler (priority = EventPriority.LOWEST)
+	@EventHandler (priority = EventPriority.MONITOR, ignoreCancelled=true)
 	public void playerJoinHandler(PlayerJoinEvent event)
 	{
 		if (this.arena.contains(event.getPlayer().getLocation()))
@@ -55,7 +56,7 @@ public class ArenaListener implements Listener
 		}
 	}
 	
-	@EventHandler (priority = EventPriority.LOWEST)
+	@EventHandler (priority = EventPriority.MONITOR, ignoreCancelled=true)
 	public void playerQuitHandler(PlayerQuitEvent event)
 	{
 		if (this.arena.contains(event.getPlayer().getLocation()))
@@ -64,7 +65,7 @@ public class ArenaListener implements Listener
 		}
 	}
 	
-	@EventHandler (priority = EventPriority.LOWEST)
+	@EventHandler (priority = EventPriority.MONITOR, ignoreCancelled=true)
 	public void playerKickHandler(PlayerKickEvent event)
 	{
 		if (this.arena.contains(event.getPlayer().getLocation()))
@@ -73,10 +74,10 @@ public class ArenaListener implements Listener
 		}
 	}
 	
-	@EventHandler (priority = EventPriority.LOWEST)
+	@EventHandler (priority = EventPriority.MONITOR, ignoreCancelled=true)
 	public void playerTeleportHandler(PlayerTeleportEvent event)
 	{
-		if (this.arena.contains(event.getPlayer().getLocation()))
+		if (this.arena.contains(event.getTo()))
 		{
 			this.addPlayer(event.getPlayer());
 		}
