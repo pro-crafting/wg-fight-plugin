@@ -101,12 +101,12 @@ public class ScoreBoardDisplay implements Listener
 		p.setScoreboard(manager.getNewScoreboard());
 	}
 	
-	public void updateHealthOfPlayer(Player p, int health)
+	public void updateHealthOfPlayer(Player p)
 	{
 		TeamMember member = this.arena.getTeam().getTeamOfPlayer(p).getTeamMember(p);
 		if (member.getAlive())
 		{
-			board.getObjective("Lebensanzeige").getScore(member.getPlayer()).setScore(health);
+			board.getObjective("Lebensanzeige").getScore(member.getPlayer()).setScore((int)Math.ceil(p.getHealth()));
 		}
 		else
 		{

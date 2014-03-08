@@ -36,12 +36,11 @@ public class ArenaListener implements Listener
 			return;
 		}
 		boolean isInArena = this.arena.getRepo().getArenaRegion().contains(BukkitUtil.toVector(event.getTo()));
-		boolean isPlayerInArena = this.arena.getPlayersInArena().contains(event.getPlayer());
-		if (!isInArena && isPlayerInArena)
+		if (!isInArena)
 		{
 			this.removePlayer(event.getPlayer());
 		}
-		else if (isInArena && !isPlayerInArena)
+		else
 		{
 			this.addPlayer(event.getPlayer());
 		}
@@ -119,7 +118,7 @@ public class ArenaListener implements Listener
 		this.plugin.getServer().getScheduler().runTask(this.plugin, new Runnable(){
 			public void run()
 			{
-				ArenaListener.this.arena.getScore().updateHealthOfPlayer(player, (int)player.getHealth());
+				ArenaListener.this.arena.getScore().updateHealthOfPlayer(player);
 			}
 		});
 	}
@@ -137,7 +136,7 @@ public class ArenaListener implements Listener
 			this.plugin.getServer().getScheduler().runTask(this.plugin, new Runnable(){
 				public void run()
 				{
-					ArenaListener.this.arena.getScore().updateHealthOfPlayer(player, (int)player.getHealth());
+					ArenaListener.this.arena.getScore().updateHealthOfPlayer(player);
 				}
 			});
 		}
