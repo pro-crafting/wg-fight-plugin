@@ -192,6 +192,17 @@ public class Arena{
 		}
 	}
 	
+	public void broadcastOutside(String message)
+	{
+		for (Player player : this.plugin.getServer().getOnlinePlayers())
+		{
+			if (!this.contains(player.getLocation()))
+			{
+				player.sendMessage(message);
+			}
+		}
+	}
+	
 	public void updateFightState(FightState state)
 	{
 		FightStateChangedEvent fightStateEvent = new FightStateChangedEvent(this.name, this.arenaState, state);
