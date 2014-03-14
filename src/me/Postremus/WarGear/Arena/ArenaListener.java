@@ -32,10 +32,6 @@ public class ArenaListener implements Listener
 	@EventHandler (priority = EventPriority.MONITOR, ignoreCancelled=true)
 	public void playerMoveHandler(PlayerMoveEvent event)
 	{
-		if (!event.getTo().getWorld().equals(this.arena.getRepo().getWorld()))
-		{
-			return;
-		}
 		boolean isInArena = this.arena.contains(event.getTo());
 		if (!isInArena)
 		{
@@ -124,7 +120,7 @@ public class ArenaListener implements Listener
 		});
 	}
 	
-	@EventHandler (priority = EventPriority.LOWEST)
+	@EventHandler (priority = EventPriority.MONITOR)
 	public void entityRegainHealthHandler(EntityRegainHealthEvent event)
 	{
 		if (!(event.getEntity() instanceof Player))

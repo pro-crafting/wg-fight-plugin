@@ -212,7 +212,8 @@ public class Arena{
 
 	public boolean contains(Location loc)
 	{
-		return this.repo.getArenaRegion().contains(BukkitUtil.toVector(loc));
+		return this.repo.getArenaRegion().contains(BukkitUtil.toVector(loc)) &&
+				this.getRepo().getWorld().getName().equals(loc.getWorld().getName());
 	}
 	
 	public void teleport(Entity entity)
