@@ -30,18 +30,13 @@ public class WarGearUtil {
 		}
 		if (!(sender instanceof ConsoleCommandSender))
 		{
-			Arena arena = null;
 			if (sender instanceof Player)
 			{
-				arena = plugin.getArenaManager().getArenaAtLocation(((Player)sender).getLocation());
+				ret = plugin.getArenaManager().getArenaAtLocation(((Player)sender).getLocation());
 			}
 			else if (sender instanceof BlockCommandSender)
 			{
-				arena = plugin.getArenaManager().getArenaAtLocation(((BlockCommandSender)sender).getBlock().getLocation());
-			}
-			if (arena != null)
-			{
-				return arena;
+				ret = plugin.getArenaManager().getArenaAtLocation(((BlockCommandSender)sender).getBlock().getLocation());
 			}
 		}
 		return ret;
