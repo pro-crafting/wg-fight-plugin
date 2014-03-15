@@ -103,14 +103,13 @@ public class ScoreBoardDisplay implements Listener
 	
 	public void updateHealthOfPlayer(Player p)
 	{
-		TeamMember member = this.arena.getTeam().getTeamOfPlayer(p).getTeamMember(p);
-		if (member.getAlive())
+		if (this.arena.getTeam().isPlayerAlive(p))
 		{
-			board.getObjective("Lebensanzeige").getScore(member.getPlayer()).setScore((int)Math.ceil(p.getHealth()));
+			board.getObjective("Lebensanzeige").getScore(p).setScore((int)Math.ceil(p.getHealth()));
 		}
 		else
 		{
-			board.resetScores(member.getPlayer());
+			board.resetScores(p);
 		}
 	}
 	

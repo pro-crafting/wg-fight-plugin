@@ -224,6 +224,15 @@ public class TeamManager implements Listener
 		 return this.team1.getIsReady() && this.team2.getIsReady();
 	 }
 	 
+	 public boolean isPlayerAlive(Player p)
+	 {
+		 if (this.getTeamOfPlayer(p) == null || this.getTeamOfPlayer(p).getTeamMember(p) == null)
+		 {
+			  return false;
+		 }
+		 return this.getTeamOfPlayer(p).getTeamMember(p).getAlive();
+	 }
+	 
 	 public WgTeam getTeam1()
 	 {
 		 return this.team1;
