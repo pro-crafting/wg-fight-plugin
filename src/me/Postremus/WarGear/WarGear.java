@@ -2,11 +2,13 @@ package me.Postremus.WarGear;
 
 import java.io.File;
 
+import me.Postremus.CommandFramework.CommandFramework;
 import me.Postremus.Generator.BlockGenerator;
 import me.Postremus.WarGear.Arena.ArenaManager;
-import me.Postremus.WarGear.Commands.WgkCommand;
+import me.Postremus.WarGear.Commands.*;
 import me.Postremus.KitApi.KitAPI;
 
+import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class WarGear extends JavaPlugin {
@@ -15,6 +17,10 @@ public class WarGear extends JavaPlugin {
 	private BlockGenerator generator;
 	private ArenaManager arenaManager;
 	private KitAPI kitApi;
+	private CommandFramework cmdFramework;
+	private WarGearCommands wgCommands;
+	private TeamCommands teamCommands;
+	private ArenaCommands arenaCommands;
 	
 	@Override
 	public void onEnable() {
@@ -23,9 +29,22 @@ public class WarGear extends JavaPlugin {
 		this.generator = new BlockGenerator(this);
 		this.arenaManager = new ArenaManager(this);
 		this.kitApi = new KitAPI(this.getServer());
-		this.getCommand("wgk").setExecutor(new WgkCommand(this));
+		this.cmdFramework = new CommandFramework(this);
+		this.wgCommands = new WarGearCommands(this);
+		this.teamCommands = new TeamCommands(this);
+		this.arenaCommands = new ArenaCommands(this);
+		this.cmdFramework.registerCommands(this.wgCommands);
+		this.cmdFramework.registerCommands(this.teamCommands);
+		this.cmdFramework.registerCommands(this.arenaCommands);
+		this.cmdFramework.registerHelp();
 		System.out.println("[WarGear] Plugin erfolgreich geladen!");
 	}
+	
+	@Override
+    public boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String label, String[] args) {
+        return this.cmdFramework.handleCommand(sender, label, command, args);
+    }
+	
 	@Override
 	public void onDisable() {
 		this.arenaManager.unloadArenas();
@@ -58,5 +77,10 @@ public class WarGear extends JavaPlugin {
 	public KitAPI getKitApi()
 	{
 		return this.kitApi;
+	}
+	
+	public CommandFramework GetCmdFramework()
+	{
+		return this.cmdFramework;
 	}
 }

@@ -1,8 +1,15 @@
 package me.Postremus.WarGear.Arena;
 
+import me.Postremus.WarGear.DrawReason;
 import me.Postremus.WarGear.FightState;
+import me.Postremus.WarGear.TeamWinReason;
 import me.Postremus.WarGear.WarGear;
+import me.Postremus.WarGear.Events.DrawQuitEvent;
+import me.Postremus.WarGear.Events.FightQuitEvent;
+import me.Postremus.WarGear.Events.TeamWinQuitEvent;
+import me.Postremus.WarGear.FightModes.KitMode;
 
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -137,5 +144,34 @@ public class ArenaListener implements Listener
 				}
 			});
 		}
+	}
+	
+	@EventHandler (priority = EventPriority.LOWEST)
+	public void quit(FightQuitEvent event)
+	{
+		event.getArena().close();
+		event.getArena().updateFightState(FightState.Idle);
+		event.getArena().getFightMode().stop();
+		if (event instanceof TeamWinQuitEvent)
+		{
+			TeamWinQuitEvent winEvent = (TeamWinQuitEvent)event;
+			String toBroadcast = "";
+			if (winEvent.getReason() == TeamWinReason.Death)
+			{
+				toBroadcast = ChatColor.DARK_GREEN + "Jeder aus dem ["+winEvent.getLooserTeam().getTeamName().toString().toUpperCase()+"] ist tot.";
+			}
+			event.getArena().broadcastMessage(toBroadcast);
+			event.getArena().getTeam().GenerateWinnerTeamOutput(winEvent.getWinnerTeam().getTeamName());
+		}
+		else if (event instanceof DrawQuitEvent)
+		{
+			DrawQuitEvent drawEvent = (DrawQuitEvent)event;
+			if (drawEvent.getReason() == DrawReason.Time)
+			{
+				event.getArena().broadcastMessage(ChatColor.DARK_GREEN + "Zeit abgelaufen - Unentschieden");
+			}
+		}
+		event.getArena().getTeam().quitFight();
+		event.getArena().setFightMode(new KitMode(this.plugin, event.getArena()));
 	}
 }

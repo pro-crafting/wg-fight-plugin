@@ -5,8 +5,3 @@ website: http://dev.bukkit.org/bukkit-plugins/wargear-fight/
 author: postremus
 main: me.Postremus.WarGear.WarGear
 depend: [WorldEdit, WorldGuard]
-
-commands:
-  wgk:
-    description: Alle Commands dieses Plugins
-    usage: /wgk subcommand
