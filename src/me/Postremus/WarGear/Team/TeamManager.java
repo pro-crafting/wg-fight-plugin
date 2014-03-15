@@ -55,7 +55,7 @@ public class TeamManager implements Listener
 		    player.getPlayer().teleport(this.plugin.getRepo().getWarpForTeam(team.getTeamName(), this.arena), TeleportCause.PLUGIN);
 		    player.getPlayer().setGameMode(GameMode.SURVIVAL);
 			WarGearUtil.disableFly(player.getPlayer());
-			WarGearUtil.heal(player.getPlayer());
+			WarGearUtil.makeHealthy(player.getPlayer());
 			for (PotionEffect effect : player.getPlayer().getActivePotionEffects())
 			{
 				player.getPlayer().removePotionEffect(effect.getType());
