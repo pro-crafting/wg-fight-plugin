@@ -54,11 +54,11 @@ public class WgTeam
 	
 	public TeamMember getTeamMember(Player p)
 	{
-		for (TeamMember tmp : this.teamMember)
+		for (TeamMember current : this.teamMember)
 		{
-			if (tmp.getPlayer().getName().equalsIgnoreCase(p.getName()))
+			if (current.getPlayerName().equalsIgnoreCase(p.getName()))
 			{
-				return tmp;
+				return current;
 			}
 		}
 		return null;
@@ -66,9 +66,9 @@ public class WgTeam
 	
 	public boolean isSomoneAlive()
 	{
-		for (TeamMember tmp : this.teamMember)
+		for (TeamMember current : this.teamMember)
 		{
-			if (tmp.getAlive())
+			if (current.getAlive())
 			{
 				return true;
 			}
@@ -78,9 +78,9 @@ public class WgTeam
 	
 	public boolean hasTeamLeader()
 	{
-		for (TeamMember tmp : this.teamMember)
+		for (TeamMember current : this.teamMember)
 		{
-			if (tmp.getIsTeamLeader())
+			if (current.getIsTeamLeader())
 			{
 				return true;
 			}

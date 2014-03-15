@@ -120,7 +120,7 @@ public class ArenaListener implements Listener
 		});
 	}
 	
-	@EventHandler (priority = EventPriority.MONITOR)
+	@EventHandler (priority = EventPriority.MONITOR, ignoreCancelled=true)
 	public void entityRegainHealthHandler(EntityRegainHealthEvent event)
 	{
 		if (!(event.getEntity() instanceof Player))

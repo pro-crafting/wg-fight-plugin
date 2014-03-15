@@ -21,6 +21,11 @@ public class TeamMember{
 		return Bukkit.getServer().getPlayer(playerName);
 	}
 	
+	public String getPlayerName()
+	{
+		return this.playerName;
+	}
+	
 	public Boolean getAlive()
 	{
 		return this.alive;
