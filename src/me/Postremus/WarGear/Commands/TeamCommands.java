@@ -233,14 +233,7 @@ public class TeamCommands {
 		{
 			args.getSender().sendMessage("§cDu stehst in keiner Arena, oder Sie existiert nicht.");
 			return;
-		}
-		if (args.getArgs().length == 0)
-		{
-			args.getSender().sendMessage("§cDu musst einen Spieler angeben.");
-			return;
-		}
-		
-		String playerName = args.getArgs()[0];
+		}	
 		
 		if (arena.getFightState() == FightState.Running)
 		{
