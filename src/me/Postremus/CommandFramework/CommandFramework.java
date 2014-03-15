@@ -59,7 +59,12 @@ public class CommandFramework {
 			}
 		}
 	}
-
+	
+	public String[] getCommandLabels()
+	{
+		return this.commandMap.keySet().toArray(new String[0]);
+	}
+	
 	/**
 	 * Handles commands. Used in the onCommand method in your JavaPlugin class
 	 * 
