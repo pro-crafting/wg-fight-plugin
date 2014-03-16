@@ -163,6 +163,14 @@ public class TeamManager implements Listener
 		 }, 60);
 	 }
 	 
+	 public void healTeam(WgTeam team)
+	 {
+		 for (TeamMember member : team.getTeamMembers())
+		 {
+			 WarGearUtil.makeHealthy(member.getPlayer());
+		 }
+	 }
+	 
 	 public WgTeam getTeamOfName(TeamNames name)
 	 {
 		 if (name == TeamNames.Team1)

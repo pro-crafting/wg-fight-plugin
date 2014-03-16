@@ -4,6 +4,9 @@ public enum FightState
 {
 	Idle,
 	Setup,
+	Custom,
+	PreRunning,
 	Running,
+	Spectate,
 	Reseting
 }
