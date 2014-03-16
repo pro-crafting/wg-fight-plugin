@@ -5,6 +5,7 @@ import me.Postremus.WarGear.TeamWinReason;
 import me.Postremus.WarGear.WarGear;
 import me.Postremus.WarGear.WarGearUtil;
 import me.Postremus.WarGear.Arena.Arena;
+import me.Postremus.WarGear.Events.FightStateChangedEvent;
 import me.Postremus.WarGear.Events.TeamWinQuitEvent;
 
 import org.bukkit.ChatColor;
@@ -161,6 +162,16 @@ public class TeamManager implements Listener
 			}
 			 
 		 }, 60);
+	 }
+	 
+	 @EventHandler (priority = EventPriority.MONITOR)
+	 public void fightStateChangedHandler(FightStateChangedEvent event)
+	 {
+		 if (event.getFrom() == FightState.PreRunning && event.getTo() == FightState.Running)
+		 {
+			 this.healTeam(this.team1);
+			 this.healTeam(this.team2);
+		 }
 	 }
 	 
 	 public void healTeam(WgTeam team)

@@ -3,6 +3,7 @@ package me.Postremus.WarGear.FightModes;
 import org.bukkit.ChatColor;
 import org.bukkit.Difficulty;
 
+import me.Postremus.WarGear.FightState;
 import me.Postremus.WarGear.WarGear;
 import me.Postremus.WarGear.Arena.Arena;
 import me.Postremus.WarGear.Team.TeamMember;
@@ -84,7 +85,8 @@ import me.Postremus.WarGear.Team.TeamMember;
 			this.plugin.getServer().getScheduler().cancelTask(taskId);
 			this.arena.getRepo().getWorld().setDifficulty(Difficulty.EASY);
 			this.plugin.getServer().getPluginManager().registerEvents(this, this.plugin);
-			this.arena.open();
+			this.arena.updateFightState(FightState.Running);
+			arena.open();
 		}
 		counter++;
 	}
