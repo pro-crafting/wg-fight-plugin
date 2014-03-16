@@ -189,11 +189,11 @@ public class ArenaReseter implements Listener
 			return;
 		}
 		
-		if (event.getTo() == FightState.Running)
+		if (event.getTo() == FightState.PreRunning)
 		{
 			this.removeItems(this.arena.getRepo().getWorld());
 		}
-		else if (event.getTo() == FightState.Running)
+		else if (event.getFrom() == FightState.Reseting)
 		{
 			if (this.arena.getRepo().getAutoReset())
 			{

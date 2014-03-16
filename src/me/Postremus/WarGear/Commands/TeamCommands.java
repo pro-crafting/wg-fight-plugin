@@ -48,7 +48,7 @@ public class TeamCommands {
 		
 		String playerName = args.getArgs()[0];
 		
-		if (arena.getFightState() == FightState.Running)
+		if (arena.getFightState() == FightState.Running || arena.getFightState() == FightState.PreRunning)
 		{
 			args.getSender().sendMessage("§cHier läuft bereits ein Fight.");
 			return;
@@ -101,7 +101,7 @@ public class TeamCommands {
 		
 		String playerName = args.getArgs()[0];
 		
-		if (arena.getFightState() == FightState.Running)
+		if (arena.getFightState() == FightState.Running || arena.getFightState() == FightState.PreRunning)
 		{
 			args.getSender().sendMessage("§cWährend eines Fights kannst du keine Mitglieder hinzufügen.");
 			return;
@@ -153,7 +153,7 @@ public class TeamCommands {
 		
 		String playerName = args.getArgs()[0];
 		
-		if (arena.getFightState() == FightState.Running)
+		if (arena.getFightState() == FightState.Running || arena.getFightState() == FightState.Running)
 		{
 			args.getSender().sendMessage("§Während eines Fights kannst du keine Mitglieder entfernen.");
 			return;
@@ -202,7 +202,7 @@ public class TeamCommands {
 			return;
 		}
 		
-		if (arena.getFightState() == FightState.Running)
+		if (arena.getFightState() == FightState.Running || arena.getFightState() == FightState.PreRunning)
 		{
 			args.getSender().sendMessage("§cWährend eines Fights kannst du nicht aus deinem Team raus.");
 			return;
@@ -235,9 +235,9 @@ public class TeamCommands {
 			return;
 		}	
 		
-		if (arena.getFightState() == FightState.Running)
+		if (arena.getFightState() == FightState.Running || arena.getFightState() == FightState.PreRunning)
 		{
-			args.getSender().sendMessage("§cWährend eines Fights kannst du keine Mitglieder entfernen.");
+			args.getSender().sendMessage("§cWährend eines Fights kannst du das Team nicht bereit schalten.");
 			return;
 		}
 		if (!(args.getSender() instanceof Player))
@@ -312,6 +312,6 @@ public class TeamCommands {
 		arena.setArenaOpeningFlags(false);
 		arena.getTeam().GenerateTeamOutput();
 		arena.getFightMode().start();
-		arena.updateFightState(FightState.Running);
+		arena.updateFightState(FightState.PreRunning);
 	}
 }
