@@ -64,6 +64,11 @@ public class TeamManager implements Listener
 		}
 	}
 	
+	public void teleportTeamToTeamWarp()
+	{
+		
+	}
+	
 	public void quitFight()
 	{
 		quiteFightForTeam(this.team1);
@@ -120,10 +125,14 @@ public class TeamManager implements Listener
 		this.arena.broadcastMessage(ChatColor.YELLOW +""+ ChatColor.ITALIC+team1 + " vs. " + team2);
 	}
 	
-	@EventHandler (priority = EventPriority.HIGH)
+	@EventHandler (priority = EventPriority.HIGH, ignoreCancelled=true)
      public void deathEventHandler(PlayerDeathEvent event)
 	 {
 		 if (arena.getFightState() != FightState.Running)
+		 {
+			 return;
+		 }
+		 if (!arena.contains(event.getEntity().getLocation()))
 		 {
 			 return;
 		 }
@@ -143,7 +152,7 @@ public class TeamManager implements Listener
 		 }
 	 }
 	 
-	 @EventHandler (priority = EventPriority.HIGHEST)
+	 @EventHandler (priority = EventPriority.HIGHEST, ignoreCancelled=true)
 	 public void playerRespwanHandler(PlayerRespawnEvent event)
 	 {
 		 final Player respawned = event.getPlayer();
@@ -164,10 +173,14 @@ public class TeamManager implements Listener
 		 }, 60);
 	 }
 	 
-	 @EventHandler (priority = EventPriority.MONITOR)
+	 @EventHandler (priority = EventPriority.MONITOR, ignoreCancelled=true)
 	 public void fightStateChangedHandler(FightStateChangedEvent event)
 	 {
-		 if (event.getFrom() == FightState.PreRunning && event.getTo() == FightState.Running)
+		 if (!event.getArenaName().equalsIgnoreCase(this.arena.getArenaName()))
+		{
+			return;
+		}
+		 if (event.getTo() == FightState.Running)
 		 {
 			 this.healTeam(this.team1);
 			 this.healTeam(this.team2);
