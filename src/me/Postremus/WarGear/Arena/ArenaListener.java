@@ -6,6 +6,7 @@ import me.Postremus.WarGear.TeamWinReason;
 import me.Postremus.WarGear.WarGear;
 import me.Postremus.WarGear.Events.DrawQuitEvent;
 import me.Postremus.WarGear.Events.FightQuitEvent;
+import me.Postremus.WarGear.Events.FightStateChangedEvent;
 import me.Postremus.WarGear.Events.TeamWinQuitEvent;
 import me.Postremus.WarGear.FightModes.KitMode;
 
@@ -40,6 +41,12 @@ public class ArenaListener implements Listener
 	@EventHandler (priority = EventPriority.MONITOR, ignoreCancelled=true)
 	public void playerMoveHandler(PlayerMoveEvent event)
 	{
+		if (event.getTo().getBlockX() == event.getFrom().getBlockX() &&
+				event.getTo().getBlockY() == event.getFrom().getBlockY() &&
+				event.getTo().getBlockZ() == event.getFrom().getBlockZ())
+		{
+			return;
+		}
 		boolean isInArena = this.arena.contains(event.getTo());
 		if (!isInArena)
 		{
@@ -93,14 +100,20 @@ public class ArenaListener implements Listener
 	
 	private void addPlayer(Player p)
 	{
-		this.arena.getScore().enterArena(p);
-		this.arena.getPlayersInArena().add(p);
+		if (!this.arena.getPlayersInArena().contains(p))
+		{
+			this.arena.getScore().enterArena(p);
+			this.arena.getPlayersInArena().add(p);
+		}
 	}
 	
 	private void removePlayer(Player p)
 	{
-		this.arena.getScore().leaveArena(p);
-		this.arena.getPlayersInArena().remove(p);
+		if (this.arena.getPlayersInArena().contains(p))
+		{
+			this.arena.getScore().leaveArena(p);
+			this.arena.getPlayersInArena().remove(p);
+		}
 	}
 	
 	@EventHandler (priority = EventPriority.LOWEST)
@@ -151,7 +164,7 @@ public class ArenaListener implements Listener
 	public void quit(FightQuitEvent event)
 	{
 		event.getArena().close();
-		event.getArena().updateFightState(FightState.Idle);
+		event.getArena().updateFightState(FightState.Spectate);
 		event.getArena().getFightMode().stop();
 		if (event instanceof TeamWinQuitEvent)
 		{
