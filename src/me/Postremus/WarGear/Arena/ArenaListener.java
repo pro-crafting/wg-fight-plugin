@@ -9,8 +9,11 @@ import me.Postremus.WarGear.Events.FightQuitEvent;
 import me.Postremus.WarGear.Events.FightStateChangedEvent;
 import me.Postremus.WarGear.Events.TeamWinQuitEvent;
 import me.Postremus.WarGear.FightModes.KitMode;
+import me.Postremus.WarGear.Team.TeamMember;
+import me.Postremus.WarGear.Team.TeamNames;
 
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -185,7 +188,48 @@ public class ArenaListener implements Listener
 				event.getArena().broadcastMessage(ChatColor.DARK_GREEN + "Zeit abgelaufen - Unentschieden");
 			}
 		}
-		event.getArena().getTeam().quitFight();
-		event.getArena().setFightMode(new KitMode(this.plugin, event.getArena()));
+	}
+	
+	
+	@EventHandler (priority = EventPriority.LOWEST)
+	public void fightStateChangedHandler(FightStateChangedEvent event)
+	{
+		if (!event.getArenaName().equalsIgnoreCase(this.arena.getArenaName()))
+		{
+			return;
+		}
+		if (event.getTo() == FightState.Spectate)
+		{
+			this.arena.broadcastMessage("Wargears können betrachtet werden von den Teams.");
+			this.arena.broadcastMessage("Zeit: Zwei Minute");
+			this.arena.getTeam().teleportTeamToTeamWarp(TeamNames.Team1);
+			this.arena.getTeam().teleportTeamToTeamWarp(TeamNames.Team2);
+			this.arena.getTeam().setGameMode(TeamNames.Team1, GameMode.CREATIVE);
+			this.arena.getTeam().setGameMode(TeamNames.Team2, GameMode.CREATIVE);
+			this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable(){
+				public void run()
+				{
+					ArenaListener.this.arena.broadcastMessage("Zeit fürs Betrachten abgelaufen.");
+					ArenaListener.this.arena.updateFightState(FightState.Reseting);
+					for (TeamMember member : ArenaListener.this.arena.getTeam().getTeam1().getTeamMembers())
+					{
+						ArenaListener.this.arena.teleport(member.getPlayer());
+						member.getPlayer().getInventory().clear();
+					}
+					for (TeamMember member : ArenaListener.this.arena.getTeam().getTeam2().getTeamMembers())
+					{
+						ArenaListener.this.arena.teleport(member.getPlayer());
+						member.getPlayer().getInventory().clear();
+					}
+					ArenaListener.this.arena.getTeam().setGameMode(TeamNames.Team1, GameMode.SURVIVAL);
+					ArenaListener.this.arena.getTeam().setGameMode(TeamNames.Team2, GameMode.SURVIVAL);
+				}
+			}, 2 * 1200);
+		}
+		if (event.getTo() == FightState.Idle)
+		{
+			this.arena.getTeam().quitFight();
+			this.arena.setFightMode(new KitMode(this.plugin, this.arena));
+		}
 	}
 }

@@ -10,6 +10,7 @@ import me.Postremus.WarGear.Events.TeamWinQuitEvent;
 
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -48,12 +49,12 @@ public class TeamManager implements Listener
 	
 	private void prepareFightForTeam(WgTeam team)
 	{
+		teleportTeamToTeamWarp(team.getTeamName());
 		for (TeamMember player : team.getTeamMembers())
 		{
 			player.getPlayer().getInventory().clear();
 			player.getPlayer().getInventory().setArmorContents(null);
 			
-		    player.getPlayer().teleport(this.plugin.getRepo().getWarpForTeam(team.getTeamName(), this.arena), TeleportCause.PLUGIN);
 		    player.getPlayer().setGameMode(GameMode.SURVIVAL);
 			WarGearUtil.disableFly(player.getPlayer());
 			WarGearUtil.makeHealthy(player.getPlayer());
@@ -64,9 +65,27 @@ public class TeamManager implements Listener
 		}
 	}
 	
-	public void teleportTeamToTeamWarp()
+	public void setGameMode(TeamNames team, GameMode mode)
 	{
-		
+		for (TeamMember player : this.getTeamOfName(team).getTeamMembers())
+		{
+			if (player.getPlayer() != null)
+			{
+				player.getPlayer().setGameMode(mode);
+			}
+		}
+	}
+	
+	public void teleportTeamToTeamWarp(TeamNames team)
+	{
+		Location teleportTo = this.plugin.getRepo().getWarpForTeam(team, this.arena);
+		for (TeamMember player : this.getTeamOfName(team).getTeamMembers())
+		{
+			if (player.getPlayer() != null)
+			{
+				player.getPlayer().teleport(teleportTo, TeleportCause.PLUGIN);
+			}
+		}
 	}
 	
 	public void quitFight()

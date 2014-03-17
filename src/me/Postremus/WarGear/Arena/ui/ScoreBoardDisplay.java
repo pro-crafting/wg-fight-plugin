@@ -137,7 +137,7 @@ public class ScoreBoardDisplay implements Listener
 		{
 			this.timer.start();
 		}
-		else if (event.getTo() == FightState.Idle)
+		else if (event.getFrom() == FightState.Running)
 		{
 			if (this.timer.getIsRunning())
 			{

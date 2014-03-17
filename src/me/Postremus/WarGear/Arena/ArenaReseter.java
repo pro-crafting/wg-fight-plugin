@@ -195,11 +195,11 @@ public class ArenaReseter implements Listener
 		}
 		else if (event.getTo() == FightState.Reseting)
 		{
-			if (this.arena.getRepo().getAutoReset())
+			if (!this.arena.getRepo().getAutoReset())
 			{
-				event.setTo(FightState.Reseting);
-				this.reset();
+				event.setTo(FightState.Idle);
 			}
+			this.reset();
 		}
 	}
 }
