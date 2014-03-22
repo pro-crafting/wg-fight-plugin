@@ -11,6 +11,7 @@ import me.Postremus.WarGear.Events.TeamWinQuitEvent;
 import me.Postremus.WarGear.FightModes.KitMode;
 import me.Postremus.WarGear.Team.TeamMember;
 import me.Postremus.WarGear.Team.TeamNames;
+import me.Postremus.WarGear.Team.WgTeam;
 
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -20,6 +21,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -200,36 +202,39 @@ public class ArenaListener implements Listener
 		}
 		if (event.getTo() == FightState.Spectate)
 		{
-			this.arena.broadcastMessage("Wargears können betrachtet werden von den Teams.");
-			this.arena.broadcastMessage("Zeit: Zwei Minute");
-			this.arena.getTeam().teleportTeamToTeamWarp(TeamNames.Team1);
-			this.arena.getTeam().teleportTeamToTeamWarp(TeamNames.Team2);
-			this.arena.getTeam().setGameMode(TeamNames.Team1, GameMode.CREATIVE);
-			this.arena.getTeam().setGameMode(TeamNames.Team2, GameMode.CREATIVE);
-			this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable(){
-				public void run()
-				{
-					ArenaListener.this.arena.broadcastMessage("Zeit fürs Betrachten abgelaufen.");
-					ArenaListener.this.arena.updateFightState(FightState.Reseting);
-					for (TeamMember member : ArenaListener.this.arena.getTeam().getTeam1().getTeamMembers())
-					{
-						ArenaListener.this.arena.teleport(member.getPlayer());
-						member.getPlayer().getInventory().clear();
-					}
-					for (TeamMember member : ArenaListener.this.arena.getTeam().getTeam2().getTeamMembers())
-					{
-						ArenaListener.this.arena.teleport(member.getPlayer());
-						member.getPlayer().getInventory().clear();
-					}
-					ArenaListener.this.arena.getTeam().setGameMode(TeamNames.Team1, GameMode.SURVIVAL);
-					ArenaListener.this.arena.getTeam().setGameMode(TeamNames.Team2, GameMode.SURVIVAL);
-				}
-			}, 2 * 1200);
+			ArenaListener.this.arena.updateFightState(FightState.Reseting);
 		}
 		if (event.getTo() == FightState.Idle)
 		{
 			this.arena.getTeam().quitFight();
 			this.arena.setFightMode(new KitMode(this.plugin, this.arena));
 		}
+	}
+	
+	@EventHandler (priority = EventPriority.LOWEST)
+	public void asyncPlayerChatHandler(AsyncPlayerChatEvent event)
+	{
+		WgTeam team = this.arena.getTeam().getTeamOfPlayer(event.getPlayer());
+		String color = "§7";
+		System.out.println("t");
+		if (team != null)
+		{
+			if (team.getTeamName() == TeamNames.Team1)
+			{
+				System.out.println("t2");
+				color = "§c";
+			}
+			else if (team.getTeamName() == TeamNames.Team2)
+			{
+				System.out.println("t3");
+				color = "§1";
+			}
+		}
+		else if (!this.arena.contains(event.getPlayer().getLocation()))
+		{
+			return;
+		}
+		event.setFormat(color+"["+this.arena.getArenaName()+"]"+event.getFormat());
+		System.out.println("t4--");
 	}
 }
