@@ -155,7 +155,7 @@ public class TeamManager implements Listener
 		 {
 			 return;
 		 }
-		 Player died = event.getEntity().getPlayer();
+		 Player died = event.getEntity();
 		 final WgTeam team = this.getTeamOfPlayer(died);
 		 if (team != null && team.getTeamMember(died).getAlive())
 		 {
@@ -172,7 +172,7 @@ public class TeamManager implements Listener
 	 }
 	 
 	 @EventHandler (priority = EventPriority.HIGHEST, ignoreCancelled=true)
-	 public void playerRespwanHandler(PlayerRespawnEvent event)
+	 public void playerRespawnHandler(PlayerRespawnEvent event)
 	 {
 		 final Player respawned = event.getPlayer();
 		 if (!this.arena.contains(respawned.getLocation()))

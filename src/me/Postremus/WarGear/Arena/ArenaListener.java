@@ -168,6 +168,10 @@ public class ArenaListener implements Listener
 	@EventHandler (priority = EventPriority.LOWEST)
 	public void quit(FightQuitEvent event)
 	{
+		if (!this.arena.equals(event.getArena()))
+		{
+			return;
+		}
 		event.getArena().close();
 		event.getArena().updateFightState(FightState.Spectate);
 		event.getArena().getFightMode().stop();
@@ -211,22 +215,20 @@ public class ArenaListener implements Listener
 		}
 	}
 	
-	@EventHandler (priority = EventPriority.LOWEST)
+	@EventHandler (priority = EventPriority.HIGHEST)
 	public void asyncPlayerChatHandler(AsyncPlayerChatEvent event)
 	{
 		WgTeam team = this.arena.getTeam().getTeamOfPlayer(event.getPlayer());
 		String color = "§7";
-		System.out.println("t");
+		
 		if (team != null)
 		{
 			if (team.getTeamName() == TeamNames.Team1)
 			{
-				System.out.println("t2");
 				color = "§c";
 			}
 			else if (team.getTeamName() == TeamNames.Team2)
 			{
-				System.out.println("t3");
 				color = "§1";
 			}
 		}
@@ -235,6 +237,5 @@ public class ArenaListener implements Listener
 			return;
 		}
 		event.setFormat(color+"["+this.arena.getArenaName()+"]"+event.getFormat());
-		System.out.println("t4--");
 	}
 }
