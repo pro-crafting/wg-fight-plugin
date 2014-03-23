@@ -16,9 +16,11 @@ import me.Postremus.WarGear.Team.WgTeam;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -138,6 +140,27 @@ public class ArenaListener implements Listener
 			event.setCancelled(true);
 			return;
 		}
+		Player damager = null;
+		if (event instanceof EntityDamageByEntityEvent)
+		{
+			EntityDamageByEntityEvent damageEvent = (EntityDamageByEntityEvent)event;
+			if (damageEvent.getDamager() instanceof Projectile
+					&& ((Projectile)damageEvent.getDamager()).getShooter() instanceof Player)
+			{
+				damager = (Player) ((Projectile)damageEvent.getDamager()).getShooter();
+			}
+			else if (damageEvent.getDamager() instanceof Player)
+			{
+				damager = (Player) damageEvent.getDamager();
+			}
+			if (player != null && this.arena.getTeam().getTeamOfPlayer(player).equals(this.arena.getTeam().getTeamOfPlayer(damager)))
+			{
+				damager.sendMessage("§7Du darfst keinen Spieler aus deinem eigenen Team Schaden zufügen.");
+				event.setCancelled(true);
+				return;
+			}
+		}
+		
 		this.plugin.getServer().getScheduler().runTask(this.plugin, new Runnable(){
 			public void run()
 			{
