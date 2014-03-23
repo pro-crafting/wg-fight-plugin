@@ -227,6 +227,13 @@ public class ArenaListener implements Listener
 		{
 			return;
 		}
+		if (event.getTo() == FightState.Setup)
+		{
+			for (Player p : this.arena.getPlayersInArena())
+			{
+				this.arena.getScore().enterArena(p);
+			}
+		}
 		if (event.getTo() == FightState.Spectate)
 		{
 			ArenaListener.this.arena.updateFightState(FightState.Reseting);
