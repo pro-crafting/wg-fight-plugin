@@ -119,7 +119,7 @@ public class TeamCommands {
 		}
 		Player senderPlayer = (Player)args.getSender();
 		WgTeam team = arena.getTeam().getTeamOfPlayer(senderPlayer);
-		if (!team.getTeamMember(senderPlayer).getIsTeamLeader())
+		if (team != null && team.getTeamMember(senderPlayer) != null && !team.getTeamMember(senderPlayer).getIsTeamLeader())
 		{
 			senderPlayer.sendMessage("§cDer Command muss vom Teamleiter ausgeführt werden.");
 			return;
