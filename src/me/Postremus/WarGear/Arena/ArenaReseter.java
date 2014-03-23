@@ -72,7 +72,10 @@ public class ArenaReseter implements Listener
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		this.arena.updateFightState(FightState.Idle);
+		if (this.arena.getFightState() == FightState.Reseting)
+		{
+			this.arena.updateFightState(FightState.Idle);
+		}
 	}
 	
 	private void pasteGround(World arenaWorld) throws FilenameException, IOException, DataException, MaxChangedBlocksException
@@ -199,7 +202,10 @@ public class ArenaReseter implements Listener
 			{
 				this.reset();
 			}
-			event.setTo(FightState.Idle);
+			else
+			{
+				event.setTo(FightState.Idle);
+			}
 		}
 	}
 }
