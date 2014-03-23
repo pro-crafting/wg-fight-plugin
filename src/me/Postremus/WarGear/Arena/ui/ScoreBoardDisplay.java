@@ -41,6 +41,10 @@ public class ScoreBoardDisplay implements Listener
 	
 	private void initScoreboard()
 	{
+		if (board.getObjective("Lebensanzeige") != null)
+		{
+			return;
+		}
 		board.registerNewObjective("Lebensanzeige", "dummy");
 		board.getObjective("Lebensanzeige").setDisplaySlot(DisplaySlot.SIDEBAR);
 		initTeams();
@@ -60,6 +64,7 @@ public class ScoreBoardDisplay implements Listener
 	
 	public void removeTeamMember(TeamMember member, TeamNames team)
 	{
+		initScoreboard();
 		if (team == TeamNames.Team1)
 		{
 			teamRed.removePlayer(member.getPlayer());
@@ -73,6 +78,7 @@ public class ScoreBoardDisplay implements Listener
 	
 	public void addTeamMember(TeamMember member, TeamNames team)
 	{
+		initScoreboard();
 		if (team == TeamNames.Team1)
 		{
 			teamRed.addPlayer(member.getPlayer());
@@ -125,13 +131,9 @@ public class ScoreBoardDisplay implements Listener
 		{
 			return;
 		}
-		
 		if (event.getTo() == FightState.Setup)
 		{
-			if (board.getObjective("Lebensanzeige") == null)
-			{
-				initScoreboard();
-			}
+			initScoreboard();
 		}
 		else if (event.getTo() == FightState.Running)
 		{
