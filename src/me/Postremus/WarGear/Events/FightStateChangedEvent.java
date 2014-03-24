@@ -4,25 +4,26 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import me.Postremus.WarGear.FightState;
+import me.Postremus.WarGear.Arena.Arena;
 
 public class FightStateChangedEvent extends Event
 {
 	private static final HandlerList handlers = new HandlerList();
-	private String arenaName;
+	private Arena arena;
 	private FightState from;
 	private FightState to;
 	
-	public FightStateChangedEvent(String arenaName, FightState from, FightState to)
+	public FightStateChangedEvent(Arena arena, FightState from, FightState to)
 	{
-		this.arenaName = arenaName;
+		this.arena = arena;
 		this.from = from;
 		this.to = to;
 	}
 	
-	public String getArenaName()
-	{
-		return arenaName;
-	}
+    public Arena getArena()
+    {
+    	return this.arena;
+    }
 	
 	public FightState getFrom()
 	{

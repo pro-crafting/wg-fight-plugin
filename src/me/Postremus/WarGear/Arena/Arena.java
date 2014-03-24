@@ -205,7 +205,7 @@ public class Arena{
 	
 	public void updateFightState(FightState state)
 	{
-		FightStateChangedEvent fightStateEvent = new FightStateChangedEvent(this.name, this.arenaState, state);
+		FightStateChangedEvent fightStateEvent = new FightStateChangedEvent(this, this.arenaState, state);
 		this.plugin.getServer().getPluginManager().callEvent(fightStateEvent);
 		this.arenaState = fightStateEvent.getTo();
 	}
