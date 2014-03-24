@@ -50,7 +50,7 @@ public class TeamManager implements Listener
 	private void prepareFightForTeam(WgTeam team)
 	{
 		teleportTeamToTeamWarp(team.getTeamName());
-		for (TeamMember player : team.getTeamMembers())
+		for (TeamMember player : team.getTeamMembers().values())
 		{
 			player.getPlayer().getInventory().clear();
 			player.getPlayer().getInventory().setArmorContents(null);
@@ -67,7 +67,7 @@ public class TeamManager implements Listener
 	
 	public void setGameMode(TeamNames team, GameMode mode)
 	{
-		for (TeamMember player : this.getTeamOfName(team).getTeamMembers())
+		for (TeamMember player : this.getTeamOfName(team).getTeamMembers().values())
 		{
 			if (player.getPlayer() != null)
 			{
@@ -79,7 +79,7 @@ public class TeamManager implements Listener
 	public void teleportTeamToTeamWarp(TeamNames team)
 	{
 		Location teleportTo = this.plugin.getRepo().getWarpForTeam(team, this.arena);
-		for (TeamMember player : this.getTeamOfName(team).getTeamMembers())
+		for (TeamMember player : this.getTeamOfName(team).getTeamMembers().values())
 		{
 			if (player.getPlayer() != null)
 			{
@@ -98,7 +98,7 @@ public class TeamManager implements Listener
 	
 	private void quiteFightForTeam(WgTeam team)
 	{
-		for (TeamMember player : team.getTeamMembers())
+		for (TeamMember player : team.getTeamMembers().values())
 		{
 			player.getPlayer().getInventory().clear();
 			player.getPlayer().teleport(this.arena.getRepo().getFightEndWarp(), TeleportCause.PLUGIN);
@@ -111,17 +111,17 @@ public class TeamManager implements Listener
 		if (teamName == TeamNames.Team1)
 		{
 			team = "[Team1]";
-			for (TeamMember player : this.team1.getTeamMembers())
+			for (String player : this.team1.getTeamMembers().keySet())
 			{
-				team += " "+ player.getPlayer().getName();
+				team += " "+ player;
 			}
 		}
 		else if (teamName == TeamNames.Team2)
 		{
 			team = "[Team2]";
-			for (TeamMember player : this.team2.getTeamMembers())
+			for (String player : this.team2.getTeamMembers().keySet())
 			{
-				team += " "+ player.getPlayer().getName();
+				team += " "+ player;
 			}
 		}
 		this.arena.broadcastMessage(ChatColor.DARK_GREEN + team + " hat gewonnen!");
@@ -130,15 +130,15 @@ public class TeamManager implements Listener
 	public void GenerateTeamOutput()
 	{
 		String team1 = "[Team1]";
-		for (TeamMember player : this.team1.getTeamMembers())
+		for (String player : this.team1.getTeamMembers().keySet())
 		{
-			team1 += " "+ player.getPlayer().getName();
+			team1 += " "+ player;
 		}
 		
 		String team2 = "[Team2]";
-		for (TeamMember player : this.team2.getTeamMembers())
+		for (String player : this.team2.getTeamMembers().keySet())
 		{
-			team2 += " "+ player.getPlayer().getName();
+			team2 += " "+ player;
 		}
 		
 		this.arena.broadcastMessage(ChatColor.YELLOW +""+ ChatColor.ITALIC+team1 + " vs. " + team2);
@@ -208,7 +208,7 @@ public class TeamManager implements Listener
 	 
 	 public void healTeam(WgTeam team)
 	 {
-		 for (TeamMember member : team.getTeamMembers())
+		 for (TeamMember member : team.getTeamMembers().values())
 		 {
 			 WarGearUtil.makeHealthy(member.getPlayer());
 		 }

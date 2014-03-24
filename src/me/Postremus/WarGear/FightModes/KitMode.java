@@ -22,11 +22,11 @@ import me.Postremus.WarGear.Team.TeamMember;
 	public void start() {
 		super.start();
 		counter = 0;
-		for (TeamMember member : this.arena.getTeam().getTeam1().getTeamMembers())
+		for (TeamMember member : this.arena.getTeam().getTeam1().getTeamMembers().values())
 		{
 			this.plugin.getKitApi().giveKit(this.arena.getKit(), member.getPlayer());
 		}
-		for (TeamMember member : this.arena.getTeam().getTeam2().getTeamMembers())
+		for (TeamMember member : this.arena.getTeam().getTeam2().getTeamMembers().values())
 		{
 			this.plugin.getKitApi().giveKit(this.arena.getKit(), member.getPlayer());
 		}

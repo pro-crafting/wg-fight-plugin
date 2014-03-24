@@ -1,13 +1,13 @@
 package me.Postremus.WarGear.Team;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.bukkit.entity.Player;
 
 public class WgTeam 
 {
-	private List<TeamMember> teamMember;
+	private Map<String, TeamMember> teamMember;
 	private boolean isReady;
 	private TeamNames teamName;
 	
@@ -15,21 +15,17 @@ public class WgTeam
 	{
 		this.teamName = teamName;
 		isReady = false;
-		this.teamMember = new ArrayList<TeamMember>();
+		this.teamMember = new HashMap<String, TeamMember>();
 	}
 	
 	public void add(Player p, boolean isLeader)
 	{
-		this.teamMember.add(new TeamMember(p, isLeader));
+		this.teamMember.put(p.getName(), new TeamMember(p, isLeader));
 	}
 	
 	public void remove(Player p)
 	{
-		TeamMember toRemove = this.getTeamMember(p);
-		if (toRemove != null)
-		{
-			this.teamMember.remove(toRemove);
-		}
+		this.teamMember.remove(p.getName());
 	}
 	
 	public boolean getIsReady()
@@ -47,26 +43,19 @@ public class WgTeam
 		return this.teamName;
 	}
 	
-	public List<TeamMember> getTeamMembers()
+	public Map<String, TeamMember> getTeamMembers()
 	{
 		return this.teamMember;
 	}
 	
 	public TeamMember getTeamMember(Player p)
 	{
-		for (TeamMember current : this.teamMember)
-		{
-			if (current.getPlayerName().equalsIgnoreCase(p.getName()))
-			{
-				return current;
-			}
-		}
-		return null;
+		return this.teamMember.get(p.getName());
 	}
 	
 	public boolean isSomoneAlive()
 	{
-		for (TeamMember current : this.teamMember)
+		for (TeamMember current : this.teamMember.values())
 		{
 			if (current.getAlive())
 			{
@@ -78,7 +67,7 @@ public class WgTeam
 	
 	public boolean hasTeamLeader()
 	{
-		for (TeamMember current : this.teamMember)
+		for (TeamMember current : this.teamMember.values())
 		{
 			if (current.getIsTeamLeader())
 			{
