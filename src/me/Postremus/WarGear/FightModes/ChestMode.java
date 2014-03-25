@@ -16,7 +16,9 @@ import org.bukkit.Difficulty;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.Inventory;
@@ -27,21 +29,18 @@ public class ChestMode extends FightBase implements IFightMode, Listener{
 
 	private Timer timer;
 	private int counter;
-	private boolean areChestsOpen;
 	
 	public ChestMode(WarGear plugin, Arena arena)
 	{
 		super(plugin, arena);
 		timer = new Timer();
-		areChestsOpen = false;
 	}
 	
 	@Override
 	public void start() {
-		// TODO Auto-generated method stub
 		super.start();
 		this.fillChest(this.arena.getRepo().getTeam1Warp());
-		this.fillChest(this.arena.getRepo().getTeam1Warp());
+		this.fillChest(this.arena.getRepo().getTeam2Warp());
 		
 		this.plugin.getServer().getPluginManager().registerEvents(this, this.plugin);
 		PlayerMoveEvent.getHandlerList().unregister(this);
@@ -58,21 +57,17 @@ public class ChestMode extends FightBase implements IFightMode, Listener{
 
 	private void fillChest(Location loc)
 	{
-		KitAPI kitapi = new KitAPI(this.plugin.getServer());
-		loc.setY(loc.getY()-1); //Die kiste liegt unterhalb des spielers
-		if (loc.getBlock().getType() != Material.CHEST)
-		{
-			loc.getBlock().setType(Material.CHEST);
-			loc.setX(loc.getX()-1);
-			loc.getBlock().setType(Material.CHEST);
-			loc.setX(loc.getX()+1);
-		}
-		((Chest)loc.getBlock().getState()).getBlockInventory().clear();
-		fillWithTnt(((Chest)loc.getBlock().getState()).getBlockInventory());
-		loc.setX(loc.getX()-1);
-		((Chest)loc.getBlock().getState()).getBlockInventory().clear();
-		((Chest)loc.getBlock().getState()).getBlockInventory().setContents(removeTNTStacks(kitapi.getKitItems(this.arena.getKit())));
-		fillWithTnt(((Chest)loc.getBlock().getState()).getBlockInventory());
+		loc.setY(loc.getY()-1);
+		Location chestOne = loc.add(0, 0, 2);
+		Location chestTwo = chestOne.add(0, 0, 1);
+		setChests(chestOne, chestTwo);
+		
+		ItemStack[] items = removeTNTStacks(this.plugin.getKitApi().getKitItems(this.arena.getKit()));
+		Inventory chestOneInv = ((Chest)loc.getBlock().getState()).getBlockInventory();
+		chestOneInv.setContents(items);
+		
+		fillChestWithTnt(chestOne);
+		fillChestWithTnt(chestTwo);
 	}
 	
 	private ItemStack[] removeTNTStacks(ItemStack[] withtnt)
@@ -88,15 +83,26 @@ public class ChestMode extends FightBase implements IFightMode, Listener{
 		return ret.toArray(new ItemStack[0]);
 	}
 	
-	private void fillWithTnt(Inventory v)
+	private void fillChestWithTnt(Location loc)
 	{
-		for (int i=0;i<v.getSize();i++)
+		if (loc.getBlock().getType() != Material.CHEST)
 		{
-			if (v.getItem(i) == null)
+			return;
+		}
+		Inventory inv = ((Chest)loc.getBlock().getState()).getBlockInventory();
+		for (int i=0;i<inv.getSize();i++)
+		{
+			if (inv.getItem(i) == null)
 			{
-				v.setItem(i, new ItemStack(Material.TNT, 64));
+				inv.setItem(i, new ItemStack(Material.TNT, 64));
 			}
 		}
+	}
+	
+	private void setChests(Location chestOne, Location chestTwo)
+	{
+		chestOne.getBlock().setType(Material.CHEST);
+		chestTwo.getBlock().setType(Material.CHEST);
 	}
 	
 	private void chestOpenCountdown()
@@ -116,7 +122,6 @@ public class ChestMode extends FightBase implements IFightMode, Listener{
 			counter = 0;
 			timer.cancel();
 			timer = new Timer();
-			this.areChestsOpen = true;
 			this.arena.broadcastMessage(ChatColor.AQUA + "Kisten geöffnet!");
 			timer.schedule(new TimerTask(){
 				@Override
@@ -146,7 +151,6 @@ public class ChestMode extends FightBase implements IFightMode, Listener{
 			counter = 0;
 			timer.cancel();
 			timer = new Timer();
-			this.areChestsOpen = false;
 			this.arena.broadcastMessage(ChatColor.AQUA + "Kisten geschlossen!");
 			this.arena.broadcastMessage(ChatColor.AQUA + "Wargear betreten!");
 			timer.schedule(new TimerTask(){
@@ -199,13 +203,18 @@ public class ChestMode extends FightBase implements IFightMode, Listener{
 		return "chest";
 	}
 	
-	@EventHandler
+	@EventHandler (priority=EventPriority.HIGHEST)
 	public void playerInteractHandler(PlayerInteractEvent event)
 	{
+		if (event.getAction() != Action.RIGHT_CLICK_BLOCK)
+		{
+			return;
+		}
 		if (event.getClickedBlock().getType() != Material.CHEST)
 		{
 			return;
 		}
+		
 		if (event.getPlayer().hasPermission("wargear.chest.open"))
 		{
 			return;
@@ -216,34 +225,20 @@ public class ChestMode extends FightBase implements IFightMode, Listener{
 			event.setCancelled(true);
 		}
 		
-		if (this.areChestsOpen)
+		if (!isItemChestLocation(event.getClickedBlock().getLocation(), this.arena.getRepo().getTeam1Warp()) &&
+				!isItemChestLocation(event.getClickedBlock().getLocation(), this.arena.getRepo().getTeam2Warp()))
 		{
 			return;
 		}
-		Chest b = ((Chest)event.getClickedBlock().getState());
-		Location clickedChest = b.getLocation();
-		if (compareChestLocation(clickedChest, arena.getRepo().getTeam1Warp()) || compareChestLocation(clickedChest, arena.getRepo().getTeam2Warp()))
-		{
-			event.setCancelled(this.areChestsOpen);
-		}
+		event.setCancelled(this.arena.getFightState() != FightState.PreRunning);
 	}
 	
-	private boolean compareChestLocation(Location loc, Location chestLoc)
+	private Boolean isItemChestLocation(Location value, Location checkAgainst)
 	{
-		if (!loc.getWorld().getName().equalsIgnoreCase(chestLoc.getWorld().getName()))
-		{
-			return false;
-		}
-		chestLoc.setY(chestLoc.getY()-1);
-		if (loc.getBlockX() == chestLoc.getBlockX() && loc.getBlockY() == chestLoc.getBlockY() && loc.getBlockZ() == chestLoc.getBlockZ())
-		{
-			return true;
-		}
-		chestLoc.setZ(chestLoc.getZ()-1);
-		if (loc.getBlockX() == chestLoc.getBlockX() && loc.getBlockY() == chestLoc.getBlockY() && loc.getBlockZ() == chestLoc.getBlockZ())
-		{
-			return true;
-		}
-		return false;
+		checkAgainst.setY(checkAgainst.getY()-1);
+		Location chestOne = checkAgainst.add(0, 0, 2);
+		Location chestTwo = chestOne.add(0, 0, 1);
+		
+		return chestOne.equals(value) || chestTwo.equals(value);
 	}
 }
