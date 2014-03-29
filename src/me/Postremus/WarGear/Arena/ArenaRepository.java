@@ -1,9 +1,11 @@
 package me.Postremus.WarGear.Arena;
 
 import me.Postremus.WarGear.WarGear;
+import me.Postremus.WarGear.WarGearUtil;
 
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.CreatureSpawner;
 
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
@@ -98,6 +100,12 @@ public class ArenaRepository
 		{
 			return false;
 		}
+		
+		this.team1Warp.add(this.team1Warp.getBlockX() < 0 ? -0.5 : 0.5, 0, this.team1Warp.getBlockZ() < 0 ? -0.5 : 0.5);
+		this.team2Warp.add(this.team2Warp.getBlockX() < 0 ? -0.5 : 0.5, 0, this.team2Warp.getBlockZ() < 0 ? -0.5 : 0.5);
+		this.fightEndWarp.add(this.fightEndWarp.getBlockX() < 0 ? -0.5 : 0.5, 0, this.fightEndWarp.getBlockZ() < 0 ? -0.5 : 0.5);
+		this.team1Warp = WarGearUtil.lookAt(this.team1Warp, this.team2Warp);
+		this.team2Warp = WarGearUtil.lookAt(this.team2Warp, this.team1Warp);
 		return true;
 	}
 	
