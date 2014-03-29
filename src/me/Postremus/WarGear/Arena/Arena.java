@@ -203,11 +203,12 @@ public class Arena{
 		}
 	}
 	
-	public void updateFightState(ArenaState state)
+	public void updateFightState(ArenaState to)
 	{
-		ArenaStateChangedEvent fightStateEvent = new ArenaStateChangedEvent(this, this.arenaState, state);
-		this.plugin.getServer().getPluginManager().callEvent(fightStateEvent);
-		this.arenaState = fightStateEvent.getTo();
+		ArenaState from = this.arenaState;
+		this.arenaState = to;
+		ArenaStateChangedEvent arenaStateEvent = new ArenaStateChangedEvent(this, from, to);
+		this.plugin.getServer().getPluginManager().callEvent(arenaStateEvent);
 	}
 
 	public boolean contains(Location loc)
