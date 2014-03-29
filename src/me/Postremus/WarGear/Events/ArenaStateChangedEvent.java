@@ -3,17 +3,17 @@ package me.Postremus.WarGear.Events;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import me.Postremus.WarGear.FightState;
+import me.Postremus.WarGear.ArenaState;
 import me.Postremus.WarGear.Arena.Arena;
 
-public class FightStateChangedEvent extends Event
+public class ArenaStateChangedEvent extends Event
 {
 	private static final HandlerList handlers = new HandlerList();
 	private Arena arena;
-	private FightState from;
-	private FightState to;
+	private ArenaState from;
+	private ArenaState to;
 	
-	public FightStateChangedEvent(Arena arena, FightState from, FightState to)
+	public ArenaStateChangedEvent(Arena arena, ArenaState from, ArenaState to)
 	{
 		this.arena = arena;
 		this.from = from;
@@ -25,17 +25,17 @@ public class FightStateChangedEvent extends Event
     	return this.arena;
     }
 	
-	public FightState getFrom()
+	public ArenaState getFrom()
 	{
 		return from;
 	}
 	
-	public FightState getTo()
+	public ArenaState getTo()
 	{
 		return to;
 	}
 
-	public void setTo(FightState to)
+	public void setTo(ArenaState to)
 	{
 		this.to = to;
 	}

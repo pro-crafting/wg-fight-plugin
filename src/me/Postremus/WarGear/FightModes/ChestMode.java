@@ -6,7 +6,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import me.Postremus.KitApi.KitAPI;
-import me.Postremus.WarGear.FightState;
+import me.Postremus.WarGear.ArenaState;
 import me.Postremus.WarGear.IFightMode;
 import me.Postremus.WarGear.WarGear;
 import me.Postremus.WarGear.WarGearUtil;
@@ -224,7 +224,7 @@ public class ChestMode extends FightBase implements IFightMode, Listener{
 			this.arena.getRepo().getWorld().setDifficulty(Difficulty.EASY);
 			PlayerInteractEvent.getHandlerList().unregister(this);
 			this.plugin.getServer().getPluginManager().registerEvents(this, this.plugin);
-			this.arena.updateFightState(FightState.Running);
+			this.arena.updateFightState(ArenaState.Running);
 			arena.open();
 			return;
 		}

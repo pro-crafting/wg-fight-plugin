@@ -11,10 +11,10 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
 
-import me.Postremus.WarGear.FightState;
+import me.Postremus.WarGear.ArenaState;
 import me.Postremus.WarGear.WarGear;
 import me.Postremus.WarGear.Arena.Arena;
-import me.Postremus.WarGear.Events.FightStateChangedEvent;
+import me.Postremus.WarGear.Events.ArenaStateChangedEvent;
 import me.Postremus.WarGear.Team.TeamMember;
 import me.Postremus.WarGear.Team.TeamNames;
 import me.Postremus.WarGear.Team.WgTeam;
@@ -125,21 +125,21 @@ public class ScoreBoardDisplay implements Listener
 	}
 	
 	@EventHandler (priority = EventPriority.LOWEST)
-	public void fightStateChangedHandler(FightStateChangedEvent event)
+	public void fightStateChangedHandler(ArenaStateChangedEvent event)
 	{
 		if (!event.getArena().equals(this.arena))
 		{
 			return;
 		}
-		if (event.getTo() == FightState.Setup)
+		if (event.getTo() == ArenaState.Setup)
 		{
 			initScoreboard();
 		}
-		else if (event.getTo() == FightState.Running)
+		else if (event.getTo() == ArenaState.Running)
 		{
 			this.timer.start();
 		}
-		else if (event.getFrom() == FightState.Running)
+		else if (event.getFrom() == ArenaState.Running)
 		{
 			if (this.timer.getIsRunning())
 			{

@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 
 import me.Postremus.CommandFramework.Command;
 import me.Postremus.CommandFramework.CommandArgs;
-import me.Postremus.WarGear.FightState;
+import me.Postremus.WarGear.ArenaState;
 import me.Postremus.WarGear.WarGear;
 import me.Postremus.WarGear.WarGearUtil;
 import me.Postremus.WarGear.Arena.Arena;
@@ -92,7 +92,7 @@ public class WarGearCommands {
 			args.getSender().sendMessage("§cDu hast kein Kit angegeben.");
 			return;
 		}
-		if (arena.getFightState() != FightState.Setup)
+		if (arena.getFightState() != ArenaState.Setup)
 		{
 			args.getSender().sendMessage("§cEs muss bereits min. ein Team geben.");
 			return;

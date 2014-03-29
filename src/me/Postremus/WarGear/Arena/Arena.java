@@ -3,11 +3,11 @@ package me.Postremus.WarGear.Arena;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.Postremus.WarGear.FightState;
+import me.Postremus.WarGear.ArenaState;
 import me.Postremus.WarGear.IFightMode;
 import me.Postremus.WarGear.WarGear;
 import me.Postremus.WarGear.Arena.ui.ScoreBoardDisplay;
-import me.Postremus.WarGear.Events.FightStateChangedEvent;
+import me.Postremus.WarGear.Events.ArenaStateChangedEvent;
 import me.Postremus.WarGear.FightModes.KitMode;
 import me.Postremus.WarGear.Team.TeamManager;
 
@@ -34,7 +34,7 @@ public class Arena{
 	private IFightMode fightMode;
 	private ArenaReseter reseter;
 	private WaterRemover remover;
-	private FightState arenaState;
+	private ArenaState arenaState;
 	private List<Player> playersInArena;
 	private ScoreBoardDisplay scores;
 	private ArenaListener listener;
@@ -45,7 +45,7 @@ public class Arena{
 		this.plugin = plugin;	
 		this.name = arenaName;
 		
-		this.arenaState = FightState.Idle;
+		this.arenaState = ArenaState.Idle;
 		this.kitname = "";
 		this.playersInArena = new ArrayList<Player>();
 		this.repo = new ArenaRepository(this.plugin, this);
@@ -75,7 +75,7 @@ public class Arena{
 		return this.remover;
 	}
 	
-	public FightState getFightState()
+	public ArenaState getFightState()
 	{
 		return this.arenaState;
 	}
@@ -203,9 +203,9 @@ public class Arena{
 		}
 	}
 	
-	public void updateFightState(FightState state)
+	public void updateFightState(ArenaState state)
 	{
-		FightStateChangedEvent fightStateEvent = new FightStateChangedEvent(this, this.arenaState, state);
+		ArenaStateChangedEvent fightStateEvent = new ArenaStateChangedEvent(this, this.arenaState, state);
 		this.plugin.getServer().getPluginManager().callEvent(fightStateEvent);
 		this.arenaState = fightStateEvent.getTo();
 	}

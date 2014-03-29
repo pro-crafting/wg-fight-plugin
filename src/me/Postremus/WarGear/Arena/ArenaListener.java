@@ -1,12 +1,12 @@
 package me.Postremus.WarGear.Arena;
 
 import me.Postremus.WarGear.DrawReason;
-import me.Postremus.WarGear.FightState;
+import me.Postremus.WarGear.ArenaState;
 import me.Postremus.WarGear.TeamWinReason;
 import me.Postremus.WarGear.WarGear;
 import me.Postremus.WarGear.Events.DrawQuitEvent;
 import me.Postremus.WarGear.Events.FightQuitEvent;
-import me.Postremus.WarGear.Events.FightStateChangedEvent;
+import me.Postremus.WarGear.Events.ArenaStateChangedEvent;
 import me.Postremus.WarGear.Events.TeamWinQuitEvent;
 import me.Postremus.WarGear.FightModes.KitMode;
 import me.Postremus.WarGear.Team.TeamMember;
@@ -135,7 +135,7 @@ public class ArenaListener implements Listener
 		{
 			return;
 		}
-		if (this.arena.getFightState() != FightState.Running)
+		if (this.arena.getFightState() != ArenaState.Running)
 		{
 			event.setCancelled(true);
 			return;
@@ -196,7 +196,7 @@ public class ArenaListener implements Listener
 			return;
 		}
 		event.getArena().close();
-		event.getArena().updateFightState(FightState.Spectate);
+		event.getArena().updateFightState(ArenaState.Spectate);
 		event.getArena().getFightMode().stop();
 		if (event instanceof TeamWinQuitEvent)
 		{
@@ -221,24 +221,24 @@ public class ArenaListener implements Listener
 	
 	
 	@EventHandler (priority = EventPriority.LOWEST)
-	public void fightStateChangedHandler(FightStateChangedEvent event)
+	public void fightStateChangedHandler(ArenaStateChangedEvent event)
 	{
 		if (!event.getArena().equals(this.arena))
 		{
 			return;
 		}
-		if (event.getTo() == FightState.Setup)
+		if (event.getTo() == ArenaState.Setup)
 		{
 			for (Player p : this.arena.getPlayersInArena())
 			{
 				this.arena.getScore().enterArena(p);
 			}
 		}
-		if (event.getTo() == FightState.Spectate)
+		if (event.getTo() == ArenaState.Spectate)
 		{
-			ArenaListener.this.arena.updateFightState(FightState.Reseting);
+			ArenaListener.this.arena.updateFightState(ArenaState.Reseting);
 		}
-		if (event.getTo() == FightState.Idle)
+		if (event.getTo() == ArenaState.Idle)
 		{
 			this.arena.getTeam().quitFight();
 			this.arena.setFightMode(new KitMode(this.plugin, this.arena));

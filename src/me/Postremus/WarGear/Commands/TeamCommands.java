@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 
 import me.Postremus.CommandFramework.Command;
 import me.Postremus.CommandFramework.CommandArgs;
-import me.Postremus.WarGear.FightState;
+import me.Postremus.WarGear.ArenaState;
 import me.Postremus.WarGear.WarGear;
 import me.Postremus.WarGear.WarGearUtil;
 import me.Postremus.WarGear.Arena.Arena;
@@ -48,14 +48,14 @@ public class TeamCommands {
 		
 		String playerName = args.getArgs()[0];
 		
-		if (arena.getFightState() == FightState.Running || arena.getFightState() == FightState.PreRunning)
+		if (arena.getFightState() == ArenaState.Running || arena.getFightState() == ArenaState.PreRunning)
 		{
 			args.getSender().sendMessage("§cHier läuft bereits ein Fight.");
 			return;
 		}
-		if (arena.getFightState() == FightState.Idle)
+		if (arena.getFightState() == ArenaState.Idle)
 		{
-			arena.updateFightState(FightState.Setup);
+			arena.updateFightState(ArenaState.Setup);
 		}
 		
 		Player p = this.plugin.getServer().getPlayer(playerName);
@@ -101,7 +101,7 @@ public class TeamCommands {
 		
 		String playerName = args.getArgs()[0];
 		
-		if (arena.getFightState() == FightState.Running || arena.getFightState() == FightState.PreRunning)
+		if (arena.getFightState() == ArenaState.Running || arena.getFightState() == ArenaState.PreRunning)
 		{
 			args.getSender().sendMessage("§cWährend eines Fights kannst du keine Mitglieder hinzufügen.");
 			return;
@@ -153,7 +153,7 @@ public class TeamCommands {
 		
 		String playerName = args.getArgs()[0];
 		
-		if (arena.getFightState() == FightState.Running || arena.getFightState() == FightState.Running)
+		if (arena.getFightState() == ArenaState.Running || arena.getFightState() == ArenaState.Running)
 		{
 			args.getSender().sendMessage("§Während eines Fights kannst du keine Mitglieder entfernen.");
 			return;
@@ -202,7 +202,7 @@ public class TeamCommands {
 			return;
 		}
 		
-		if (arena.getFightState() == FightState.Running || arena.getFightState() == FightState.PreRunning)
+		if (arena.getFightState() == ArenaState.Running || arena.getFightState() == ArenaState.PreRunning)
 		{
 			args.getSender().sendMessage("§cWährend eines Fights kannst du nicht aus deinem Team raus.");
 			return;
@@ -235,7 +235,7 @@ public class TeamCommands {
 			return;
 		}	
 		
-		if (arena.getFightState() == FightState.Running || arena.getFightState() == FightState.PreRunning)
+		if (arena.getFightState() == ArenaState.Running || arena.getFightState() == ArenaState.PreRunning)
 		{
 			args.getSender().sendMessage("§cWährend eines Fights kannst du das Team nicht bereit schalten.");
 			return;
@@ -281,7 +281,7 @@ public class TeamCommands {
 	
 	private void start(CommandSender sender, Arena arena)
 	{
-		if (arena.getFightState() != FightState.Setup)
+		if (arena.getFightState() != ArenaState.Setup)
 		{
 			sender.sendMessage("§cEs muss zuerst ein Fight Setup gestartet werden.");
 			return;
@@ -312,6 +312,6 @@ public class TeamCommands {
 		arena.setArenaOpeningFlags(false);
 		arena.getTeam().GenerateTeamOutput();
 		arena.getFightMode().start();
-		arena.updateFightState(FightState.PreRunning);
+		arena.updateFightState(ArenaState.PreRunning);
 	}
 }

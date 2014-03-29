@@ -1,11 +1,11 @@
 package me.Postremus.WarGear.Team;
 
-import me.Postremus.WarGear.FightState;
+import me.Postremus.WarGear.ArenaState;
 import me.Postremus.WarGear.TeamWinReason;
 import me.Postremus.WarGear.WarGear;
 import me.Postremus.WarGear.WarGearUtil;
 import me.Postremus.WarGear.Arena.Arena;
-import me.Postremus.WarGear.Events.FightStateChangedEvent;
+import me.Postremus.WarGear.Events.ArenaStateChangedEvent;
 import me.Postremus.WarGear.Events.TeamWinQuitEvent;
 
 import org.bukkit.ChatColor;
@@ -147,7 +147,7 @@ public class TeamManager implements Listener
 	@EventHandler (priority = EventPriority.HIGH, ignoreCancelled=true)
      public void deathEventHandler(PlayerDeathEvent event)
 	 {
-		 if (arena.getFightState() != FightState.Running)
+		 if (arena.getFightState() != ArenaState.Running)
 		 {
 			 return;
 		 }
@@ -193,13 +193,13 @@ public class TeamManager implements Listener
 	 }
 	 
 	 @EventHandler (priority = EventPriority.MONITOR, ignoreCancelled=true)
-	 public void fightStateChangedHandler(FightStateChangedEvent event)
+	 public void fightStateChangedHandler(ArenaStateChangedEvent event)
 	 {
 		 if (!event.getArena().equals(this.arena))
 		{
 			return;
 		}
-		 if (event.getTo() == FightState.Running)
+		 if (event.getTo() == ArenaState.Running)
 		 {
 			 this.healTeam(this.team1);
 			 this.healTeam(this.team2);

@@ -8,9 +8,9 @@ import java.util.List;
 import me.Postremus.Generator.CuboidGeneratorJob;
 import me.Postremus.Generator.GeneratorJobState;
 import me.Postremus.Generator.JobStateChangedEvent;
-import me.Postremus.WarGear.FightState;
+import me.Postremus.WarGear.ArenaState;
 import me.Postremus.WarGear.WarGear;
-import me.Postremus.WarGear.Events.FightStateChangedEvent;
+import me.Postremus.WarGear.Events.ArenaStateChangedEvent;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -72,9 +72,9 @@ public class ArenaReseter implements Listener
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		if (this.arena.getFightState() == FightState.Reseting)
+		if (this.arena.getFightState() == ArenaState.Reseting)
 		{
-			this.arena.updateFightState(FightState.Idle);
+			this.arena.updateFightState(ArenaState.Idle);
 		}
 	}
 	
@@ -185,18 +185,18 @@ public class ArenaReseter implements Listener
 	}
 	
 	@EventHandler (priority = EventPriority.LOWEST)
-	public void fightStateChangedHandler(FightStateChangedEvent event)
+	public void fightStateChangedHandler(ArenaStateChangedEvent event)
 	{
 		if (!event.getArena().equals(this.arena))
 		{
 			return;
 		}
 		
-		if (event.getTo() == FightState.PreRunning)
+		if (event.getTo() == ArenaState.PreRunning)
 		{
 			this.removeItems(this.arena.getRepo().getWorld());
 		}
-		else if (event.getTo() == FightState.Reseting)
+		else if (event.getTo() == ArenaState.Reseting)
 		{
 			if (this.arena.getRepo().getAutoReset())
 			{
@@ -204,7 +204,7 @@ public class ArenaReseter implements Listener
 			}
 			else
 			{
-				event.setTo(FightState.Idle);
+				event.setTo(ArenaState.Idle);
 			}
 		}
 	}

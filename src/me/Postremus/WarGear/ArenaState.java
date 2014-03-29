@@ -1,6 +1,6 @@
 package me.Postremus.WarGear;
 
-public enum FightState 
+public enum ArenaState 
 {
 	Idle,
 	Setup,
