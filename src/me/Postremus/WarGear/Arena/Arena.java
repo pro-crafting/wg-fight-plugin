@@ -207,7 +207,7 @@ public class Arena{
 	{
 		ArenaState from = this.arenaState;
 		this.arenaState = processFightStateChange(to);
-		ArenaStateChangedEvent arenaStateEvent = new ArenaStateChangedEvent(this, from, to);
+		ArenaStateChangedEvent arenaStateEvent = new ArenaStateChangedEvent(this, from, this.arenaState);
 		this.plugin.getServer().getPluginManager().callEvent(arenaStateEvent);
 	}
 
@@ -215,7 +215,7 @@ public class Arena{
 	{
 		if (to == ArenaState.Spectate)
 		{
-			to = ArenaState.Idle;
+			to = ArenaState.Reseting;
 		}
 		if (to == ArenaState.Reseting && !this.repo.getAutoReset())
 		{
