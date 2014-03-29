@@ -23,35 +23,35 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.block.Chest;
 
 public class ChestMode extends FightBase implements IFightMode, Listener{
 
-	private Timer timer;
+	private BukkitTask task;
 	private int counter;
+	private boolean areChestsOpen;
 	
 	public ChestMode(WarGear plugin, Arena arena)
 	{
 		super(plugin, arena);
-		timer = new Timer();
 	}
 	
 	@Override
 	public void start() {
 		super.start();
-		this.fillChest(this.arena.getRepo().getTeam1Warp());
-		this.fillChest(this.arena.getRepo().getTeam2Warp());
+		this.fillChest(this.arena.getRepo().getTeam1Warp().clone());
+		this.fillChest(this.arena.getRepo().getTeam2Warp().clone());
 		
 		this.plugin.getServer().getPluginManager().registerEvents(this, this.plugin);
 		PlayerMoveEvent.getHandlerList().unregister(this);
 		
 		counter = 0;
-		timer = new Timer();
-		timer.schedule(new TimerTask(){
-			@Override
-	         public void run() {
-				chestOpenCountdown();          
-	         }
+		task = this.plugin.getServer().getScheduler().runTaskTimer(this.plugin, new Runnable(){
+			public void run()
+			{
+				chestOpenCountdown();
+			}
 		}, 0, 1000);
 	}
 
@@ -59,7 +59,7 @@ public class ChestMode extends FightBase implements IFightMode, Listener{
 	{
 		loc.setY(loc.getY()-1);
 		Location chestOne = loc.add(0, 0, 2);
-		Location chestTwo = chestOne.add(0, 0, 1);
+		Location chestTwo = chestOne.clone().add(0, 0, 1);
 		setChests(chestOne, chestTwo);
 		
 		ItemStack[] items = removeTNTStacks(this.plugin.getKitApi().getKitItems(this.arena.getKit()));
@@ -109,25 +109,30 @@ public class ChestMode extends FightBase implements IFightMode, Listener{
 	{
 		if (counter == 0)
 		{
-			this.arena.broadcastMessage(ChatColor.YELLOW+"Die Kisten werden geöffnet in:");
-			this.arena.broadcastMessage(ChatColor.DARK_GREEN + "30 Sekunden");
+			this.arena.broadcastMessage(ChatColor.GOLD+"Die Kisten werden geöffnet in:");
+			this.arena.broadcastMessage(ChatColor.GOLD + "5 Sekunden");
 		}
-		else if (counter > 24 && counter < 30)
+		else if (counter > 0 && counter < 2)
 		{
-			int diff = 30 - counter;
-			this.arena.broadcastMessage(ChatColor.DARK_GREEN + ""+diff+" Sekunden");
+			int diff = 5 - counter;
+			this.arena.broadcastMessage(ChatColor.GOLD + ""+diff+" Sekunden");
 		}
-		else if (counter == 30)
+		else if (counter > 2 && counter < 5)
+		{
+			int diff = 5 - counter;
+			this.arena.broadcastMessage(ChatColor.AQUA + ""+diff+" Sekunden");
+		}
+		else if (counter == 5)
 		{
 			counter = 0;
-			timer.cancel();
-			timer = new Timer();
+			areChestsOpen = true;
 			this.arena.broadcastMessage(ChatColor.AQUA + "Kisten geöffnet!");
-			timer.schedule(new TimerTask(){
-				@Override
-		         public void run() {
-					fightPreStartCountdown();          
-		         }
+			task.cancel();
+			task = this.plugin.getServer().getScheduler().runTaskTimer(this.plugin, new Runnable(){
+				public void run()
+				{
+					fightPreStartCountdown();
+				}
 			}, 0, 1000);
 			return;
 		}
@@ -138,26 +143,43 @@ public class ChestMode extends FightBase implements IFightMode, Listener{
 	{
 		if (counter == 0)
 		{
-			this.arena.broadcastMessage(ChatColor.YELLOW+"Wargears betreten in:");
-			this.arena.broadcastMessage(ChatColor.DARK_GREEN + "30 Sekunden");
+			this.arena.broadcastMessage(ChatColor.GOLD+"Kisten werden geschlossen in:");
+			this.arena.broadcastMessage(ChatColor.GOLD + "30 Sekunden");
 		}
-		else if (counter > 24 && counter < 30)
+		else if (counter == 10)
+		{
+			this.arena.broadcastMessage(ChatColor.GOLD + "20 Sekunden");
+		}
+		else if (counter == 15)
+		{
+			this.arena.broadcastMessage(ChatColor.GOLD + "15 Sekunden");
+		}
+		else if (counter == 20)
+		{
+			this.arena.broadcastMessage(ChatColor.GOLD + "10 Sekunden");
+		}
+		else if (counter > 25 && counter < 27)
 		{
 			int diff = 30 - counter;
-			this.arena.broadcastMessage(ChatColor.DARK_GREEN + ""+diff+" Sekunden");
+			this.arena.broadcastMessage(ChatColor.GOLD + ""+diff+" Sekunden");
+		}
+		else if (counter > 27 && counter < 30)
+		{
+			int diff = 30 - counter;
+			this.arena.broadcastMessage(ChatColor.AQUA + ""+diff+" Sekunden");
 		}
 		else if (counter == 30)
 		{
 			counter = 0;
-			timer.cancel();
-			timer = new Timer();
+			areChestsOpen = false;
 			this.arena.broadcastMessage(ChatColor.AQUA + "Kisten geschlossen!");
 			this.arena.broadcastMessage(ChatColor.AQUA + "Wargear betreten!");
-			timer.schedule(new TimerTask(){
-				@Override
-		         public void run() {
-					fightStartCountdown();          
-		         }
+			task.cancel();
+			task = this.plugin.getServer().getScheduler().runTaskTimer(this.plugin, new Runnable(){
+				public void run()
+				{
+					fightStartCountdown();
+				}
 			}, 0, 1000);
 			return;
 		}
@@ -168,17 +190,34 @@ public class ChestMode extends FightBase implements IFightMode, Listener{
 	{
 		if (counter == 0)
 		{
-			this.arena.broadcastMessage(ChatColor.YELLOW+"Fight beginnt in:");
-			this.arena.broadcastMessage(ChatColor.DARK_GREEN + "20 Sekunden");
+			this.arena.broadcastMessage(ChatColor.GOLD+"Fight beginnt in:");
+			this.arena.broadcastMessage(ChatColor.GOLD + "30 Sekunden");
 		}
-		else if (counter > 14 && counter < 20)
+		else if (counter == 10)
 		{
-			int diff = 20 - counter;
-			this.arena.broadcastMessage(ChatColor.DARK_GREEN + ""+diff+" Sekunden");
+			this.arena.broadcastMessage(ChatColor.GOLD + "20 Sekunden");
+		}
+		else if (counter == 15)
+		{
+			this.arena.broadcastMessage(ChatColor.GOLD + "15 Sekunden");
 		}
 		else if (counter == 20)
 		{
-			this.timer.cancel();
+			this.arena.broadcastMessage(ChatColor.GOLD + "10 Sekunden");
+		}
+		else if (counter > 25 && counter < 27)
+		{
+			int diff = 30 - counter;
+			this.arena.broadcastMessage(ChatColor.GOLD + ""+diff+" Sekunden");
+		}
+		else if (counter > 27 && counter < 30)
+		{
+			int diff = 30 - counter;
+			this.arena.broadcastMessage(ChatColor.AQUA + ""+diff+" Sekunden");
+		}
+		else if (counter == 30)
+		{
+			task.cancel();
 			this.arena.broadcastMessage(ChatColor.AQUA + "Fight beginnt. Viel Spaß. :)");
 			this.arena.getRepo().getWorld().setDifficulty(Difficulty.EASY);
 			PlayerInteractEvent.getHandlerList().unregister(this);
@@ -193,7 +232,7 @@ public class ChestMode extends FightBase implements IFightMode, Listener{
 	@Override
 	public void stop() {
 		super.stop();
-		timer.cancel();
+		task.cancel();
 		PlayerMoveEvent.getHandlerList().unregister(this);
 		PlayerInteractEvent.getHandlerList().unregister(this);
 	}
@@ -214,31 +253,32 @@ public class ChestMode extends FightBase implements IFightMode, Listener{
 		{
 			return;
 		}
-		
 		if (event.getPlayer().hasPermission("wargear.chest.open"))
 		{
 			return;
 		}
-		
 		if (this.arena.getTeam().getTeamOfPlayer(event.getPlayer()) == null)
 		{
 			event.setCancelled(true);
 		}
-		
-		if (!isItemChestLocation(event.getClickedBlock().getLocation(), this.arena.getRepo().getTeam1Warp()) &&
-				!isItemChestLocation(event.getClickedBlock().getLocation(), this.arena.getRepo().getTeam2Warp()))
+		Location clicked = event.getClickedBlock().getLocation();
+		if (isItemChestLocation(clicked, this.arena.getRepo().getTeam1Warp().clone()) ||
+				isItemChestLocation(clicked, this.arena.getRepo().getTeam2Warp().clone()))
 		{
-			return;
+			event.setCancelled(areChestsOpen);
 		}
-		event.setCancelled(this.arena.getFightState() != FightState.PreRunning);
 	}
 	
 	private Boolean isItemChestLocation(Location value, Location checkAgainst)
 	{
 		checkAgainst.setY(checkAgainst.getY()-1);
 		Location chestOne = checkAgainst.add(0, 0, 2);
-		Location chestTwo = chestOne.add(0, 0, 1);
-		
-		return chestOne.equals(value) || chestTwo.equals(value);
+		Location chestTwo = chestOne.clone().add(0, 0, 1);
+		return equalsLocation(chestOne, value) || equalsLocation(chestTwo, value);
+	}
+	
+	private Boolean equalsLocation(Location one, Location two)
+	{
+		return one.equals(two);
 	}
 }
