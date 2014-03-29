@@ -12,9 +12,8 @@ public class KitAPI
 	private Server server;
 	private List<IKitPlugin> kitPlugins;
 	
-	public KitAPI(Server server)
+	public KitAPI()
 	{
-		this.server = server;
 		this.kitPlugins = new ArrayList<IKitPlugin>();
 		this.loadKitPlugins();
 	}
@@ -30,7 +29,6 @@ public class KitAPI
 		try
 		{
 			IKitPlugin toAdd = new AdminCmdKitPlugin();
-			toAdd.setServer(this.server);
 			this.kitPlugins.add(toAdd);
 		}
 		catch (NoClassDefFoundError ex)
@@ -39,7 +37,6 @@ public class KitAPI
 		try
 		{
 			IKitPlugin toAdd = new EssentialsKitPlugin();
-			toAdd.setServer(this.server);
 			this.kitPlugins.add(toAdd);
 		}
 		catch (NoClassDefFoundError ex)

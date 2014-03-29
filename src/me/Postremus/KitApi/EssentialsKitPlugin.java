@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -19,13 +20,6 @@ import com.earth2me.essentials.textreader.SimpleTextInput;
 
 public class EssentialsKitPlugin implements IKitPlugin
 {
-
-	private Server server;
-	@Override
-	public void setServer(Server server) {
-		this.server = server;
-	}
-
 	@Override
 	public boolean existsKit(String kitName) {
 		kitName = kitName.toLowerCase();
@@ -51,19 +45,17 @@ public class EssentialsKitPlugin implements IKitPlugin
 	
 	private Essentials getPlugin()
 	{
-		Plugin wgPlugin = server.getPluginManager().getPlugin("Essentials");
+		Plugin plugin = Bukkit.getPluginManager().getPlugin("Essentials");
 		 
-	    if (wgPlugin == null || !(wgPlugin instanceof IEssentials)) {
+	    if (plugin == null || !(plugin instanceof IEssentials)) {
 	        return null; 
 	    }
-	 
-	    return (Essentials) wgPlugin;
+	    
+	    return (Essentials) plugin;
 	}
 
 	@Override
 	public ItemStack[] getKitItems(String kitName) {
-		
-		
 		Essentials plugin =  this.getPlugin();
 		
 		Map<String, Object> kit = plugin.getSettings().getKit(kitName);

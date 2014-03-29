@@ -33,7 +33,7 @@ public class WarGear extends JavaPlugin {
 		this.repo = new WgkRepository(this);
 		this.generator = new BlockGenerator(this);
 		this.arenaManager = new ArenaManager(this);
-		this.kitApi = new KitAPI(this.getServer());
+		this.kitApi = new KitAPI();
 		this.cmdFramework = new CommandFramework(this);
 		this.wgCommands = new WarGearCommands(this);
 		this.teamCommands = new TeamCommands(this);

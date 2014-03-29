@@ -9,6 +9,7 @@ import me.Postremus.KitApi.KitAPI;
 import me.Postremus.WarGear.FightState;
 import me.Postremus.WarGear.IFightMode;
 import me.Postremus.WarGear.WarGear;
+import me.Postremus.WarGear.WarGearUtil;
 import me.Postremus.WarGear.Arena.Arena;
 
 import org.bukkit.ChatColor;
@@ -40,8 +41,8 @@ public class ChestMode extends FightBase implements IFightMode, Listener{
 	@Override
 	public void start() {
 		super.start();
-		this.fillChest(this.arena.getRepo().getTeam1Warp().clone());
-		this.fillChest(this.arena.getRepo().getTeam2Warp().clone());
+		this.fillChest(this.arena.getRepo().getTeam1Warp());
+		this.fillChest(this.arena.getRepo().getTeam2Warp());
 		
 		this.plugin.getServer().getPluginManager().registerEvents(this, this.plugin);
 		PlayerMoveEvent.getHandlerList().unregister(this);
@@ -57,9 +58,10 @@ public class ChestMode extends FightBase implements IFightMode, Listener{
 
 	private void fillChest(Location loc)
 	{
-		loc.setY(loc.getY()-1);
-		Location chestOne = loc.add(0, 0, 2);
-		Location chestTwo = chestOne.clone().add(0, 0, 1);
+		Location l = loc.clone();
+		l.setY(l.getY()-1);
+		Location chestOne = WarGearUtil.move(l, 2);
+		Location chestTwo = WarGearUtil.move(chestOne, 1);
 		setChests(chestOne, chestTwo);
 		
 		ItemStack[] items = removeTNTStacks(this.plugin.getKitApi().getKitItems(this.arena.getKit()));
@@ -271,9 +273,10 @@ public class ChestMode extends FightBase implements IFightMode, Listener{
 	
 	private Boolean isItemChestLocation(Location value, Location checkAgainst)
 	{
-		checkAgainst.setY(checkAgainst.getY()-1);
-		Location chestOne = checkAgainst.add(0, 0, 2);
-		Location chestTwo = chestOne.clone().add(0, 0, 1);
+		Location l = checkAgainst.clone();
+		l.setY(l.getY()-1);
+		Location chestOne = WarGearUtil.move(l, 2);
+		Location chestTwo = WarGearUtil.move(chestOne, 1);
 		return equalsLocation(chestOne, value) || equalsLocation(chestTwo, value);
 	}
 	

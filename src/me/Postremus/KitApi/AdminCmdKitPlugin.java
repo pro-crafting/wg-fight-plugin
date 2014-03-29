@@ -9,14 +9,6 @@ import be.Balor.bukkit.AdminCmd.ACHelper;
 
 public class AdminCmdKitPlugin implements IKitPlugin
 {
-	Server server;
-	
-	@Override
-	public void setServer(Server server)
-	{
-		this.server = server;
-	}
-
 	@Override
 	public boolean existsKit(String kitName) {
 		KitInstance kit = ACHelper.getInstance().getKit(kitName);
