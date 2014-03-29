@@ -82,8 +82,8 @@ public class ArenaCommands {
 	
 	private String getStringFromLocation(Location loc)
 	{
-		String ret = "x: %d; y: %d; z: %d";
-		return String.format(ret, new Object[]{loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()});
+		String ret = "x: %.2f; y: %.2f; z: %.2f";
+		return String.format(ret, new Object[]{loc.getX(), loc.getY(), loc.getZ()});
 	}
 	
 	@Command(name = "wgk.arena.reset", description = "Resetet die Arena", 
