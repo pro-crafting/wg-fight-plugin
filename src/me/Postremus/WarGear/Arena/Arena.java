@@ -206,11 +206,24 @@ public class Arena{
 	public void updateFightState(ArenaState to)
 	{
 		ArenaState from = this.arenaState;
-		this.arenaState = to;
+		this.arenaState = processFightStateChange(to);
 		ArenaStateChangedEvent arenaStateEvent = new ArenaStateChangedEvent(this, from, to);
 		this.plugin.getServer().getPluginManager().callEvent(arenaStateEvent);
 	}
 
+	private ArenaState processFightStateChange(ArenaState to)
+	{
+		if (to == ArenaState.Spectate)
+		{
+			to = ArenaState.Idle;
+		}
+		if (to == ArenaState.Reseting && !this.repo.getAutoReset())
+		{
+			to = ArenaState.Idle;
+		}
+		return to;
+	}
+	
 	public boolean contains(Location loc)
 	{
 		return this.repo.getArenaRegion().contains(BukkitUtil.toVector(loc)) &&

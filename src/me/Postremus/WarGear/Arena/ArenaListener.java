@@ -234,10 +234,6 @@ public class ArenaListener implements Listener
 				this.arena.getScore().enterArena(p);
 			}
 		}
-		if (event.getTo() == ArenaState.Spectate)
-		{
-			ArenaListener.this.arena.updateFightState(ArenaState.Reseting);
-		}
 		if (event.getTo() == ArenaState.Idle)
 		{
 			this.arena.getTeam().quitFight();

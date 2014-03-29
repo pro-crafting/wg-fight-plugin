@@ -198,14 +198,7 @@ public class ArenaReseter implements Listener
 		}
 		else if (event.getTo() == ArenaState.Reseting)
 		{
-			if (this.arena.getRepo().getAutoReset())
-			{
-				this.reset();
-			}
-			else
-			{
-				event.setTo(ArenaState.Idle);
-			}
+			this.reset();
 		}
 	}
 }

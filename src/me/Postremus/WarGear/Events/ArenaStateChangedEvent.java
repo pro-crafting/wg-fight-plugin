@@ -34,11 +34,6 @@ public class ArenaStateChangedEvent extends Event
 	{
 		return to;
 	}
-
-	public void setTo(ArenaState to)
-	{
-		this.to = to;
-	}
 	
 	@Override
 	public HandlerList getHandlers() {
