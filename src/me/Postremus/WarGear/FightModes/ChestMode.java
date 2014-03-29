@@ -111,7 +111,7 @@ public class ChestMode extends FightBase implements IFightMode, Listener{
 	{
 		if (counter == 0)
 		{
-			this.arena.broadcastMessage(ChatColor.GOLD+"Die Kisten werden geöffnet in:");
+			this.arena.broadcastMessage(ChatColor.GOLD+"Kisten werden geöffnet in:");
 			this.arena.broadcastMessage(ChatColor.GOLD + "5 Sekunden");
 		}
 		else if (counter > 0 && counter < 2)

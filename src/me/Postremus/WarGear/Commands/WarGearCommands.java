@@ -24,7 +24,7 @@ public class WarGearCommands {
 		args.getSender().sendMessage("§B/wgk team ...");
 		args.getSender().sendMessage("§B/wgk arena ...");
 		args.getSender().sendMessage("§B/wgk kit <kitName>");
-		args.getSender().sendMessage("§B/wgk warp <arenaname> [playernname]");
+		args.getSender().sendMessage("§B/wgk warp <arenaname> [playername]");
 		args.getSender().sendMessage("§B/wgk reload");
 	}
 	
