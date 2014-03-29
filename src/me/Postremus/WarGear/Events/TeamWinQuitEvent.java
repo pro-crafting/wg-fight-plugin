@@ -10,9 +10,9 @@ public class TeamWinQuitEvent extends FightQuitEvent
 	private WgTeam looserTeam;
 	private TeamWinReason reason;
 	
-	public TeamWinQuitEvent(WgTeam winnerTeam, WgTeam looserTeam, Arena arena, TeamWinReason reason)
+	public TeamWinQuitEvent(Arena arena, String message, WgTeam winnerTeam, WgTeam looserTeam, TeamWinReason reason)
 	{
-		super(arena);
+		super(arena, message);
 		this.winnerTeam = winnerTeam;
 		this.looserTeam = looserTeam;
 		this.reason = reason;

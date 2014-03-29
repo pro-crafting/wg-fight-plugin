@@ -9,10 +9,12 @@ import org.bukkit.event.HandlerList;
 public class FightQuitEvent  extends Event{
 	private static final HandlerList handlers = new HandlerList();
 	private Arena arena;
+	private String message;
 	
-	public FightQuitEvent(Arena arena)
+	public FightQuitEvent(Arena arena, String message)
 	{
 		this.arena = arena;
+		this.message = message;
 	}
 	
 	@Override
@@ -27,5 +29,15 @@ public class FightQuitEvent  extends Event{
     public Arena getArena()
     {
     	return this.arena;
+    }
+    
+    public String getMessage()
+    {
+    	return this.message;
+    }
+    
+    public void setMessage(String message)
+    {
+    	this.message = message;
     }
 }

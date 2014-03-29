@@ -248,7 +248,8 @@ public class TeamManager implements Listener
 			 {
 				 winnerTeam = this.team2;
 			 }
-			 this.plugin.getServer().getPluginManager().callEvent(new TeamWinQuitEvent(winnerTeam, team, this.arena, TeamWinReason.Death));
+			 String message = "Jeder aus dem ["+team.getTeamName().toString().toUpperCase()+"] ist tot.";
+			 this.plugin.getServer().getPluginManager().callEvent(new TeamWinQuitEvent(arena, message, winnerTeam, team, TeamWinReason.Death));
 		 }
 	 }
 	 

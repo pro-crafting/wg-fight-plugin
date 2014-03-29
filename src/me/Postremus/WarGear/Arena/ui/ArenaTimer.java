@@ -52,7 +52,8 @@ public class ArenaTimer
 		this.arena.getScore().updateTime(countdownStartTime-fightDuration);
 		if (fightDuration == countdownStartTime)
 		{
-			this.plugin.getServer().getPluginManager().callEvent(new DrawQuitEvent(this.arena, this.arena.getTeam().getTeam1(), this.arena.getTeam().getTeam2()));
+			DrawQuitEvent draw = new DrawQuitEvent(this.arena, "Zeit abgelaufen - Unentschieden", this.arena.getTeam().getTeam1(), this.arena.getTeam().getTeam2());
+			this.plugin.getServer().getPluginManager().callEvent(draw);
 		}
 		this.fightDuration++;
 	}
