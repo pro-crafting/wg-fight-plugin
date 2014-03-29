@@ -53,7 +53,7 @@ public class ChestMode extends FightBase implements IFightMode, Listener{
 			{
 				chestOpenCountdown();
 			}
-		}, 0, 1000);
+		}, 0, 20);
 	}
 
 	private void fillChest(Location loc)
@@ -65,7 +65,7 @@ public class ChestMode extends FightBase implements IFightMode, Listener{
 		setChests(chestOne, chestTwo);
 		
 		ItemStack[] items = removeTNTStacks(this.plugin.getKitApi().getKitItems(this.arena.getKit()));
-		Inventory chestOneInv = ((Chest)loc.getBlock().getState()).getBlockInventory();
+		Inventory chestOneInv = ((Chest)chestOne.getBlock().getState()).getBlockInventory();
 		chestOneInv.setContents(items);
 		
 		fillChestWithTnt(chestOne);
@@ -119,7 +119,7 @@ public class ChestMode extends FightBase implements IFightMode, Listener{
 			int diff = 5 - counter;
 			this.arena.broadcastMessage(ChatColor.GOLD + ""+diff+" Sekunden");
 		}
-		else if (counter > 2 && counter < 5)
+		else if (counter > 1 && counter < 5)
 		{
 			int diff = 5 - counter;
 			this.arena.broadcastMessage(ChatColor.AQUA + ""+diff+" Sekunden");
@@ -135,7 +135,7 @@ public class ChestMode extends FightBase implements IFightMode, Listener{
 				{
 					fightPreStartCountdown();
 				}
-			}, 0, 1000);
+			}, 0, 20);
 			return;
 		}
 		counter++;
@@ -160,12 +160,12 @@ public class ChestMode extends FightBase implements IFightMode, Listener{
 		{
 			this.arena.broadcastMessage(ChatColor.GOLD + "10 Sekunden");
 		}
-		else if (counter > 25 && counter < 27)
+		else if (counter > 24 && counter < 27)
 		{
 			int diff = 30 - counter;
 			this.arena.broadcastMessage(ChatColor.GOLD + ""+diff+" Sekunden");
 		}
-		else if (counter > 27 && counter < 30)
+		else if (counter > 26 && counter < 30)
 		{
 			int diff = 30 - counter;
 			this.arena.broadcastMessage(ChatColor.AQUA + ""+diff+" Sekunden");
@@ -182,7 +182,7 @@ public class ChestMode extends FightBase implements IFightMode, Listener{
 				{
 					fightStartCountdown();
 				}
-			}, 0, 1000);
+			}, 0, 20);
 			return;
 		}
 		counter++;
@@ -207,12 +207,12 @@ public class ChestMode extends FightBase implements IFightMode, Listener{
 		{
 			this.arena.broadcastMessage(ChatColor.GOLD + "10 Sekunden");
 		}
-		else if (counter > 25 && counter < 27)
+		else if (counter > 24 && counter < 27)
 		{
 			int diff = 30 - counter;
 			this.arena.broadcastMessage(ChatColor.GOLD + ""+diff+" Sekunden");
 		}
-		else if (counter > 27 && counter < 30)
+		else if (counter > 26 && counter < 30)
 		{
 			int diff = 30 - counter;
 			this.arena.broadcastMessage(ChatColor.AQUA + ""+diff+" Sekunden");
@@ -220,7 +220,7 @@ public class ChestMode extends FightBase implements IFightMode, Listener{
 		else if (counter == 30)
 		{
 			task.cancel();
-			this.arena.broadcastMessage(ChatColor.AQUA + "Fight beginnt. Viel Spaß. :)");
+			this.arena.broadcastMessage(ChatColor.AQUA + "Fight beginnt. Viel Spaß.");
 			this.arena.getRepo().getWorld().setDifficulty(Difficulty.EASY);
 			PlayerInteractEvent.getHandlerList().unregister(this);
 			this.plugin.getServer().getPluginManager().registerEvents(this, this.plugin);
@@ -267,7 +267,7 @@ public class ChestMode extends FightBase implements IFightMode, Listener{
 		if (isItemChestLocation(clicked, this.arena.getRepo().getTeam1Warp().clone()) ||
 				isItemChestLocation(clicked, this.arena.getRepo().getTeam2Warp().clone()))
 		{
-			event.setCancelled(areChestsOpen);
+			event.setCancelled(!areChestsOpen);
 		}
 	}
 	
@@ -282,6 +282,6 @@ public class ChestMode extends FightBase implements IFightMode, Listener{
 	
 	private Boolean equalsLocation(Location one, Location two)
 	{
-		return one.equals(two);
+		return one.getBlockX() == two.getBlockX() && one.getBlockY() == two.getBlockY() && one.getBlockZ() == two.getBlockZ();
 	}
 }
