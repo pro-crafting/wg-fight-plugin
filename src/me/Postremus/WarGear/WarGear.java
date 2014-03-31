@@ -44,7 +44,7 @@ public class WarGear extends JavaPlugin {
 		this.cmdFramework.registerCommands(this.arenaCommands);
 		this.cmdFramework.registerCommands(this);
 		this.cmdFramework.registerHelp();
-		System.out.println("[WarGear] Plugin erfolgreich geladen!");
+		this.getLogger().info("Plugin erfolgreich geladen!");
 	}
 	
 	@Override
@@ -55,7 +55,7 @@ public class WarGear extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		this.arenaManager.unloadArenas();
-		System.out.println("[WarGear] Plugin erfolgreich deaktiviert!");
+		this.getLogger().info("Plugin erfolgreich deaktiviert!");
 	}
 	
 	@Completer (name="wgk")
