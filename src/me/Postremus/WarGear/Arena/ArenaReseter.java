@@ -81,7 +81,7 @@ public class ArenaReseter implements Listener
         
         File dir = wePlugin.getWorldEdit().getWorkingDirectoryFile(config.saveDir);
         String schemName = this.arena.getRepo().getGroundSchematic();
-        File f = wePlugin.getWorldEdit().getSafeOpenFile(player, dir, schemName, "schematic", "schematic");
+        File f = wePlugin.getWorldEdit().getSafeOpenFile(player, dir, schemName, "schematic");
     
         EditSession es = new EditSession(new BukkitWorld(arenaWorld), 999999999);
         CuboidClipboard cc = MCEditSchematicFormat.MCEDIT.load(f);
