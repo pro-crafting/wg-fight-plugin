@@ -8,7 +8,6 @@ import java.util.List;
 import me.Postremus.Generator.CuboidGeneratorJob;
 import me.Postremus.Generator.GeneratorJobState;
 import me.Postremus.Generator.JobStateChangedEvent;
-import me.Postremus.WarGear.ArenaState;
 import me.Postremus.WarGear.WarGear;
 import me.Postremus.WarGear.Events.ArenaStateChangedEvent;
 
@@ -91,7 +90,9 @@ public class ArenaReseter implements Listener
         EditSession es = new EditSession(new BukkitWorld(arenaWorld), 999999999);
         CuboidClipboard cc = MCEditSchematicFormat.MCEDIT.load(f);
         es.enableQueue();
+        es.setFastMode(true);
         cc.place(es, cc.getOrigin(), false);
+        es.setFastMode(false);
         es.flushQueue();
 	}
 	
