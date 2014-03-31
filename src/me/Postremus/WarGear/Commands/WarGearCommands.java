@@ -1,7 +1,5 @@
 package me.Postremus.WarGear.Commands;
 
-import org.bukkit.entity.Player;
-
 import me.Postremus.CommandFramework.Command;
 import me.Postremus.CommandFramework.CommandArgs;
 import me.Postremus.WarGear.DrawReason;
@@ -12,6 +10,8 @@ import me.Postremus.WarGear.Arena.Arena;
 import me.Postremus.WarGear.Arena.ArenaState;
 import me.Postremus.WarGear.Events.DrawQuitEvent;
 import me.Postremus.WarGear.Events.WinQuitEvent;
+
+import org.bukkit.entity.Player;
 
 public class WarGearCommands {
 	private WarGear plugin;

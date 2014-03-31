@@ -1,19 +1,14 @@
 package me.Postremus.WarGear.Arena;
 
-import me.Postremus.WarGear.DrawReason;
-import me.Postremus.WarGear.TeamWinReason;
 import me.Postremus.WarGear.WarGear;
-import me.Postremus.WarGear.Events.DrawQuitEvent;
-import me.Postremus.WarGear.Events.FightQuitEvent;
 import me.Postremus.WarGear.Events.ArenaStateChangedEvent;
+import me.Postremus.WarGear.Events.FightQuitEvent;
 import me.Postremus.WarGear.Events.WinQuitEvent;
 import me.Postremus.WarGear.FightModes.KitMode;
-import me.Postremus.WarGear.Team.TeamMember;
 import me.Postremus.WarGear.Team.TeamNames;
 import me.Postremus.WarGear.Team.WgTeam;
 
 import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -27,11 +22,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
-import org.bukkit.event.weather.WeatherChangeEvent;
-
-import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 public class ArenaListener implements Listener
 {

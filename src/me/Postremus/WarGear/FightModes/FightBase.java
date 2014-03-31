@@ -1,13 +1,13 @@
 package me.Postremus.WarGear.FightModes;
 
+import me.Postremus.WarGear.IFightMode;
+import me.Postremus.WarGear.WarGear;
+import me.Postremus.WarGear.Arena.Arena;
+
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
-
-import me.Postremus.WarGear.IFightMode;
-import me.Postremus.WarGear.WarGear;
-import me.Postremus.WarGear.Arena.Arena;
 
 public abstract class FightBase implements IFightMode, Listener
 {

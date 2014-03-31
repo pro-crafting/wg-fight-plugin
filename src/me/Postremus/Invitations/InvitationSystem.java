@@ -1,12 +1,11 @@
 package me.Postremus.Invitations;
 
-import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.entity.Player;
-
 import me.Postremus.WarGear.WarGear;
+
+import org.bukkit.entity.Player;
 
 public class InvitationSystem {
 	private WarGear plugin;

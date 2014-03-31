@@ -8,11 +8,12 @@ import me.Postremus.CommandFramework.CommandArgs;
 import me.Postremus.CommandFramework.CommandFramework;
 import me.Postremus.CommandFramework.Completer;
 import me.Postremus.Generator.BlockGenerator;
-import me.Postremus.WarGear.Arena.ArenaManager;
-import me.Postremus.WarGear.Commands.*;
 import me.Postremus.KitApi.KitAPI;
+import me.Postremus.WarGear.Arena.ArenaManager;
+import me.Postremus.WarGear.Commands.ArenaCommands;
+import me.Postremus.WarGear.Commands.TeamCommands;
+import me.Postremus.WarGear.Commands.WarGearCommands;
 
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 

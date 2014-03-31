@@ -3,16 +3,13 @@ package me.Postremus.WarGear;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.Postremus.WarGear.Arena.Arena;
+
 import org.bukkit.Location;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.util.Vector;
-
-import com.sk89q.worldedit.bukkit.BukkitUtil;
-
-import me.Postremus.WarGear.Arena.Arena;
 
 public class WarGearUtil {
 	public static Arena getArenaFromSender(WarGear plugin, CommandSender sender, String[] args)
