@@ -17,10 +17,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 import com.sk89q.worldguard.bukkit.BukkitUtil;
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
-import com.sk89q.worldguard.protection.flags.InvalidFlagFormat;
-import com.sk89q.worldguard.protection.flags.StateFlag;
+import com.sk89q.worldguard.protection.flags.StateFlag.State;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 public class Arena{
@@ -126,14 +124,14 @@ public class Arena{
 	{
 		if (this.repo.load())
 		{
-		this.team = new TeamManager(plugin, this);
-		this.setFightMode(new KitMode(this.plugin, this));
-		this.reseter = new ArenaReseter(this.plugin, this);
-		this.remover = new WaterRemover(this.plugin, this);
-		scores = new ScoreBoardDisplay(this.plugin, this);
-		this.listener = new ArenaListener(this.plugin, this);
-		this.plugin.getServer().getPluginManager().registerEvents(this.listener, this.plugin);
-		return true;
+			this.team = new TeamManager(plugin, this);
+			this.setFightMode(new KitMode(this.plugin, this));
+			this.reseter = new ArenaReseter(this.plugin, this);
+			this.remover = new WaterRemover(this.plugin, this);
+			scores = new ScoreBoardDisplay(this.plugin, this);
+			this.listener = new ArenaListener(this.plugin, this);
+			this.plugin.getServer().getPluginManager().registerEvents(this.listener, this.plugin);
+			return true;
 		}
 		return false;
 	}
@@ -150,36 +148,21 @@ public class Arena{
 	
 	public void setArenaOpeningFlags(Boolean allowed)
 	{
-		String value = "allow";
-		if (!allowed)
-		{
-			value = "deny";
-		}
+		State value = allowed ? State.ALLOW : State.DENY;
 		
-		setFlag(this.repo.getTeam1Region(), DefaultFlag.TNT, value);
-		setFlag(this.repo.getTeam1Region(), DefaultFlag.BUILD, value);
-		setFlag(this.repo.getTeam1Region(), DefaultFlag.PVP, value);
-		setFlag(this.repo.getTeam1Region(), DefaultFlag.FIRE_SPREAD, value);
-		setFlag(this.repo.getTeam1Region(), DefaultFlag.GHAST_FIREBALL, value);
-		setFlag(this.repo.getTeam1Region(), DefaultFlag.CHEST_ACCESS, value);
-		setFlag(this.repo.getTeam2Region(), DefaultFlag.TNT, value);
-		setFlag(this.repo.getTeam2Region(), DefaultFlag.BUILD, value);
-		setFlag(this.repo.getTeam2Region(), DefaultFlag.PVP, value);
-		setFlag(this.repo.getTeam2Region(), DefaultFlag.FIRE_SPREAD, value);
-		setFlag(this.repo.getTeam2Region(), DefaultFlag.GHAST_FIREBALL, value);
-		setFlag(this.repo.getTeam2Region(), DefaultFlag.CHEST_ACCESS, value);
+		setArenaOpeningFlags(this.repo.getTeam1Region(), value);
+		setArenaOpeningFlags(this.repo.getTeam2Region(), value);
 	}
 	
-	public void setFlag(ProtectedRegion region, StateFlag flag, String value)
-    {
-		WorldGuardPlugin worldGuard = this.plugin.getRepo().getWorldGuard();
-	    try {
-			region.setFlag(flag, flag.parseInput(worldGuard, this.plugin.getServer().getConsoleSender(), value));
-		} catch (InvalidFlagFormat e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    }
+	private void setArenaOpeningFlags(ProtectedRegion region, State value)
+	{
+		region.setFlag(DefaultFlag.TNT, value);
+		region.setFlag(DefaultFlag.BUILD, value);
+		region.setFlag(DefaultFlag.PVP, value);
+		region.setFlag(DefaultFlag.FIRE_SPREAD, value);
+		region.setFlag(DefaultFlag.GHAST_FIREBALL, value);
+		region.setFlag(DefaultFlag.CHEST_ACCESS, value);
+	}
 	
 	public void broadcastMessage(String message)
 	{
