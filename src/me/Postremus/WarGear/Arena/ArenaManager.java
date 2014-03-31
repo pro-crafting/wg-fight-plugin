@@ -1,7 +1,7 @@
 package me.Postremus.WarGear.Arena;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import me.Postremus.WarGear.WarGear;
 
@@ -10,49 +10,48 @@ import org.bukkit.Location;
 public class ArenaManager {
 
 	private WarGear plugin;
-	private List<Arena> arenas;
+	private Map<String, Arena> arenas;
 	
 	public ArenaManager(WarGear plugin)
 	{
 		this.plugin = plugin;
-		this.arenas = new ArrayList<Arena>();
+		this.arenas = new HashMap<String, Arena>();
 		this.loadArenas();
 	}
 	
 	public void loadArenas()
 	{
-		this.arenas.removeAll(this.arenas);
+		this.arenas.clear();
 		for (String element : this.plugin.getRepo().getArenaNames())
 		{
 			Arena toAdd = new Arena(this.plugin, element);
 			if (toAdd.load())
 			{
-				this.arenas.add(toAdd);
+				this.arenas.put(element.toLowerCase(), toAdd);
 			}
 		}
 	}
 	
 	public void loadArena(String name)
 	{
-		Arena arena = this.getArena(name);
-		if (arena != null)
+		if (this.getArena(name) != null)
 		{
 			return;
 		}
-		arena = new Arena(this.plugin, name);
+		Arena arena = new Arena(this.plugin, name);
 		if (arena.load())
 		{
-			this.arenas.add(arena);
+			this.arenas.put(name.toLowerCase(), arena);
 		}
 	}
 	
 	public void unloadArenas()
 	{
-		for (Arena arena : this.arenas)
+		for (Arena arena : this.arenas.values())
 		{
 			arena.unload();
 		}
-		this.arenas.removeAll(this.arenas);
+		this.arenas.clear();
 	}
 	
 	public void unloadArena(String name)
@@ -61,13 +60,13 @@ public class ArenaManager {
 		if (arena != null)
 		{
 			arena.unload();
-			this.arenas.remove(arena);
+			this.arenas.remove(name.toLowerCase());
 		}
 	}
 	
 	public void saveArenas()
 	{
-		for (Arena arena : this.arenas)
+		for (Arena arena : this.arenas.values())
 		{
 			arena.getRepo().save();
 		}
@@ -75,36 +74,22 @@ public class ArenaManager {
 	
 	public Arena getArena(String name)
 	{
-		for (Arena element : arenas)
-		{
-			if (element.getArenaName().equalsIgnoreCase(name))
-			{
-				return element;
-			}
-		}
-		return null;
+		return arenas.get(name.toLowerCase());
 	}
 	
-	public List<Arena> getArenas()
+	public Map<String, Arena> getArenas()
 	{
 		return this.arenas;
 	}
 	
 	public boolean isArenaLoaded(String arenaName)
 	{
-		for (Arena arena : this.arenas)
-		{
-			if (arena.getArenaName().equalsIgnoreCase(arenaName))
-			{
-				return true;
-			}
-		}
-		return false;
+		return getArena(arenaName) != null;
 	}
 	
 	public Arena getArenaAtLocation(Location loc)
 	{
-		for (Arena arena : this.arenas)
+		for (Arena arena : this.arenas.values())
 		{
 			if (arena.contains(loc))
 			{

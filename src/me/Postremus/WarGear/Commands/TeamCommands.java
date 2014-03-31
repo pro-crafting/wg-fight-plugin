@@ -269,9 +269,9 @@ public class TeamCommands {
 	
 	private boolean isAnywhereInTeam(Player p)
 	{
-		for (Arena currArena : this.plugin.getArenaManager().getArenas())
+		for (Arena currArena : this.plugin.getArenaManager().getArenas().values())
 		{
-			if (currArena.getTeam().getTeamOfPlayer(p)!= null)
+			if (currArena.getTeam().getTeamOfPlayer(p) != null)
 			{
 				return true;
 			}
