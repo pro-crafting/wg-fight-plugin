@@ -4,7 +4,7 @@ import me.Postremus.WarGear.DrawReason;
 import me.Postremus.WarGear.WarGear;
 import me.Postremus.WarGear.Arena.Arena;
 import me.Postremus.WarGear.Events.DrawQuitEvent;
-import me.Postremus.WarGear.Events.TeamWinQuitEvent;
+import me.Postremus.WarGear.Events.WinQuitEvent;
 
 public class ArenaTimer 
 {

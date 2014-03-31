@@ -13,7 +13,7 @@ public class DrawQuitEvent extends FightQuitEvent{
 		super(arena, message);
 		this.team1 = team1;
 		this.team2 = team2;
-		reason = reason;
+		this.reason = reason;
 	}
 
 	public WgTeam getTeam1()

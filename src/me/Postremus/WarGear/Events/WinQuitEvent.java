@@ -4,13 +4,13 @@ import me.Postremus.WarGear.TeamWinReason;
 import me.Postremus.WarGear.Arena.Arena;
 import me.Postremus.WarGear.Team.WgTeam;
 
-public class TeamWinQuitEvent extends FightQuitEvent
+public class WinQuitEvent extends FightQuitEvent
 {
 	private WgTeam winnerTeam;
 	private WgTeam looserTeam;
 	private TeamWinReason reason;
 	
-	public TeamWinQuitEvent(Arena arena, String message, WgTeam winnerTeam, WgTeam looserTeam, TeamWinReason reason)
+	public WinQuitEvent(Arena arena, String message, WgTeam winnerTeam, WgTeam looserTeam, TeamWinReason reason)
 	{
 		super(arena, message);
 		this.winnerTeam = winnerTeam;

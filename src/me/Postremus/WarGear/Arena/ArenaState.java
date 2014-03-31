@@ -1,4 +1,4 @@
-package me.Postremus.WarGear;
+package me.Postremus.WarGear.Arena;
 
 public enum ArenaState 
 {

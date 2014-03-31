@@ -66,18 +66,18 @@ public class ArenaCommands {
 			args.getSender().sendMessage("§cDu stehst in keiner Arena, oder Sie existiert nicht.");
 			return;
 		}
-		args.getSender().sendMessage(ChatColor.GREEN + "---Arena Info---");
-		args.getSender().sendMessage(ChatColor.GRAY+"Arena Name: " + ChatColor.AQUA + arena.getArenaName());
-		args.getSender().sendMessage(ChatColor.GRAY+"Welt: " + ChatColor.AQUA + arena.getRepo().getWorld().getName());
-		args.getSender().sendMessage(ChatColor.GRAY+"Fight Modus: " + ChatColor.AQUA + arena.getRepo().getFightMode());
-		args.getSender().sendMessage(ChatColor.GRAY+"Bodenhöhe: " + ChatColor.AQUA + arena.getRepo().getGroundHeight());
-		args.getSender().sendMessage(ChatColor.GRAY+"BodenSchematic: " + ChatColor.AQUA + arena.getRepo().getGroundSchematic());
-		args.getSender().sendMessage(ChatColor.GRAY+"Auto Reset: " + ChatColor.AQUA + arena.getRepo().getAutoReset());
-		args.getSender().sendMessage(ChatColor.GRAY+"Region Team1: " + ChatColor.AQUA + arena.getRepo().getTeam1Region().getId());
-		args.getSender().sendMessage(ChatColor.GRAY+"Region Team2: " + ChatColor.AQUA + arena.getRepo().getTeam2Region().getId());
-		args.getSender().sendMessage(ChatColor.GRAY+"Warp Team1: " + ChatColor.AQUA + getStringFromLocation(arena.getRepo().getTeam1Warp()));
-		args.getSender().sendMessage(ChatColor.GRAY+"Warp Team2: " + ChatColor.AQUA + getStringFromLocation(arena.getRepo().getTeam2Warp()));
-		args.getSender().sendMessage(ChatColor.GRAY+"Warp Fight Ende: " + ChatColor.AQUA + getStringFromLocation(arena.getRepo().getFightEndWarp()));
+		args.getSender().sendMessage("§A---Arena Info---");
+		args.getSender().sendMessage("§7Arena Name: §B" + arena.getArenaName());
+		args.getSender().sendMessage("§7Welt: §B" + arena.getRepo().getWorld().getName());
+		args.getSender().sendMessage("§7Fight Modus: §B" + arena.getRepo().getFightMode());
+		args.getSender().sendMessage("§7Bodenhöhe: §B" + arena.getRepo().getGroundHeight());
+		args.getSender().sendMessage("§7BodenSchematic: §B" + arena.getRepo().getGroundSchematic());
+		args.getSender().sendMessage("§7Auto Reset: §B" + arena.getRepo().getAutoReset());
+		args.getSender().sendMessage("§7Region Team1: §B" + arena.getRepo().getTeam1Region().getId());
+		args.getSender().sendMessage("§7Region Team2: §B" + arena.getRepo().getTeam2Region().getId());
+		args.getSender().sendMessage("§7Warp Team1: §B" + getStringFromLocation(arena.getRepo().getTeam1Warp()));
+		args.getSender().sendMessage("§7Warp Team2: §B" + getStringFromLocation(arena.getRepo().getTeam2Warp()));
+		args.getSender().sendMessage("§7Warp Fight Ende: §B" + getStringFromLocation(arena.getRepo().getFightEndWarp()));
 	}
 	
 	private String getStringFromLocation(Location loc)
@@ -104,11 +104,11 @@ public class ArenaCommands {
 			usage = "/wgk arena list", permission="wargear.arena.list")
 	public void list(CommandArgs args)
 	{
-		args.getSender().sendMessage(ChatColor.GREEN + "---Verfügbare Arenen---");
+		args.getSender().sendMessage("$A---Verfügbare Arenen---");
 		List<String> arenas = this.plugin.getRepo().getArenaNames();
 		for (String arenaName : arenas)
 		{
-			args.getSender().sendMessage(arenaName);
+			args.getSender().sendMessage("§7"+arenaName);
 		}
 	}
 }

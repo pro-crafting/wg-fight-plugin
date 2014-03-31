@@ -1,12 +1,12 @@
 package me.Postremus.WarGear.Team;
 
-import me.Postremus.WarGear.ArenaState;
 import me.Postremus.WarGear.TeamWinReason;
 import me.Postremus.WarGear.WarGear;
 import me.Postremus.WarGear.WarGearUtil;
 import me.Postremus.WarGear.Arena.Arena;
+import me.Postremus.WarGear.Arena.ArenaState;
 import me.Postremus.WarGear.Events.ArenaStateChangedEvent;
-import me.Postremus.WarGear.Events.TeamWinQuitEvent;
+import me.Postremus.WarGear.Events.WinQuitEvent;
 
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -249,7 +249,7 @@ public class TeamManager implements Listener
 				 winnerTeam = this.team2;
 			 }
 			 String message = "Jeder aus dem ["+team.getTeamName().toString().toUpperCase()+"] ist tot.";
-			 this.plugin.getServer().getPluginManager().callEvent(new TeamWinQuitEvent(arena, message, winnerTeam, team, TeamWinReason.Death));
+			 this.plugin.getServer().getPluginManager().callEvent(new WinQuitEvent(arena, message, winnerTeam, team, TeamWinReason.Death));
 		 }
 	 }
 	 

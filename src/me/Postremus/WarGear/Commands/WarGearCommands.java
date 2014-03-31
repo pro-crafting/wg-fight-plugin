@@ -4,14 +4,14 @@ import org.bukkit.entity.Player;
 
 import me.Postremus.CommandFramework.Command;
 import me.Postremus.CommandFramework.CommandArgs;
-import me.Postremus.WarGear.ArenaState;
 import me.Postremus.WarGear.DrawReason;
 import me.Postremus.WarGear.TeamWinReason;
 import me.Postremus.WarGear.WarGear;
 import me.Postremus.WarGear.WarGearUtil;
 import me.Postremus.WarGear.Arena.Arena;
+import me.Postremus.WarGear.Arena.ArenaState;
 import me.Postremus.WarGear.Events.DrawQuitEvent;
-import me.Postremus.WarGear.Events.TeamWinQuitEvent;
+import me.Postremus.WarGear.Events.WinQuitEvent;
 
 public class WarGearCommands {
 	private WarGear plugin;
@@ -133,12 +133,12 @@ public class WarGearCommands {
 		}
 		else if (args.getArgs()[0].equalsIgnoreCase("team1"))
 		{
-			TeamWinQuitEvent event = new TeamWinQuitEvent(arena, "Team1 hat gewonnen", arena.getTeam().getTeam1(), arena.getTeam().getTeam2(), TeamWinReason.FightLeader);
+			WinQuitEvent event = new WinQuitEvent(arena, "Team1 hat gewonnen", arena.getTeam().getTeam1(), arena.getTeam().getTeam2(), TeamWinReason.FightLeader);
 			this.plugin.getServer().getPluginManager().callEvent(event);
 		}
 		else if (args.getArgs()[0].equalsIgnoreCase("team2"))
 		{
-			TeamWinQuitEvent event = new TeamWinQuitEvent(arena, "Team2 hat gewonnen", arena.getTeam().getTeam2(), arena.getTeam().getTeam1(), TeamWinReason.FightLeader);
+			WinQuitEvent event = new WinQuitEvent(arena, "Team2 hat gewonnen", arena.getTeam().getTeam2(), arena.getTeam().getTeam1(), TeamWinReason.FightLeader);
 			this.plugin.getServer().getPluginManager().callEvent(event);
 		}
 	}

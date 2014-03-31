@@ -3,8 +3,8 @@ package me.Postremus.WarGear.Events;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import me.Postremus.WarGear.ArenaState;
 import me.Postremus.WarGear.Arena.Arena;
+import me.Postremus.WarGear.Arena.ArenaState;
 
 public class ArenaStateChangedEvent extends Event
 {

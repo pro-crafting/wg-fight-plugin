@@ -11,9 +11,9 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
 
-import me.Postremus.WarGear.ArenaState;
 import me.Postremus.WarGear.WarGear;
 import me.Postremus.WarGear.Arena.Arena;
+import me.Postremus.WarGear.Arena.ArenaState;
 import me.Postremus.WarGear.Events.ArenaStateChangedEvent;
 import me.Postremus.WarGear.Team.TeamMember;
 import me.Postremus.WarGear.Team.TeamNames;

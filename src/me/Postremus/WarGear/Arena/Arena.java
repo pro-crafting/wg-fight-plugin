@@ -3,7 +3,6 @@ package me.Postremus.WarGear.Arena;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.Postremus.WarGear.ArenaState;
 import me.Postremus.WarGear.IFightMode;
 import me.Postremus.WarGear.WarGear;
 import me.Postremus.WarGear.Arena.ui.ScoreBoardDisplay;

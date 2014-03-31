@@ -1,13 +1,12 @@
 package me.Postremus.WarGear.Arena;
 
 import me.Postremus.WarGear.DrawReason;
-import me.Postremus.WarGear.ArenaState;
 import me.Postremus.WarGear.TeamWinReason;
 import me.Postremus.WarGear.WarGear;
 import me.Postremus.WarGear.Events.DrawQuitEvent;
 import me.Postremus.WarGear.Events.FightQuitEvent;
 import me.Postremus.WarGear.Events.ArenaStateChangedEvent;
-import me.Postremus.WarGear.Events.TeamWinQuitEvent;
+import me.Postremus.WarGear.Events.WinQuitEvent;
 import me.Postremus.WarGear.FightModes.KitMode;
 import me.Postremus.WarGear.Team.TeamMember;
 import me.Postremus.WarGear.Team.TeamNames;
@@ -201,9 +200,9 @@ public class ArenaListener implements Listener
 		}
 		event.getArena().close();
 		event.getArena().broadcastMessage(ChatColor.DARK_GREEN + event.getMessage());
-		if (event instanceof TeamWinQuitEvent)
+		if (event instanceof WinQuitEvent)
 		{
-			TeamWinQuitEvent winEvent = (TeamWinQuitEvent)event;
+			WinQuitEvent winEvent = (WinQuitEvent)event;
 			event.getArena().getTeam().GenerateWinnerTeamOutput(winEvent.getWinnerTeam().getTeamName());
 		}
 		event.getArena().updateFightState(ArenaState.Spectate);

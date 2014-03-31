@@ -6,11 +6,11 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import me.Postremus.KitApi.KitAPI;
-import me.Postremus.WarGear.ArenaState;
 import me.Postremus.WarGear.IFightMode;
 import me.Postremus.WarGear.WarGear;
 import me.Postremus.WarGear.WarGearUtil;
 import me.Postremus.WarGear.Arena.Arena;
+import me.Postremus.WarGear.Arena.ArenaState;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Difficulty;
@@ -220,7 +220,6 @@ public class ChestMode extends FightBase implements IFightMode, Listener{
 		else if (counter == 30)
 		{
 			task.cancel();
-			this.arena.broadcastMessage(ChatColor.AQUA + "Fight beginnt. Viel Spaﬂ.");
 			this.arena.getRepo().getWorld().setDifficulty(Difficulty.EASY);
 			PlayerInteractEvent.getHandlerList().unregister(this);
 			this.plugin.getServer().getPluginManager().registerEvents(this, this.plugin);
