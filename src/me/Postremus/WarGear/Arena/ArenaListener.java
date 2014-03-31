@@ -189,8 +189,12 @@ public class ArenaListener implements Listener
 		{
 			return;
 		}
+		event.getArena().getFightMode().stop();
 		event.getArena().close();
-		event.getArena().broadcastMessage(ChatColor.DARK_GREEN + event.getMessage());
+		if (event.getMessage().length() > 0)
+		{
+			event.getArena().broadcastMessage(ChatColor.DARK_GREEN + event.getMessage());
+		}
 		if (event instanceof WinQuitEvent)
 		{
 			WinQuitEvent winEvent = (WinQuitEvent)event;
