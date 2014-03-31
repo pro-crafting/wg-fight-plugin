@@ -58,7 +58,7 @@ public class WaterRemover implements Listener
 		}
 	}
 	
-	@EventHandler (priority = EventPriority.HIGH)
+	@EventHandler (priority = EventPriority.MONITOR, ignoreCancelled=true)
     public void entityExplodeHandler(EntityExplodeEvent event)
 	{
 		for (Block b : event.blockList())
