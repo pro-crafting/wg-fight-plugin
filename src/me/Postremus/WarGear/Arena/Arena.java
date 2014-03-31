@@ -14,6 +14,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 import com.sk89q.worldguard.bukkit.BukkitUtil;
@@ -138,12 +139,11 @@ public class Arena{
 	
 	public void unload()
 	{
-		this.team = null;
-		this.fightMode = null;
-		this.reseter = null;
-		this.remover = null;
-		this.scores = null;
-		this.listener = null;
+		HandlerList.unregisterAll(this.team);
+		HandlerList.unregisterAll(this.reseter);
+		HandlerList.unregisterAll(this.remover);
+		HandlerList.unregisterAll(this.scores);
+		HandlerList.unregisterAll(this.listener);
 	}
 	
 	public void setArenaOpeningFlags(Boolean allowed)
