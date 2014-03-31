@@ -5,9 +5,13 @@ import org.bukkit.entity.Player;
 import me.Postremus.CommandFramework.Command;
 import me.Postremus.CommandFramework.CommandArgs;
 import me.Postremus.WarGear.ArenaState;
+import me.Postremus.WarGear.DrawReason;
+import me.Postremus.WarGear.TeamWinReason;
 import me.Postremus.WarGear.WarGear;
 import me.Postremus.WarGear.WarGearUtil;
 import me.Postremus.WarGear.Arena.Arena;
+import me.Postremus.WarGear.Events.DrawQuitEvent;
+import me.Postremus.WarGear.Events.TeamWinQuitEvent;
 
 public class WarGearCommands {
 	private WarGear plugin;
@@ -104,5 +108,38 @@ public class WarGearCommands {
 			return;
 		}
 		arena.setKit(kitName);
+	}
+	
+	@Command(name="wgk.quit", description="Beendet einen Fight.", usage="/wgk quit <team1|team2>",permission="wargear.quit")
+	public void quit(CommandArgs args)
+	{
+		Arena arena = WarGearUtil.getArenaFromSender(plugin, args.getSender(), args.getArgs());
+		if (arena == null)
+		{
+			args.getSender().sendMessage("§cDu stehst in keiner Arena, oder Sie existiert nicht.");
+			return;
+		}
+		
+		if (arena.getFightState() != ArenaState.PreRunning && arena.getFightState() != ArenaState.Running)
+		{
+			args.getSender().sendMessage("§cIn dieser Arena läuft kein Fight.");
+			return;
+		}
+		
+		if (args.getArgs().length == 0)
+		{
+			DrawQuitEvent event = new DrawQuitEvent(arena, "Unentschieden", arena.getTeam().getTeam1(), arena.getTeam().getTeam2(), DrawReason.FightLeader);
+			this.plugin.getServer().getPluginManager().callEvent(event);
+		}
+		else if (args.getArgs()[0].equalsIgnoreCase("team1"))
+		{
+			TeamWinQuitEvent event = new TeamWinQuitEvent(arena, "Team1 hat gewonnen", arena.getTeam().getTeam1(), arena.getTeam().getTeam2(), TeamWinReason.FightLeader);
+			this.plugin.getServer().getPluginManager().callEvent(event);
+		}
+		else if (args.getArgs()[0].equalsIgnoreCase("team2"))
+		{
+			TeamWinQuitEvent event = new TeamWinQuitEvent(arena, "Team2 hat gewonnen", arena.getTeam().getTeam2(), arena.getTeam().getTeam1(), TeamWinReason.FightLeader);
+			this.plugin.getServer().getPluginManager().callEvent(event);
+		}
 	}
 }

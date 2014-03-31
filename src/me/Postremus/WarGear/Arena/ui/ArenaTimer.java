@@ -1,5 +1,6 @@
 package me.Postremus.WarGear.Arena.ui;
 
+import me.Postremus.WarGear.DrawReason;
 import me.Postremus.WarGear.WarGear;
 import me.Postremus.WarGear.Arena.Arena;
 import me.Postremus.WarGear.Events.DrawQuitEvent;
@@ -52,7 +53,7 @@ public class ArenaTimer
 		this.arena.getScore().updateTime(countdownStartTime-fightDuration);
 		if (fightDuration == countdownStartTime)
 		{
-			DrawQuitEvent draw = new DrawQuitEvent(this.arena, "Zeit abgelaufen - Unentschieden", this.arena.getTeam().getTeam1(), this.arena.getTeam().getTeam2());
+			DrawQuitEvent draw = new DrawQuitEvent(this.arena, "Zeit abgelaufen - Unentschieden", this.arena.getTeam().getTeam1(), this.arena.getTeam().getTeam2(), DrawReason.Time);
 			this.plugin.getServer().getPluginManager().callEvent(draw);
 		}
 		this.fightDuration++;

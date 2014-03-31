@@ -4,5 +4,6 @@ public enum TeamWinReason
 {
 	Death,
 	Points,
-	Griefing
+	Griefing,
+	FightLeader
 }

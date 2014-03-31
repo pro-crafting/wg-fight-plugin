@@ -9,11 +9,11 @@ public class DrawQuitEvent extends FightQuitEvent{
 	private WgTeam team2;
 	private DrawReason reason;
 	
-	public DrawQuitEvent(Arena arena, String message, WgTeam team1, WgTeam team2) {
+	public DrawQuitEvent(Arena arena, String message, WgTeam team1, WgTeam team2, DrawReason reason) {
 		super(arena, message);
 		this.team1 = team1;
 		this.team2 = team2;
-		reason = DrawReason.Time;
+		reason = reason;
 	}
 
 	public WgTeam getTeam1()

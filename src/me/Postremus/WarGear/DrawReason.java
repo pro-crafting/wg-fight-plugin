@@ -2,5 +2,6 @@ package me.Postremus.WarGear;
 
 public enum DrawReason 
 {
-	Time
+	Time,
+	FightLeader
 }

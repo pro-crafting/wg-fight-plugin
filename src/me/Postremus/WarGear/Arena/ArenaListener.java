@@ -195,6 +195,10 @@ public class ArenaListener implements Listener
 		{
 			return;
 		}
+		if (this.arena.getFightState() != ArenaState.PreRunning && this.arena.getFightState() != ArenaState.Running)
+		{
+			return;
+		}
 		event.getArena().close();
 		event.getArena().broadcastMessage(ChatColor.DARK_GREEN + event.getMessage());
 		if (event instanceof TeamWinQuitEvent)
