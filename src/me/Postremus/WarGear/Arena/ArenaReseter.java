@@ -11,11 +11,9 @@ import me.Postremus.Generator.JobStateChangedEvent;
 import me.Postremus.WarGear.WarGear;
 import me.Postremus.WarGear.Events.ArenaStateChangedEvent;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
@@ -30,14 +28,12 @@ import com.sk89q.worldedit.FilenameException;
 import com.sk89q.worldedit.LocalConfiguration;
 import com.sk89q.worldedit.LocalPlayer;
 import com.sk89q.worldedit.MaxChangedBlocksException;
-import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.data.DataException;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.schematic.MCEditSchematicFormat;
-import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 public class ArenaReseter implements Listener
 {

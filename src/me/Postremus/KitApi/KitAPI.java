@@ -3,13 +3,11 @@ package me.Postremus.KitApi;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class KitAPI 
 {
-	private Server server;
 	private List<IKitPlugin> kitPlugins;
 	
 	public KitAPI()

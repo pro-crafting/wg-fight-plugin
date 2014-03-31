@@ -1,7 +1,13 @@
 package me.Postremus.WarGear.Arena.ui;
 
+import me.Postremus.WarGear.WarGear;
+import me.Postremus.WarGear.Arena.Arena;
+import me.Postremus.WarGear.Arena.ArenaState;
+import me.Postremus.WarGear.Events.ArenaStateChangedEvent;
+import me.Postremus.WarGear.Team.TeamMember;
+import me.Postremus.WarGear.Team.TeamNames;
+
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -10,14 +16,6 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
-
-import me.Postremus.WarGear.WarGear;
-import me.Postremus.WarGear.Arena.Arena;
-import me.Postremus.WarGear.Arena.ArenaState;
-import me.Postremus.WarGear.Events.ArenaStateChangedEvent;
-import me.Postremus.WarGear.Team.TeamMember;
-import me.Postremus.WarGear.Team.TeamNames;
-import me.Postremus.WarGear.Team.WgTeam;
 
 public class ScoreBoardDisplay implements Listener
 {

@@ -2,14 +2,13 @@ package me.Postremus.WarGear.Commands;
 
 import java.util.List;
 
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-
 import me.Postremus.CommandFramework.Command;
 import me.Postremus.CommandFramework.CommandArgs;
 import me.Postremus.WarGear.WarGear;
 import me.Postremus.WarGear.WarGearUtil;
 import me.Postremus.WarGear.Arena.Arena;
+
+import org.bukkit.Location;
 
 public class ArenaCommands {
 	private WarGear plugin;

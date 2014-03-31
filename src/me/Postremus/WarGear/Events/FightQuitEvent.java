@@ -1,7 +1,6 @@
 package me.Postremus.WarGear.Events;
 
 import me.Postremus.WarGear.Arena.Arena;
-import me.Postremus.WarGear.Team.WgTeam;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;

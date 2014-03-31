@@ -1,6 +1,5 @@
 package me.Postremus.KitApi;
 
-import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 

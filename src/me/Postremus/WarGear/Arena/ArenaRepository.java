@@ -5,7 +5,6 @@ import me.Postremus.WarGear.WarGearUtil;
 
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.block.CreatureSpawner;
 
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;

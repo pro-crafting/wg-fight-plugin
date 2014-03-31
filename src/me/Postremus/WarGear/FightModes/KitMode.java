@@ -1,12 +1,12 @@
 package me.Postremus.WarGear.FightModes;
 
-import org.bukkit.ChatColor;
-import org.bukkit.Difficulty;
-
 import me.Postremus.WarGear.WarGear;
 import me.Postremus.WarGear.Arena.Arena;
 import me.Postremus.WarGear.Arena.ArenaState;
 import me.Postremus.WarGear.Team.TeamMember;
+
+import org.bukkit.ChatColor;
+import org.bukkit.Difficulty;
 
  public class KitMode extends FightBase{
 

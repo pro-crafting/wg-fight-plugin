@@ -1,8 +1,5 @@
 package me.Postremus.WarGear.Commands;
 
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import me.Postremus.CommandFramework.Command;
 import me.Postremus.CommandFramework.CommandArgs;
 import me.Postremus.WarGear.WarGear;
@@ -12,6 +9,9 @@ import me.Postremus.WarGear.Arena.ArenaState;
 import me.Postremus.WarGear.FightModes.ChestMode;
 import me.Postremus.WarGear.FightModes.KitMode;
 import me.Postremus.WarGear.Team.WgTeam;
+
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class TeamCommands {
 	private WarGear plugin;
