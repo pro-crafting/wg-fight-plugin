@@ -71,9 +71,9 @@ public class ArenaReseter implements Listener
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		if (this.arena.getFightState() == ArenaState.Reseting)
+		if (this.arena.getState() == ArenaState.Reseting)
 		{
-			this.arena.updateFightState(ArenaState.Idle);
+			this.arena.updateState(ArenaState.Idle);
 		}
 	}
 	
@@ -186,7 +186,7 @@ public class ArenaReseter implements Listener
 	}
 	
 	@EventHandler (priority = EventPriority.LOWEST)
-	public void fightStateChangedHandler(ArenaStateChangedEvent event)
+	public void arenaStateChangedHandler(ArenaStateChangedEvent event)
 	{
 		if (!event.getArena().equals(this.arena))
 		{

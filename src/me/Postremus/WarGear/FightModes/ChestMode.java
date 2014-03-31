@@ -223,7 +223,7 @@ public class ChestMode extends FightBase implements IFightMode, Listener{
 			this.arena.getRepo().getWorld().setDifficulty(Difficulty.EASY);
 			PlayerInteractEvent.getHandlerList().unregister(this);
 			this.plugin.getServer().getPluginManager().registerEvents(this, this.plugin);
-			this.arena.updateFightState(ArenaState.Running);
+			this.arena.updateState(ArenaState.Running);
 			arena.open();
 			return;
 		}

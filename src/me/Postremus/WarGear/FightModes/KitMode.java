@@ -85,7 +85,7 @@ import me.Postremus.WarGear.Team.TeamMember;
 			this.plugin.getServer().getScheduler().cancelTask(taskId);
 			this.arena.getRepo().getWorld().setDifficulty(Difficulty.EASY);
 			this.plugin.getServer().getPluginManager().registerEvents(this, this.plugin);
-			this.arena.updateFightState(ArenaState.Running);
+			this.arena.updateState(ArenaState.Running);
 			arena.open();
 		}
 		counter++;

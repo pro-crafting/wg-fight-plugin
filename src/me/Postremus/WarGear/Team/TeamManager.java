@@ -147,7 +147,7 @@ public class TeamManager implements Listener
 	@EventHandler (priority = EventPriority.HIGH, ignoreCancelled=true)
      public void deathEventHandler(PlayerDeathEvent event)
 	 {
-		 if (arena.getFightState() != ArenaState.Running)
+		 if (arena.getState() != ArenaState.Running)
 		 {
 			 return;
 		 }
@@ -193,7 +193,7 @@ public class TeamManager implements Listener
 	 }
 	 
 	 @EventHandler (priority = EventPriority.MONITOR, ignoreCancelled=true)
-	 public void fightStateChangedHandler(ArenaStateChangedEvent event)
+	 public void arenaStateChangedHandler(ArenaStateChangedEvent event)
 	 {
 		 if (!event.getArena().equals(this.arena))
 		{
