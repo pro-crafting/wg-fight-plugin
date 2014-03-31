@@ -74,7 +74,7 @@ public class Arena{
 		return this.remover;
 	}
 	
-	public ArenaState getFightState()
+	public ArenaState getState()
 	{
 		return this.arenaState;
 	}
@@ -202,15 +202,15 @@ public class Arena{
 		}
 	}
 	
-	public void updateFightState(ArenaState to)
+	public void updateState(ArenaState to)
 	{
 		ArenaState from = this.arenaState;
-		this.arenaState = processFightStateChange(to);
+		this.arenaState = processStateChange(to);
 		ArenaStateChangedEvent arenaStateEvent = new ArenaStateChangedEvent(this, from, this.arenaState);
 		this.plugin.getServer().getPluginManager().callEvent(arenaStateEvent);
 	}
 
-	private ArenaState processFightStateChange(ArenaState to)
+	private ArenaState processStateChange(ArenaState to)
 	{
 		if (to == ArenaState.Spectate)
 		{

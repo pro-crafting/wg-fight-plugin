@@ -134,7 +134,7 @@ public class ArenaListener implements Listener
 		{
 			return;
 		}
-		if (this.arena.getFightState() != ArenaState.Running)
+		if (this.arena.getState() != ArenaState.Running)
 		{
 			event.setCancelled(true);
 			return;
@@ -194,7 +194,7 @@ public class ArenaListener implements Listener
 		{
 			return;
 		}
-		if (this.arena.getFightState() != ArenaState.PreRunning && this.arena.getFightState() != ArenaState.Running)
+		if (this.arena.getState() != ArenaState.PreRunning && this.arena.getState() != ArenaState.Running)
 		{
 			return;
 		}
@@ -205,13 +205,13 @@ public class ArenaListener implements Listener
 			WinQuitEvent winEvent = (WinQuitEvent)event;
 			event.getArena().getTeam().GenerateWinnerTeamOutput(winEvent.getWinnerTeam().getTeamName());
 		}
-		event.getArena().updateFightState(ArenaState.Spectate);
+		event.getArena().updateState(ArenaState.Spectate);
 		event.getArena().getFightMode().stop();
 	}
 	
 	
 	@EventHandler (priority = EventPriority.LOWEST)
-	public void fightStateChangedHandler(ArenaStateChangedEvent event)
+	public void arenaStateChangedHandler(ArenaStateChangedEvent event)
 	{
 		if (!event.getArena().equals(this.arena))
 		{

@@ -71,9 +71,9 @@ public class ArenaReseter implements Listener
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		if (this.arena.getFightState() == ArenaState.Reseting)
+		if (this.arena.getState() == ArenaState.Reseting)
 		{
-			this.arena.updateFightState(ArenaState.Idle);
+			this.arena.updateState(ArenaState.Idle);
 		}
 	}
 	

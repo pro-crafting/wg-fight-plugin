@@ -96,7 +96,7 @@ public class WarGearCommands {
 			args.getSender().sendMessage("§cDu hast kein Kit angegeben.");
 			return;
 		}
-		if (arena.getFightState() != ArenaState.Setup)
+		if (arena.getState() != ArenaState.Setup)
 		{
 			args.getSender().sendMessage("§cEs muss bereits min. ein Team geben.");
 			return;
@@ -120,7 +120,7 @@ public class WarGearCommands {
 			return;
 		}
 		
-		if (arena.getFightState() != ArenaState.PreRunning && arena.getFightState() != ArenaState.Running)
+		if (arena.getState() != ArenaState.PreRunning && arena.getState() != ArenaState.Running)
 		{
 			args.getSender().sendMessage("§cIn dieser Arena läuft kein Fight.");
 			return;

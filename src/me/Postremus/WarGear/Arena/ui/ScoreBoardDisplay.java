@@ -125,7 +125,7 @@ public class ScoreBoardDisplay implements Listener
 	}
 	
 	@EventHandler (priority = EventPriority.LOWEST)
-	public void fightStateChangedHandler(ArenaStateChangedEvent event)
+	public void arenaStateChangedHandler(ArenaStateChangedEvent event)
 	{
 		if (!event.getArena().equals(this.arena))
 		{
