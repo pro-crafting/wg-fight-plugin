@@ -18,7 +18,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
-import org.bukkit.potion.PotionEffect;
 
 public class TeamManager implements Listener
 {
@@ -36,11 +35,6 @@ public class TeamManager implements Listener
 		this.arena = arena;
 	}
 	
-	public void setArena(Arena arena)
-	{
-		this.arena = arena;
-	}
-	
 	public void prepareFightTeams()
 	{
 		this.prepareFightForTeam(team1);
@@ -49,7 +43,7 @@ public class TeamManager implements Listener
 	
 	private void prepareFightForTeam(WgTeam team)
 	{
-		teleportTeamToTeamWarp(team.getTeamName());
+		Location teamWarp = this.plugin.getRepo().getWarpForTeam(team.getTeamName(), this.arena);
 		for (TeamMember player : team.getTeamMembers().values())
 		{
 			player.getPlayer().getInventory().clear();
@@ -58,33 +52,8 @@ public class TeamManager implements Listener
 		    player.getPlayer().setGameMode(GameMode.SURVIVAL);
 			WarGearUtil.disableFly(player.getPlayer());
 			WarGearUtil.makeHealthy(player.getPlayer());
-			for (PotionEffect effect : player.getPlayer().getActivePotionEffects())
-			{
-				player.getPlayer().removePotionEffect(effect.getType());
-			}
-		}
-	}
-	
-	public void setGameMode(TeamNames team, GameMode mode)
-	{
-		for (TeamMember player : this.getTeamOfName(team).getTeamMembers().values())
-		{
-			if (player.getPlayer() != null)
-			{
-				player.getPlayer().setGameMode(mode);
-			}
-		}
-	}
-	
-	public void teleportTeamToTeamWarp(TeamNames team)
-	{
-		Location teleportTo = this.plugin.getRepo().getWarpForTeam(team, this.arena);
-		for (TeamMember player : this.getTeamOfName(team).getTeamMembers().values())
-		{
-			if (player.getPlayer() != null)
-			{
-				player.getPlayer().teleport(teleportTo, TeleportCause.PLUGIN);
-			}
+			WarGearUtil.removePotionEffects(player.getPlayer());
+			player.getPlayer().teleport(teamWarp, TeleportCause.PLUGIN);
 		}
 	}
 	
@@ -108,7 +77,7 @@ public class TeamManager implements Listener
 		}
 	}
 	
-	public void GenerateWinnerTeamOutput(TeamNames teamName)
+	public void sendWinnerOutput(TeamNames teamName)
 	{
 		String team = "";
 		if (teamName == TeamNames.Team1)
@@ -130,7 +99,7 @@ public class TeamManager implements Listener
 		this.arena.broadcastMessage(ChatColor.DARK_GREEN + team + " hat gewonnen!");
 	}
 	
-	public void GenerateTeamOutput()
+	public void sendTeamOutput()
 	{
 		String team1 = "[Team1]";
 		for (String player : this.team1.getTeamMembers().keySet())
@@ -300,14 +269,12 @@ public class TeamManager implements Listener
 		 }
 		 return null;
 	 }
-	 
-	 public WgTeam getTeam1()
-	 {
-		 return this.team1;
-	 }
-	 
-	 public WgTeam getTeam2()
-	 {
-		 return this.team2;
-	 }
+
+	public WgTeam getTeam1() {
+		return team1;
+	}
+
+	public WgTeam getTeam2() {
+		return team2;
+	}
 }
