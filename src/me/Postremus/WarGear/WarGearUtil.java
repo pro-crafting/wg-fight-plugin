@@ -10,6 +10,7 @@ import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
 
 public class WarGearUtil {
 	public static Arena getArenaFromSender(WarGear plugin, CommandSender sender, String[] args)
@@ -97,6 +98,14 @@ public class WarGearUtil {
 		Location ret = start.clone();
 		ret.add(ret.getDirection().normalize().multiply(distance).toLocation(start.getWorld()));
 		return ret;
+	}
+	
+	public static void removePotionEffects(Player player)
+	{
+		for (PotionEffect effect : player.getActivePotionEffects())
+		{
+			player.getPlayer().removePotionEffect(effect.getType());
+		}
 	}
 	
 	//Lookat function of bergerkiller

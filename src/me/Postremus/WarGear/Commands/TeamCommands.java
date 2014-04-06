@@ -310,7 +310,7 @@ public class TeamCommands {
 			}
 		}
 		arena.setArenaOpeningFlags(false);
-		arena.getTeam().GenerateTeamOutput();
+		arena.getTeam().sendTeamOutput();
 		arena.getFightMode().start();
 		arena.updateState(ArenaState.PreRunning);
 	}

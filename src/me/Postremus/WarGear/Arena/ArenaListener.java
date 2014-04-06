@@ -189,7 +189,6 @@ public class ArenaListener implements Listener
 		{
 			return;
 		}
-		event.getArena().getFightMode().stop();
 		event.getArena().close();
 		if (event.getMessage().length() > 0)
 		{
@@ -198,10 +197,10 @@ public class ArenaListener implements Listener
 		if (event instanceof WinQuitEvent)
 		{
 			WinQuitEvent winEvent = (WinQuitEvent)event;
-			event.getArena().getTeam().GenerateWinnerTeamOutput(winEvent.getWinnerTeam().getTeamName());
+			event.getArena().getTeam().sendWinnerOutput(winEvent.getWinnerTeam().getTeamName());
 		}
-		event.getArena().updateState(ArenaState.Spectate);
 		event.getArena().getFightMode().stop();
+		event.getArena().updateState(ArenaState.Spectate);
 	}
 	
 	
