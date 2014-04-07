@@ -1,6 +1,6 @@
 package me.Postremus.WarGear.Commands;
 
-import java.util.List;
+import java.util.Set;
 
 import me.Postremus.CommandFramework.Command;
 import me.Postremus.CommandFramework.CommandArgs;
@@ -65,7 +65,7 @@ public class ArenaCommands {
 			args.getSender().sendMessage("§cDu stehst in keiner Arena, oder Sie existiert nicht.");
 			return;
 		}
-		args.getSender().sendMessage("§A---Arena Info---");
+		args.getSender().sendMessage("§a---Arena Info---");
 		args.getSender().sendMessage("§7Arena Name: §B" + arena.getArenaName());
 		args.getSender().sendMessage("§7Welt: §B" + arena.getRepo().getWorld().getName());
 		args.getSender().sendMessage("§7Fight Modus: §B" + arena.getRepo().getFightMode());
@@ -103,8 +103,8 @@ public class ArenaCommands {
 			usage = "/wgk arena list", permission="wargear.arena.list")
 	public void list(CommandArgs args)
 	{
-		args.getSender().sendMessage("$A---Verfügbare Arenen---");
-		List<String> arenas = this.plugin.getRepo().getArenaNames();
+		args.getSender().sendMessage("§a---Verfügbare Arenen---");
+		Set<String> arenas = this.plugin.getArenaManager().getArenas().keySet();
 		for (String arenaName : arenas)
 		{
 			args.getSender().sendMessage("§7"+arenaName);
