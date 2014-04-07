@@ -6,7 +6,7 @@ import org.bukkit.inventory.ItemStack;
 import be.Balor.Kit.KitInstance;
 import be.Balor.bukkit.AdminCmd.ACHelper;
 
-public class AdminCmdKitPlugin implements IKitPlugin
+public class AdminCmdKitPlugin implements KitPlugin
 {
 	@Override
 	public boolean existsKit(String kitName) {

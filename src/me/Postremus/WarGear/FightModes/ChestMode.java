@@ -3,7 +3,7 @@ package me.Postremus.WarGear.FightModes;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.Postremus.WarGear.IFightMode;
+import me.Postremus.WarGear.FightMode;
 import me.Postremus.WarGear.WarGear;
 import me.Postremus.WarGear.WarGearUtil;
 import me.Postremus.WarGear.Arena.Arena;
@@ -24,7 +24,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
 
-public class ChestMode extends FightBase implements IFightMode, Listener{
+public class ChestMode extends FightBase implements FightMode, Listener{
 
 	private BukkitTask task;
 	private int counter;

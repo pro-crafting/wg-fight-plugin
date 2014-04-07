@@ -4,7 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 
-public class CuboidGeneratorJob implements IGeneratorJob
+public class CuboidGeneratorJob implements GeneratorJob
 {
 	private int maximumBlockChange;
 	private int currX;

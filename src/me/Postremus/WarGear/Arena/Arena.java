@@ -3,7 +3,7 @@ package me.Postremus.WarGear.Arena;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.Postremus.WarGear.IFightMode;
+import me.Postremus.WarGear.FightMode;
 import me.Postremus.WarGear.WarGear;
 import me.Postremus.WarGear.Arena.ui.ScoreBoardDisplay;
 import me.Postremus.WarGear.Events.ArenaStateChangedEvent;
@@ -27,7 +27,7 @@ public class Arena{
 	private String name;
 	private TeamManager team;
 	private String kitname;
-	private IFightMode fightMode;
+	private FightMode fightMode;
 	private ArenaReseter reseter;
 	private WaterRemover remover;
 	private ArenaState arenaState;
@@ -84,11 +84,11 @@ public class Arena{
 		this.kitname = kitname;
 	}
 
-	public IFightMode getFightMode() {
+	public FightMode getFightMode() {
 		return fightMode;
 	}
 
-	public void setFightMode(IFightMode fightMode) {
+	public void setFightMode(FightMode fightMode) {
 		this.fightMode = fightMode;
 	}
 	

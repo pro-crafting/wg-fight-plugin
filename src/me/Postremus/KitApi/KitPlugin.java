@@ -3,7 +3,7 @@ package me.Postremus.KitApi;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public interface IKitPlugin 
+public interface KitPlugin 
 {
 	boolean existsKit(String kitName);
 	void giveKit(String kitName, Player p);

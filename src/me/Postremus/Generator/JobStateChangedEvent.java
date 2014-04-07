@@ -6,11 +6,11 @@ import org.bukkit.event.HandlerList;
 public class JobStateChangedEvent extends Event {
 
 	private static final HandlerList handlers = new HandlerList();
-	IGeneratorJob job;
+	GeneratorJob job;
 	GeneratorJobState from;
 	GeneratorJobState to;
 	
-	public JobStateChangedEvent(IGeneratorJob job, GeneratorJobState from, GeneratorJobState to)
+	public JobStateChangedEvent(GeneratorJob job, GeneratorJobState from, GeneratorJobState to)
 	{
 		this.job = job;
 		this.from = from;
@@ -26,7 +26,7 @@ public class JobStateChangedEvent extends Event {
         return handlers;
     }
     
-    public IGeneratorJob getJob()
+    public GeneratorJob getJob()
     {
     	return this.job;
     }

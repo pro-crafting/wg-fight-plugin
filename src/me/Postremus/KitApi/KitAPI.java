@@ -8,11 +8,11 @@ import org.bukkit.inventory.ItemStack;
 
 public class KitAPI 
 {
-	private List<IKitPlugin> kitPlugins;
+	private List<KitPlugin> kitPlugins;
 	
 	public KitAPI()
 	{
-		this.kitPlugins = new ArrayList<IKitPlugin>();
+		this.kitPlugins = new ArrayList<KitPlugin>();
 		this.loadKitPlugins();
 	}
 	
@@ -26,7 +26,7 @@ public class KitAPI
 		}*/ //TODO:Reflection benutzen für das auslesen der KitPlugins
 		try
 		{
-			IKitPlugin toAdd = new AdminCmdKitPlugin();
+			KitPlugin toAdd = new AdminCmdKitPlugin();
 			this.kitPlugins.add(toAdd);
 		}
 		catch (NoClassDefFoundError ex)
@@ -34,7 +34,7 @@ public class KitAPI
 		}
 		try
 		{
-			IKitPlugin toAdd = new EssentialsKitPlugin();
+			KitPlugin toAdd = new EssentialsKitPlugin();
 			this.kitPlugins.add(toAdd);
 		}
 		catch (NoClassDefFoundError ex)
@@ -45,7 +45,7 @@ public class KitAPI
 	
 	public boolean existsKit(String kitName)
 	{
-		for (IKitPlugin curr : this.kitPlugins)
+		for (KitPlugin curr : this.kitPlugins)
 		{
 			try
 			{
@@ -65,7 +65,7 @@ public class KitAPI
 	
 	public void giveKit(String kitName, Player p)
 	{
-		for (IKitPlugin curr : this.kitPlugins)
+		for (KitPlugin curr : this.kitPlugins)
 		{
 			try
 			{
@@ -85,7 +85,7 @@ public class KitAPI
 	
 	public ItemStack[] getKitItems(String kitName)
 	{
-		for (IKitPlugin curr : this.kitPlugins)
+		for (KitPlugin curr : this.kitPlugins)
 		{
 			try
 			{

@@ -17,7 +17,7 @@ import com.earth2me.essentials.textreader.IText;
 import com.earth2me.essentials.textreader.KeywordReplacer;
 import com.earth2me.essentials.textreader.SimpleTextInput;
 
-public class EssentialsKitPlugin implements IKitPlugin
+public class EssentialsKitPlugin implements KitPlugin
 {
 	@Override
 	public boolean existsKit(String kitName) {

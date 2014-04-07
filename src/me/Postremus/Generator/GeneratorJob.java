@@ -3,7 +3,7 @@ package me.Postremus.Generator;
 import org.bukkit.Location;
 import org.bukkit.Material;
 
-public interface IGeneratorJob 
+public interface GeneratorJob 
 {
 	public int getMaximumBlockChange();
 	public Location getBlockLocationToChange();

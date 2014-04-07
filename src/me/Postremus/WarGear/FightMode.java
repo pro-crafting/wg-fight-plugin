@@ -1,6 +1,6 @@
 package me.Postremus.WarGear;
 
-public interface IFightMode {
+public interface FightMode {
 
 	void start();
 	void stop();

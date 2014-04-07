@@ -1,6 +1,6 @@
 package me.Postremus.WarGear.FightModes;
 
-import me.Postremus.WarGear.IFightMode;
+import me.Postremus.WarGear.FightMode;
 import me.Postremus.WarGear.WarGear;
 import me.Postremus.WarGear.Arena.Arena;
 
@@ -9,7 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-public abstract class FightBase implements IFightMode, Listener
+public abstract class FightBase implements FightMode, Listener
 {
 	protected WarGear plugin;
 	protected Arena arena;
