@@ -13,18 +13,38 @@ import com.sk89q.worldguard.bukkit.BukkitUtil;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
-public class WgkRepository {
+public class WarGearRepository {
 	
 	private WarGear plugin;
 	
-	public WgkRepository(WarGear plugin)
+	public WarGearRepository(WarGear plugin)
 	{
 		this.plugin = plugin;
 	}
 	
 	public String getDefaultKitName()
 	{
-		return this.plugin.getConfig().getString("wgk.defaults.kit");
+		return this.plugin.getConfig().getString("general.kit");
+	}
+
+	public boolean getIsEconomyEnabled()
+	{
+		return this.plugin.getConfig().getBoolean("general.economy.enabled", false);
+	}
+	
+	public double getWinAmount()
+	{
+		return this.plugin.getConfig().getDouble("general.economy.win", 2.5);
+	}
+	
+	public double getLoseAmount()
+	{
+		return this.plugin.getConfig().getDouble("general.economy.lose", -2.5);
+	}
+	
+	public double getDrawAmount()
+	{
+		return this.plugin.getConfig().getDouble("general.economy.draw", 1);
 	}
 	
 	public Location getWarpForTeam(TeamNames team, Arena arena)
@@ -51,7 +71,7 @@ public class WgkRepository {
 	public List<String> getArenaNames()
 	{
 		List<String> ret = new ArrayList<String>();
-		for (String arenaName : this.plugin.getConfig().getConfigurationSection("wgk.arenas").getKeys(false)) 
+		for (String arenaName : this.plugin.getConfig().getConfigurationSection("arenas").getKeys(false)) 
 		{
 			if (arenaName != null)
 			{
@@ -60,7 +80,6 @@ public class WgkRepository {
 		}
 		return ret;
 	}
-	
 	
 	public List<Player> getPlayerOfRegion(ProtectedRegion region)
 	{

@@ -23,6 +23,8 @@ public class ArenaRepository
 	private Location team1Warp;
 	private Location team2Warp;
 	private Location fightEndWarp;
+	private boolean waterRemove;
+	private int groundDamage;
 	
 	private String worldPath;
 	private String arenaRegionPath;
@@ -32,77 +34,48 @@ public class ArenaRepository
 	private String autoResetPath;
 	private String team1RegionPath;
 	private String team2RegionPath;
-	private String team1WarpPath;
-	private String team2WarpPath;
-	private String fightEndWarpPath;
+	private String team1Path;
+	private String team2Path;
+	private String fightEndPath;
+	private String waterRemovePath;
+	private String groundDamagePath;
 	
 	public ArenaRepository(WarGear plugin, Arena arena)
 	{
 		this.plugin = plugin;
-		
-		worldPath = "wgk.arenas."+arena.getArenaName()+".world";
-		arenaRegionPath = "wgk.arenas."+arena.getArenaName()+".arenaRegion";
-		modePath = "wgk.arenas."+arena.getArenaName()+".mode";
-		groundHeightPath = "wgk.arenas."+arena.getArenaName()+".groundHeight";
-		groundSchematicPath = "wgk.arenas."+arena.getArenaName()+".groundschematic";
-		autoResetPath = "wgk.arenas."+arena.getArenaName()+".auto-reset";
-		team1RegionPath = "wgk.arenas."+arena.getArenaName()+".regions.Team1";
-		team2RegionPath = "wgk.arenas."+arena.getArenaName()+".regions.Team2";
-		team1WarpPath = "wgk.arenas."+arena.getArenaName()+".warpFightStart.Team1";
-		team2WarpPath = "wgk.arenas."+arena.getArenaName()+".warpFightStart.Team2";
-		fightEndWarpPath = "wgk.arenas."+arena.getArenaName()+".warpFightEnd";
+		String basePath = "arenas."+arena.getArenaName()+".";
+		plugin.getLogger().info("Basepath: "+basePath);
+		worldPath = basePath+"world";
+		modePath = basePath+"mode";
+		groundHeightPath = basePath+"ground.height";
+		groundSchematicPath = basePath+"ground.schematic";
+		groundDamagePath = basePath+"ground.damage";
+		autoResetPath = basePath+"auto-reset";
+		waterRemovePath = basePath+"water-remove";
+		team1RegionPath = basePath+"regions.team1";
+		team2RegionPath = basePath+"regions.team2";
+		arenaRegionPath = basePath+"regions.arena";
+		team1Path = basePath+"fightStart.team1";
+		team2Path = basePath+"fightStart.team2";
+		fightEndPath = basePath+"fightEnd";
 	}
 	
 	public boolean load()
 	{
-		if (!loadWorld())
-		{
-			return false;
-		}
-		if (!loadArenaRegion())
-		{
-			return false;
-		}
-		if (!loadMode())
-		{
-			return false;
-		}
-		if (!loadGroundHeight())
-		{
-			return false;
-		}
-		if (!loadGroundSchematic())
-		{
-			return false;
-		}
-		if (!this.loadAutoReset())
-		{
-			return false;
-		}
-		if (!this.loadTeam1Region())
-		{
-			return false;
-		}
-		if (!this.loadTeam2Region())
-		{
-			return false;
-		}
-		if (!this.loadTeam1Warp())
-		{
-			return false;
-		}
-		if (!this.loadTeam2Warp())
-		{
-			return false;
-		}
-		if (!this.loadFightEndWarp())
-		{
-			return false;
-		}
+		if (!this.loadWorld()) return false;
+		if (!this.loadArenaRegion()) return false;
+		if (!this.loadMode()) return false;
+		if (!this.loadGroundHeight()) return false;
+		if (!this.loadGroundSchematic()) return false;
+		if (!this.loadAutoReset()) return false;
+		if (!this.loadTeam1Region()) return false;
+		if (!this.loadTeam2Region()) return false;
+		if (!this.loadTeam1Warp()) return false;
+		if (!this.loadTeam2Warp()) return false;
+		if (!this.loadFightEndWarp()) return false;
+		if (!this.loadGroundDamage()) return false;
+		if (!this.loadWaterRemove()) return false;
 		
-		this.team1Warp.add(this.team1Warp.getBlockX() < 0 ? -0.5 : 0.5, 0, this.team1Warp.getBlockZ() < 0 ? -0.5 : 0.5);
-		this.team2Warp.add(this.team2Warp.getBlockX() < 0 ? -0.5 : 0.5, 0, this.team2Warp.getBlockZ() < 0 ? -0.5 : 0.5);
-		this.fightEndWarp.add(this.fightEndWarp.getBlockX() < 0 ? -0.5 : 0.5, 0, this.fightEndWarp.getBlockZ() < 0 ? -0.5 : 0.5);
 		this.team1Warp = WarGearUtil.lookAt(this.team1Warp, this.team2Warp);
 		this.team2Warp = WarGearUtil.lookAt(this.team2Warp, this.team1Warp);
 		return true;
@@ -122,12 +95,8 @@ public class ArenaRepository
 	private boolean loadArenaRegion()
 	{
 		String id = this.plugin.getConfig().getString(this.arenaRegionPath);
-		if (!this.existsWorldGuardRegion(id))
-		{
-			return false;
-		}
 		this.arenaRegion = this.getWorldGuardRegion(id);
-		return true;
+		return this.arenaRegion != null;
 	}
 	
 	private boolean loadMode()
@@ -139,7 +108,7 @@ public class ArenaRepository
 	private boolean loadGroundHeight()
 	{
 		int groundHeight = this.plugin.getConfig().getInt(groundHeightPath, -1);
-		if (groundHeight < 0 && groundHeight > this.getWorld().getMaxHeight())
+		if (groundHeight < 0 || groundHeight > this.getWorld().getMaxHeight())
 		{
 			return false;
 		}
@@ -162,74 +131,74 @@ public class ArenaRepository
 	private boolean loadTeam1Region()
 	{
 		String id = this.plugin.getConfig().getString(this.team1RegionPath);
-		if (!this.existsWorldGuardRegion(id))
-		{
-			return false;
-		}
 		this.team1Region = this.getWorldGuardRegion(id);
-		return true;
+		return this.team1Region != null;
 	}
 	
 	private boolean loadTeam2Region()
 	{
 		String id = this.plugin.getConfig().getString(this.team2RegionPath);
-		if (!this.existsWorldGuardRegion(id))
-		{
-			return false;
-		}
 		this.team2Region = this.getWorldGuardRegion(id);
-		return true;
+		return this.team2Region != null;
 	}
 	
 	private boolean loadTeam1Warp()
 	{
-		this.team1Warp = this.loadLocationFromConfig(this.team1WarpPath, getWorld());
-		return true;
+		this.team1Warp = this.loadLocation(this.team1Path, getWorld());
+		return this.team1Warp != null;
 	}
 	
 	private boolean loadTeam2Warp()
 	{
-		this.team2Warp = this.loadLocationFromConfig(this.team2WarpPath, getWorld());
-		return true;
+		this.team2Warp = this.loadLocation(this.team2Path, getWorld());
+		return this.team2Warp != null;
 	}
 	
 	private boolean loadFightEndWarp()
 	{
-		this.fightEndWarp = this.loadLocationFromConfig(this.fightEndWarpPath, getWorld());
+		this.fightEndWarp = this.loadLocation(this.fightEndPath, getWorld());
+		return this.fightEndWarp != null;
+	}
+	
+	private boolean loadGroundDamage()
+	{
+		this.groundDamage = this.plugin.getConfig().getInt(groundDamagePath, 4);
 		return true;
 	}
 	
-	private Location loadLocationFromConfig(String node, World world)
+	private boolean loadWaterRemove()
 	{
-		int x = this.plugin.getConfig().getInt(node+".x");
-		int y = this.plugin.getConfig().getInt(node+".y");
-		int z = this.plugin.getConfig().getInt(node+".z");
-		return new Location(world, x, y, z);
+		this.waterRemove = this.plugin.getConfig().getBoolean(waterRemovePath, true);
+		return true;
+	}
+	
+	private Location loadLocation(String node, World world)
+	{
+		String location = this.plugin.getConfig().getString(node, "");
+		String[] splited = location.split(";");
+		if (splited.length != 3)
+		{
+			return null;
+		}
+		try
+		{
+			return new Location(world, Double.parseDouble(splited[0]), Double.parseDouble(splited[1]), Double.parseDouble(splited[2]));
+		}
+		catch (Exception ex)
+		{
+			return null;
+		}
 	}
 	
 	private boolean existsWorld(String name)
 	{
-		for (World w : this.plugin.getServer().getWorlds())
-		{
-			if (w.getName().equals(name))
-			{
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	private boolean existsWorldGuardRegion(String id)
-	{
-		RegionManager rm = this.plugin.getRepo().getWorldGuard().getRegionManager(this.getWorld());
-		ProtectedRegion rg = rm.getRegion(id);
-		return rg != null;
+		return this.plugin.getServer().getWorld(name) != null;
 	}
 	
 	private ProtectedRegion getWorldGuardRegion(String id)
 	{
 		RegionManager rm = this.plugin.getRepo().getWorldGuard().getRegionManager(this.getWorld());
-		return  rm.getRegion(id);
+		return rm.getRegion(id);
 	}
 	
 	public boolean save()
@@ -366,6 +335,22 @@ public class ArenaRepository
 	public void setFightEndWarp(Location warp)
 	{
 		this.fightEndWarp = warp;
+	}
+
+	public boolean isWaterRemove() {
+		return waterRemove;
+	}
+
+	public void setWaterRemove(boolean waterRemove) {
+		this.waterRemove = waterRemove;
+	}
+
+	public int getGroundDamage() {
+		return groundDamage;
+	}
+
+	public void setGroundDamage(int groundDamage) {
+		this.groundDamage = groundDamage;
 	}
 	
 }

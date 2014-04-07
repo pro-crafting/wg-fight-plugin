@@ -1,27 +1,25 @@
-wgk:
-    defaults:
-        kit: 
-    arenas:
-        wgarena_1:
-            world:
-            arenaRegion:
-            mode: kit
-            groundHeight:
-            groundschematic:
-            auto-reset: true
-            regions:
-                Team1:
-                Team2:
-            warpFightStart:
-                Team1:
-                    x:
-                    y:
-                    z:
-                Team2:
-                    x:
-                    y:
-                    z:
-            warpFightEnd:
-                x:
-                y:
-                z:
+general:
+    kit:
+    economy:
+        enabled: false
+        win: 2.5
+        lose: -2.5
+        draw: 1
+arenas:
+    wgarena_1:
+        world:
+        mode: kit
+        auto-reset: true
+        water-remove: true
+        ground:
+            height: 4
+            schematic:
+            damage: 4
+        regions:
+            team1:
+            team2:
+            arena:
+        fightStart:
+            team1: x;y;z
+            team2: x;y;z
+        fightEnd: x;y;z

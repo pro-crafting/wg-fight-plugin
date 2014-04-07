@@ -19,7 +19,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class WarGear extends JavaPlugin {
 
-	private WgkRepository repo;
+	private WarGearRepository repo;
 	private BlockGenerator generator;
 	private ArenaManager arenaManager;
 	private KitAPI kitApi;
@@ -31,7 +31,7 @@ public class WarGear extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		this.loadConfig();
-		this.repo = new WgkRepository(this);
+		this.repo = new WarGearRepository(this);
 		this.generator = new BlockGenerator(this);
 		this.arenaManager = new ArenaManager(this);
 		this.kitApi = new KitAPI();
@@ -87,11 +87,11 @@ public class WarGear extends JavaPlugin {
 	{
 		if(!new File("plugins/WarGear/config.yml").exists()){			
 			saveDefaultConfig();
-			System.out.println("[WarGear] config.yml erstellt und geladen.");
+			this.getLogger().info("config.yml erstellt und geladen.");
 		}
 	}
 	
-	public WgkRepository getRepo()
+	public WarGearRepository getRepo()
 	{
 		return this.repo;
 	}
