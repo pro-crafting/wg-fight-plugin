@@ -100,8 +100,11 @@ public class TeamManager implements Listener
 	{
 		for (TeamMember player : team.getTeamMembers().values())
 		{
-			player.getPlayer().getInventory().clear();
-			player.getPlayer().teleport(this.arena.getRepo().getFightEndWarp(), TeleportCause.PLUGIN);
+			if (player.getPlayer() != null)
+			{
+				player.getPlayer().getInventory().clear();
+				player.getPlayer().teleport(this.arena.getRepo().getFightEndWarp(), TeleportCause.PLUGIN);
+			}
 		}
 	}
 	
