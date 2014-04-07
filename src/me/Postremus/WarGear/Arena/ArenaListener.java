@@ -130,25 +130,9 @@ public class ArenaListener implements Listener
 			event.setCancelled(true);
 			return;
 		}
-		Player damager = null;
 		if (event instanceof EntityDamageByEntityEvent)
 		{
-			EntityDamageByEntityEvent damageEvent = (EntityDamageByEntityEvent)event;
-			if (damageEvent.getDamager() instanceof Projectile
-					&& ((Projectile)damageEvent.getDamager()).getShooter() instanceof Player)
-			{
-				damager = (Player) ((Projectile)damageEvent.getDamager()).getShooter();
-			}
-			else if (damageEvent.getDamager() instanceof Player)
-			{
-				damager = (Player) damageEvent.getDamager();
-			}
-			if (player != null && this.arena.getTeam().getTeamOfPlayer(player).equals(this.arena.getTeam().getTeamOfPlayer(damager)))
-			{
-				damager.sendMessage("§7Du darfst keinen Spieler aus deinem eigenen Team Schaden zufügen.");
-				event.setCancelled(true);
-				return;
-			}
+			this.checkTeamDamaging((EntityDamageByEntityEvent)event, player);
 		}
 		
 		this.plugin.getServer().getScheduler().runTask(this.plugin, new Runnable(){
@@ -157,6 +141,27 @@ public class ArenaListener implements Listener
 				ArenaListener.this.arena.getScore().updateHealthOfPlayer(player);
 			}
 		});
+	}
+	
+	private void checkTeamDamaging(EntityDamageByEntityEvent event, Player player)
+	{
+		Player damager = null;
+		EntityDamageByEntityEvent damageEvent = (EntityDamageByEntityEvent)event;
+		if (damageEvent.getDamager() instanceof Projectile
+				&& ((Projectile)damageEvent.getDamager()).getShooter() instanceof Player)
+		{
+			damager = (Player) ((Projectile)damageEvent.getDamager()).getShooter();
+		}
+		else if (damageEvent.getDamager() instanceof Player)
+		{
+			damager = (Player) damageEvent.getDamager();
+		}
+		if (damager != null && this.arena.getTeam().getTeamOfPlayer(player).equals(this.arena.getTeam().getTeamOfPlayer(damager)))
+		{
+			damager.sendMessage("§7Du darfst keinen Spieler aus deinem eigenen Team Schaden zufügen.");
+			event.setCancelled(true);
+			return;
+		}
 	}
 	
 	@EventHandler (priority = EventPriority.MONITOR, ignoreCancelled=true)
