@@ -141,9 +141,9 @@ public class Arena{
 	{
 		HandlerList.unregisterAll(this.team);
 		HandlerList.unregisterAll(this.reseter);
-		HandlerList.unregisterAll(this.remover);
 		HandlerList.unregisterAll(this.scores);
 		HandlerList.unregisterAll(this.listener);
+		remover.stop();
 	}
 	
 	public void setArenaOpeningFlags(Boolean allowed)
