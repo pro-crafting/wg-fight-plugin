@@ -36,16 +36,19 @@ public class WaterRemover implements Listener
 	public void start()
 	{
 		stop();
-		this.plugin.getServer().getPluginManager().registerEvents(this, this.plugin);
-		explodedBlocks = new ArrayList<SimpleEntry<Location, Integer>>();
-		waterList = new ArrayList<Block>();
-		task = this.plugin.getServer().getScheduler().runTaskTimer(this.plugin, new Runnable(){
-			public void run()
-			{
-				wateredCheck();
-				removeWater();
-			}
-		}, 0, 20);
+		if (this.arena.getRepo().isWaterRemove())
+		{
+			this.plugin.getServer().getPluginManager().registerEvents(this, this.plugin);
+			explodedBlocks = new ArrayList<SimpleEntry<Location, Integer>>();
+			waterList = new ArrayList<Block>();
+			task = this.plugin.getServer().getScheduler().runTaskTimer(this.plugin, new Runnable(){
+				public void run()
+				{
+					wateredCheck();
+					removeWater();
+				}
+			}, 0, 20);
+		}
 	}
 	
 	public void stop()
