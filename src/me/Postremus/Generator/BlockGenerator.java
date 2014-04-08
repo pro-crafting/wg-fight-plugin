@@ -10,13 +10,13 @@ public class BlockGenerator
 {
 	private JavaPlugin plugin;
 	private int currIdx;
-	private List<GeneratorJob> jobs;
+	private List<Job> jobs;
 	private int taskId;
 	
 	public BlockGenerator(JavaPlugin plugin)
 	{
 		this.plugin = plugin;
-		this.jobs = new ArrayList<GeneratorJob>();
+		this.jobs = new ArrayList<Job>();
 		taskId = -1;
 	}
 	
@@ -32,17 +32,17 @@ public class BlockGenerator
 		{
 			currIdx = this.jobs.size()-1;
 		}
-		GeneratorJob job = this.jobs.get(currIdx);
-		if (job.getState() == GeneratorJobState.Paused)
+		Job job = this.jobs.get(currIdx);
+		if (job.getState() == JobState.Paused)
 		{
 			return;
 		}
-		for (int i=0;i<job.getMaximumBlockChange()&&job.getState()!=GeneratorJobState.Finished;i++)
+		for (int i=0;i<job.getMaximumBlockChange()&&job.getState()!=JobState.Finished;i++)
 		{
-			Block b = job.getBlockLocationToChange().getBlock();
+			Block b = job.getLocationToChange().getBlock();
 			b.setType(job.getType());
 		}
-		if (job.getState() == GeneratorJobState.Finished)
+		if (job.getState() == JobState.Finished)
 		{
 			this.jobs.remove(currIdx);
 			currIdx = 0;
@@ -67,9 +67,9 @@ public class BlockGenerator
 		}
 	}
 	
-	public void addJob(GeneratorJob job)
+	public void addJob(Job job)
 	{
-		job.setState(GeneratorJobState.Started);
+		job.setState(JobState.Started);
 		this.jobs.add(job);
 		startTask();
 	}

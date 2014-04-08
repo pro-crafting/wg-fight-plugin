@@ -1,10 +1,9 @@
 package me.Postremus.Generator;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 
-public class CuboidGeneratorJob implements GeneratorJob
+public class CuboidJob implements Job
 {
 	private int maximumBlockChange;
 	private int currX;
@@ -12,20 +11,20 @@ public class CuboidGeneratorJob implements GeneratorJob
 	private int currZ;
 	private Material type;
 	private Location currLoc;
-	private GeneratorJobState jobState = GeneratorJobState.Unstarted;
+	private JobState jobState = JobState.Unstarted;
 	private Location min;
 	private Location max;
-	private String jobName;
+	private JobStateChangedCallback callback;
 	
-	public CuboidGeneratorJob(Location min, Location max, Material type, String jobName)
+	public CuboidJob(Location min, Location max, Material type, JobStateChangedCallback callback)
 	{
 		this.maximumBlockChange = 3000;
 		this.type = type;
 		currLoc = new Location(min.getWorld(), 0, 0, 0);
-		jobState = GeneratorJobState.Unstarted;
+		jobState = JobState.Unstarted;
 		this.min = min;
 		this.max = max;
-		this.jobName = jobName;
+		this.callback = callback;
 	}
 	
 	@Override
@@ -34,10 +33,10 @@ public class CuboidGeneratorJob implements GeneratorJob
 	}
 
 	@Override
-	public Location getBlockLocationToChange() {
+	public Location getLocationToChange() {
 		if (this.currX == max.getBlockX() && this.currY == min.getBlockY() && this.currZ == max.getBlockZ())
 		{
-			this.setState(GeneratorJobState.Finished);
+			this.setState(JobState.Finished);
 		}
 		if (this.currX == 0 && this.currY == 0 && this.currZ == 0)
 		{
@@ -66,7 +65,7 @@ public class CuboidGeneratorJob implements GeneratorJob
 			currY=max.getBlockY();
 			return this.currLoc;
 		}
-		this.setState(GeneratorJobState.Finished);
+		this.setState(JobState.Finished);
 		return this.currLoc;
 	}
 
@@ -76,14 +75,15 @@ public class CuboidGeneratorJob implements GeneratorJob
 	}
 
 	@Override
-	public GeneratorJobState getState() {
+	public JobState getState() {
 		return this.jobState;
 	}
 
 	@Override
-	public void setState(GeneratorJobState state) {
-		Bukkit.getPluginManager().callEvent(new JobStateChangedEvent(this, this.jobState, state));
+	public void setState(JobState state) {
+		JobState from = this.jobState;
 		this.jobState = state;
+		this.callback.jobStateChanged(this, from);
 	}
 
 	@Override
@@ -95,10 +95,4 @@ public class CuboidGeneratorJob implements GeneratorJob
 	public Location getMax() {
 		return this.max;
 	}
-
-	@Override
-	public String getJobName() {
-		return this.jobName;
-	}
-
 }

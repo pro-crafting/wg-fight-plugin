@@ -1,6 +1,6 @@
 package me.Postremus.Generator;
 
-public enum GeneratorJobState 
+public enum JobState 
 {
 	Unstarted,
 	Started,

@@ -3,14 +3,13 @@ package me.Postremus.Generator;
 import org.bukkit.Location;
 import org.bukkit.Material;
 
-public interface GeneratorJob 
+public interface Job 
 {
 	public int getMaximumBlockChange();
-	public Location getBlockLocationToChange();
+	public Location getLocationToChange();
 	public Material getType();
-	public GeneratorJobState getState();
-	public void setState(GeneratorJobState state);
+	public JobState getState();
+	public void setState(JobState state);
 	public Location getMin();
 	public Location getMax();
-	public String getJobName();
 }

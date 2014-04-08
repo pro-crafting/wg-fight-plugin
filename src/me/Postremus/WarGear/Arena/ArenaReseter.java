@@ -5,9 +5,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.Postremus.Generator.CuboidGeneratorJob;
-import me.Postremus.Generator.GeneratorJobState;
-import me.Postremus.Generator.JobStateChangedEvent;
+import me.Postremus.Generator.CuboidJob;
+import me.Postremus.Generator.Job;
+import me.Postremus.Generator.JobState;
+import me.Postremus.Generator.JobStateChangedCallback;
 import me.Postremus.WarGear.WarGear;
 import me.Postremus.WarGear.Events.ArenaStateChangedEvent;
 
@@ -35,7 +36,7 @@ import com.sk89q.worldedit.data.DataException;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.schematic.MCEditSchematicFormat;
 
-public class ArenaReseter implements Listener
+public class ArenaReseter implements Listener, JobStateChangedCallback
 {
 	private Arena arena;
 	private WarGear plugin;
@@ -55,7 +56,7 @@ public class ArenaReseter implements Listener
 		Location min = BukkitUtil.toLocation(this.arena.getRepo().getWorld(), rg.getMinimumPoint());
 		min.setY(groundHeight);
 		Location max = BukkitUtil.toLocation(this.arena.getRepo().getWorld(), rg.getMaximumPoint());
-		this.plugin.getGenerator().addJob(new CuboidGeneratorJob(min, max, Material.AIR, "ArenaReseter:"+this.arena.getArenaName()));
+		this.plugin.getGenerator().addJob(new CuboidJob(min, max, Material.AIR, this));
 	}
 	
 	private void stopClear()
@@ -163,25 +164,6 @@ public class ArenaReseter implements Listener
 	}
 	
 	@EventHandler (priority = EventPriority.LOWEST)
-	public void generatorJobStateChangedHandler(JobStateChangedEvent event)
-	{
-		if (event.getTo() != GeneratorJobState.Finished)
-		{
-			return;
-		}
-		String name = event.getJob().getJobName();
-		if (!name.startsWith("ArenaReseter"))
-		{
-			return;
-		}
-		String[] splited = name.split(":");
-		if (splited.length>1 && splited[1].equals(this.arena.getArenaName()))
-		{
-			ArenaReseter.this.stopClear();
-		}
-	}
-	
-	@EventHandler (priority = EventPriority.LOWEST)
 	public void arenaStateChangedHandler(ArenaStateChangedEvent event)
 	{
 		if (!event.getArena().equals(this.arena))
@@ -197,5 +179,14 @@ public class ArenaReseter implements Listener
 		{
 			this.reset();
 		}
+	}
+
+	@Override
+	public void jobStateChanged(Job job, JobState fromState) {
+		if (job.getState() != JobState.Finished)
+		{
+			return;
+		}
+		ArenaReseter.this.stopClear();
 	}
 }
