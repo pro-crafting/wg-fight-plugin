@@ -12,50 +12,49 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityExplodeEvent;
-
-import com.sk89q.worldedit.BlockVector;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
+import org.bukkit.scheduler.BukkitTask;
 
 public class WaterRemover implements Listener
 {
 	private Arena arena;
 	private WarGear plugin;
 	private List<SimpleEntry<Location, Integer>> explodedBlocks;
-	private List<Location> waterList;
-	private int taskId;
+	private List<Block> waterList;
+	private BukkitTask task;
 	
 	public WaterRemover(WarGear plugin, Arena arena)
 	{
 		this.arena = arena;
 		this.plugin = plugin;
 		explodedBlocks = new ArrayList<SimpleEntry<Location, Integer>>();
-		waterList = new ArrayList<Location>();
-		taskId = -1;
-		this.plugin.getServer().getPluginManager().registerEvents(this, this.plugin);
+		waterList = new ArrayList<Block>();
 	}
 	
 	public void start()
 	{
 		stop();
+		this.plugin.getServer().getPluginManager().registerEvents(this, this.plugin);
 		explodedBlocks = new ArrayList<SimpleEntry<Location, Integer>>();
-		waterList = new ArrayList<Location>();
-		this.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(this.plugin, new Runnable(){
+		waterList = new ArrayList<Block>();
+		task = this.plugin.getServer().getScheduler().runTaskTimer(this.plugin, new Runnable(){
 			public void run()
 			{
 				wateredCheck();
 				removeWater();
 			}
-		}, 0, 2);
+		}, 0, 20);
 	}
 	
 	public void stop()
 	{
-		if (taskId != -1)
+		if (task != null)
 		{
-			this.plugin.getServer().getScheduler().cancelTask(taskId);
+			task.cancel();
 		}
+		HandlerList.unregisterAll(this);
 	}
 	
 	@EventHandler (priority = EventPriority.MONITOR, ignoreCancelled=true)
@@ -63,11 +62,9 @@ public class WaterRemover implements Listener
 	{
 		for (Block b : event.blockList())
 		{
-			
 			if (b.getType() != Material.WATER || b.getType() != Material.STATIONARY_WATER)
 			{
-				BlockVector vec = BukkitUtil.toVector(b);
-				if (this.arena.getRepo().getTeam1Region().contains(vec) || this.arena.getRepo().getTeam2Region().contains(vec))
+				if (this.arena.contains(b.getLocation()))
 				{
 					this.explodedBlocks.add(new SimpleEntry<Location, Integer>(b.getLocation(), 0));
 				}
@@ -79,13 +76,12 @@ public class WaterRemover implements Listener
 	{
 		for (int i= this.explodedBlocks.size()-1;i>-1;i--)
 		{
-			if (this.explodedBlocks.get(i).getValue() == 160)
+			if (this.explodedBlocks.get(i).getValue() >= 15)
 			{
-				Location loc = this.explodedBlocks.get(i).getKey();
-				Block b = loc.getBlock();
+				Block b = this.explodedBlocks.get(i).getKey().getBlock();
 				if (b.getType() == Material.WATER || b.getType() == Material.STATIONARY_WATER)
 				{
-					this.waterList.add(loc);
+					this.waterList.add(b);
 				}
 				this.explodedBlocks.remove(i);
 			}
@@ -100,33 +96,22 @@ public class WaterRemover implements Listener
 	{
 		for (int i=this.waterList.size()-1;i>-1;i--)
 		{
-			for (Block removeBlock : getSourceBlocksOfWater(this.waterList.get(i)))
+			Block current = this.waterList.get(i);
+			for (Block removeBlock : getSourceBlocksOfWater(current))
 			{
-				if (!removeBlock.getChunk().isLoaded())
-				{
-					removeBlock.getChunk().load();
-					continue;
-				}
 				removeBlock.setType(Material.AIR);
 			}
-			Location loc = this.waterList.get(i);
-			Block b = loc.getBlock();
-			if (!b.getChunk().isLoaded())
-			{
-				b.getChunk().load();
-				continue;
-			}
-			if (b.getType() == Material.AIR)
+			if (current.getType() == Material.AIR)
 			{
 				this.waterList.remove(i);
 			}
 		}
 	}
 	
-	private List<Block> getSourceBlocksOfWater(Location loc)
+	private List<Block> getSourceBlocksOfWater(Block startBlock)
 	{
 		List<Block> water = new ArrayList<Block>();
-		collectBlocks(loc.getBlock(), water, new ArrayList<Block>());
+		collectBlocks(startBlock, water, new ArrayList<Block>());
 		return water;
 	}
 	
