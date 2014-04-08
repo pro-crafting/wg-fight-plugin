@@ -47,6 +47,11 @@ public class WarGearRepository {
 		return this.plugin.getConfig().getDouble("general.economy.draw", 1);
 	}
 	
+	public boolean getIsPrefixEnabled()
+	{
+		return this.plugin.getConfig().getBoolean("general.enable-prefix", true);
+	}
+	
 	public Location getWarpForTeam(TeamNames team, Arena arena)
 	{
 		if (team == TeamNames.Team1)

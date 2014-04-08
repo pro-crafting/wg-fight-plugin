@@ -233,6 +233,10 @@ public class ArenaListener implements Listener
 	@EventHandler (priority = EventPriority.HIGHEST)
 	public void asyncPlayerChatHandler(AsyncPlayerChatEvent event)
 	{
+		if (!this.plugin.getRepo().getIsPrefixEnabled())
+		{
+			return;
+		}
 		WgTeam team = this.arena.getTeam().getTeamOfPlayer(event.getPlayer());
 		String color = "§7";
 		
