@@ -231,7 +231,6 @@ public class ChestMode extends FightBase implements FightMode, Listener{
 	public void stop() {
 		super.stop();
 		task.cancel();
-		PlayerMoveEvent.getHandlerList().unregister(this);
 		PlayerInteractEvent.getHandlerList().unregister(this);
 	}
 
