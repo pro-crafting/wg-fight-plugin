@@ -27,7 +27,7 @@ public class WarGearRepository {
 		return this.plugin.getConfig().getString("general.kit");
 	}
 
-	public boolean getIsEconomyEnabled()
+	public boolean isEconomyEnabled()
 	{
 		return this.plugin.getConfig().getBoolean("general.economy.enabled", false);
 	}
@@ -47,7 +47,7 @@ public class WarGearRepository {
 		return this.plugin.getConfig().getDouble("general.economy.draw", 1);
 	}
 	
-	public boolean getIsPrefixEnabled()
+	public boolean isPrefixEnabled()
 	{
 		return this.plugin.getConfig().getBoolean("general.enable-prefix", true);
 	}
