@@ -2,8 +2,6 @@ package me.Postremus.WarGear.Arena;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import me.Postremus.Generator.CuboidJob;
 import me.Postremus.Generator.Job;
@@ -22,7 +20,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
-import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.CuboidClipboard;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.FilenameException;
@@ -52,7 +49,7 @@ public class ArenaReseter implements Listener, JobStateChangedCallback
 	
 	public void reset()
 	{
-		CuboidRegion rg = getPlayGroundRegion();
+		CuboidRegion rg = this.arena.getPlayGroundRegion();
 		Location min = BukkitUtil.toLocation(this.arena.getRepo().getWorld(), rg.getMinimumPoint());
 		min.setY(groundHeight);
 		Location max = BukkitUtil.toLocation(this.arena.getRepo().getWorld(), rg.getMaximumPoint());
@@ -65,7 +62,6 @@ public class ArenaReseter implements Listener, JobStateChangedCallback
 		try {
 			this.pasteGround(this.arena.getRepo().getWorld());
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		if (this.arena.getState() == ArenaState.Reseting)
@@ -84,7 +80,7 @@ public class ArenaReseter implements Listener, JobStateChangedCallback
         String schemName = this.arena.getRepo().getGroundSchematic();
         File f = wePlugin.getWorldEdit().getSafeOpenFile(player, dir, schemName, "schematic");
     
-        EditSession es = new EditSession(new BukkitWorld(arenaWorld), 999999999);
+        EditSession es = new EditSession(new BukkitWorld(arenaWorld), config.maxChangeLimit);
         CuboidClipboard cc = MCEditSchematicFormat.MCEDIT.load(f);
         es.enableQueue();
         es.setFastMode(true);
@@ -95,7 +91,7 @@ public class ArenaReseter implements Listener, JobStateChangedCallback
 	
 	private void removeItems(World arenaWorld)
 	{
-		CuboidRegion rg = getPlayGroundRegion();
+		CuboidRegion rg = this.arena.getPlayGroundRegion();
 		for (Entity curr : arenaWorld.getEntitiesByClasses(Item.class, Arrow.class))
 		{
 			if (rg.contains(BukkitUtil.toVector(curr.getLocation())))
@@ -103,64 +99,6 @@ public class ArenaReseter implements Listener, JobStateChangedCallback
 				curr.remove();
 			}
 		}
-	}
-	
-	private CuboidRegion getPlayGroundRegion()
-	{
-		List<BlockVector> vectors = new ArrayList<BlockVector>();
-		vectors.add(arena.getRepo().getTeam1Region().getMinimumPoint());
-		vectors.add(arena.getRepo().getTeam2Region().getMinimumPoint());
-		vectors.add(arena.getRepo().getTeam1Region().getMaximumPoint());
-		vectors.add(arena.getRepo().getTeam2Region().getMaximumPoint());
-		return new CuboidRegion(getMinBlockVec(vectors), getMaxBlockVec(vectors));
-	}
-	
-	private BlockVector getMinBlockVec(List<BlockVector> toCheck)
-	{
-		if (toCheck.size() == 0)
-		{
-			return null;
-		}
-		BlockVector ret = toCheck.get(0);
-		int minY = 256;
-		for (BlockVector current : toCheck)
-		{
-			if (current.getBlockY() < minY)
-			{
-				minY = current.getBlockY();
-			}
-			if (current.getBlockX() <= ret.getBlockX() &&
-					current.getBlockZ() <= ret.getBlockZ())
-			{
-				ret = current;
-			}
-		}
-		ret.setY(minY);
-		return ret;
-	}
-	
-	private BlockVector getMaxBlockVec(List<BlockVector> toCheck)
-	{
-		if (toCheck.size() == 0)
-		{
-			return null;
-		}
-		BlockVector ret = toCheck.get(0);
-		int maxY = 0;
-		for (BlockVector current : toCheck)
-		{
-			if (current.getBlockY() > maxY)
-			{
-				maxY = current.getBlockY();
-			}
-			if (current.getBlockX() >= ret.getBlockX() &&
-					current.getBlockZ() >= ret.getBlockZ())
-			{
-				ret = current;
-			}
-		}
-		ret.setY(maxY);
-		return ret;
 	}
 	
 	@EventHandler (priority = EventPriority.LOWEST)
