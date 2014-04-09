@@ -32,7 +32,7 @@ public class WarGear extends JavaPlugin {
 	public void onEnable() {
 		this.loadConfig();
 		this.repo = new WarGearRepository(this);
-		this.generator = new BlockGenerator(this);
+		this.generator = new BlockGenerator(this, 10000);
 		this.arenaManager = new ArenaManager(this);
 		this.kitApi = new KitAPI();
 		this.cmdFramework = new CommandFramework(this);

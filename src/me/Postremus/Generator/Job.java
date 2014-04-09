@@ -5,7 +5,6 @@ import org.bukkit.Material;
 
 public interface Job 
 {
-	public int getMaximumBlockChange();
 	public Location getLocationToChange();
 	public Material getType();
 	public JobState getState();

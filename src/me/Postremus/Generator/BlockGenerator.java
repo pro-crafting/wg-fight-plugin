@@ -9,48 +9,43 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class BlockGenerator 
 {
 	private JavaPlugin plugin;
-	private int currIdx;
 	private List<Job> jobs;
 	private int taskId;
+	private int maxBlockChange;
 	
-	public BlockGenerator(JavaPlugin plugin)
+	public BlockGenerator(JavaPlugin plugin, int maxBlockChange)
 	{
 		this.plugin = plugin;
 		this.jobs = new ArrayList<Job>();
 		taskId = -1;
+		this.maxBlockChange = maxBlockChange;
 	}
 	
 	private void changeBlocks()
 	{
+		int changedBlocks = 0;
+		for (int i=jobs.size()-1;i>-1;i--)
+		{
+			Job job = jobs.get(i);
+			while (changedBlocks<this.maxBlockChange&&job.getState()!=JobState.Finished&&job.getState()!=JobState.Paused)
+			{
+				Block b = job.getLocationToChange().getBlock();
+				b.setType(job.getType());
+				changedBlocks++;
+			}
+			if (job.getState() == JobState.Finished)
+			{
+				jobs.remove(i);
+			}
+			if (changedBlocks>=this.maxBlockChange)
+			{
+				break;
+			}
+		}
 		if (this.jobs.size() == 0)
 		{
 			this.plugin.getServer().getScheduler().cancelTask(taskId);
 			taskId = -1;
-			return;
-		}
-		if (currIdx == 0)
-		{
-			currIdx = this.jobs.size()-1;
-		}
-		Job job = this.jobs.get(currIdx);
-		if (job.getState() == JobState.Paused)
-		{
-			return;
-		}
-		for (int i=0;i<job.getMaximumBlockChange()&&job.getState()!=JobState.Finished;i++)
-		{
-			Block b = job.getLocationToChange().getBlock();
-			b.setType(job.getType());
-		}
-		if (job.getState() == JobState.Finished)
-		{
-			this.jobs.remove(currIdx);
-			currIdx = 0;
-			return;
-		}
-		if (currIdx > 0)
-		{
-			currIdx--;
 		}
 	}
 	

@@ -5,7 +5,6 @@ import org.bukkit.Material;
 
 public class CuboidJob implements Job
 {
-	private int maximumBlockChange;
 	private int currX;
 	private int currY;
 	private int currZ;
@@ -18,18 +17,12 @@ public class CuboidJob implements Job
 	
 	public CuboidJob(Location min, Location max, Material type, JobStateChangedCallback callback)
 	{
-		this.maximumBlockChange = 3000;
 		this.type = type;
 		currLoc = new Location(min.getWorld(), 0, 0, 0);
 		jobState = JobState.Unstarted;
 		this.min = min;
 		this.max = max;
 		this.callback = callback;
-	}
-	
-	@Override
-	public int getMaximumBlockChange() {
-		return this.maximumBlockChange;
 	}
 
 	@Override
