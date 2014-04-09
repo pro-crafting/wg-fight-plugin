@@ -17,6 +17,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
+import com.sk89q.worldedit.BlockVector;
+import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldguard.bukkit.BukkitUtil;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.flags.StateFlag.State;
@@ -213,6 +215,64 @@ public class Arena{
 	public void teleport(Entity entity)
 	{
 		entity.teleport(this.getRepo().getFightEndWarp(), TeleportCause.PLUGIN);
+	}
+	
+	public CuboidRegion getPlayGroundRegion()
+	{
+		List<BlockVector> vectors = new ArrayList<BlockVector>();
+		vectors.add(this.repo.getTeam1Region().getMinimumPoint());
+		vectors.add(this.repo.getTeam2Region().getMinimumPoint());
+		vectors.add(this.repo.getTeam1Region().getMaximumPoint());
+		vectors.add(this.repo.getTeam2Region().getMaximumPoint());
+		return new CuboidRegion(getMinBlockVec(vectors), getMaxBlockVec(vectors));
+	}
+	
+	private BlockVector getMinBlockVec(List<BlockVector> toCheck)
+	{
+		if (toCheck.size() == 0)
+		{
+			return null;
+		}
+		BlockVector ret = toCheck.get(0);
+		int minY = 256;
+		for (BlockVector current : toCheck)
+		{
+			if (current.getBlockY() < minY)
+			{
+				minY = current.getBlockY();
+			}
+			if (current.getBlockX() <= ret.getBlockX() &&
+					current.getBlockZ() <= ret.getBlockZ())
+			{
+				ret = current;
+			}
+		}
+		ret.setY(minY);
+		return ret;
+	}
+	
+	private BlockVector getMaxBlockVec(List<BlockVector> toCheck)
+	{
+		if (toCheck.size() == 0)
+		{
+			return null;
+		}
+		BlockVector ret = toCheck.get(0);
+		int maxY = 0;
+		for (BlockVector current : toCheck)
+		{
+			if (current.getBlockY() > maxY)
+			{
+				maxY = current.getBlockY();
+			}
+			if (current.getBlockX() >= ret.getBlockX() &&
+					current.getBlockZ() >= ret.getBlockZ())
+			{
+				ret = current;
+			}
+		}
+		ret.setY(maxY);
+		return ret;
 	}
 	
 	@Override
