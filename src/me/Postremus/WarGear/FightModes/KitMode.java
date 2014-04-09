@@ -10,8 +10,8 @@ import org.bukkit.Difficulty;
 
  public class KitMode extends FightBase{
 
-	int counter;
-	int taskId;
+	private int counter;
+	private int taskId;
 	
 	public KitMode(WarGear plugin, Arena arena)
 	{

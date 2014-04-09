@@ -26,8 +26,8 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 
 public class ArenaListener implements Listener
 {
-	Arena arena;
-	WarGear plugin;
+	private Arena arena;
+	private WarGear plugin;
 	
 	public ArenaListener(WarGear plugin, Arena arena)
 	{

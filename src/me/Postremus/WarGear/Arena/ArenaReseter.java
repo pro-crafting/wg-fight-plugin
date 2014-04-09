@@ -22,7 +22,6 @@ import org.bukkit.event.Listener;
 
 import com.sk89q.worldedit.CuboidClipboard;
 import com.sk89q.worldedit.EditSession;
-import com.sk89q.worldedit.EditSessionFactory;
 import com.sk89q.worldedit.FilenameException;
 import com.sk89q.worldedit.LocalConfiguration;
 import com.sk89q.worldedit.LocalPlayer;
@@ -119,7 +118,7 @@ public class ArenaReseter implements Listener, JobStateChangedCallback
 			this.reset();
 		}
 	}
-
+	
 	@Override
 	public void jobStateChanged(Job job, JobState fromState) {
 		if (job.getState() != JobState.Finished)
