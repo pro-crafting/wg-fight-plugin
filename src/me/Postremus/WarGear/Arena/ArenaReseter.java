@@ -22,6 +22,7 @@ import org.bukkit.event.Listener;
 
 import com.sk89q.worldedit.CuboidClipboard;
 import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.EditSessionFactory;
 import com.sk89q.worldedit.FilenameException;
 import com.sk89q.worldedit.LocalConfiguration;
 import com.sk89q.worldedit.LocalPlayer;
