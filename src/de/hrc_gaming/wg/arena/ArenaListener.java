@@ -146,21 +146,19 @@ public class ArenaListener implements Listener
 	private void checkTeamDamaging(EntityDamageByEntityEvent event, Player player)
 	{
 		Player damager = null;
-		EntityDamageByEntityEvent damageEvent = (EntityDamageByEntityEvent)event;
-		if (damageEvent.getDamager() instanceof Projectile
-				&& ((Projectile)damageEvent.getDamager()).getShooter() instanceof Player)
+		if (event.getDamager() instanceof Projectile
+				&& ((Projectile)event.getDamager()).getShooter() instanceof Player)
 		{
-			damager = (Player) ((Projectile)damageEvent.getDamager()).getShooter();
+			damager = (Player) ((Projectile)event.getDamager()).getShooter();
 		}
-		else if (damageEvent.getDamager() instanceof Player)
+		else if (event.getDamager() instanceof Player)
 		{
-			damager = (Player) damageEvent.getDamager();
+			damager = (Player) event.getDamager();
 		}
 		if (damager != null && this.arena.getTeam().getTeamOfPlayer(player).equals(this.arena.getTeam().getTeamOfPlayer(damager)))
 		{
 			damager.sendMessage("§7Du darfst keinen Spieler aus deinem eigenen Team Schaden zufügen.");
 			event.setCancelled(true);
-			return;
 		}
 	}
 	
