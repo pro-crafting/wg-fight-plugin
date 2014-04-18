@@ -23,6 +23,10 @@ public class CuboidJob implements Job
 		this.min = min;
 		this.max = max;
 		this.callback = callback;
+		
+		this.currX = min.getBlockX();
+		this.currY = max.getBlockY();
+		this.currZ = min.getBlockZ();
 	}
 
 	@Override
@@ -31,16 +35,9 @@ public class CuboidJob implements Job
 		{
 			this.setState(JobState.Finished);
 		}
-		if (this.currX == 0 && this.currY == 0 && this.currZ == 0)
+		for (;currX<max.getBlockX()+1;currX++)
 		{
-			this.currX = min.getBlockX();
-			this.currY = max.getBlockY();
-			this.currZ = min.getBlockZ();
-			return this.currLoc;
-		}
-		for (;currX<max.getBlockX()+1;)
-		{
-			for (;currY>min.getBlockY()-1;)
+			for (;currY>min.getBlockY()-1;currY--)
 			{
 				for (;currZ<max.getBlockZ()+1;)
 				{
@@ -50,13 +47,9 @@ public class CuboidJob implements Job
 					currZ++;
 					return this.currLoc;
 				}
-				currY--;
 				currZ=min.getBlockZ();
-				return this.currLoc;
 			}
-			currX++;
 			currY=max.getBlockY();
-			return this.currLoc;
 		}
 		this.setState(JobState.Finished);
 		return this.currLoc;
@@ -79,12 +72,10 @@ public class CuboidJob implements Job
 		this.callback.jobStateChanged(this, from);
 	}
 
-	@Override
 	public Location getMin() {
 		return this.min;
 	}
 
-	@Override
 	public Location getMax() {
 		return this.max;
 	}

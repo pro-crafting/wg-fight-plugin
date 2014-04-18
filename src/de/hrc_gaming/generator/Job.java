@@ -9,6 +9,4 @@ public interface Job
 	public Material getType();
 	public JobState getState();
 	public void setState(JobState state);
-	public Location getMin();
-	public Location getMax();
 }
