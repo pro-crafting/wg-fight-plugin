@@ -2,28 +2,24 @@ package de.hrc_gaming.wg.team;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import java.util.UUID;
 
 public class TeamMember{
 
-	private String playerName;
+	private UUID playerId;
 	private Boolean alive;
 	private Boolean isTeamLeader;
 	
 	public TeamMember(Player player, boolean isTeamLeader)
 	{
-		this.playerName = player.getName();
+		this.playerId = player.getUniqueId();
 		this.alive = true;
 		this.isTeamLeader = isTeamLeader;
 	}
 	
 	public Player getPlayer()
 	{
-		return Bukkit.getServer().getPlayer(playerName);
-	}
-	
-	public String getPlayerName()
-	{
-		return this.playerName;
+		return Bukkit.getPlayer(this.playerId);
 	}
 	
 	public Boolean getAlive()
