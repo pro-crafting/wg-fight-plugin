@@ -3,21 +3,20 @@ package de.hrc_gaming.generator;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.block.Block;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitTask;
 
 public class BlockGenerator 
 {
 	private JavaPlugin plugin;
 	private List<Job> jobs;
-	private int taskId;
+	private BukkitTask task;
 	private int maxBlockChange;
 	
 	public BlockGenerator(JavaPlugin plugin, int maxBlockChange)
 	{
 		this.plugin = plugin;
 		this.jobs = new ArrayList<Job>();
-		taskId = -1;
 		this.maxBlockChange = maxBlockChange;
 	}
 	
@@ -27,10 +26,13 @@ public class BlockGenerator
 		for (int i=jobs.size()-1;i>-1;i--)
 		{
 			Job job = jobs.get(i);
-			while (changedBlocks<this.maxBlockChange&&job.getState()!=JobState.Finished&&job.getState()!=JobState.Paused)
+			if (job.getState() == JobState.Unstarted)
 			{
-				Block b = job.getLocationToChange().getBlock();
-				b.setType(job.getType());
+				job.setState(JobState.Started);
+			}
+			while (changedBlocks<this.maxBlockChange&&job.getState()==JobState.Started)
+			{
+				job.getLocationToChange().getBlock().setType(job.getType());
 				changedBlocks++;
 			}
 			if (job.getState() == JobState.Finished)
@@ -44,16 +46,16 @@ public class BlockGenerator
 		}
 		if (this.jobs.size() == 0)
 		{
-			this.plugin.getServer().getScheduler().cancelTask(taskId);
-			taskId = -1;
+			task.cancel();
+			task = null;
 		}
 	}
 	
 	private void startTask()
 	{
-		if (taskId == -1)
+		if (task == null)
 		{
-			this.taskId = this.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(this.plugin, new Runnable(){
+			task = this.plugin.getServer().getScheduler().runTaskTimer(this.plugin, new Runnable(){
 				public void run()
 				{
 					BlockGenerator.this.changeBlocks();
