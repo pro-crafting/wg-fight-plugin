@@ -1,5 +1,6 @@
 package de.hrc_gaming.wg.arena;
 
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 import com.sk89q.worldedit.BlockVector;
+import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldguard.bukkit.BukkitUtil;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
@@ -224,54 +226,42 @@ public class Arena{
 		vectors.add(this.repo.getTeam2Region().getMinimumPoint());
 		vectors.add(this.repo.getTeam1Region().getMaximumPoint());
 		vectors.add(this.repo.getTeam2Region().getMaximumPoint());
-		return new CuboidRegion(getMinBlockVec(vectors), getMaxBlockVec(vectors));
+		SimpleEntry<Vector, Vector> minMax = getMinMax(vectors);
+		return new CuboidRegion(minMax.getKey(), minMax.getValue());
 	}
 	
-	private BlockVector getMinBlockVec(List<BlockVector> toCheck)
+	private SimpleEntry<Vector, Vector> getMinMax(List<BlockVector> toCheck)
 	{
-		if (toCheck.size() == 0)
+		Vector min = new BlockVector(toCheck.get(0));
+		Vector max = new BlockVector(toCheck.get(0));
+		for (BlockVector vec : toCheck)
 		{
-			return null;
-		}
-		BlockVector ret = toCheck.get(0);
-		int minY = 256;
-		for (BlockVector current : toCheck)
-		{
-			if (current.getBlockY() < minY)
+			if (vec.getBlockX() < min.getBlockX())
 			{
-				minY = current.getBlockY();
+				min = min.setX(vec.getBlockX());
 			}
-			if (current.getBlockX() <= ret.getBlockX() &&
-					current.getBlockZ() <= ret.getBlockZ())
+			if (vec.getBlockY() < min.getBlockY())
 			{
-				ret = current;
+				min = min.setY(vec.getBlockY());
 			}
-		}
-		ret.setY(minY);
-		return ret;
-	}
-	
-	private BlockVector getMaxBlockVec(List<BlockVector> toCheck)
-	{
-		if (toCheck.size() == 0)
-		{
-			return null;
-		}
-		BlockVector ret = toCheck.get(0);
-		int maxY = 0;
-		for (BlockVector current : toCheck)
-		{
-			if (current.getBlockY() > maxY)
+			if (vec.getBlockZ() < min.getBlockZ())
 			{
-				maxY = current.getBlockY();
+				min = min.setZ(vec.getBlockZ());
 			}
-			if (current.getBlockX() >= ret.getBlockX() &&
-					current.getBlockZ() >= ret.getBlockZ())
+			if (vec.getBlockX() > max.getBlockX())
 			{
-				ret = current;
+				max = max.setX(vec.getBlockX());
+			}
+			if (vec.getBlockY() > max.getBlockY())
+			{
+				max = max.setY(vec.getBlockY());
+			}
+			if (vec.getBlockZ() > max.getBlockZ())
+			{
+				max = max.setZ(vec.getBlockZ());
 			}
 		}
-		ret.setY(maxY);
+		SimpleEntry<Vector, Vector> ret = new SimpleEntry<Vector, Vector>(min, max);
 		return ret;
 	}
 	
