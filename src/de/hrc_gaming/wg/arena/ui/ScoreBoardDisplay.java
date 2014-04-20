@@ -40,6 +40,10 @@ public class ScoreBoardDisplay implements Listener
 	
 	private void initScoreboard()
 	{
+		if (!this.arena.getRepo().isScoreboardEnabled())
+		{
+			return;
+		}
 		if (board.getObjective("Lebensanzeige") != null)
 		{
 			return;
@@ -53,6 +57,10 @@ public class ScoreBoardDisplay implements Listener
 	
 	private void initTeams()
 	{
+		if (!this.arena.getRepo().isScoreboardEnabled())
+		{
+			return;
+		}
 		teamRed = board.registerNewTeam("team_red");
 		teamRed.setDisplayName("teamred");
 		teamRed.setPrefix(ChatColor.RED+"");
@@ -64,6 +72,10 @@ public class ScoreBoardDisplay implements Listener
 	
 	public void removeTeamMember(TeamMember member, TeamNames team)
 	{
+		if (!this.arena.getRepo().isScoreboardEnabled())
+		{
+			return;
+		}
 		initScoreboard();
 		if (team == TeamNames.Team1)
 		{
@@ -78,6 +90,10 @@ public class ScoreBoardDisplay implements Listener
 	
 	public void addTeamMember(TeamMember member, TeamNames team)
 	{
+		if (!this.arena.getRepo().isScoreboardEnabled())
+		{
+			return;
+		}
 		initScoreboard();
 		if (team == TeamNames.Team1)
 		{
@@ -92,6 +108,10 @@ public class ScoreBoardDisplay implements Listener
 	
 	private void clearScoreboard()
 	{
+		if (!this.arena.getRepo().isScoreboardEnabled())
+		{
+			return;
+		}
 		teamRed.unregister();
 		teamBlue.unregister();
 		board.getObjective("Lebensanzeige").unregister();
@@ -99,16 +119,28 @@ public class ScoreBoardDisplay implements Listener
 	
 	public void enterArena(Player p)
 	{
+		if (!this.arena.getRepo().isScoreboardEnabled())
+		{
+			return;
+		}
 		p.setScoreboard(board);
 	}
 	
 	public void leaveArena(Player p)
 	{
+		if (!this.arena.getRepo().isScoreboardEnabled())
+		{
+			return;
+		}
 		p.setScoreboard(manager.getNewScoreboard());
 	}
 	
 	public void updateHealthOfPlayer(Player p)
 	{
+		if (!this.arena.getRepo().isScoreboardEnabled())
+		{
+			return;
+		}
 		if (this.arena.getTeam().isPlayerAlive(p))
 		{
 			board.getObjective("Lebensanzeige").getScore(p).setScore((int)Math.ceil(p.getHealth()));
