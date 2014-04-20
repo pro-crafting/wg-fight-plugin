@@ -18,7 +18,7 @@ public class ArenaTimer
 		this.plugin = plugin;
 		this.arena = arena;
 		taskId = -1;
-		countdownStartTime = 60;
+		countdownStartTime = this.arena.getRepo().getScoreboardTime();
 	}
 	
 	public void start()

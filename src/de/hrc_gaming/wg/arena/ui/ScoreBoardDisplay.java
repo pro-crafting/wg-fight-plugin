@@ -1,6 +1,7 @@
 package de.hrc_gaming.wg.arena.ui;
 
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -46,7 +47,8 @@ public class ScoreBoardDisplay implements Listener
 		board.registerNewObjective("Lebensanzeige", "dummy");
 		board.getObjective("Lebensanzeige").setDisplaySlot(DisplaySlot.SIDEBAR);
 		initTeams();
-		board.getObjective("Lebensanzeige").getScore(this.plugin.getServer().getOfflinePlayer(ChatColor.GREEN+"Zeit (m):")).setScore(60);
+		OfflinePlayer timePlayer = this.plugin.getServer().getOfflinePlayer(ChatColor.GREEN+"Zeit (m):");
+		board.getObjective("Lebensanzeige").getScore(timePlayer).setScore(this.arena.getRepo().getScoreboardTime());
 	}
 	
 	private void initTeams()
@@ -126,6 +128,10 @@ public class ScoreBoardDisplay implements Listener
 	public void arenaStateChangedHandler(ArenaStateChangedEvent event)
 	{
 		if (!event.getArena().equals(this.arena))
+		{
+			return;
+		}
+		if (!this.arena.getRepo().isScoreboardEnabled())
 		{
 			return;
 		}

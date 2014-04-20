@@ -25,6 +25,8 @@ public class ArenaRepository
 	private Location fightEndWarp;
 	private boolean waterRemove;
 	private int groundDamage;
+	private boolean isScoreboardEnabled;
+	private int scoreboardTime;
 	
 	private String worldPath;
 	private String arenaRegionPath;
@@ -39,6 +41,8 @@ public class ArenaRepository
 	private String fightEndPath;
 	private String waterRemovePath;
 	private String groundDamagePath;
+	private String scoreboardEnabledPath;
+	private String scoreboardTimePath;
 	
 	public ArenaRepository(WarGear plugin, Arena arena)
 	{
@@ -58,6 +62,8 @@ public class ArenaRepository
 		team1Path = basePath+"fightStart.team1";
 		team2Path = basePath+"fightStart.team2";
 		fightEndPath = basePath+"fightEnd";
+		scoreboardEnabledPath = basePath+"scoreboard.enabled";
+		scoreboardTimePath = basePath+"scoreboard.time";
 	}
 	
 	public boolean load()
@@ -75,6 +81,9 @@ public class ArenaRepository
 		if (!this.loadFightEndWarp()) return false;
 		if (!this.loadGroundDamage()) return false;
 		if (!this.loadWaterRemove()) return false;
+		if (!this.loadScoreboardEnabled()) return false;
+		if (!this.loadScoreboardTime()) return false;
+		
 		
 		this.team1Warp = WarGearUtil.lookAt(this.team1Warp, this.team2Warp);
 		this.team2Warp = WarGearUtil.lookAt(this.team2Warp, this.team1Warp);
@@ -169,6 +178,18 @@ public class ArenaRepository
 	private boolean loadWaterRemove()
 	{
 		this.waterRemove = this.plugin.getConfig().getBoolean(waterRemovePath, true);
+		return true;
+	}
+	
+	private boolean loadScoreboardEnabled()
+	{
+		this.isScoreboardEnabled = this.plugin.getConfig().getBoolean(scoreboardEnabledPath, true);
+		return true;
+	}
+	
+	private boolean loadScoreboardTime()
+	{
+		this.scoreboardTime = this.plugin.getConfig().getInt(scoreboardTimePath, 30);
 		return true;
 	}
 	
@@ -351,6 +372,22 @@ public class ArenaRepository
 
 	public void setGroundDamage(int groundDamage) {
 		this.groundDamage = groundDamage;
+	}
+
+	public boolean isScoreboardEnabled() {
+		return this.isScoreboardEnabled;
+	}
+
+	public void setScoreboardEnabled(boolean isScoreboardEnabled) {
+		this.isScoreboardEnabled = isScoreboardEnabled;
+	}
+
+	public int getScoreboardTime() {
+		return this.scoreboardTime;
+	}
+
+	public void setScoreboardTime(int scoreboardTime) {
+		this.scoreboardTime = scoreboardTime;
 	}
 	
 }

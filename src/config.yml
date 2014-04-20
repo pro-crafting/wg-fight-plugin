@@ -12,8 +12,6 @@ arenas:
         mode: kit
         auto-reset: true
         water-remove: true
-        team1-color: &c
-        team2-color: &1
         scoreboard:
             enabled: true
             time: 30
