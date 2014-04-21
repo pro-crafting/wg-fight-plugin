@@ -213,6 +213,7 @@ public class ArenaRepository
 	
 	private boolean existsWorld(String name)
 	{
+		if (name == null) return false;
 		return this.plugin.getServer().getWorld(name) != null;
 	}
 	
