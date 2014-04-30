@@ -1,4 +1,4 @@
-package de.hrc_gaming.kit;
+package de.hrc_gaming.kit.plugins;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +17,9 @@ import com.earth2me.essentials.textreader.IText;
 import com.earth2me.essentials.textreader.KeywordReplacer;
 import com.earth2me.essentials.textreader.SimpleTextInput;
 
-public class EssentialsKitPlugin implements KitPlugin
+import de.hrc_gaming.kit.KitPlugin;
+
+public class EssentialsKit implements KitPlugin
 {
 	@Override
 	public boolean existsKit(String kitName) {

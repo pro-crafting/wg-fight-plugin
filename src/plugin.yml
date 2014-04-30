@@ -5,4 +5,4 @@ website: http://dev.bukkit.org/bukkit-plugins/wargear-fight/
 author: postremus
 main: de.hrc_gaming.wg.WarGear
 depend: [WorldEdit, WorldGuard]
-soft-depend: [Vault]
+soft-depend: [Vault, AdminCmd, Essentials]

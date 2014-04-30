@@ -1,12 +1,13 @@
-package de.hrc_gaming.kit;
+package de.hrc_gaming.kit.plugins;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import de.hrc_gaming.kit.KitPlugin;
 import be.Balor.Kit.KitInstance;
 import be.Balor.bukkit.AdminCmd.ACHelper;
 
-public class AdminCmdKitPlugin implements KitPlugin
+public class AdminCmdKit implements KitPlugin
 {
 	@Override
 	public boolean existsKit(String kitName) {

@@ -3,8 +3,12 @@ package de.hrc_gaming.kit;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+
+import de.hrc_gaming.kit.plugins.AdminCmdKit;
+import de.hrc_gaming.kit.plugins.EssentialsKit;
 
 public class KitAPI 
 {
@@ -18,67 +22,43 @@ public class KitAPI
 	
 	private void loadKitPlugins()
 	{
-		/*ServiceLoader<IKitPlugin> loader = ServiceLoader.load(IKitPlugin.class);
-		for (IKitPlugin foundImpl : loader)
+		hookKitPlugin("AdminCmd", AdminCmdKit.class);
+		hookKitPlugin("Essentials", EssentialsKit.class);
+	}
+	
+	private void hookKitPlugin(String name, Class<? extends KitPlugin> hookClass)
+	{
+		if (Bukkit.getPluginManager().getPlugin(name) != null)
 		{
-			foundImpl.setServer(this.server);
-			this.kitPlugins.add(foundImpl);
-		}*/ //TODO:Reflection benutzen für das auslesen der KitPlugins
-		try
-		{
-			KitPlugin toAdd = new AdminCmdKitPlugin();
-			this.kitPlugins.add(toAdd);
-		}
-		catch (NoClassDefFoundError ex)
-		{
-		}
-		try
-		{
-			KitPlugin toAdd = new EssentialsKitPlugin();
-			this.kitPlugins.add(toAdd);
-		}
-		catch (NoClassDefFoundError ex)
-		{
-			
+			try {
+				this.kitPlugins.add(hookClass.getConstructor().newInstance());
+			} catch (Exception ex) {
+				
+			}
 		}
 	}
 	
 	public boolean existsKit(String kitName)
 	{
+		boolean exists = false;
 		for (KitPlugin curr : this.kitPlugins)
 		{
-			try
+			if (!exists)
 			{
-				return curr.existsKit(kitName);
-			}
-			catch(NoClassDefFoundError ex)
-			{
-				
-			}
-			catch(Exception ex)
-			{
-				ex.printStackTrace();
+				exists = curr.existsKit(kitName);
 			}
 		}
-		return false;
+		return exists;
 	}
 	
 	public void giveKit(String kitName, Player p)
 	{
 		for (KitPlugin curr : this.kitPlugins)
 		{
-			try
+			if (curr.existsKit(kitName))
 			{
 				curr.giveKit(kitName, p);
 				return;
-			}
-			catch(NoClassDefFoundError ex)
-			{
-				
-			}
-			catch(Exception ex)
-			{
-				ex.printStackTrace();
 			}
 		}
 	}
@@ -87,17 +67,9 @@ public class KitAPI
 	{
 		for (KitPlugin curr : this.kitPlugins)
 		{
-			try
+			if (curr.existsKit(kitName))
 			{
 				return curr.getKitItems(kitName);
-			}
-			catch(NoClassDefFoundError ex)
-			{
-				
-			}
-			catch(Exception ex)
-			{
-				ex.printStackTrace();
 			}
 		}
 		return new ItemStack[0];
