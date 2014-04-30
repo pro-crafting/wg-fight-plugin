@@ -206,7 +206,6 @@ public class ArenaListener implements Listener
 		event.getArena().updateState(ArenaState.Spectate);
 	}
 	
-	
 	@EventHandler (priority = EventPriority.LOWEST)
 	public void arenaStateChangedHandler(ArenaStateChangedEvent event)
 	{

@@ -83,8 +83,7 @@ public class ArenaRepository
 		if (!this.loadWaterRemove()) return false;
 		if (!this.loadScoreboardEnabled()) return false;
 		if (!this.loadScoreboardTime()) return false;
-		
-		
+				
 		this.team1Warp = WarGearUtil.lookAt(this.team1Warp, this.team2Warp);
 		this.team2Warp = WarGearUtil.lookAt(this.team2Warp, this.team1Warp);
 		return true;
