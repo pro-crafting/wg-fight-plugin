@@ -17,11 +17,10 @@ import com.sk89q.worldedit.CuboidClipboard;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.FilenameException;
 import com.sk89q.worldedit.LocalConfiguration;
-import com.sk89q.worldedit.LocalPlayer;
 import com.sk89q.worldedit.MaxChangedBlocksException;
+import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
-import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.data.DataException;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.schematic.MCEditSchematicFormat;
@@ -72,16 +71,15 @@ public class ArenaReseter implements Listener, JobStateChangedCallback
 	
 	private void pasteGround(World arenaWorld) throws FilenameException, IOException, DataException, MaxChangedBlocksException
 	{
-	    WorldEditPlugin wePlugin = this.plugin.getRepo().getWorldEdit();
-        LocalConfiguration config = wePlugin.getLocalConfiguration();
-        LocalPlayer player = wePlugin.wrapCommandSender(this.plugin.getServer().getConsoleSender());
+	    WorldEdit we = this.plugin.getRepo().getWorldEdit().getWorldEdit();
+        LocalConfiguration config = we.getConfiguration();
         
-        File dir = wePlugin.getWorldEdit().getWorkingDirectoryFile(config.saveDir);
+        File dir = we.getWorkingDirectoryFile(config.saveDir);
         String schemName = this.arena.getRepo().getGroundSchematic();
-        File f = wePlugin.getWorldEdit().getSafeOpenFile(player, dir, schemName, "schematic");
-    
+        File schematic = we.getSafeOpenFile(null, dir, schemName, "schematic");
+        
         EditSession es = new EditSession(new BukkitWorld(arenaWorld), config.maxChangeLimit);
-        CuboidClipboard cc = MCEditSchematicFormat.MCEDIT.load(f);
+        CuboidClipboard cc = MCEditSchematicFormat.MCEDIT.load(schematic);
         es.enableQueue();
         es.setFastMode(true);
         cc.place(es, cc.getOrigin(), false);
