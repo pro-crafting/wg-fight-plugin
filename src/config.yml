@@ -17,12 +17,12 @@ arenas:
             time: 30
         ground:
             height: 4
-            schematic:
             damage: 4
+            schematic:
         regions:
+            arena:
             team1:
             team2:
-            arena:
         fightStart:
             team1: x;y;z
             team2: x;y;z
