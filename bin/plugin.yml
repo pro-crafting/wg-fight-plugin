@@ -1,7 +1,0 @@
-name: WarGear
-version: 0.8.5-dev
-description: Postremus Wargear Fight Plugin
-website: http://dev.bukkit.org/bukkit-plugins/wargear-fight/
-author: postremus
-main: me.Postremus.WarGear.WarGear
-depend: [WorldEdit, WorldGuard]
