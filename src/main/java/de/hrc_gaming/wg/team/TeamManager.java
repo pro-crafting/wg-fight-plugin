@@ -156,7 +156,6 @@ public class TeamManager implements Listener
 		 
 		 this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable(){
 
-			@Override
 			public void run() {
 				respawned.getInventory().clear();
 			}

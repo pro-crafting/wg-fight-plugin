@@ -117,7 +117,6 @@ public class ArenaReseter implements Listener, JobStateChangedCallback
 		}
 	}
 	
-	@Override
 	public void jobStateChanged(Job job, JobState fromState) {
 		if (job.getState() != JobState.Finished)
 		{

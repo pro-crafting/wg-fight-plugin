@@ -1,0 +1,63 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                      http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>de.hrc_gaming</groupId>
+  <artifactId>WarGear</artifactId>
+  <version>0.9-SNAPSHOT</version>
+  
+  <repositories>
+	<repository>
+      <id>sk89q-repo</id>
+      <name>sk89q Repo</name>
+      <url>http://maven.sk89q.com/repo/</url>
+      <layout>default</layout>
+    </repository>
+    
+    <repository>
+	  <id>bukkit-repo</id>
+	  <url>http://repo.bukkit.org/content/groups/public/</url>
+	</repository>
+	
+	<repository>
+      <id>ess-repo</id>
+      <url>http://repo.ess3.net/content/groups/essentials</url>
+    </repository>
+  </repositories>
+  
+  <dependencies>
+    <dependency>
+      <groupId>com.sk89q</groupId>
+      <artifactId>worldedit</artifactId>
+      <version>5.6.2</version>
+    </dependency>
+	
+	<dependency>
+      <groupId>com.sk89q</groupId>
+      <artifactId>worldguard</artifactId>
+      <version>5.9</version>
+    </dependency>
+    
+    <dependency>
+           <groupId>org.bukkit</groupId>
+           <artifactId>bukkit</artifactId>
+           <version>1.7.9-R0.1-SNAPSHOT</version>
+           <type>jar</type>
+           <scope>provided</scope>
+    </dependency>
+    
+    <dependency>
+      <groupId>net.ess3</groupId>
+      <artifactId>Essentials</artifactId>
+      <version>2.13.1</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>be.Balor</groupId>
+      <artifactId>AdminCmd</artifactId>
+      <version>7.4.1</version>
+    </dependency>
+  </dependencies>
+</project>

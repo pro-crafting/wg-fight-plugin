@@ -31,7 +31,6 @@ import de.hrc_gaming.wg.team.TeamMember;
 			this.plugin.getKitApi().giveKit(this.arena.getKit(), member.getPlayer());
 		}
 		taskId = this.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(this.plugin, new Runnable(){
-			@Override
 			public void run() {
 				finalStartCountdown();
 			}          

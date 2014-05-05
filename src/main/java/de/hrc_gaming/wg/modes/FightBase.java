@@ -20,20 +20,17 @@ public abstract class FightBase implements FightMode, Listener
 		this.arena = arena;
 	}
 	
-	@Override
 	public void start() {
 		this.plugin.getServer().broadcastMessage(ChatColor.YELLOW+"Gleich: WarGear-Kampf in der "+this.arena.getArenaName()+" Arena");
 		this.arena.broadcastOutside("§7Mit §B\"/wgk warp "+this.arena.getArenaName().toLowerCase()+"\" §7 kommst du in die Arena.");
 		this.arena.getTeam().prepareFightTeams();
 	}
 
-	@Override
 	public void stop() 
 	{
 		PlayerMoveEvent.getHandlerList().unregister(this);
 	}
 
-	@Override
 	public String getName() {
 		return "base, you stupid boy";
 	}

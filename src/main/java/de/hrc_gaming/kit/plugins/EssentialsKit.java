@@ -21,13 +21,11 @@ import de.hrc_gaming.kit.KitPlugin;
 
 public class EssentialsKit implements KitPlugin
 {
-	@Override
 	public boolean existsKit(String kitName) {
 		kitName = kitName.toLowerCase();
 		return this.getPlugin().getSettings().getKit(kitName) != null;
 	}
 
-	@Override
 	public void giveKit(String kitName, Player p) 
 	{
 		kitName = kitName.toLowerCase();
@@ -55,7 +53,6 @@ public class EssentialsKit implements KitPlugin
 	    return (Essentials) plugin;
 	}
 
-	@Override
 	public ItemStack[] getKitItems(String kitName) {
 		Essentials plugin =  this.getPlugin();
 		

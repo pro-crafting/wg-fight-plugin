@@ -29,7 +29,6 @@ public class CuboidJob implements Job
 		this.currZ = min.getBlockZ();
 	}
 
-	@Override
 	public Location getLocationToChange() {
 		if (this.currX == max.getBlockX() && this.currY == min.getBlockY() && this.currZ == max.getBlockZ())
 		{
@@ -55,17 +54,14 @@ public class CuboidJob implements Job
 		return this.currLoc;
 	}
 
-	@Override
 	public Material getType() {
 		return this.type;
 	}
 
-	@Override
 	public JobState getState() {
 		return this.jobState;
 	}
 
-	@Override
 	public void setState(JobState state) {
 		JobState from = this.jobState;
 		this.jobState = state;
