@@ -199,9 +199,9 @@ public class Arena{
 	{
 		if (to == ArenaState.Spectate)
 		{
-			to = ArenaState.Reseting;
+			to = ArenaState.Resetting;
 		}
-		if (to == ArenaState.Reseting && !this.repo.getAutoReset())
+		if (to == ArenaState.Resetting && !this.repo.getAutoReset())
 		{
 			to = ArenaState.Idle;
 		}

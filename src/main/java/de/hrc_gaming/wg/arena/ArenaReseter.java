@@ -63,7 +63,7 @@ public class ArenaReseter implements Listener, JobStateChangedCallback
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		if (this.arena.getState() == ArenaState.Reseting)
+		if (this.arena.getState() == ArenaState.Resetting)
 		{
 			this.arena.updateState(ArenaState.Idle);
 		}
@@ -111,7 +111,7 @@ public class ArenaReseter implements Listener, JobStateChangedCallback
 		{
 			this.removeItems(this.arena.getRepo().getWorld());
 		}
-		else if (event.getTo() == ArenaState.Reseting)
+		else if (event.getTo() == ArenaState.Resetting)
 		{
 			this.reset();
 		}

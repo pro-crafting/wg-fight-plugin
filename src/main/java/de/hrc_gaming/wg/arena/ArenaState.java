@@ -8,5 +8,5 @@ public enum ArenaState
 	PreRunning,
 	Running,
 	Spectate,
-	Reseting
+	Resetting
 }
