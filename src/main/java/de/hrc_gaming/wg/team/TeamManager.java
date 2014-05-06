@@ -11,7 +11,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
-import de.hrc_gaming.wg.TeamWinReason;
+import de.hrc_gaming.wg.FightQuitReason;
 import de.hrc_gaming.wg.WarGear;
 import de.hrc_gaming.wg.WarGearUtil;
 import de.hrc_gaming.wg.arena.Arena;
@@ -220,7 +220,7 @@ public class TeamManager implements Listener
 				 winnerTeam = this.team2;
 			 }
 			 String message = "Jeder aus dem ["+team.getTeamName().toString().toUpperCase()+"] ist tot.";
-			 this.plugin.getServer().getPluginManager().callEvent(new WinQuitEvent(arena, message, winnerTeam, team, TeamWinReason.Death));
+			 this.plugin.getServer().getPluginManager().callEvent(new WinQuitEvent(arena, message, winnerTeam, team, FightQuitReason.Death));
 		 }
 	 }
 	 

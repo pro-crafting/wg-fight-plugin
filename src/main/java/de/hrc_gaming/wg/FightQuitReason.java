@@ -1,9 +1,10 @@
 package de.hrc_gaming.wg;
 
-public enum TeamWinReason 
+public enum FightQuitReason 
 {
 	Death,
 	Points,
 	Griefing,
-	FightLeader
+	FightLeader,
+	Time
 }

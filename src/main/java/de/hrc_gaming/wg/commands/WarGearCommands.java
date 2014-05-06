@@ -4,8 +4,7 @@ import org.bukkit.entity.Player;
 
 import de.hrc_gaming.commandframework.Command;
 import de.hrc_gaming.commandframework.CommandArgs;
-import de.hrc_gaming.wg.DrawReason;
-import de.hrc_gaming.wg.TeamWinReason;
+import de.hrc_gaming.wg.FightQuitReason;
 import de.hrc_gaming.wg.WarGear;
 import de.hrc_gaming.wg.WarGearUtil;
 import de.hrc_gaming.wg.arena.Arena;
@@ -129,17 +128,17 @@ public class WarGearCommands {
 		
 		if (args.getArgs().length == 0)
 		{
-			DrawQuitEvent event = new DrawQuitEvent(arena, "Unentschieden", arena.getTeam().getTeam1(), arena.getTeam().getTeam2(), DrawReason.FightLeader);
+			DrawQuitEvent event = new DrawQuitEvent(arena, "Unentschieden", arena.getTeam().getTeam1(), arena.getTeam().getTeam2(), FightQuitReason.FightLeader);
 			this.plugin.getServer().getPluginManager().callEvent(event);
 		}
 		else if (args.getArgs()[0].equalsIgnoreCase("team1"))
 		{
-			WinQuitEvent event = new WinQuitEvent(arena, "", arena.getTeam().getTeam1(), arena.getTeam().getTeam2(), TeamWinReason.FightLeader);
+			WinQuitEvent event = new WinQuitEvent(arena, "", arena.getTeam().getTeam1(), arena.getTeam().getTeam2(), FightQuitReason.FightLeader);
 			this.plugin.getServer().getPluginManager().callEvent(event);
 		}
 		else if (args.getArgs()[0].equalsIgnoreCase("team2"))
 		{
-			WinQuitEvent event = new WinQuitEvent(arena, "", arena.getTeam().getTeam2(), arena.getTeam().getTeam1(), TeamWinReason.FightLeader);
+			WinQuitEvent event = new WinQuitEvent(arena, "", arena.getTeam().getTeam2(), arena.getTeam().getTeam1(), FightQuitReason.FightLeader);
 			this.plugin.getServer().getPluginManager().callEvent(event);
 		}
 	}

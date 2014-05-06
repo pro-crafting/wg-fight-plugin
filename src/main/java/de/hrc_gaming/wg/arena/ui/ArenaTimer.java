@@ -1,6 +1,6 @@
 package de.hrc_gaming.wg.arena.ui;
 
-import de.hrc_gaming.wg.DrawReason;
+import de.hrc_gaming.wg.FightQuitReason;
 import de.hrc_gaming.wg.WarGear;
 import de.hrc_gaming.wg.arena.Arena;
 import de.hrc_gaming.wg.event.DrawQuitEvent;
@@ -52,7 +52,7 @@ public class ArenaTimer
 		this.arena.getScore().updateTime(countdownStartTime-fightDuration);
 		if (fightDuration == countdownStartTime)
 		{
-			DrawQuitEvent draw = new DrawQuitEvent(this.arena, "Zeit abgelaufen - Unentschieden", this.arena.getTeam().getTeam1(), this.arena.getTeam().getTeam2(), DrawReason.Time);
+			DrawQuitEvent draw = new DrawQuitEvent(this.arena, "Zeit abgelaufen - Unentschieden", this.arena.getTeam().getTeam1(), this.arena.getTeam().getTeam2(), FightQuitReason.Time);
 			this.plugin.getServer().getPluginManager().callEvent(draw);
 		}
 		this.fightDuration++;
