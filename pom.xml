@@ -25,6 +25,11 @@
       <id>ess-repo</id>
       <url>http://repo.ess3.net/content/groups/essentials</url>
     </repository>
+    
+    <repository>
+      <id>balor-repo</id>
+      <url>http://www.gestdown.info:8888/nexus/content/repositories/bukkit-plugin-release/</url>
+    </repository>
   </repositories>
   
   <dependencies>
@@ -41,11 +46,11 @@
     </dependency>
     
     <dependency>
-           <groupId>org.bukkit</groupId>
-           <artifactId>bukkit</artifactId>
-           <version>1.7.9-R0.1-SNAPSHOT</version>
-           <type>jar</type>
-           <scope>provided</scope>
+      <groupId>org.bukkit</groupId>
+      <artifactId>bukkit</artifactId>
+      <version>1.7.9-R0.1-SNAPSHOT</version>
+      <type>jar</type>
+	  <scope>provided</scope>
     </dependency>
     
     <dependency>
