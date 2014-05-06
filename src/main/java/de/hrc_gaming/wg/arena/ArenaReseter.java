@@ -55,20 +55,6 @@ public class ArenaReseter implements Listener, JobStateChangedCallback
 		this.plugin.getGenerator().addJob(new CuboidJob(min, max, Material.AIR, this));
 	}
 	
-	private void stopClear()
-	{
-		removeItems(this.arena.getRepo().getWorld());
-		try {
-			this.pasteGround(this.arena.getRepo().getWorld());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		if (this.arena.getState() == ArenaState.Resetting)
-		{
-			this.arena.updateState(ArenaState.Idle);
-		}
-	}
-	
 	private void pasteGround(World arenaWorld) throws FilenameException, IOException, DataException, MaxChangedBlocksException
 	{
 	    WorldEdit we = this.plugin.getRepo().getWorldEdit().getWorldEdit();
@@ -122,6 +108,15 @@ public class ArenaReseter implements Listener, JobStateChangedCallback
 		{
 			return;
 		}
-		ArenaReseter.this.stopClear();
+		removeItems(this.arena.getRepo().getWorld());
+		try {
+			this.pasteGround(this.arena.getRepo().getWorld());
+		} catch (Exception e) {
+			this.plugin.getLogger().info("Boden konne in "+this.arena.getArenaName()+" nicht geresetet werden.");
+		}
+		if (this.arena.getState() == ArenaState.Resetting)
+		{
+			this.arena.updateState(ArenaState.Idle);
+		}
 	}
 }
