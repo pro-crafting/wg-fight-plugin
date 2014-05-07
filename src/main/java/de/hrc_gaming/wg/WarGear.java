@@ -88,7 +88,7 @@ public class WarGear extends JavaPlugin {
 	
 	public void loadConfig()
 	{
-		if(!new File("plugins/WarGear/config.yml").exists()){			
+		if(!new File(this.getDataFolder(), "config.yml").exists()){			
 			saveDefaultConfig();
 			this.getLogger().info("config.yml erstellt und geladen.");
 		}
