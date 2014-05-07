@@ -2,8 +2,11 @@ package de.hrc_gaming.wg;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.milkbowl.vault.economy.Economy;
+
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.RegisteredServiceProvider;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldguard.bukkit.BukkitUtil;
@@ -14,12 +17,13 @@ import de.hrc_gaming.wg.arena.Arena;
 import de.hrc_gaming.wg.team.TeamNames;
 
 public class WarGearRepository {
-	
 	private WarGear plugin;
+	private Economy eco;
 	
 	public WarGearRepository(WarGear plugin)
 	{
 		this.plugin = plugin;
+		this.eco = loadEco();
 	}
 	
 	public String getDefaultKitName()
@@ -29,7 +33,8 @@ public class WarGearRepository {
 
 	public boolean isEconomyEnabled()
 	{
-		return this.plugin.getConfig().getBoolean("general.economy.enabled", false);
+		return this.plugin.getConfig().getBoolean("general.economy.enabled", false) &&
+				this.getEco() != null;
 	}
 	
 	public double getWinAmount()
@@ -71,6 +76,26 @@ public class WarGearRepository {
 	public WorldEditPlugin getWorldEdit()
 	{
 		return (WorldEditPlugin)this.plugin.getServer().getPluginManager().getPlugin("WorldEdit");
+	}
+	
+	public Economy getEco()
+	{
+		return this.eco;
+	}
+	
+	
+	
+	private Economy loadEco()
+	{
+		if (this.plugin.getServer().getPluginManager().getPlugin("Vault") == null)
+		{
+			return null;
+		}
+		RegisteredServiceProvider<Economy> economyProvider = this.plugin.getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
+        if (economyProvider != null) {
+        	return economyProvider.getProvider();
+        }
+        return null;
 	}
 	
 	public List<String> getArenaNames()

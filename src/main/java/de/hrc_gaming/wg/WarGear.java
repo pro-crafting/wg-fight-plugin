@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import de.hrc_gaming.commandframework.CommandArgs;
@@ -18,7 +19,6 @@ import de.hrc_gaming.wg.commands.TeamCommands;
 import de.hrc_gaming.wg.commands.WarGearCommands;
 
 public class WarGear extends JavaPlugin {
-
 	private WarGearRepository repo;
 	private BlockGenerator generator;
 	private ArenaManager arenaManager;
@@ -27,6 +27,7 @@ public class WarGear extends JavaPlugin {
 	private WarGearCommands wgCommands;
 	private TeamCommands teamCommands;
 	private ArenaCommands arenaCommands;
+	private WgEconomy eco;
 	
 	@Override
 	public void onEnable() {
@@ -44,6 +45,7 @@ public class WarGear extends JavaPlugin {
 		this.cmdFramework.registerCommands(this.arenaCommands);
 		this.cmdFramework.registerCommands(this);
 		this.cmdFramework.registerHelp();
+		this.eco = new WgEconomy(this);
 		this.getLogger().info("Plugin erfolgreich geladen!");
 	}
 	
@@ -54,6 +56,7 @@ public class WarGear extends JavaPlugin {
 	
 	@Override
 	public void onDisable() {
+		HandlerList.unregisterAll(this.eco);
 		this.arenaManager.unloadArenas();
 		this.getLogger().info("Plugin erfolgreich deaktiviert!");
 	}
