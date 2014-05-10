@@ -3,6 +3,7 @@ package de.hrc_gaming.wg.arena;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -16,7 +17,6 @@ import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldguard.bukkit.BukkitUtil;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
-
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 import de.hrc_gaming.wg.FightMode;
@@ -35,7 +35,7 @@ public class Arena{
 	private Reseter reseter;
 	private WaterRemover remover;
 	private State state;
-	private List<Player> players;
+	private List<UUID> players;
 	private ScoreBoardDisplay scores;
 	private ArenaListener arenaListener;
 	private Repository repo;
@@ -47,7 +47,7 @@ public class Arena{
 		
 		this.state = State.Idle;
 		this.kitname = "";
-		this.players = new ArrayList<Player>();
+		this.players = new ArrayList<UUID>();
 		this.repo = new Repository(this.plugin, this);
 	}
 	
@@ -96,14 +96,25 @@ public class Arena{
 		this.fightMode = fightMode;
 	}
 	
-	public List<Player> getPlayers()
+	public List<UUID> getPlayers()
 	{
 		return this.players;
 	}
 	
-	public ScoreBoardDisplay getScore()
+	public void join(Player p)
 	{
-		return this.scores;
+		if (!this.players.contains(p.getUniqueId()))
+		{
+			this.players.add(p.getUniqueId());
+		}
+	}
+	
+	public void leave(Player p)
+	{
+		if (this.players.contains(p.getUniqueId()))
+		{
+			this.players.remove(p.getUniqueId());
+		}
 	}
 	
 	public Repository getRepo()
@@ -271,5 +282,9 @@ public class Arena{
 		} else if (!name.equals(other.name))
 			return false;
 		return true;
+	}
+
+	public ScoreBoardDisplay getScore() {
+		return scores;
 	}
 }

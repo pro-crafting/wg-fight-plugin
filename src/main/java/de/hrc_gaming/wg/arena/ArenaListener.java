@@ -47,11 +47,11 @@ public class ArenaListener implements Listener
 		boolean isInArena = this.arena.contains(event.getTo());
 		if (!isInArena)
 		{
-			this.removePlayer(event.getPlayer());
+			arena.leave(event.getPlayer());
 		}
 		else
 		{
-			this.addPlayer(event.getPlayer());
+			arena.join(event.getPlayer());
 		}
 	}
 	
@@ -60,7 +60,7 @@ public class ArenaListener implements Listener
 	{
 		if (this.arena.contains(event.getPlayer().getLocation()))
 		{
-			this.addPlayer(event.getPlayer());
+			arena.join(event.getPlayer());
 		}
 	}
 	
@@ -69,7 +69,7 @@ public class ArenaListener implements Listener
 	{
 		if (this.arena.contains(event.getPlayer().getLocation()))
 		{
-			this.removePlayer(event.getPlayer());
+			arena.leave(event.getPlayer());
 		}
 	}
 	
@@ -78,7 +78,7 @@ public class ArenaListener implements Listener
 	{
 		if (this.arena.contains(event.getPlayer().getLocation()))
 		{
-			this.removePlayer(event.getPlayer());
+			arena.leave(event.getPlayer());
 		}
 	}
 	
@@ -87,29 +87,11 @@ public class ArenaListener implements Listener
 	{
 		if (this.arena.contains(event.getTo()))
 		{
-			this.addPlayer(event.getPlayer());
+			arena.join(event.getPlayer());
 		}
 		else
 		{
-			this.removePlayer(event.getPlayer());
-		}
-	}
-	
-	private void addPlayer(Player p)
-	{
-		if (!this.arena.getPlayers().contains(p))
-		{
-			this.arena.getScore().enterArena(p);
-			this.arena.getPlayers().add(p);
-		}
-	}
-	
-	private void removePlayer(Player p)
-	{
-		if (this.arena.getPlayers().contains(p))
-		{
-			this.arena.getScore().leaveArena(p);
-			this.arena.getPlayers().remove(p);
+			arena.leave(event.getPlayer());
 		}
 	}
 	
@@ -212,13 +194,6 @@ public class ArenaListener implements Listener
 		if (!event.getArena().equals(this.arena))
 		{
 			return;
-		}
-		if (event.getTo() == State.Setup)
-		{
-			for (Player p : this.arena.getPlayers())
-			{
-				this.arena.getScore().enterArena(p);
-			}
 		}
 		if (event.getTo() == State.Idle)
 		{
