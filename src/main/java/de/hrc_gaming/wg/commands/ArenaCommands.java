@@ -7,7 +7,7 @@ import org.bukkit.Location;
 import de.hrc_gaming.commandframework.Command;
 import de.hrc_gaming.commandframework.CommandArgs;
 import de.hrc_gaming.wg.WarGear;
-import de.hrc_gaming.wg.WarGearUtil;
+import de.hrc_gaming.wg.Util;
 import de.hrc_gaming.wg.arena.Arena;
 
 public class ArenaCommands {
@@ -33,7 +33,7 @@ public class ArenaCommands {
 			usage = "/wgk arena close", permission="wargear.arena.close")
 	public void close(CommandArgs args)
 	{
-		Arena arena = WarGearUtil.getArenaFromSender(plugin, args.getSender(), args.getArgs());
+		Arena arena = Util.getArenaFromSender(plugin, args.getSender(), args.getArgs());
 		if (arena == null)
 		{
 			args.getSender().sendMessage("§cDu stehst in keiner Arena, oder Sie existiert nicht.");
@@ -46,7 +46,7 @@ public class ArenaCommands {
 			usage = "/wgk arena open", permission="wargear.arena.open")
 	public void open(CommandArgs args)
 	{
-		Arena arena = WarGearUtil.getArenaFromSender(plugin, args.getSender(), args.getArgs());
+		Arena arena = Util.getArenaFromSender(plugin, args.getSender(), args.getArgs());
 		if (arena == null)
 		{
 			args.getSender().sendMessage("§cDu stehst in keiner Arena, oder Sie existiert nicht.");
@@ -59,14 +59,14 @@ public class ArenaCommands {
 			usage = "/wgk arena info", permission="wargear.arena.info")
 	public void info(CommandArgs args)
 	{
-		Arena arena = WarGearUtil.getArenaFromSender(plugin, args.getSender(), args.getArgs());
+		Arena arena = Util.getArenaFromSender(plugin, args.getSender(), args.getArgs());
 		if (arena == null)
 		{
 			args.getSender().sendMessage("§cDu stehst in keiner Arena, oder Sie existiert nicht.");
 			return;
 		}
 		args.getSender().sendMessage("§a---Arena Info---");
-		args.getSender().sendMessage("§7Arena Name: §B" + arena.getArenaName());
+		args.getSender().sendMessage("§7Arena Name: §B" + arena.getName());
 		args.getSender().sendMessage("§7Welt: §B" + arena.getRepo().getWorld().getName());
 		args.getSender().sendMessage("§7Fight Modus: §B" + arena.getRepo().getFightMode());
 		args.getSender().sendMessage("§7Bodenhöhe: §B" + arena.getRepo().getGroundHeight());
@@ -89,14 +89,14 @@ public class ArenaCommands {
 			usage = "/wgk arena reset", permission="wargear.arena.reset")
 	public void reset(CommandArgs args)
 	{
-		Arena arena = WarGearUtil.getArenaFromSender(plugin, args.getSender(), args.getArgs());
+		Arena arena = Util.getArenaFromSender(plugin, args.getSender(), args.getArgs());
 		if (arena == null)
 		{
 			args.getSender().sendMessage("§cDu stehst in keiner Arena, oder Sie existiert nicht.");
 			return;
 		}
 		arena.getReseter().reset();
-		args.getSender().sendMessage("§7Arena §B"+arena.getArenaName()+" §7wird resetet.");
+		args.getSender().sendMessage("§7Arena §B"+arena.getName()+" §7wird resetet.");
 	}
 	
 	@Command(name = "wgk.arena.list", description = "Listet die Arenen", 

@@ -13,7 +13,7 @@ import org.bukkit.scoreboard.Team;
 
 import de.hrc_gaming.wg.WarGear;
 import de.hrc_gaming.wg.arena.Arena;
-import de.hrc_gaming.wg.arena.ArenaState;
+import de.hrc_gaming.wg.arena.State;
 import de.hrc_gaming.wg.event.ArenaStateChangedEvent;
 import de.hrc_gaming.wg.team.TeamMember;
 import de.hrc_gaming.wg.team.TeamNames;
@@ -167,15 +167,15 @@ public class ScoreBoardDisplay implements Listener
 		{
 			return;
 		}
-		if (event.getTo() == ArenaState.Setup)
+		if (event.getTo() == State.Setup)
 		{
 			initScoreboard();
 		}
-		else if (event.getTo() == ArenaState.Running)
+		else if (event.getTo() == State.Running)
 		{
 			this.timer.start();
 		}
-		else if (event.getFrom() == ArenaState.Running)
+		else if (event.getFrom() == State.Running)
 		{
 			if (this.timer.getIsRunning())
 			{

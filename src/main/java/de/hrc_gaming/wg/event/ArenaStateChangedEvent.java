@@ -4,16 +4,16 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import de.hrc_gaming.wg.arena.Arena;
-import de.hrc_gaming.wg.arena.ArenaState;
+import de.hrc_gaming.wg.arena.State;
 
 public class ArenaStateChangedEvent extends Event
 {
 	private static final HandlerList handlers = new HandlerList();
 	private Arena arena;
-	private ArenaState from;
-	private ArenaState to;
+	private State from;
+	private State to;
 	
-	public ArenaStateChangedEvent(Arena arena, ArenaState from, ArenaState to)
+	public ArenaStateChangedEvent(Arena arena, State from, State to)
 	{
 		this.arena = arena;
 		this.from = from;
@@ -25,12 +25,12 @@ public class ArenaStateChangedEvent extends Event
     	return this.arena;
     }
 	
-	public ArenaState getFrom()
+	public State getFrom()
 	{
 		return from;
 	}
 	
-	public ArenaState getTo()
+	public State getTo()
 	{
 		return to;
 	}

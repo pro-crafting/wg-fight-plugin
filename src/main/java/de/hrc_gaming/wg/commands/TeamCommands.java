@@ -6,9 +6,9 @@ import org.bukkit.entity.Player;
 import de.hrc_gaming.commandframework.Command;
 import de.hrc_gaming.commandframework.CommandArgs;
 import de.hrc_gaming.wg.WarGear;
-import de.hrc_gaming.wg.WarGearUtil;
+import de.hrc_gaming.wg.Util;
 import de.hrc_gaming.wg.arena.Arena;
-import de.hrc_gaming.wg.arena.ArenaState;
+import de.hrc_gaming.wg.arena.State;
 import de.hrc_gaming.wg.modes.ChestMode;
 import de.hrc_gaming.wg.modes.KitMode;
 import de.hrc_gaming.wg.team.WgTeam;
@@ -34,7 +34,7 @@ public class TeamCommands {
 	@Command(name = "wgk.team.leader", description = "Setzt den Leiter eines Teams.", usage = "/wgk team leader", permission="wargear.team.leader")
 	public void leader(CommandArgs args)
 	{
-		Arena arena = WarGearUtil.getArenaFromSender(plugin, args.getSender(), args.getArgs());
+		Arena arena = Util.getArenaFromSender(plugin, args.getSender(), args.getArgs());
 		if (arena == null)
 		{
 			args.getSender().sendMessage("§cDu stehst in keiner Arena, oder Sie existiert nicht.");
@@ -48,14 +48,14 @@ public class TeamCommands {
 		
 		String playerName = args.getArgs()[0];
 		
-		if (arena.getState() == ArenaState.Running || arena.getState() == ArenaState.PreRunning)
+		if (arena.getState() == State.Running || arena.getState() == State.PreRunning)
 		{
 			args.getSender().sendMessage("§cHier läuft bereits ein Fight.");
 			return;
 		}
-		if (arena.getState() == ArenaState.Idle)
+		if (arena.getState() == State.Idle)
 		{
-			arena.updateState(ArenaState.Setup);
+			arena.updateState(State.Setup);
 		}
 		
 		Player p = this.plugin.getServer().getPlayer(playerName);
@@ -87,7 +87,7 @@ public class TeamCommands {
 			usage = "/wgk team add", permission="wargear.team.add")
 	public void add(CommandArgs args)
 	{
-		Arena arena = WarGearUtil.getArenaFromSender(plugin, args.getSender(), args.getArgs());
+		Arena arena = Util.getArenaFromSender(plugin, args.getSender(), args.getArgs());
 		if (arena == null)
 		{
 			args.getSender().sendMessage("§cDu stehst in keiner Arena, oder Sie existiert nicht.");
@@ -101,7 +101,7 @@ public class TeamCommands {
 		
 		String playerName = args.getArgs()[0];
 		
-		if (arena.getState() == ArenaState.Running || arena.getState() == ArenaState.PreRunning)
+		if (arena.getState() == State.Running || arena.getState() == State.PreRunning)
 		{
 			args.getSender().sendMessage("§cWährend eines Fights kannst du keine Mitglieder hinzufügen.");
 			return;
@@ -139,7 +139,7 @@ public class TeamCommands {
 			usage = "/wgk team remove", permission="wargear.team.remove")
 	public void remove(CommandArgs args)
 	{
-		Arena arena = WarGearUtil.getArenaFromSender(plugin, args.getSender(), args.getArgs());
+		Arena arena = Util.getArenaFromSender(plugin, args.getSender(), args.getArgs());
 		if (arena == null)
 		{
 			args.getSender().sendMessage("§cDu stehst in keiner Arena, oder Sie existiert nicht.");
@@ -153,7 +153,7 @@ public class TeamCommands {
 		
 		String playerName = args.getArgs()[0];
 		
-		if (arena.getState() == ArenaState.Running || arena.getState() == ArenaState.Running)
+		if (arena.getState() == State.Running || arena.getState() == State.Running)
 		{
 			args.getSender().sendMessage("§Während eines Fights kannst du keine Mitglieder entfernen.");
 			return;
@@ -195,14 +195,14 @@ public class TeamCommands {
 			usage = "/wgk team leave", permission="wargear.team.leave")
 	public void leave(CommandArgs args)
 	{
-		Arena arena = WarGearUtil.getArenaFromSender(plugin, args.getSender(), args.getArgs());
+		Arena arena = Util.getArenaFromSender(plugin, args.getSender(), args.getArgs());
 		if (arena == null)
 		{
 			args.getSender().sendMessage("§cDu stehst in keiner Arena, oder Sie existiert nicht.");
 			return;
 		}
 		
-		if (arena.getState() == ArenaState.Running || arena.getState() == ArenaState.PreRunning)
+		if (arena.getState() == State.Running || arena.getState() == State.PreRunning)
 		{
 			args.getSender().sendMessage("§cWährend eines Fights kannst du nicht aus deinem Team raus.");
 			return;
@@ -228,14 +228,14 @@ public class TeamCommands {
 			usage = "/wgk team ready", permission="wargear.team.ready")
 	public void ready(CommandArgs args)
 	{
-		Arena arena = WarGearUtil.getArenaFromSender(plugin, args.getSender(), args.getArgs());
+		Arena arena = Util.getArenaFromSender(plugin, args.getSender(), args.getArgs());
 		if (arena == null)
 		{
 			args.getSender().sendMessage("§cDu stehst in keiner Arena, oder Sie existiert nicht.");
 			return;
 		}	
 		
-		if (arena.getState() == ArenaState.Running || arena.getState() == ArenaState.PreRunning)
+		if (arena.getState() == State.Running || arena.getState() == State.PreRunning)
 		{
 			args.getSender().sendMessage("§cWährend eines Fights kannst du das Team nicht bereit schalten.");
 			return;
@@ -281,7 +281,7 @@ public class TeamCommands {
 	
 	private void start(CommandSender sender, Arena arena)
 	{
-		if (arena.getState() != ArenaState.Setup)
+		if (arena.getState() != State.Setup)
 		{
 			sender.sendMessage("§cEs muss zuerst ein Fight Setup gestartet werden.");
 			return;
@@ -312,6 +312,6 @@ public class TeamCommands {
 		arena.setArenaOpeningFlags(false);
 		arena.getTeam().sendTeamOutput();
 		arena.getFightMode().start();
-		arena.updateState(ArenaState.PreRunning);
+		arena.updateState(State.PreRunning);
 	}
 }

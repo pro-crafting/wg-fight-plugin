@@ -19,7 +19,7 @@ import de.hrc_gaming.wg.commands.TeamCommands;
 import de.hrc_gaming.wg.commands.WarGearCommands;
 
 public class WarGear extends JavaPlugin {
-	private WarGearRepository repo;
+	private Repository repo;
 	private BlockGenerator generator;
 	private ArenaManager arenaManager;
 	private KitAPI kitApi;
@@ -32,7 +32,7 @@ public class WarGear extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		this.loadConfig();
-		this.repo = new WarGearRepository(this);
+		this.repo = new Repository(this);
 		this.generator = new BlockGenerator(this, 10000);
 		this.arenaManager = new ArenaManager(this);
 		this.kitApi = new KitAPI();
@@ -94,7 +94,7 @@ public class WarGear extends JavaPlugin {
 		}
 	}
 	
-	public WarGearRepository getRepo()
+	public Repository getRepo()
 	{
 		return this.repo;
 	}

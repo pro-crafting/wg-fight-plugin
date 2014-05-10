@@ -7,9 +7,9 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 import de.hrc_gaming.wg.WarGear;
-import de.hrc_gaming.wg.WarGearUtil;
+import de.hrc_gaming.wg.Util;
 
-public class ArenaRepository 
+public class Repository 
 {
 	private WarGear plugin;
 	private String world;
@@ -44,10 +44,10 @@ public class ArenaRepository
 	private String scoreboardEnabledPath;
 	private String scoreboardTimePath;
 	
-	public ArenaRepository(WarGear plugin, Arena arena)
+	public Repository(WarGear plugin, Arena arena)
 	{
 		this.plugin = plugin;
-		String basePath = "arenas."+arena.getArenaName()+".";
+		String basePath = "arenas."+arena.getName()+".";
 		plugin.getLogger().info("Basepath: "+basePath);
 		worldPath = basePath+"world";
 		modePath = basePath+"mode";
@@ -84,8 +84,8 @@ public class ArenaRepository
 		if (!this.loadScoreboardEnabled()) return false;
 		if (!this.loadScoreboardTime()) return false;
 				
-		this.team1Warp = WarGearUtil.lookAt(this.team1Warp, this.team2Warp);
-		this.team2Warp = WarGearUtil.lookAt(this.team2Warp, this.team1Warp);
+		this.team1Warp = Util.lookAt(this.team1Warp, this.team2Warp);
+		this.team2Warp = Util.lookAt(this.team2Warp, this.team1Warp);
 		return true;
 	}
 	

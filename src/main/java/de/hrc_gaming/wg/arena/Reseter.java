@@ -32,13 +32,13 @@ import de.hrc_gaming.generator.JobStateChangedCallback;
 import de.hrc_gaming.wg.WarGear;
 import de.hrc_gaming.wg.event.ArenaStateChangedEvent;
 
-public class ArenaReseter implements Listener, JobStateChangedCallback
+public class Reseter implements Listener, JobStateChangedCallback
 {
 	private Arena arena;
 	private WarGear plugin;
 	private int groundHeight;
 	
-	public ArenaReseter(WarGear plugin, Arena arena)
+	public Reseter(WarGear plugin, Arena arena)
 	{
 		this.arena = arena;
 		this.plugin = plugin;
@@ -93,11 +93,11 @@ public class ArenaReseter implements Listener, JobStateChangedCallback
 			return;
 		}
 		
-		if (event.getTo() == ArenaState.PreRunning)
+		if (event.getTo() == State.PreRunning)
 		{
 			this.removeItems(this.arena.getRepo().getWorld());
 		}
-		else if (event.getTo() == ArenaState.Resetting)
+		else if (event.getTo() == State.Resetting)
 		{
 			this.reset();
 		}
@@ -112,11 +112,11 @@ public class ArenaReseter implements Listener, JobStateChangedCallback
 		try {
 			this.pasteGround(this.arena.getRepo().getWorld());
 		} catch (Exception e) {
-			this.plugin.getLogger().info("Boden konne in "+this.arena.getArenaName()+" nicht geresetet werden.");
+			this.plugin.getLogger().info("Boden konne in "+this.arena.getName()+" nicht geresetet werden.");
 		}
-		if (this.arena.getState() == ArenaState.Resetting)
+		if (this.arena.getState() == State.Resetting)
 		{
-			this.arena.updateState(ArenaState.Idle);
+			this.arena.updateState(State.Idle);
 		}
 	}
 }

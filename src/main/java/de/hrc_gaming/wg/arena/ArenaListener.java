@@ -125,7 +125,7 @@ public class ArenaListener implements Listener
 		{
 			return;
 		}
-		if (this.arena.getState() != ArenaState.Running)
+		if (this.arena.getState() != State.Running)
 		{
 			event.setCancelled(true);
 			return;
@@ -188,7 +188,7 @@ public class ArenaListener implements Listener
 		{
 			return;
 		}
-		if (this.arena.getState() != ArenaState.PreRunning && this.arena.getState() != ArenaState.Running)
+		if (this.arena.getState() != State.PreRunning && this.arena.getState() != State.Running)
 		{
 			return;
 		}
@@ -203,7 +203,7 @@ public class ArenaListener implements Listener
 			event.getArena().getTeam().sendWinnerOutput(winEvent.getWinnerTeam().getTeamName());
 		}
 		event.getArena().getFightMode().stop();
-		event.getArena().updateState(ArenaState.Spectate);
+		event.getArena().updateState(State.Spectate);
 	}
 	
 	@EventHandler (priority = EventPriority.LOWEST)
@@ -213,14 +213,14 @@ public class ArenaListener implements Listener
 		{
 			return;
 		}
-		if (event.getTo() == ArenaState.Setup)
+		if (event.getTo() == State.Setup)
 		{
 			for (Player p : this.arena.getPlayersInArena())
 			{
 				this.arena.getScore().enterArena(p);
 			}
 		}
-		if (event.getTo() == ArenaState.Idle)
+		if (event.getTo() == State.Idle)
 		{
 			this.arena.getTeam().quitFight();
 			this.arena.setFightMode(new KitMode(this.plugin, this.arena));
@@ -252,6 +252,6 @@ public class ArenaListener implements Listener
 		{
 			return;
 		}
-		event.setFormat(color+"["+this.arena.getArenaName()+"]"+event.getFormat());
+		event.setFormat(color+"["+this.arena.getName()+"]"+event.getFormat());
 	}
 }

@@ -20,9 +20,9 @@ import org.bukkit.scheduler.BukkitTask;
 
 import de.hrc_gaming.wg.FightMode;
 import de.hrc_gaming.wg.WarGear;
-import de.hrc_gaming.wg.WarGearUtil;
+import de.hrc_gaming.wg.Util;
 import de.hrc_gaming.wg.arena.Arena;
-import de.hrc_gaming.wg.arena.ArenaState;
+import de.hrc_gaming.wg.arena.State;
 
 public class ChestMode extends FightBase implements FightMode, Listener{
 
@@ -57,8 +57,8 @@ public class ChestMode extends FightBase implements FightMode, Listener{
 	{
 		Location l = loc.clone();
 		l.setY(l.getY()-1);
-		Location chestOne = WarGearUtil.move(l, 2);
-		Location chestTwo = WarGearUtil.move(chestOne, 1);
+		Location chestOne = Util.move(l, 2);
+		Location chestTwo = Util.move(chestOne, 1);
 		setChests(chestOne, chestTwo);
 		
 		ItemStack[] items = removeTNTStacks(this.plugin.getKitApi().getKitItems(this.arena.getKit()));
@@ -220,7 +220,7 @@ public class ChestMode extends FightBase implements FightMode, Listener{
 			this.arena.getRepo().getWorld().setDifficulty(Difficulty.EASY);
 			PlayerInteractEvent.getHandlerList().unregister(this);
 			this.plugin.getServer().getPluginManager().registerEvents(this, this.plugin);
-			this.arena.updateState(ArenaState.Running);
+			this.arena.updateState(State.Running);
 			arena.open();
 			return;
 		}
@@ -270,8 +270,8 @@ public class ChestMode extends FightBase implements FightMode, Listener{
 	{
 		Location l = checkAgainst.clone();
 		l.setY(l.getY()-1);
-		Location chestOne = WarGearUtil.move(l, 2);
-		Location chestTwo = WarGearUtil.move(chestOne, 1);
+		Location chestOne = Util.move(l, 2);
+		Location chestTwo = Util.move(chestOne, 1);
 		return equalsLocation(chestOne, value) || equalsLocation(chestTwo, value);
 	}
 	

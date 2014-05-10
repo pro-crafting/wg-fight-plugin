@@ -5,7 +5,7 @@ import org.bukkit.Difficulty;
 
 import de.hrc_gaming.wg.WarGear;
 import de.hrc_gaming.wg.arena.Arena;
-import de.hrc_gaming.wg.arena.ArenaState;
+import de.hrc_gaming.wg.arena.State;
 import de.hrc_gaming.wg.team.TeamMember;
 
  public class KitMode extends FightBase{
@@ -84,7 +84,7 @@ import de.hrc_gaming.wg.team.TeamMember;
 			this.plugin.getServer().getScheduler().cancelTask(taskId);
 			this.arena.getRepo().getWorld().setDifficulty(Difficulty.EASY);
 			this.plugin.getServer().getPluginManager().registerEvents(this, this.plugin);
-			this.arena.updateState(ArenaState.Running);
+			this.arena.updateState(State.Running);
 			arena.open();
 		}
 		counter++;

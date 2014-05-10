@@ -12,7 +12,7 @@ import org.bukkit.potion.PotionEffect;
 
 import de.hrc_gaming.wg.arena.Arena;
 
-public class WarGearUtil {
+public class Util {
 	public static Arena getArenaFromSender(WarGear plugin, CommandSender sender, String[] args)
 	{
 		boolean hasFoundArenaFlag = false;

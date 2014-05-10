@@ -16,7 +16,7 @@ import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldguard.bukkit.BukkitUtil;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
-import com.sk89q.worldguard.protection.flags.StateFlag.State;
+
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 import de.hrc_gaming.wg.FightMode;
@@ -32,40 +32,40 @@ public class Arena{
 	private TeamManager team;
 	private String kitname;
 	private FightMode fightMode;
-	private ArenaReseter reseter;
+	private Reseter reseter;
 	private WaterRemover remover;
-	private ArenaState arenaState;
+	private State state;
 	private List<Player> playersInArena;
 	private ScoreBoardDisplay scores;
-	private ArenaListener listener;
-	private ArenaRepository repo;
+	private ArenaListener arenaListener;
+	private Repository repo;
 	
 	public Arena(WarGear plugin, String arenaName)
 	{
 		this.plugin = plugin;	
 		this.name = arenaName;
 		
-		this.arenaState = ArenaState.Idle;
+		this.state = State.Idle;
 		this.kitname = "";
 		this.playersInArena = new ArrayList<Player>();
-		this.repo = new ArenaRepository(this.plugin, this);
+		this.repo = new Repository(this.plugin, this);
 	}
 	
-	public String getArenaName()
+	public String getName()
 	{
 		return this.name;
 	}
 	
-	public void setArenaName(String arena)
+	public void setName(String name)
 	{
-		this.name = arena;
+		this.name = name;
 	}
 
 	public TeamManager getTeam() {
 		return team;
 	}
 	
-	public ArenaReseter getReseter()
+	public Reseter getReseter()
 	{
 		return this.reseter;
 	}
@@ -75,9 +75,9 @@ public class Arena{
 		return this.remover;
 	}
 	
-	public ArenaState getState()
+	public State getState()
 	{
-		return this.arenaState;
+		return this.state;
 	}
 	
 	public String getKit() {
@@ -106,7 +106,7 @@ public class Arena{
 		return this.scores;
 	}
 	
-	public ArenaRepository getRepo()
+	public Repository getRepo()
 	{
 		return this.repo;
 	}
@@ -131,11 +131,11 @@ public class Arena{
 		{
 			this.team = new TeamManager(plugin, this);
 			this.setFightMode(new KitMode(this.plugin, this));
-			this.reseter = new ArenaReseter(this.plugin, this);
+			this.reseter = new Reseter(this.plugin, this);
 			this.remover = new WaterRemover(this.plugin, this);
 			scores = new ScoreBoardDisplay(this.plugin, this);
-			this.listener = new ArenaListener(this.plugin, this);
-			this.plugin.getServer().getPluginManager().registerEvents(this.listener, this.plugin);
+			this.arenaListener = new ArenaListener(this.plugin, this);
+			this.plugin.getServer().getPluginManager().registerEvents(this.arenaListener, this.plugin);
 			return true;
 		}
 		return false;
@@ -146,19 +146,19 @@ public class Arena{
 		HandlerList.unregisterAll(this.team);
 		HandlerList.unregisterAll(this.reseter);
 		HandlerList.unregisterAll(this.scores);
-		HandlerList.unregisterAll(this.listener);
+		HandlerList.unregisterAll(this.arenaListener);
 		remover.stop();
 	}
 	
 	public void setArenaOpeningFlags(Boolean allowed)
 	{
-		State value = allowed ? State.ALLOW : State.DENY;
+		com.sk89q.worldguard.protection.flags.StateFlag.State value = allowed ? com.sk89q.worldguard.protection.flags.StateFlag.State.ALLOW : com.sk89q.worldguard.protection.flags.StateFlag.State.DENY;
 		
 		setArenaOpeningFlags(this.repo.getTeam1Region(), value);
 		setArenaOpeningFlags(this.repo.getTeam2Region(), value);
 	}
 	
-	private void setArenaOpeningFlags(ProtectedRegion region, State value)
+	private void setArenaOpeningFlags(ProtectedRegion region, com.sk89q.worldguard.protection.flags.StateFlag.State value)
 	{
 		region.setFlag(DefaultFlag.TNT, value);
 		region.setFlag(DefaultFlag.BUILD, value);
@@ -187,23 +187,23 @@ public class Arena{
 		}
 	}
 	
-	public void updateState(ArenaState to)
+	public void updateState(State to)
 	{
-		ArenaState from = this.arenaState;
-		this.arenaState = processStateChange(to);
-		ArenaStateChangedEvent arenaStateEvent = new ArenaStateChangedEvent(this, from, this.arenaState);
+		State from = this.state;
+		this.state = processStateChange(to);
+		ArenaStateChangedEvent arenaStateEvent = new ArenaStateChangedEvent(this, from, this.state);
 		this.plugin.getServer().getPluginManager().callEvent(arenaStateEvent);
 	}
 
-	private ArenaState processStateChange(ArenaState to)
+	private State processStateChange(State to)
 	{
-		if (to == ArenaState.Spectate)
+		if (to == State.Spectate)
 		{
-			to = ArenaState.Resetting;
+			to = State.Resetting;
 		}
-		if (to == ArenaState.Resetting && !this.repo.getAutoReset())
+		if (to == State.Resetting && !this.repo.getAutoReset())
 		{
-			to = ArenaState.Idle;
+			to = State.Idle;
 		}
 		return to;
 	}

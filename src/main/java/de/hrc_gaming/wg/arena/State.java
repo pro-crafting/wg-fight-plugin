@@ -1,6 +1,6 @@
 package de.hrc_gaming.wg.arena;
 
-public enum ArenaState 
+public enum State 
 {
 	Idle,
 	Setup,

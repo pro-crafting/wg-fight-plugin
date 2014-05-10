@@ -13,9 +13,9 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 import de.hrc_gaming.wg.FightQuitReason;
 import de.hrc_gaming.wg.WarGear;
-import de.hrc_gaming.wg.WarGearUtil;
+import de.hrc_gaming.wg.Util;
 import de.hrc_gaming.wg.arena.Arena;
-import de.hrc_gaming.wg.arena.ArenaState;
+import de.hrc_gaming.wg.arena.State;
 import de.hrc_gaming.wg.event.ArenaStateChangedEvent;
 import de.hrc_gaming.wg.event.WinQuitEvent;
 
@@ -50,9 +50,9 @@ public class TeamManager implements Listener
 			player.getPlayer().getInventory().setArmorContents(null);
 			
 		    player.getPlayer().setGameMode(GameMode.SURVIVAL);
-			WarGearUtil.disableFly(player.getPlayer());
-			WarGearUtil.makeHealthy(player.getPlayer());
-			WarGearUtil.removePotionEffects(player.getPlayer());
+			Util.disableFly(player.getPlayer());
+			Util.makeHealthy(player.getPlayer());
+			Util.removePotionEffects(player.getPlayer());
 			player.getPlayer().teleport(teamWarp, TeleportCause.PLUGIN);
 		}
 	}
@@ -119,7 +119,7 @@ public class TeamManager implements Listener
 	@EventHandler (priority = EventPriority.HIGH, ignoreCancelled=true)
      public void deathEventHandler(PlayerDeathEvent event)
 	 {
-		 if (arena.getState() != ArenaState.Running)
+		 if (arena.getState() != State.Running)
 		 {
 			 return;
 		 }
@@ -170,7 +170,7 @@ public class TeamManager implements Listener
 		{
 			return;
 		}
-		 if (event.getTo() == ArenaState.Running)
+		 if (event.getTo() == State.Running)
 		 {
 			 this.healTeam(this.team1);
 			 this.healTeam(this.team2);
@@ -181,7 +181,7 @@ public class TeamManager implements Listener
 	 {
 		 for (TeamMember member : team.getTeamMembers().values())
 		 {
-			 WarGearUtil.makeHealthy(member.getPlayer());
+			 Util.makeHealthy(member.getPlayer());
 		 }
 	 }
 	 
@@ -235,11 +235,6 @@ public class TeamManager implements Listener
 			 return this.team2;
 		 }
 		 return null;
-	 }
-	 
-	 public void addTeamMember(TeamNames team, TeamMember member)
-	 {
-		 
 	 }
 	 
 	 public boolean areBothTeamsReady()

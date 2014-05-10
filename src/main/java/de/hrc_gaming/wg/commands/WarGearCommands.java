@@ -6,9 +6,9 @@ import de.hrc_gaming.commandframework.Command;
 import de.hrc_gaming.commandframework.CommandArgs;
 import de.hrc_gaming.wg.FightQuitReason;
 import de.hrc_gaming.wg.WarGear;
-import de.hrc_gaming.wg.WarGearUtil;
+import de.hrc_gaming.wg.Util;
 import de.hrc_gaming.wg.arena.Arena;
-import de.hrc_gaming.wg.arena.ArenaState;
+import de.hrc_gaming.wg.arena.State;
 import de.hrc_gaming.wg.event.DrawQuitEvent;
 import de.hrc_gaming.wg.event.WinQuitEvent;
 
@@ -85,7 +85,7 @@ public class WarGearCommands {
 	@Command(name = "wgk.kit", description="Legt das Kit für den Fight fest.", usage="/wgk kit name", permission="wargear.kit")
 	public void kit(CommandArgs args)
 	{
-		Arena arena = WarGearUtil.getArenaFromSender(plugin, args.getSender(), args.getArgs());
+		Arena arena = Util.getArenaFromSender(plugin, args.getSender(), args.getArgs());
 		if (arena == null)
 		{
 			args.getSender().sendMessage("§cDu stehst in keiner Arena, oder Sie existiert nicht.");
@@ -96,7 +96,7 @@ public class WarGearCommands {
 			args.getSender().sendMessage("§cDu hast kein Kit angegeben.");
 			return;
 		}
-		if (arena.getState() != ArenaState.Setup)
+		if (arena.getState() != State.Setup)
 		{
 			args.getSender().sendMessage("§cEs muss bereits min. ein Team geben.");
 			return;
@@ -113,14 +113,14 @@ public class WarGearCommands {
 	@Command(name="wgk.quit", description="Beendet einen Fight.", usage="/wgk quit <team1|team2>",permission="wargear.quit")
 	public void quit(CommandArgs args)
 	{
-		Arena arena = WarGearUtil.getArenaFromSender(plugin, args.getSender(), args.getArgs());
+		Arena arena = Util.getArenaFromSender(plugin, args.getSender(), args.getArgs());
 		if (arena == null)
 		{
 			args.getSender().sendMessage("§cDu stehst in keiner Arena, oder Sie existiert nicht.");
 			return;
 		}
 		
-		if (arena.getState() != ArenaState.PreRunning && arena.getState() != ArenaState.Running)
+		if (arena.getState() != State.PreRunning && arena.getState() != State.Running)
 		{
 			args.getSender().sendMessage("§cIn dieser Arena läuft kein Fight.");
 			return;

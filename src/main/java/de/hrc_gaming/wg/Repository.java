@@ -16,11 +16,11 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import de.hrc_gaming.wg.arena.Arena;
 import de.hrc_gaming.wg.team.TeamNames;
 
-public class WarGearRepository {
+public class Repository {
 	private WarGear plugin;
 	private Economy eco;
 	
-	public WarGearRepository(WarGear plugin)
+	public Repository(WarGear plugin)
 	{
 		this.plugin = plugin;
 		this.eco = loadEco();
