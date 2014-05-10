@@ -97,19 +97,19 @@ public class ArenaListener implements Listener
 	
 	private void addPlayer(Player p)
 	{
-		if (!this.arena.getPlayersInArena().contains(p))
+		if (!this.arena.getPlayers().contains(p))
 		{
 			this.arena.getScore().enterArena(p);
-			this.arena.getPlayersInArena().add(p);
+			this.arena.getPlayers().add(p);
 		}
 	}
 	
 	private void removePlayer(Player p)
 	{
-		if (this.arena.getPlayersInArena().contains(p))
+		if (this.arena.getPlayers().contains(p))
 		{
 			this.arena.getScore().leaveArena(p);
-			this.arena.getPlayersInArena().remove(p);
+			this.arena.getPlayers().remove(p);
 		}
 	}
 	
@@ -215,7 +215,7 @@ public class ArenaListener implements Listener
 		}
 		if (event.getTo() == State.Setup)
 		{
-			for (Player p : this.arena.getPlayersInArena())
+			for (Player p : this.arena.getPlayers())
 			{
 				this.arena.getScore().enterArena(p);
 			}

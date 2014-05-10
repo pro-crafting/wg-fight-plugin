@@ -309,7 +309,7 @@ public class TeamCommands {
 				arena.setFightMode(new ChestMode(this.plugin, arena));
 			}
 		}
-		arena.setArenaOpeningFlags(false);
+		arena.setOpeningFlags(false);
 		arena.getTeam().sendTeamOutput();
 		arena.getFightMode().start();
 		arena.updateState(State.PreRunning);

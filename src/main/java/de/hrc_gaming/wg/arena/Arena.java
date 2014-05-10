@@ -35,7 +35,7 @@ public class Arena{
 	private Reseter reseter;
 	private WaterRemover remover;
 	private State state;
-	private List<Player> playersInArena;
+	private List<Player> players;
 	private ScoreBoardDisplay scores;
 	private ArenaListener arenaListener;
 	private Repository repo;
@@ -47,7 +47,7 @@ public class Arena{
 		
 		this.state = State.Idle;
 		this.kitname = "";
-		this.playersInArena = new ArrayList<Player>();
+		this.players = new ArrayList<Player>();
 		this.repo = new Repository(this.plugin, this);
 	}
 	
@@ -96,9 +96,9 @@ public class Arena{
 		this.fightMode = fightMode;
 	}
 	
-	public List<Player> getPlayersInArena()
+	public List<Player> getPlayers()
 	{
-		return this.playersInArena;
+		return this.players;
 	}
 	
 	public ScoreBoardDisplay getScore()
@@ -113,14 +113,14 @@ public class Arena{
 	
 	public void open()
 	{
-		this.setArenaOpeningFlags(true);
+		this.setOpeningFlags(true);
 		this.remover.start();
 		this.broadcastMessage(ChatColor.GREEN + "Arena Freigegeben!");
 	}
 	
 	public void close()
 	{
-		this.setArenaOpeningFlags(false);
+		this.setOpeningFlags(false);
 		this.remover.stop();
 		this.broadcastMessage(ChatColor.GREEN + "Arena gesperrt!");
 	}
@@ -150,15 +150,15 @@ public class Arena{
 		remover.stop();
 	}
 	
-	public void setArenaOpeningFlags(Boolean allowed)
+	public void setOpeningFlags(Boolean allowed)
 	{
 		com.sk89q.worldguard.protection.flags.StateFlag.State value = allowed ? com.sk89q.worldguard.protection.flags.StateFlag.State.ALLOW : com.sk89q.worldguard.protection.flags.StateFlag.State.DENY;
 		
-		setArenaOpeningFlags(this.repo.getTeam1Region(), value);
-		setArenaOpeningFlags(this.repo.getTeam2Region(), value);
+		setOpeningFlags(this.repo.getTeam1Region(), value);
+		setOpeningFlags(this.repo.getTeam2Region(), value);
 	}
 	
-	private void setArenaOpeningFlags(ProtectedRegion region, com.sk89q.worldguard.protection.flags.StateFlag.State value)
+	private void setOpeningFlags(ProtectedRegion region, com.sk89q.worldguard.protection.flags.StateFlag.State value)
 	{
 		region.setFlag(DefaultFlag.TNT, value);
 		region.setFlag(DefaultFlag.BUILD, value);
