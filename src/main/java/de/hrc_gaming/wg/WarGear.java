@@ -45,7 +45,10 @@ public class WarGear extends JavaPlugin {
 		this.cmdFramework.registerCommands(this.arenaCommands);
 		this.cmdFramework.registerCommands(this);
 		this.cmdFramework.registerHelp();
-		this.eco = new WgEconomy(this);
+		if (this.repo.isEconomyEnabled())
+		{
+			this.eco = new WgEconomy(this);
+		}
 		this.getLogger().info("Plugin erfolgreich geladen!");
 	}
 	
