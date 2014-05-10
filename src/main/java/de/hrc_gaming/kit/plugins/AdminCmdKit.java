@@ -3,9 +3,9 @@ package de.hrc_gaming.kit.plugins;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import de.hrc_gaming.kit.KitPlugin;
 import be.Balor.Kit.KitInstance;
 import be.Balor.bukkit.AdminCmd.ACHelper;
+import de.hrc_gaming.kit.KitPlugin;
 
 public class AdminCmdKit implements KitPlugin
 {

@@ -19,8 +19,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
 
 import de.hrc_gaming.wg.FightMode;
-import de.hrc_gaming.wg.WarGear;
 import de.hrc_gaming.wg.Util;
+import de.hrc_gaming.wg.WarGear;
 import de.hrc_gaming.wg.arena.Arena;
 import de.hrc_gaming.wg.arena.State;
 

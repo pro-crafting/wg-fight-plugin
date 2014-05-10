@@ -1,8 +1,9 @@
 package de.hrc_gaming.wg.team;
 
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import java.util.UUID;
 
 public class TeamMember{
 

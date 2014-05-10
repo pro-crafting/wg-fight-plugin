@@ -6,8 +6,8 @@ import org.bukkit.Location;
 
 import de.hrc_gaming.commandframework.Command;
 import de.hrc_gaming.commandframework.CommandArgs;
-import de.hrc_gaming.wg.WarGear;
 import de.hrc_gaming.wg.Util;
+import de.hrc_gaming.wg.WarGear;
 import de.hrc_gaming.wg.arena.Arena;
 
 public class ArenaCommands {

@@ -12,8 +12,8 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 import de.hrc_gaming.wg.FightQuitReason;
-import de.hrc_gaming.wg.WarGear;
 import de.hrc_gaming.wg.Util;
+import de.hrc_gaming.wg.WarGear;
 import de.hrc_gaming.wg.arena.Arena;
 import de.hrc_gaming.wg.arena.State;
 import de.hrc_gaming.wg.event.ArenaStateChangedEvent;

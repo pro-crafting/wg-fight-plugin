@@ -6,8 +6,8 @@ import org.bukkit.World;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
-import de.hrc_gaming.wg.WarGear;
 import de.hrc_gaming.wg.Util;
+import de.hrc_gaming.wg.WarGear;
 
 public class Repository 
 {
