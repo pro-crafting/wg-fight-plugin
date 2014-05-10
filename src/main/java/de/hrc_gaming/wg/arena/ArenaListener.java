@@ -14,6 +14,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
 import de.hrc_gaming.wg.WarGear;
@@ -205,11 +206,12 @@ public class ArenaListener implements Listener
 	@EventHandler (priority = EventPriority.HIGHEST)
 	public void asyncPlayerChatHandler(AsyncPlayerChatEvent event)
 	{
-		if (!this.plugin.getRepo().isPrefixEnabled())
+		Player player = event.getPlayer();
+		if (!this.plugin.getRepo().isPrefixEnabled() || !this.arena.contains(player.getLocation()))
 		{
 			return;
 		}
-		WgTeam team = this.arena.getTeam().getTeamOfPlayer(event.getPlayer());
+		WgTeam team = this.arena.getTeam().getTeamOfPlayer(player);
 		String color = "§7";
 		
 		if (team != null)
@@ -223,10 +225,24 @@ public class ArenaListener implements Listener
 				color = "§1";
 			}
 		}
-		else if (!this.arena.contains(event.getPlayer().getLocation()))
-		{
-			return;
-		}
 		event.setFormat(color+"["+this.arena.getName()+"]"+event.getFormat());
 	}
+	
+	 @EventHandler (priority = EventPriority.HIGHEST, ignoreCancelled=true)
+	 public void playerRespawnHandler(PlayerRespawnEvent event)
+	 {
+		 final Player respawned = event.getPlayer();
+		 if (!this.arena.contains(respawned.getLocation()))
+		 {
+			 return;
+		 }
+		 
+		 event.setRespawnLocation(this.arena.getSpawnLocation(respawned));
+		 
+		 this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable(){
+			public void run() {
+				respawned.getInventory().clear();
+			}
+		 }, 60);
+	 }
 }

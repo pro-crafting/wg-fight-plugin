@@ -25,6 +25,7 @@ import de.hrc_gaming.wg.arena.ui.ScoreBoardDisplay;
 import de.hrc_gaming.wg.event.ArenaStateChangedEvent;
 import de.hrc_gaming.wg.modes.KitMode;
 import de.hrc_gaming.wg.team.TeamManager;
+import de.hrc_gaming.wg.team.WgTeam;
 
 public class Arena{
 	private WarGear plugin;
@@ -286,5 +287,18 @@ public class Arena{
 
 	public ScoreBoardDisplay getScore() {
 		return scores;
+	}
+	
+	public Location getSpawnLocation(Player p)
+	{
+		if (this.state == State.Spectate || this.state == State.Setup)
+		{
+			WgTeam playerTeam = this.team.getTeamOfPlayer(p);
+			if (playerTeam != null)
+			{
+				return this.team.getTeamSpawn(playerTeam.getTeamName());
+			}
+		}
+		return this.repo.getFightEndWarp();
 	}
 }

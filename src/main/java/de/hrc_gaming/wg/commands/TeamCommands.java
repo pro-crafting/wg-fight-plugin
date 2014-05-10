@@ -76,7 +76,7 @@ public class TeamCommands {
 			return;
 		}
 		team.add(p, true);
-		p.teleport(this.plugin.getRepo().getWarpForTeam(team.getTeamName(), arena));
+		p.teleport(arena.getTeam().getTeamSpawn(team.getTeamName()));
 		p.sendMessage("§7Mit §B\"/wgk team add <spieler>\" §7fügst du Spieler zu deinem Team hinzu.");
 		p.sendMessage("§7Mit §B\"/wgk team remove <spieler>\" §7entfernst du Spieler aus deinem Team.");
 		p.sendMessage("§7Mit §B\"/wgk team ready\" §7schaltest du dein Team bereit.");

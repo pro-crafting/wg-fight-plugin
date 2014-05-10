@@ -43,7 +43,7 @@ public class TeamManager implements Listener
 	
 	private void prepareFightForTeam(WgTeam team)
 	{
-		Location teamWarp = this.plugin.getRepo().getWarpForTeam(team.getTeamName(), this.arena);
+		Location teamWarp = this.getTeamSpawn(team.getTeamName());
 		for (TeamMember player : team.getTeamMembers().values())
 		{
 			player.getPlayer().getInventory().clear();
@@ -54,6 +54,18 @@ public class TeamManager implements Listener
 			Util.makeHealthy(player.getPlayer());
 			Util.removePotionEffects(player.getPlayer());
 			player.getPlayer().teleport(teamWarp, TeleportCause.PLUGIN);
+		}
+	}
+	
+	public Location getTeamSpawn(TeamNames team)
+	{
+		if (team == TeamNames.Team1)
+		{
+			return arena.getRepo().getTeam1Warp();
+		}
+		else
+		{
+			return arena.getRepo().getTeam2Warp();
 		}
 	}
 	
@@ -143,33 +155,13 @@ public class TeamManager implements Listener
 		 }
 	 }
 	 
-	 @EventHandler (priority = EventPriority.HIGHEST, ignoreCancelled=true)
-	 public void playerRespawnHandler(PlayerRespawnEvent event)
-	 {
-		 final Player respawned = event.getPlayer();
-		 if (!this.arena.contains(respawned.getLocation()))
-		 {
-			 return;
-		 }
-		 
-		 event.setRespawnLocation(this.arena.getRepo().getFightEndWarp());
-		 
-		 this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable(){
-
-			public void run() {
-				respawned.getInventory().clear();
-			}
-			 
-		 }, 60);
-	 }
-	 
 	 @EventHandler (priority = EventPriority.MONITOR, ignoreCancelled=true)
 	 public void arenaStateChangedHandler(ArenaStateChangedEvent event)
 	 {
 		 if (!event.getArena().equals(this.arena))
-		{
+		 {
 			return;
-		}
+		 }
 		 if (event.getTo() == State.Running)
 		 {
 			 this.healTeam(this.team1);
