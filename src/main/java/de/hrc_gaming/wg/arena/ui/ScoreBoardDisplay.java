@@ -117,7 +117,7 @@ public class ScoreBoardDisplay implements Listener
 		board.getObjective("Lebensanzeige").unregister();
 	}
 	
-	public void enterArena(Player p)
+	public void addViewer(Player p)
 	{
 		if (!this.arena.getRepo().isScoreboardEnabled())
 		{
@@ -126,7 +126,7 @@ public class ScoreBoardDisplay implements Listener
 		p.setScoreboard(board);
 	}
 	
-	public void leaveArena(Player p)
+	public void removeViewer(Player p)
 	{
 		if (!this.arena.getRepo().isScoreboardEnabled())
 		{

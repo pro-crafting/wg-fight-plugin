@@ -107,6 +107,7 @@ public class Arena{
 		if (!this.players.contains(p.getUniqueId()))
 		{
 			this.players.add(p.getUniqueId());
+			this.scores.addViewer(p);
 		}
 	}
 	
@@ -115,6 +116,7 @@ public class Arena{
 		if (this.players.contains(p.getUniqueId()))
 		{
 			this.players.remove(p.getUniqueId());
+			this.scores.removeViewer(p);
 		}
 	}
 	
