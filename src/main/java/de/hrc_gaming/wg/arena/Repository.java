@@ -27,6 +27,8 @@ public class Repository
 	private int groundDamage;
 	private boolean isScoreboardEnabled;
 	private int scoreboardTime;
+	private boolean isSpectatorModeEnabled;
+	private int spectatorModeTime;
 	
 	private String worldPath;
 	private String arenaRegionPath;
@@ -43,6 +45,8 @@ public class Repository
 	private String groundDamagePath;
 	private String scoreboardEnabledPath;
 	private String scoreboardTimePath;
+	private String spectatorModeEnabledPath;
+	private String spectatorModeTimePath;
 	
 	public Repository(WarGear plugin, Arena arena)
 	{
@@ -64,6 +68,8 @@ public class Repository
 		fightEndPath = basePath+"fightEnd";
 		scoreboardEnabledPath = basePath+"scoreboard.enabled";
 		scoreboardTimePath = basePath+"scoreboard.time";
+		spectatorModeEnabledPath = basePath+"spectator-mode.enabled";
+		spectatorModeTimePath = basePath+"spectator-mode.time";
 	}
 	
 	public boolean load()
@@ -83,7 +89,9 @@ public class Repository
 		if (!this.loadWaterRemove()) return false;
 		if (!this.loadScoreboardEnabled()) return false;
 		if (!this.loadScoreboardTime()) return false;
-				
+		if (!this.loadSpectatorModeEnabled()) return false;
+		if (!this.loadSpectatorModeTime()) return false;
+		
 		this.team1Warp = Util.lookAt(this.team1Warp, this.team2Warp);
 		this.team2Warp = Util.lookAt(this.team2Warp, this.team1Warp);
 		return true;
@@ -189,6 +197,18 @@ public class Repository
 	private boolean loadScoreboardTime()
 	{
 		this.scoreboardTime = this.plugin.getConfig().getInt(scoreboardTimePath, 30);
+		return true;
+	}
+	
+	private boolean loadSpectatorModeEnabled()
+	{
+		this.isSpectatorModeEnabled = this.plugin.getConfig().getBoolean(spectatorModeEnabledPath, false);
+		return true;
+	}
+	
+	private boolean loadSpectatorModeTime()
+	{
+		this.spectatorModeTime = this.plugin.getConfig().getInt(spectatorModeTimePath, 120);
 		return true;
 	}
 	
@@ -388,6 +408,22 @@ public class Repository
 
 	public void setScoreboardTime(int scoreboardTime) {
 		this.scoreboardTime = scoreboardTime;
+	}
+
+	public boolean isSpectatorModeEnabled() {
+		return this.isSpectatorModeEnabled;
+	}
+
+	public void setSpectatorModeEnabled(boolean isSpectatorModeEnabled) {
+		this.isSpectatorModeEnabled = isSpectatorModeEnabled;
+	}
+
+	public int getSpectatorModeTime() {
+		return this.spectatorModeTime;
+	}
+
+	public void setSpectatorModeTime(int spectatorModeTime) {
+		this.spectatorModeTime = spectatorModeTime;
 	}
 	
 }

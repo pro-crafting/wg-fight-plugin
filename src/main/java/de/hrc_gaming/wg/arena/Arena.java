@@ -40,6 +40,7 @@ public class Arena{
 	private ScoreBoardDisplay scores;
 	private ArenaListener arenaListener;
 	private Repository repo;
+	private SpectatorMode spectator;
 	
 	public Arena(WarGear plugin, String arenaName)
 	{
@@ -147,7 +148,8 @@ public class Arena{
 			this.setFightMode(new KitMode(this.plugin, this));
 			this.reseter = new Reseter(this.plugin, this);
 			this.remover = new WaterRemover(this.plugin, this);
-			scores = new ScoreBoardDisplay(this.plugin, this);
+			this.scores = new ScoreBoardDisplay(this.plugin, this);
+			this.spectator = new SpectatorMode(this.plugin, this);
 			this.arenaListener = new ArenaListener(this.plugin, this);
 			this.plugin.getServer().getPluginManager().registerEvents(this.arenaListener, this.plugin);
 			return true;
@@ -211,7 +213,7 @@ public class Arena{
 
 	private State processStateChange(State to)
 	{
-		if (to == State.Spectate)
+		if (to == State.Spectate && !this.repo.isScoreboardEnabled())
 		{
 			to = State.Resetting;
 		}
@@ -302,5 +304,10 @@ public class Arena{
 			}
 		}
 		return this.repo.getFightEndWarp();
+	}
+	
+	public SpectatorMode getSpectatorMode()
+	{
+		return this.spectator;
 	}
 }

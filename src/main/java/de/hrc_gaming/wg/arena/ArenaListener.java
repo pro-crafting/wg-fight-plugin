@@ -201,6 +201,10 @@ public class ArenaListener implements Listener
 			this.arena.getTeam().quitFight();
 			this.arena.setFightMode(new KitMode(this.plugin, this.arena));
 		}
+		if (event.getTo() == State.Spectate)
+		{
+			this.arena.getSpectatorMode().start();
+		}
 	}
 	
 	@EventHandler (priority = EventPriority.HIGHEST)

@@ -12,9 +12,6 @@ arenas:
         mode: kit
         auto-reset: true
         water-remove: true
-        scoreboard:
-            enabled: true
-            time: 30
         ground:
             height: 4
             damage: 4
@@ -27,3 +24,9 @@ arenas:
             team1: x;y;z
             team2: x;y;z
         fightEnd: x;y;z
+        scoreboard:
+            enabled: true
+            time: 30
+        spectator-mode:
+            enabled: true
+            time: 120
