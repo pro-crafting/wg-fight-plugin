@@ -35,7 +35,14 @@ public class WgEconomy implements Listener{
 	{
 		for (String name : team.getTeamMembers().keySet())
 		{
-			this.plugin.getRepo().getEco().withdrawPlayer(name, amount);
+			if (amount < 0)
+			{
+				this.plugin.getRepo().getEco().withdrawPlayer(name, amount);
+			}
+			else
+			{
+				this.plugin.getRepo().getEco().depositPlayer(name, amount);
+			}
 		}
 	}
 }
