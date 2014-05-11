@@ -88,7 +88,7 @@
 		<dependency>
 			<groupId>org.mcstats.bukkit</groupId>
 			<artifactId>metrics-lite</artifactId>
-			<version>R6</version>
+			<version>R7</version>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>
@@ -109,7 +109,7 @@
 							<relocations>
 								<relocation>
 									<pattern>org.mcstats</pattern>
-									<shadedPattern>de.hrc_gaming.wg.mcstats</shadedPattern>
+									<shadedPattern>de.hrc_gaming.wg.metrics</shadedPattern>
 								</relocation>
 							</relocations>
 						</configuration>
