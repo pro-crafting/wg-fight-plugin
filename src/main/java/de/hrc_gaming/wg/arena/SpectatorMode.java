@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
 import de.hrc_gaming.wg.WarGear;
-import de.hrc_gaming.wg.team.TeamMember;
 import de.hrc_gaming.wg.team.WgTeam;
 
 public class SpectatorMode {

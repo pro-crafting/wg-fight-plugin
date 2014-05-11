@@ -1,12 +1,14 @@
 package de.hrc_gaming.wg;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.mcstats.MetricsLite;
 
 import de.hrc_gaming.commandframework.CommandArgs;
 import de.hrc_gaming.commandframework.CommandFramework;
@@ -28,6 +30,7 @@ public class WarGear extends JavaPlugin {
 	private TeamCommands teamCommands;
 	private ArenaCommands arenaCommands;
 	private WgEconomy eco;
+	private MetricsLite metrics;
 	
 	@Override
 	public void onEnable() {
@@ -49,7 +52,24 @@ public class WarGear extends JavaPlugin {
 		{
 			this.eco = new WgEconomy(this);
 		}
+		startMetrics();
 		this.getLogger().info("Plugin erfolgreich geladen!");
+	}
+	
+	private void startMetrics()
+	{
+		if (repo.areMetricsEnabled())
+		{
+			try {
+				metrics = new MetricsLite(this);
+				if (metrics.start())
+				{
+					this.getLogger().info("Metrics gestartet!");
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	@Override

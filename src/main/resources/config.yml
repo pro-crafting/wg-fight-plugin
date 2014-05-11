@@ -6,6 +6,7 @@ general:
         lose: -2.5
         draw: 1
     enable-prefix: true
+    metrics: true
 arenas:
     wgarena_1:
         world:

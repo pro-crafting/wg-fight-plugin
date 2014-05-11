@@ -53,6 +53,11 @@ public class Repository {
 		return this.plugin.getConfig().getBoolean("general.enable-prefix", true);
 	}
 	
+	public boolean areMetricsEnabled()
+	{
+		return this.plugin.getConfig().getBoolean("general.metrics", false);
+	}
+	
 	public WorldGuardPlugin getWorldGuard() {
 		return (WorldGuardPlugin) this.plugin.getServer().getPluginManager().getPlugin("WorldGuard");
 	}
