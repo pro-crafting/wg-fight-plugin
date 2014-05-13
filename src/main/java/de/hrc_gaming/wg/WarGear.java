@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.gravitydevelopment.updater.Updater;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -31,6 +33,8 @@ public class WarGear extends JavaPlugin {
 	private ArenaCommands arenaCommands;
 	private WgEconomy eco;
 	private MetricsLite metrics;
+	private Updater updater;
+	private WgListener wgListener;
 	
 	@Override
 	public void onEnable() {
@@ -53,36 +57,23 @@ public class WarGear extends JavaPlugin {
 			this.eco = new WgEconomy(this);
 		}
 		startMetrics();
+		startUpdater();
+		this.wgListener = new WgListener(this);
 		this.getLogger().info("Plugin erfolgreich geladen!");
 	}
 	
-	private void startMetrics()
-	{
-		if (repo.areMetricsEnabled())
-		{
-			try {
-				metrics = new MetricsLite(this);
-				if (metrics.start())
-				{
-					this.getLogger().info("Metrics gestartet!");
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+	@Override
+	public void onDisable() {
+		HandlerList.unregisterAll(this.eco);
+		HandlerList.unregisterAll(this.wgListener);
+		this.arenaManager.unloadArenas();
+		this.getLogger().info("Plugin erfolgreich deaktiviert!");
 	}
 	
 	@Override
     public boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String label, String[] args) {
         return this.cmdFramework.handleCommand(sender, label, command, args);
     }
-	
-	@Override
-	public void onDisable() {
-		HandlerList.unregisterAll(this.eco);
-		this.arenaManager.unloadArenas();
-		this.getLogger().info("Plugin erfolgreich deaktiviert!");
-	}
 	
 	@Completer (name="wgk")
 	public List<String> completeCommands(CommandArgs args)
@@ -117,6 +108,30 @@ public class WarGear extends JavaPlugin {
 		}
 	}
 	
+	private void startMetrics()
+	{
+		if (repo.areMetricsEnabled())
+		{
+			try {
+				metrics = new MetricsLite(this);
+				if (metrics.start())
+				{
+					this.getLogger().info("Metrics gestartet!");
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	private void startUpdater()
+	{
+		if (repo.isUpdateCheckEnabled())
+		{
+			updater = new Updater(this, 66631, this.getFile(), Updater.UpdateType.NO_DOWNLOAD, false);
+		}
+	}
+	
 	public Repository getRepo()
 	{
 		return this.repo;
@@ -140,5 +155,10 @@ public class WarGear extends JavaPlugin {
 	public CommandFramework GetCmdFramework()
 	{
 		return this.cmdFramework;
+	}
+	
+	public Updater getUpdater()
+	{
+		return this.updater;
 	}
 }
