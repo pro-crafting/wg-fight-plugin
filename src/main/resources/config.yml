@@ -1,12 +1,12 @@
-general:
-    kit:
-    economy:
-        enabled: false
-        win: 2.5
-        lose: -2.5
-        draw: 1
-    enable-prefix: true
-    metrics: true
+kit:
+economy:
+    enabled: false
+    win: 2.5
+    lose: -2.5
+    draw: 1
+prefix-enabled: true
+metrics: true
+update-check: true
 arenas:
     wgarena_1:
         world:

@@ -24,38 +24,43 @@ public class Repository {
 	
 	public String getDefaultKitName()
 	{
-		return this.plugin.getConfig().getString("general.kit");
+		return this.plugin.getConfig().getString("kit");
 	}
 
 	public boolean isEconomyEnabled()
 	{
-		return this.plugin.getConfig().getBoolean("general.economy.enabled", false) &&
+		return this.plugin.getConfig().getBoolean("economy.enabled", false) &&
 				this.getEco() != null;
 	}
 	
 	public double getWinAmount()
 	{
-		return this.plugin.getConfig().getDouble("general.economy.win", 2.5);
+		return this.plugin.getConfig().getDouble("economy.win", 2.5);
 	}
 	
 	public double getLoseAmount()
 	{
-		return this.plugin.getConfig().getDouble("general.economy.lose", -2.5);
+		return this.plugin.getConfig().getDouble("economy.lose", -2.5);
 	}
 	
 	public double getDrawAmount()
 	{
-		return this.plugin.getConfig().getDouble("general.economy.draw", 1);
+		return this.plugin.getConfig().getDouble("economy.draw", 1);
 	}
 	
 	public boolean isPrefixEnabled()
 	{
-		return this.plugin.getConfig().getBoolean("general.enable-prefix", true);
+		return this.plugin.getConfig().getBoolean("enable-prefix", true);
 	}
 	
 	public boolean areMetricsEnabled()
 	{
-		return this.plugin.getConfig().getBoolean("general.metrics", false);
+		return this.plugin.getConfig().getBoolean("metrics", false);
+	}
+	
+	public boolean isUpdateCheckEnabled()
+	{
+		return this.plugin.getConfig().getBoolean("update-check", false);
 	}
 	
 	public WorldGuardPlugin getWorldGuard() {
