@@ -50,7 +50,7 @@ public class Repository {
 	
 	public boolean isPrefixEnabled()
 	{
-		return this.plugin.getConfig().getBoolean("enable-prefix", true);
+		return this.plugin.getConfig().getBoolean("prefix-enabled", true);
 	}
 	
 	public boolean areMetricsEnabled()
