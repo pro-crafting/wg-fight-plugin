@@ -38,7 +38,6 @@ public class Arena{
 	private State state;
 	private List<UUID> players;
 	private ScoreBoardDisplay scores;
-	private ArenaListener arenaListener;
 	private Repository repo;
 	private SpectatorMode spectator;
 	
@@ -150,8 +149,6 @@ public class Arena{
 			this.remover = new WaterRemover(this.plugin, this);
 			this.scores = new ScoreBoardDisplay(this.plugin, this);
 			this.spectator = new SpectatorMode(this.plugin, this);
-			this.arenaListener = new ArenaListener(this.plugin, this);
-			this.plugin.getServer().getPluginManager().registerEvents(this.arenaListener, this.plugin);
 			return true;
 		}
 		return false;
@@ -162,7 +159,6 @@ public class Arena{
 		HandlerList.unregisterAll(this.team);
 		HandlerList.unregisterAll(this.reseter);
 		HandlerList.unregisterAll(this.scores);
-		HandlerList.unregisterAll(this.arenaListener);
 		remover.stop();
 	}
 	

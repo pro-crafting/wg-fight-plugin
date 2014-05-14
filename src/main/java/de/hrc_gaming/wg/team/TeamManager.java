@@ -8,7 +8,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 import de.hrc_gaming.wg.FightQuitReason;
@@ -16,7 +15,6 @@ import de.hrc_gaming.wg.Util;
 import de.hrc_gaming.wg.WarGear;
 import de.hrc_gaming.wg.arena.Arena;
 import de.hrc_gaming.wg.arena.State;
-import de.hrc_gaming.wg.event.ArenaStateChangedEvent;
 import de.hrc_gaming.wg.event.WinQuitEvent;
 
 public class TeamManager implements Listener
@@ -129,132 +127,118 @@ public class TeamManager implements Listener
 	}
 	
 	@EventHandler (priority = EventPriority.HIGH, ignoreCancelled=true)
-     public void deathEventHandler(PlayerDeathEvent event)
-	 {
-		 if (arena.getState() != State.Running)
-		 {
-			 return;
-		 }
-		 if (!arena.contains(event.getEntity().getLocation()))
-		 {
-			 return;
-		 }
-		 Player died = event.getEntity();
-		 final WgTeam team = this.getTeamOfPlayer(died);
-		 if (team != null && team.getTeamMember(died).getAlive())
-		 {
-			 team.getTeamMember(died).setAlive(false);
-			 event.setDeathMessage(ChatColor.DARK_GREEN + died.getName() + "["+team.getTeamName().toString()+"] ist gestorben.");
-			 this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable()
-			 {
-				 public void run()
-				 {
-					 TeamManager.this.checkAlives(team);
-				 }
-			 });
-		 }
-	 }
-	 
-	 @EventHandler (priority = EventPriority.MONITOR, ignoreCancelled=true)
-	 public void arenaStateChangedHandler(ArenaStateChangedEvent event)
-	 {
-		 if (!event.getArena().equals(this.arena))
-		 {
+    public void deathEventHandler(PlayerDeathEvent event)
+	{
+		if (arena.getState() != State.Running)
+		{
 			return;
-		 }
-		 if (event.getTo() == State.Running)
-		 {
-			 this.healTeam(this.team1);
-			 this.healTeam(this.team2);
-		 }
-	 }
+		}
+		if (!arena.contains(event.getEntity().getLocation()))
+		{
+			return;
+		}
+		Player died = event.getEntity();
+		final WgTeam team = this.getTeamOfPlayer(died);
+		if (team != null && team.getTeamMember(died).getAlive())
+		{
+			team.getTeamMember(died).setAlive(false);
+			event.setDeathMessage(ChatColor.DARK_GREEN + died.getName() + "["+team.getTeamName().toString()+"] ist gestorben.");
+			this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable()
+			{
+				public void run()
+				{
+					TeamManager.this.checkAlives(team);
+				}
+			});
+		}
+	}
 	 
-	 public void healTeam(WgTeam team)
-	 {
-		 for (TeamMember member : team.getTeamMembers().values())
-		 {
-			 Util.makeHealthy(member.getPlayer());
-		 }
-	 }
+	public void healTeam(WgTeam team)
+	{
+		for (TeamMember member : team.getTeamMembers().values())
+		{
+			Util.makeHealthy(member.getPlayer());
+		}
+	}
 	 
-	 public WgTeam getTeamOfName(TeamNames name)
-	 {
-		 if (name == TeamNames.Team1)
-		 {
-			 return this.team1;
-		 }
-		 else
-		 {
-			 return this.team2;
-		 }
-	 }
+	public WgTeam getTeamOfName(TeamNames name)
+	{
+		if (name == TeamNames.Team1)
+		{
+			return this.team1;
+		}
+		else
+		{
+			return this.team2;
+		}
+	}
 	 
-	 public WgTeam getTeamOfPlayer(Player p)
-	 {
-		 if (this.team1.getTeamMember(p) != null)
-		 {
-			 return this.team1;
-		 }
-		 else if (this.team2.getTeamMember(p) != null)
-		 {
-			 return this.team2;
-		 }
-		 return null;
-	 }
+	public WgTeam getTeamOfPlayer(Player p)
+	{
+		if (this.team1.getTeamMember(p) != null)
+		{
+			return this.team1;
+		}
+		else if (this.team2.getTeamMember(p) != null)
+		{
+			return this.team2;
+		}
+		return null;
+	}
 	 
-	 private void checkAlives(WgTeam team)
-	 {
-		 if (!team.isSomoneAlive())
-		 {
-			 WgTeam winnerTeam = this.team1;
-			 if (team.getTeamName() == TeamNames.Team1)
-			 {
-				 winnerTeam = this.team2;
-			 }
-			 String message = "Jeder aus dem ["+team.getTeamName().toString().toUpperCase()+"] ist tot.";
-			 this.plugin.getServer().getPluginManager().callEvent(new WinQuitEvent(arena, message, winnerTeam, team, FightQuitReason.Death));
-		 }
-	 }
+	private void checkAlives(WgTeam team)
+	{
+		if (!team.isSomoneAlive())
+		{
+			WgTeam winnerTeam = this.team1;
+			if (team.getTeamName() == TeamNames.Team1)
+			{
+				winnerTeam = this.team2;
+			}
+			String message = "Jeder aus dem ["+team.getTeamName().toString().toUpperCase()+"] ist tot.";
+			this.plugin.getServer().getPluginManager().callEvent(new WinQuitEvent(arena, message, winnerTeam, team, FightQuitReason.Death));
+		}
+	}
 	 
-	 public WgTeam getTeamWithOutLeader()
-	 {
-		 if (!this.team1.hasTeamLeader())
-		 {
-			 return this.team1;
-		 }
-		 else if (!this.team2.hasTeamLeader())
-		 {
-			 return this.team2;
-		 }
-		 return null;
-	 }
+	public WgTeam getTeamWithOutLeader()
+	{
+		if (!this.team1.hasTeamLeader())
+		{
+			return this.team1;
+		}
+		else if (!this.team2.hasTeamLeader())
+		{
+			return this.team2;
+		}
+		return null;
+	}
 	 
-	 public boolean areBothTeamsReady()
-	 {
-		 return this.team1.getIsReady() && this.team2.getIsReady();
-	 }
+	public boolean areBothTeamsReady()
+	{
+		return this.team1.getIsReady() && this.team2.getIsReady();
+	}
 	 
-	 public boolean isPlayerAlive(Player p)
-	 {
-		 if (this.getTeamOfPlayer(p) == null || this.getTeamOfPlayer(p).getTeamMember(p) == null)
-		 {
-			  return false;
-		 }
-		 return this.getTeamOfPlayer(p).getTeamMember(p).getAlive();
-	 }
+	public boolean isPlayerAlive(Player p)
+	{
+		if (this.getTeamOfPlayer(p) == null || this.getTeamOfPlayer(p).getTeamMember(p) == null)
+		{
+			 return false;
+		}
+		return this.getTeamOfPlayer(p).getTeamMember(p).getAlive();
+	}
 	 
-	 public TeamMember getTeamMember(Player p)
-	 {
-		 if (this.team1.getTeamMember(p) != null)
-		 {
-			 return this.team1.getTeamMember(p);
-		 }
-		 if (this.team2.getTeamMember(p) != null)
-		 {
-			 return this.team2.getTeamMember(p);
-		 }
-		 return null;
-	 }
+	public TeamMember getTeamMember(Player p)
+	{
+		if (this.team1.getTeamMember(p) != null)
+		{
+			return this.team1.getTeamMember(p);
+		}
+		if (this.team2.getTeamMember(p) != null)
+		{
+			return this.team2.getTeamMember(p);
+		}
+		return null;
+	}
 
 	public WgTeam getTeam1() {
 		return team1;
