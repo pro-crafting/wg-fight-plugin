@@ -7,12 +7,15 @@
 	<artifactId>WarGear</artifactId>
 	<version>0.9-SNAPSHOT</version>
 
+	<properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
 	<repositories>
 		<repository>
 			<id>sk89q-repo</id>
 			<name>sk89q Repo</name>
 			<url>http://maven.sk89q.com/repo/</url>
-			<layout>default</layout>
 		</repository>
 
 		<repository>
@@ -132,6 +135,17 @@
 					</execution>
 				</executions>
 			</plugin>
+			
+			<plugin>
+        		<groupId>org.apache.maven.plugins</groupId>
+        			<artifactId>maven-compiler-plugin</artifactId>
+       				<version>3.1</version>
+        			<configuration>
+          				<verbose>true</verbose>
+          				<fork>true</fork>
+          			<compilerVersion>1.6</compilerVersion>
+        		</configuration>
+      		</plugin>
 		</plugins>
 	</build>
 </project>
