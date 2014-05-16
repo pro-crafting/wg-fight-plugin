@@ -248,13 +248,30 @@ public class Arena{
 		Vector max = new BlockVector(toCheck.get(0));
 		for (BlockVector vec : toCheck)
 		{
-			min.setX(Math.min(vec.getBlockX(), min.getBlockX()));
-			min.setY(Math.min(vec.getBlockY(), min.getBlockY()));
-			min.setZ(Math.min(vec.getBlockZ(), min.getBlockZ()));
-			
-			max.setX(Math.max(vec.getBlockX(), max.getBlockX()));
-			max.setY(Math.max(vec.getBlockY(), max.getBlockY()));
-			max.setZ(Math.max(vec.getBlockZ(), max.getBlockZ()));
+			if (vec.getBlockX() < min.getBlockX())
+			{
+				min = min.setX(vec.getBlockX());
+			}
+			if (vec.getBlockY() < min.getBlockY())
+			{
+				min = min.setY(vec.getBlockY());
+			}
+			if (vec.getBlockZ() < min.getBlockZ())
+			{
+				min = min.setZ(vec.getBlockZ());
+			}
+			if (vec.getBlockX() > max.getBlockX())
+			{
+				max = max.setX(vec.getBlockX());
+			}
+			if (vec.getBlockY() > max.getBlockY())
+			{
+				max = max.setY(vec.getBlockY());
+			}
+			if (vec.getBlockZ() > max.getBlockZ())
+			{
+				max = max.setZ(vec.getBlockZ());
+			}
 		}
 		SimpleEntry<Vector, Vector> ret = new SimpleEntry<Vector, Vector>(min, max);
 		return ret;
