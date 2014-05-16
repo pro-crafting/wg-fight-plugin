@@ -108,7 +108,7 @@ public class ChestMode extends FightBase implements FightMode, Listener{
 	{
 		if (counter == 0)
 		{
-			this.arena.broadcastMessage(ChatColor.GOLD+"Kisten werden geöffnet in:");
+			this.arena.broadcastMessage(ChatColor.GOLD+"Kisten werden geÂ§ffnet in:");
 			this.arena.broadcastMessage(ChatColor.GOLD + "5 Sekunden");
 		}
 		else if (counter > 0 && counter < 2)
@@ -125,7 +125,7 @@ public class ChestMode extends FightBase implements FightMode, Listener{
 		{
 			counter = 0;
 			areChestsOpen = true;
-			this.arena.broadcastMessage(ChatColor.AQUA + "Kisten geöffnet!");
+			this.arena.broadcastMessage(ChatColor.AQUA + "Kisten geÃ¶ffnet!");
 			task.cancel();
 			task = this.plugin.getServer().getScheduler().runTaskTimer(this.plugin, new Runnable(){
 				public void run()

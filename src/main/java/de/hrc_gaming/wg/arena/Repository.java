@@ -52,7 +52,6 @@ public class Repository
 	{
 		this.plugin = plugin;
 		String basePath = "arenas."+arena.getName()+".";
-		plugin.getLogger().info("Basepath: "+basePath);
 		worldPath = basePath+"world";
 		modePath = basePath+"mode";
 		groundHeightPath = basePath+"ground.height";

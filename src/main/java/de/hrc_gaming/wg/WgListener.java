@@ -45,7 +45,7 @@ public class WgListener implements Listener {
 		}
 		if (this.plugin.getUpdater() != null && this.plugin.getUpdater().getResult() == UpdateResult.UPDATE_AVAILABLE)
 		{
-			event.getPlayer().sendMessage("§7Version "+this.plugin.getUpdater().getLatestName()+" von "+this.plugin.getName()+" ist veröffentlicht.");
+			event.getPlayer().sendMessage("Â§7Version "+this.plugin.getUpdater().getLatestName()+" von "+this.plugin.getName()+" ist verÃ¶ffentlicht.");
 		}
 	}
 	
@@ -81,17 +81,17 @@ public class WgListener implements Listener {
 		{
 			return;
 		}
-		String color = "§7";
+		String color = "Â§7";
 		WgTeam team = arena.getTeam().getTeamOfPlayer(player);
 		if (team != null)
 		{
 			if (team.getTeamName() == TeamNames.Team1)
 			{
-				color = "§c";
+				color = "Â§c";
 			}
 			else if (team.getTeamName() == TeamNames.Team2)
 			{
-				color = "§1";
+				color = "Â§1";
 			}
 		}
 		event.setFormat(color+"["+arena.getName()+"]"+event.getFormat());
@@ -241,7 +241,7 @@ public class WgListener implements Listener {
 		}
 		if (damager != null && arena.getTeam().getTeamOfPlayer(player).equals(arena.getTeam().getTeamOfPlayer(damager)))
 		{
-			damager.sendMessage("§7Du darfst keinen Spieler aus deinem eigenen Team Schaden zufügen.");
+			damager.sendMessage("Â§7Du darfst keinen Spieler aus deinem eigenen Team Schaden zufÃ¼gen.");
 			event.setCancelled(true);
 		}
 	}

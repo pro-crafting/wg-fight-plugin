@@ -21,35 +21,35 @@ public class ArenaCommands {
 	@Command(name = "wgk.arena", aliases = { "wgk.arena.help" }, description = "Zeigt die Hilfe an.", usage = "/wgk arena", permission="wargear.arena")
 	public void arena(CommandArgs args)
 	{
-		args.getSender().sendMessage("§c§LKein passender Befehl gefunden!");
-		args.getSender().sendMessage("§B/wgk arena open");
-		args.getSender().sendMessage("§B/wgk arena close");
-		args.getSender().sendMessage("§B/wgk arena list");
-		args.getSender().sendMessage("§B/wgk arena info");
-		args.getSender().sendMessage("§B/wgk arena reset");
+		args.getSender().sendMessage("Â§cÂ§LKein passender Befehl gefunden!");
+		args.getSender().sendMessage("Â§B/wgk arena open");
+		args.getSender().sendMessage("Â§B/wgk arena close");
+		args.getSender().sendMessage("Â§B/wgk arena list");
+		args.getSender().sendMessage("Â§B/wgk arena info");
+		args.getSender().sendMessage("Â§B/wgk arena reset");
 	}
 	
-	@Command(name = "wgk.arena.close", description = "Schließt die Arena", 
+	@Command(name = "wgk.arena.close", description = "SchlieÃŸt die Arena", 
 			usage = "/wgk arena close", permission="wargear.arena.close")
 	public void close(CommandArgs args)
 	{
 		Arena arena = Util.getArenaFromSender(plugin, args.getSender(), args.getArgs());
 		if (arena == null)
 		{
-			args.getSender().sendMessage("§cDu stehst in keiner Arena, oder Sie existiert nicht.");
+			args.getSender().sendMessage("Â§cDu stehst in keiner Arena, oder Sie existiert nicht.");
 			return;
 		}
 		arena.close();
 	}
 	
-	@Command(name = "wgk.arena.open", description = "Öffnet die Arena", 
+	@Command(name = "wgk.arena.open", description = "Ã¶ffnet die Arena", 
 			usage = "/wgk arena open", permission="wargear.arena.open")
 	public void open(CommandArgs args)
 	{
 		Arena arena = Util.getArenaFromSender(plugin, args.getSender(), args.getArgs());
 		if (arena == null)
 		{
-			args.getSender().sendMessage("§cDu stehst in keiner Arena, oder Sie existiert nicht.");
+			args.getSender().sendMessage("Â§cDu stehst in keiner Arena, oder Sie existiert nicht.");
 			return;
 		}
 		arena.open();
@@ -62,21 +62,21 @@ public class ArenaCommands {
 		Arena arena = Util.getArenaFromSender(plugin, args.getSender(), args.getArgs());
 		if (arena == null)
 		{
-			args.getSender().sendMessage("§cDu stehst in keiner Arena, oder Sie existiert nicht.");
+			args.getSender().sendMessage("Â§cDu stehst in keiner Arena, oder Sie existiert nicht.");
 			return;
 		}
-		args.getSender().sendMessage("§a---Arena Info---");
-		args.getSender().sendMessage("§7Arena Name: §B" + arena.getName());
-		args.getSender().sendMessage("§7Welt: §B" + arena.getRepo().getWorld().getName());
-		args.getSender().sendMessage("§7Fight Modus: §B" + arena.getRepo().getFightMode());
-		args.getSender().sendMessage("§7Bodenhöhe: §B" + arena.getRepo().getGroundHeight());
-		args.getSender().sendMessage("§7BodenSchematic: §B" + arena.getRepo().getGroundSchematic());
-		args.getSender().sendMessage("§7Auto Reset: §B" + arena.getRepo().getAutoReset());
-		args.getSender().sendMessage("§7Region Team1: §B" + arena.getRepo().getTeam1Region().getId());
-		args.getSender().sendMessage("§7Region Team2: §B" + arena.getRepo().getTeam2Region().getId());
-		args.getSender().sendMessage("§7Warp Team1: §B" + getStringFromLocation(arena.getRepo().getTeam1Warp()));
-		args.getSender().sendMessage("§7Warp Team2: §B" + getStringFromLocation(arena.getRepo().getTeam2Warp()));
-		args.getSender().sendMessage("§7Warp Fight Ende: §B" + getStringFromLocation(arena.getRepo().getFightEndWarp()));
+		args.getSender().sendMessage("Â§a---Arena Info---");
+		args.getSender().sendMessage("Â§7Arena Name: Â§B" + arena.getName());
+		args.getSender().sendMessage("Â§7Welt: Â§B" + arena.getRepo().getWorld().getName());
+		args.getSender().sendMessage("Â§7Fight Modus: Â§B" + arena.getRepo().getFightMode());
+		args.getSender().sendMessage("Â§7BodenhÂ§he: Â§B" + arena.getRepo().getGroundHeight());
+		args.getSender().sendMessage("Â§7BodenSchematic: Â§B" + arena.getRepo().getGroundSchematic());
+		args.getSender().sendMessage("Â§7Auto Reset: Â§B" + arena.getRepo().getAutoReset());
+		args.getSender().sendMessage("Â§7Region Team1: Â§B" + arena.getRepo().getTeam1Region().getId());
+		args.getSender().sendMessage("Â§7Region Team2: Â§B" + arena.getRepo().getTeam2Region().getId());
+		args.getSender().sendMessage("Â§7Warp Team1: Â§B" + getStringFromLocation(arena.getRepo().getTeam1Warp()));
+		args.getSender().sendMessage("Â§7Warp Team2: Â§B" + getStringFromLocation(arena.getRepo().getTeam2Warp()));
+		args.getSender().sendMessage("Â§7Warp Fight Ende: Â§B" + getStringFromLocation(arena.getRepo().getFightEndWarp()));
 	}
 	
 	private String getStringFromLocation(Location loc)
@@ -92,22 +92,22 @@ public class ArenaCommands {
 		Arena arena = Util.getArenaFromSender(plugin, args.getSender(), args.getArgs());
 		if (arena == null)
 		{
-			args.getSender().sendMessage("§cDu stehst in keiner Arena, oder Sie existiert nicht.");
+			args.getSender().sendMessage("Â§cDu stehst in keiner Arena, oder Sie existiert nicht.");
 			return;
 		}
 		arena.getReseter().reset();
-		args.getSender().sendMessage("§7Arena §B"+arena.getName()+" §7wird resetet.");
+		args.getSender().sendMessage("Â§7Arena Â§B"+arena.getName()+" Â§7wird resetet.");
 	}
 	
 	@Command(name = "wgk.arena.list", description = "Listet die Arenen", 
 			usage = "/wgk arena list", permission="wargear.arena.list")
 	public void list(CommandArgs args)
 	{
-		args.getSender().sendMessage("§a---Verfügbare Arenen---");
+		args.getSender().sendMessage("Â§a---VerfÂ§gbare Arenen---");
 		Set<String> arenas = this.plugin.getArenaManager().getArenas().keySet();
 		for (String arenaName : arenas)
 		{
-			args.getSender().sendMessage("§7"+arenaName);
+			args.getSender().sendMessage("Â§7"+arenaName);
 		}
 	}
 }
