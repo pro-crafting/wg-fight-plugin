@@ -152,11 +152,11 @@ public class WgListener implements Listener {
 		}
 		Arena arenaFrom = this.plugin.getArenaManager().getArenaAtLocation(event.getFrom());
 		Arena arenaTo = this.plugin.getArenaManager().getArenaAtLocation(event.getTo());
-		if (arenaFrom != null)
+		if (arenaFrom != null && !arenaFrom.equals(arenaTo))
 		{
 			arenaFrom.leave(event.getPlayer());
 		}
-		if (arenaTo != null)
+		if (arenaTo != null && !arenaTo.equals(arenaFrom))
 		{
 			arenaTo.join(event.getPlayer());
 		}
@@ -187,11 +187,11 @@ public class WgListener implements Listener {
 	{
 		Arena arenaFrom = this.plugin.getArenaManager().getArenaAtLocation(event.getFrom());
 		Arena arenaTo = this.plugin.getArenaManager().getArenaAtLocation(event.getTo());
-		if (arenaFrom != null)
+		if (arenaFrom != null && !arenaFrom.equals(arenaTo))
 		{
 			arenaFrom.leave(event.getPlayer());
 		}
-		if (arenaTo != null)
+		if (arenaTo != null && !arenaTo.equals(arenaFrom))
 		{
 			arenaTo.join(event.getPlayer());
 		}
