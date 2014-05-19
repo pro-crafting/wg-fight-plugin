@@ -3,6 +3,8 @@ package de.hrc_gaming.wg;
 import net.gravitydevelopment.updater.Updater.UpdateResult;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -12,11 +14,14 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.inventory.ItemStack;
 
 import de.hrc_gaming.wg.arena.Arena;
 import de.hrc_gaming.wg.arena.State;
@@ -241,7 +246,7 @@ public class WgListener implements Listener {
 		}
 		if (damager != null && arena.getTeam().getTeamOfPlayer(player).equals(arena.getTeam().getTeamOfPlayer(damager)))
 		{
-			damager.sendMessage("§7Du darfst keinen Spieler aus deinem eigenen Team Schaden zufügen.");
+			damager.sendMessage("§7Du darfst keinen Spieler aus deinem Team Schaden zufügen.");
 			event.setCancelled(true);
 		}
 	}
@@ -267,5 +272,47 @@ public class WgListener implements Listener {
 				});
 			}
 		}
+	}
+	
+	@EventHandler (priority = EventPriority.HIGHEST, ignoreCancelled=false)
+	public void playerInteractHandler(PlayerInteractEvent event)
+	{
+		Player player = event.getPlayer();
+		Block block = event.getClickedBlock();
+		if (isAnywhereInTeam(player) && block != null && block.getType() == Material.CAKE_BLOCK)
+		{
+			player.sendMessage("§7Du darfst kein Essen benutzen.");
+			event.setCancelled(true);
+		}
+	}
+	
+	@EventHandler (priority = EventPriority.HIGHEST, ignoreCancelled=false)
+	public void playerItemConsumeHandler(PlayerItemConsumeEvent event)
+	{
+		Player player = event.getPlayer();
+		ItemStack item = event.getItem();
+		if (isAnywhereInTeam(player))
+		{
+			if (item.getType().isEdible() || item.getType() == Material.POTION)
+			{
+				player.sendMessage("§7Du darfst kein Essen und keine Tränke benutzen.");
+				player.getInventory().remove(item.getType());
+				player.getInventory().setArmorContents(null);
+				player.updateInventory();
+				event.setCancelled(true);
+			}
+		}
+	}
+	
+	private boolean isAnywhereInTeam(Player p)
+	{
+		for (Arena currArena : this.plugin.getArenaManager().getArenas().values())
+		{
+			if (currArena.getTeam().getTeamOfPlayer(p) != null)
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 }
