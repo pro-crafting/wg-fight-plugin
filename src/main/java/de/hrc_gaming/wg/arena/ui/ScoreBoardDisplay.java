@@ -1,5 +1,7 @@
 package de.hrc_gaming.wg.arena.ui;
 
+import java.util.UUID;
+
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -25,8 +27,11 @@ public class ScoreBoardDisplay implements Listener
 	private ScoreboardManager manager;
 	private Scoreboard board;
 	private Team teamRed;
+	private Team teamLeaderRed;
 	private Team teamBlue;
+	private Team teamLeaderBlue;
 	private ArenaTimer timer;
+	private OfflinePlayer timePlayer;
 	
 	public ScoreBoardDisplay(WarGear plugin, Arena arena)
 	{
@@ -51,7 +56,7 @@ public class ScoreBoardDisplay implements Listener
 		board.registerNewObjective("Lebensanzeige", "dummy");
 		board.getObjective("Lebensanzeige").setDisplaySlot(DisplaySlot.SIDEBAR);
 		initTeams();
-		OfflinePlayer timePlayer = this.plugin.getServer().getOfflinePlayer(ChatColor.GREEN+"Zeit (m):");
+		timePlayer = this.plugin.getServer().getOfflinePlayer(ChatColor.GREEN+"Zeit (m):");
 		board.getObjective("Lebensanzeige").getScore(timePlayer).setScore(this.arena.getRepo().getScoreboardTime());
 	}
 	
@@ -61,13 +66,19 @@ public class ScoreBoardDisplay implements Listener
 		{
 			return;
 		}
-		teamRed = board.registerNewTeam("team_red");
-		teamRed.setDisplayName("teamred");
-		teamRed.setPrefix(ChatColor.RED+"");
+		teamRed = createTeam("team_red", "Team Red", ChatColor.RED.toString()+"(T)");
+		teamLeaderRed = createTeam("team_red_leader", "Teamleader Red", ChatColor.RED.toString()+"(C)");
 		
-		teamBlue = board.registerNewTeam("team_blue");
-		teamBlue.setDisplayName("teamblue");
-		teamBlue.setPrefix(ChatColor.BLUE+"");
+		teamBlue = createTeam("team_blue", "Team Blue", ChatColor.BLUE.toString()+"(T)");
+		teamLeaderBlue = createTeam("team_blue_leader", "Teamleader Blue", ChatColor.BLUE.toString()+"(C)");
+	}
+	
+	private Team createTeam(String teamName, String displayName, String prefix)
+	{
+		Team created = board.registerNewTeam(teamName);
+		created.setDisplayName(displayName);
+		created.setPrefix(prefix);
+		return created;
 	}
 	
 	public void removeTeamMember(TeamMember member, TeamNames team)
@@ -79,13 +90,26 @@ public class ScoreBoardDisplay implements Listener
 		initScoreboard();
 		if (team == TeamNames.Team1)
 		{
-			teamRed.removePlayer(member.getPlayer());
+			removeMemberToTeam(teamLeaderRed, teamRed, member);
 		}
 		else if (team == TeamNames.Team2)
 		{
-			teamBlue.removePlayer(member.getPlayer());
+			removeMemberToTeam(teamLeaderBlue, teamBlue, member);
 		}
 		board.resetScores(member.getPlayer());
+		
+	}
+	
+	private void removeMemberFromTeam(Team leader, Team memberTeam, TeamMember member)
+	{
+		if (member.getIsTeamLeader())
+		{
+			leader.removePlayer(member.getPlayer());
+		}
+		else
+		{
+			memberTeam.removePlayer(member.getPlayer());
+		}
 	}
 	
 	public void addTeamMember(TeamMember member, TeamNames team)
@@ -97,13 +121,24 @@ public class ScoreBoardDisplay implements Listener
 		initScoreboard();
 		if (team == TeamNames.Team1)
 		{
-			teamRed.addPlayer(member.getPlayer());
+			addMemberToTeam(teamLeaderRed, teamRed, member);
 		}
 		else if (team == TeamNames.Team2)
 		{
-			teamBlue.addPlayer(member.getPlayer());
+			addMemberToTeam(teamLeaderBlue, teamBlue, member);
 		}
-		board.getObjective("Lebensanzeige").getScore(member.getPlayer()).setScore(20);
+	}
+	
+	private void addMemberToTeam(Team leader, Team memberTeam, TeamMember member)
+	{
+		if (member.getIsTeamLeader())
+		{
+			leader.addPlayer(member.getPlayer());
+		}
+		else
+		{
+			memberTeam.addPlayer(member.getPlayer());
+		}
 	}
 	
 	private void clearScoreboard()
@@ -114,6 +149,8 @@ public class ScoreBoardDisplay implements Listener
 		}
 		teamRed.unregister();
 		teamBlue.unregister();
+		teamLeaderBlue.unregister();
+		teamLeaderRed.unregister();
 		board.getObjective("Lebensanzeige").unregister();
 	}
 	
@@ -132,7 +169,7 @@ public class ScoreBoardDisplay implements Listener
 		{
 			return;
 		}
-		p.setScoreboard(manager.getNewScoreboard());
+		p.setScoreboard(manager.getMainScoreboard());
 	}
 	
 	public void updateHealthOfPlayer(Player p)
@@ -153,7 +190,7 @@ public class ScoreBoardDisplay implements Listener
 	
 	public void updateTime(int time)
 	{
-		board.getObjective("Lebensanzeige").getScore(this.plugin.getServer().getOfflinePlayer(ChatColor.GREEN+"Zeit (m):")).setScore(time);
+		board.getObjective("Lebensanzeige").getScore(timePlayer).setScore(time);
 	}
 	
 	@EventHandler (priority = EventPriority.LOWEST)
@@ -170,6 +207,17 @@ public class ScoreBoardDisplay implements Listener
 		if (event.getTo() == State.Setup)
 		{
 			initScoreboard();
+		}
+		else if (event.getTo() == State.PreRunning)
+		{
+			for (UUID playerId : this.arena.getPlayers())
+			{
+				Player player = this.plugin.getServer().getPlayer(playerId);
+				if (player != null)
+				{
+					this.addViewer(player);
+				}
+			}
 		}
 		else if (event.getTo() == State.Running)
 		{
