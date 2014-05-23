@@ -73,7 +73,8 @@ public class Util {
 	
 	public static void feed(Player player)
 	{
-		player.setFoodLevel(20);
+		player.setFoodLevel(10);
+		player.setSaturation(10);
 	}
 	
 	public static void heal(Player player)
