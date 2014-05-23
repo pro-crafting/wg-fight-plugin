@@ -90,11 +90,11 @@ public class ScoreBoardDisplay implements Listener
 		initScoreboard();
 		if (team == TeamNames.Team1)
 		{
-			removeMemberToTeam(teamLeaderRed, teamRed, member);
+			removeMemberFromTeam(teamLeaderRed, teamRed, member);
 		}
 		else if (team == TeamNames.Team2)
 		{
-			removeMemberToTeam(teamLeaderBlue, teamBlue, member);
+			removeMemberFromTeam(teamLeaderBlue, teamBlue, member);
 		}
 		board.resetScores(member.getPlayer());
 		
