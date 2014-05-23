@@ -156,7 +156,7 @@ public class WgListener implements Listener {
 		{
 			arenaFrom.leave(event.getPlayer());
 		}
-		if (arenaTo != null && !arenaTo.equals(arenaFrom))
+		if (arenaTo != null)
 		{
 			arenaTo.join(event.getPlayer());
 		}
