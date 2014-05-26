@@ -1,5 +1,8 @@
 package de.hrc_gaming.wg;
 
+import java.util.UUID;
+
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -33,15 +36,15 @@ public class WgEconomy implements Listener{
 	
 	private void giveTeamMoney(WgTeam team, double amount)
 	{
-		for (String name : team.getTeamMembers().keySet())
+		for (UUID id : team.getTeamMembers().keySet())
 		{
 			if (amount < 0)
 			{
-				this.plugin.getRepo().getEco().withdrawPlayer(name, amount);
+				this.plugin.getRepo().getEco().withdrawPlayer(Bukkit.getPlayer(id), amount);
 			}
 			else
 			{
-				this.plugin.getRepo().getEco().depositPlayer(name, amount);
+				this.plugin.getRepo().getEco().depositPlayer(Bukkit.getPlayer(id), amount);
 			}
 		}
 	}

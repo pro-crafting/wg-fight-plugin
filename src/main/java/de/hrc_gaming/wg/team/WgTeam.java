@@ -2,12 +2,13 @@ package de.hrc_gaming.wg.team;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import org.bukkit.entity.Player;
 
 public class WgTeam 
 {
-	private Map<String, TeamMember> teamMember;
+	private Map<UUID, TeamMember> teamMember;
 	private boolean isReady;
 	private TeamNames teamName;
 	
@@ -15,12 +16,12 @@ public class WgTeam
 	{
 		this.teamName = teamName;
 		isReady = false;
-		this.teamMember = new HashMap<String, TeamMember>();
+		this.teamMember = new HashMap<UUID, TeamMember>();
 	}
 	
 	public void add(Player p, boolean isLeader)
 	{
-		this.teamMember.put(p.getName(), new TeamMember(p, isLeader));
+		this.teamMember.put(p.getUniqueId(), new TeamMember(p, isLeader));
 	}
 	
 	public void remove(Player p)
@@ -43,7 +44,7 @@ public class WgTeam
 		return this.teamName;
 	}
 	
-	public Map<String, TeamMember> getTeamMembers()
+	public Map<UUID, TeamMember> getTeamMembers()
 	{
 		return this.teamMember;
 	}

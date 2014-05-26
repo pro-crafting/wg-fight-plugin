@@ -93,17 +93,17 @@ public class TeamManager implements Listener
 		if (teamName == TeamNames.Team1)
 		{
 			team = "[Team1]";
-			for (String player : this.team1.getTeamMembers().keySet())
+			for (TeamMember member : this.team1.getTeamMembers().values())
 			{
-				team += " "+ player;
+				team += " "+ member.getPlayer().getName();
 			}
 		}
 		else if (teamName == TeamNames.Team2)
 		{
 			team = "[Team2]";
-			for (String player : this.team2.getTeamMembers().keySet())
+			for (TeamMember member : this.team1.getTeamMembers().values())
 			{
-				team += " "+ player;
+				team += " "+ member.getPlayer().getName();
 			}
 		}
 		this.arena.broadcastMessage(ChatColor.DARK_GREEN + team + " hat gewonnen!");
@@ -112,15 +112,15 @@ public class TeamManager implements Listener
 	public void sendTeamOutput()
 	{
 		String team1 = "[Team1]";
-		for (String player : this.team1.getTeamMembers().keySet())
+		for (TeamMember member : this.team1.getTeamMembers().values())
 		{
-			team1 += " "+ player;
+			team1 += " "+ member.getPlayer().getName();
 		}
 		
 		String team2 = "[Team2]";
-		for (String player : this.team2.getTeamMembers().keySet())
+		for (TeamMember member : this.team1.getTeamMembers().values())
 		{
-			team2 += " "+ player;
+			team2 += " "+ member.getPlayer().getName();
 		}
 		
 		this.arena.broadcastMessage(ChatColor.YELLOW +""+ ChatColor.ITALIC+team1 + " vs. " + team2);

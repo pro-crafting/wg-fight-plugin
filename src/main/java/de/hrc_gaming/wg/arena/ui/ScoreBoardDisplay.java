@@ -97,7 +97,6 @@ public class ScoreBoardDisplay implements Listener
 			removeMemberFromTeam(teamLeaderBlue, teamBlue, member);
 		}
 		board.resetScores(member.getPlayer());
-		
 	}
 	
 	private void removeMemberFromTeam(Team leader, Team memberTeam, TeamMember member)

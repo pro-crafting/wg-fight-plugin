@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
 import de.hrc_gaming.wg.WarGear;
+import de.hrc_gaming.wg.team.TeamMember;
 import de.hrc_gaming.wg.team.WgTeam;
 
 public class SpectatorMode {
@@ -67,9 +68,9 @@ public class SpectatorMode {
 
 	private void prepareTeamSpectating(WgTeam team)
 	{
-		for (String member : team.getTeamMembers().keySet())
+		for (TeamMember member : team.getTeamMembers().values())
 		{
-			Player player = Bukkit.getPlayer(member);
+			Player player = member.getPlayer();
 			player.teleport(arena.getSpawnLocation(player));
 			player.setGameMode(GameMode.CREATIVE);
 		}
@@ -77,9 +78,9 @@ public class SpectatorMode {
 	
 	private void finishTeamSpectating(WgTeam team)
 	{
-		for (String member : team.getTeamMembers().keySet())
+		for (TeamMember member : team.getTeamMembers().values())
 		{
-			Player player = Bukkit.getPlayer(member);
+			Player player = member.getPlayer();
 			player.setGameMode(GameMode.SURVIVAL);
 		}
 	}
