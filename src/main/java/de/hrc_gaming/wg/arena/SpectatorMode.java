@@ -38,7 +38,15 @@ public class SpectatorMode {
 	{
 		int time = this.arena.getRepo().getSpectatorModeTime();
 		int diff = time - counter;
-		if (counter == 0)
+		if (counter == time)
+		{
+			finishTeamSpectating(this.arena.getTeam().getTeam1());
+			finishTeamSpectating(this.arena.getTeam().getTeam2());
+			this.arena.broadcastMessage(ChatColor.AQUA + "Zeit vorbei!");
+			task.cancel();
+			this.arena.updateState(State.Resetting);
+		}
+		else if (counter == 0)
 		{
 			this.arena.broadcastMessage(ChatColor.GOLD+"Zeit endet in");
 			this.arena.broadcastMessage(ChatColor.GOLD + ""+time+" Sekunden");
@@ -51,17 +59,9 @@ public class SpectatorMode {
 		{
 			this.arena.broadcastMessage(ChatColor.AQUA + ""+diff+" Sekunden");
 		}
-		else if (diff > 4 && diff < 6)
+		else if (diff > 3 && diff < 6)
 		{
 			this.arena.broadcastMessage(ChatColor.GOLD + ""+diff+" Sekunden");
-		}
-		else if (counter == time)
-		{
-			finishTeamSpectating(this.arena.getTeam().getTeam1());
-			finishTeamSpectating(this.arena.getTeam().getTeam2());
-			this.arena.broadcastMessage(ChatColor.AQUA + "Zeit vorbei!");
-			task.cancel();
-			this.arena.updateState(State.Resetting);
 		}
 		counter++;
 	}
