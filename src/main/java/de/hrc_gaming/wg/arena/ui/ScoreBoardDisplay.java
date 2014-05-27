@@ -126,6 +126,7 @@ public class ScoreBoardDisplay implements Listener
 		{
 			addMemberToTeam(teamLeaderBlue, teamBlue, member);
 		}
+		board.getObjective("Lebensanzeige").getScore(member.getPlayer()).setScore((int)member.getPlayer().getHealth());
 	}
 	
 	private void addMemberToTeam(Team leader, Team memberTeam, TeamMember member)
