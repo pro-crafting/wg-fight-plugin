@@ -26,7 +26,7 @@ public class WgTeam
 	
 	public void remove(Player p)
 	{
-		this.teamMember.remove(p.getName());
+		this.teamMember.remove(p.getUniqueId());
 	}
 	
 	public boolean getIsReady()
@@ -51,7 +51,7 @@ public class WgTeam
 	
 	public TeamMember getTeamMember(Player p)
 	{
-		return this.teamMember.get(p.getName());
+		return this.teamMember.get(p.getUniqueId());
 	}
 	
 	public boolean isSomoneAlive()
