@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
@@ -23,6 +24,7 @@ import de.hrc_gaming.wg.FightMode;
 import de.hrc_gaming.wg.WarGear;
 import de.hrc_gaming.wg.arena.ui.ScoreBoardDisplay;
 import de.hrc_gaming.wg.event.ArenaStateChangedEvent;
+import de.hrc_gaming.wg.modes.ChestMode;
 import de.hrc_gaming.wg.modes.KitMode;
 import de.hrc_gaming.wg.team.TeamManager;
 import de.hrc_gaming.wg.team.WgTeam;
@@ -275,6 +277,37 @@ public class Arena{
 		}
 		SimpleEntry<Vector, Vector> ret = new SimpleEntry<Vector, Vector>(min, max);
 		return ret;
+	}
+	
+	public void startFight(CommandSender sender)
+	{
+		if (this.getKit() == null || this.getKit().length() == 0)
+		{
+			if (this.plugin.getRepo().getDefaultKitName() == null || this.plugin.getRepo().getDefaultKitName().length() == 0)
+			{
+				sender.sendMessage("§cEs wurde kein Kit ausgewählt oder ein Standard Kit angegeben.");
+				return;
+			}
+			else
+			{
+				this.setKit(this.plugin.getRepo().getDefaultKitName());
+			}
+		}
+		if (!this.getFightMode().getName().equalsIgnoreCase(this.getRepo().getFightMode()))
+		{
+			if (this.getRepo().getFightMode().equalsIgnoreCase("kit"))
+			{
+				this.setFightMode(new KitMode(this.plugin, this));
+			}
+			else
+			{
+				this.setFightMode(new ChestMode(this.plugin, this));
+			}
+		}
+		this.setOpeningFlags(false);
+		this.getTeam().sendTeamOutput();
+		this.getFightMode().start();
+		this.updateState(State.PreRunning);
 	}
 	
 	@Override

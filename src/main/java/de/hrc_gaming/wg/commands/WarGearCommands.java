@@ -142,4 +142,29 @@ public class WarGearCommands {
 			this.plugin.getServer().getPluginManager().callEvent(event);
 		}
 	}
+	
+	@Command(name="wgk.start", description="Startet einen Fight.", usage="/wgk start",permission="wargear.start")
+	public void start(CommandArgs args)
+	{
+		Arena arena = Util.getArenaFromSender(plugin, args.getSender(), args.getArgs());
+		if (arena == null)
+		{
+			args.getSender().sendMessage("§cDu stehst in keiner Arena, oder Sie existiert nicht.");
+			return;
+		}
+		
+		if (arena.getState() != State.Setup)
+		{
+			args.getSender().sendMessage("§cHier kann kein Fight gestartet werden.");
+			return;
+		}
+		
+		if (arena.getTeam().getTeam1().getTeamMembers().size() == 0 || arena.getTeam().getTeam2().getTeamMembers().size() == 0)
+		{
+			args.getSender().sendMessage("§cBeide Teams müssen einen Spieler haben.");
+			return;
+		}
+		
+		arena.startFight(args.getSender());
+	}
 }

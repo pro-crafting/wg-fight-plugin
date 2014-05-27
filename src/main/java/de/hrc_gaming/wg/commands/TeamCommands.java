@@ -258,7 +258,7 @@ public class TeamCommands {
 			senderPlayer.sendMessage("§7Dein Team ist bereit.");
 			if (arena.getTeam().areBothTeamsReady())
 			{
-				this.start(args.getSender(), arena);
+				arena.startFight(args.getSender());
 			}
 		}
 		else
@@ -277,41 +277,5 @@ public class TeamCommands {
 			}
 		}
 		return false;
-	}
-	
-	private void start(CommandSender sender, Arena arena)
-	{
-		if (arena.getState() != State.Setup)
-		{
-			sender.sendMessage("§cEs muss zuerst ein Fight Setup gestartet werden.");
-			return;
-		}
-		if (arena.getKit() == null || arena.getKit().length() == 0)
-		{
-			if (this.plugin.getRepo().getDefaultKitName() == null || this.plugin.getRepo().getDefaultKitName().length() == 0)
-			{
-				sender.sendMessage("§cEs wurde kein Kit ausgewählt oder ein Standard Kit angegeben.");
-				return;
-			}
-			else
-			{
-				arena.setKit(this.plugin.getRepo().getDefaultKitName());
-			}
-		}
-		if (!arena.getFightMode().getName().equalsIgnoreCase(arena.getRepo().getFightMode()))
-		{
-			if (arena.getRepo().getFightMode().equalsIgnoreCase("kit"))
-			{
-				arena.setFightMode(new KitMode(this.plugin, arena));
-			}
-			else
-			{
-				arena.setFightMode(new ChestMode(this.plugin, arena));
-			}
-		}
-		arena.setOpeningFlags(false);
-		arena.getTeam().sendTeamOutput();
-		arena.getFightMode().start();
-		arena.updateState(State.PreRunning);
 	}
 }
