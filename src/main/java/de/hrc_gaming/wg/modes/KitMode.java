@@ -82,7 +82,6 @@ import de.hrc_gaming.wg.team.TeamMember;
 		else if (counter == 60)
 		{
 			this.plugin.getServer().getScheduler().cancelTask(taskId);
-			this.arena.getRepo().getWorld().setDifficulty(Difficulty.EASY);
 			this.plugin.getServer().getPluginManager().registerEvents(this, this.plugin);
 			this.arena.updateState(State.Running);
 			arena.open();

@@ -217,7 +217,6 @@ public class ChestMode extends FightBase implements FightMode, Listener{
 		else if (counter == 30)
 		{
 			task.cancel();
-			this.arena.getRepo().getWorld().setDifficulty(Difficulty.EASY);
 			PlayerInteractEvent.getHandlerList().unregister(this);
 			this.plugin.getServer().getPluginManager().registerEvents(this, this.plugin);
 			this.arena.updateState(State.Running);
