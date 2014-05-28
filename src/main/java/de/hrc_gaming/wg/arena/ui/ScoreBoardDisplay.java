@@ -141,7 +141,7 @@ public class ScoreBoardDisplay implements Listener
 		}
 	}
 	
-	private void clearScoreboard()
+	public void clearScoreboard()
 	{
 		if (!this.arena.getRepo().isScoreboardEnabled())
 		{

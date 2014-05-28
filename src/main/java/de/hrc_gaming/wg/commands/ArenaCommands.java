@@ -27,6 +27,7 @@ public class ArenaCommands {
 		args.getSender().sendMessage("§B/wgk arena list");
 		args.getSender().sendMessage("§B/wgk arena info");
 		args.getSender().sendMessage("§B/wgk arena reset");
+		args.getSender().sendMessage("§B/wgk arena reload");
 	}
 	
 	@Command(name = "wgk.arena.close", description = "Schließt die Arena", 
@@ -109,5 +110,21 @@ public class ArenaCommands {
 		{
 			args.getSender().sendMessage("§7"+arenaName);
 		}
+	}
+	
+	@Command(name = "wgk.arena.reload", description = "Reloaded die Arena", 
+			usage = "/wgk arena reload", permission="wargear.arena.reload")
+	public void reload(CommandArgs args)
+	{
+		Arena arena = Util.getArenaFromSender(plugin, args.getSender(), args.getArgs());
+		if (arena == null)
+		{
+			args.getSender().sendMessage("§cDu stehst in keiner Arena, oder Sie existiert nicht.");
+			return;
+		}
+		arena.unload();
+		arena.getScore().clearScoreboard();
+		arena.load();
+		args.getSender().sendMessage("§7Arena §B"+arena.getName()+" §7ist reloaded.");
 	}
 }
