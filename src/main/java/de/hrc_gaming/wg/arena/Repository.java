@@ -1,7 +1,10 @@
 package de.hrc_gaming.wg.arena;
 
+import java.io.File;
+
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
@@ -12,6 +15,9 @@ import de.hrc_gaming.wg.WarGear;
 public class Repository 
 {
 	private WarGear plugin;
+	private File arenaConfig;
+	private YamlConfiguration config;
+	
 	private String world;
 	private ProtectedRegion arenaRegion;
 	private String mode;
@@ -51,24 +57,25 @@ public class Repository
 	public Repository(WarGear plugin, Arena arena)
 	{
 		this.plugin = plugin;
-		String basePath = "arenas."+arena.getName()+".";
-		worldPath = basePath+"world";
-		modePath = basePath+"mode";
-		groundHeightPath = basePath+"ground.height";
-		groundSchematicPath = basePath+"ground.schematic";
-		groundDamagePath = basePath+"ground.damage";
-		autoResetPath = basePath+"auto-reset";
-		waterRemovePath = basePath+"water-remove";
-		team1RegionPath = basePath+"regions.team1";
-		team2RegionPath = basePath+"regions.team2";
-		arenaRegionPath = basePath+"regions.arena";
-		team1Path = basePath+"fightStart.team1";
-		team2Path = basePath+"fightStart.team2";
-		fightEndPath = basePath+"fightEnd";
-		scoreboardEnabledPath = basePath+"scoreboard.enabled";
-		scoreboardTimePath = basePath+"scoreboard.time";
-		spectatorModeEnabledPath = basePath+"spectator-mode.enabled";
-		spectatorModeTimePath = basePath+"spectator-mode.time";
+		this.arenaConfig = new File(this.plugin.getArenaFolder(), arena.getName()+".yml");
+		
+		worldPath = "world";
+		modePath = "mode";
+		groundHeightPath = "ground.height";
+		groundSchematicPath = "ground.schematic";
+		groundDamagePath = "ground.damage";
+		autoResetPath = "auto-reset";
+		waterRemovePath = "water-remove";
+		team1RegionPath = "regions.team1";
+		team2RegionPath = "regions.team2";
+		arenaRegionPath = "regions.arena";
+		team1Path = "fightStart.team1";
+		team2Path = "fightStart.team2";
+		fightEndPath = "fightEnd";
+		scoreboardEnabledPath = "scoreboard.enabled";
+		scoreboardTimePath = "scoreboard.time";
+		spectatorModeEnabledPath = "spectator-mode.enabled";
+		spectatorModeTimePath = "spectator-mode.time";
 	}
 	
 	public boolean load()
@@ -98,7 +105,7 @@ public class Repository
 	
 	private boolean loadWorld()
 	{
-		String worldName = this.plugin.getConfig().getString(this.worldPath);
+		String worldName = this.config.getString(this.worldPath);
 		if (!this.existsWorld(worldName))
 		{
 			return false;
@@ -109,20 +116,20 @@ public class Repository
 	
 	private boolean loadArenaRegion()
 	{
-		String id = this.plugin.getConfig().getString(this.arenaRegionPath);
+		String id = this.config.getString(this.arenaRegionPath);
 		this.arenaRegion = this.getWorldGuardRegion(id);
 		return this.arenaRegion != null;
 	}
 	
 	private boolean loadMode()
 	{
-		this.mode = this.plugin.getConfig().getString(modePath, "kit");
+		this.mode = this.config.getString(modePath, "kit");
 		return true;
 	}
 	
 	private boolean loadGroundHeight()
 	{
-		int groundHeight = this.plugin.getConfig().getInt(groundHeightPath, -1);
+		int groundHeight = this.config.getInt(groundHeightPath, -1);
 		if (groundHeight < 0 || groundHeight > this.getWorld().getMaxHeight())
 		{
 			return false;
@@ -133,26 +140,26 @@ public class Repository
 	
 	private boolean loadGroundSchematic()
 	{
-		this.groundSchematic = this.plugin.getConfig().getString(groundSchematicPath);
+		this.groundSchematic = this.config.getString(groundSchematicPath);
 		return true;
 	}
 	
 	private boolean loadAutoReset()
 	{
-		this.autoReset = this.plugin.getConfig().getBoolean(autoResetPath, true);
+		this.autoReset = this.config.getBoolean(autoResetPath, true);
 		return true;
 	}
 	
 	private boolean loadTeam1Region()
 	{
-		String id = this.plugin.getConfig().getString(this.team1RegionPath);
+		String id = this.config.getString(this.team1RegionPath);
 		this.team1Region = this.getWorldGuardRegion(id);
 		return this.team1Region != null;
 	}
 	
 	private boolean loadTeam2Region()
 	{
-		String id = this.plugin.getConfig().getString(this.team2RegionPath);
+		String id = this.config.getString(this.team2RegionPath);
 		this.team2Region = this.getWorldGuardRegion(id);
 		return this.team2Region != null;
 	}
@@ -177,43 +184,43 @@ public class Repository
 	
 	private boolean loadGroundDamage()
 	{
-		this.groundDamage = this.plugin.getConfig().getInt(groundDamagePath, 4);
+		this.groundDamage = this.config.getInt(groundDamagePath, 4);
 		return true;
 	}
 	
 	private boolean loadWaterRemove()
 	{
-		this.waterRemove = this.plugin.getConfig().getBoolean(waterRemovePath, true);
+		this.waterRemove = this.config.getBoolean(waterRemovePath, true);
 		return true;
 	}
 	
 	private boolean loadScoreboardEnabled()
 	{
-		this.isScoreboardEnabled = this.plugin.getConfig().getBoolean(scoreboardEnabledPath, true);
+		this.isScoreboardEnabled = this.config.getBoolean(scoreboardEnabledPath, true);
 		return true;
 	}
 	
 	private boolean loadScoreboardTime()
 	{
-		this.scoreboardTime = this.plugin.getConfig().getInt(scoreboardTimePath, 30);
+		this.scoreboardTime = this.config.getInt(scoreboardTimePath, 30);
 		return true;
 	}
 	
 	private boolean loadSpectatorModeEnabled()
 	{
-		this.isSpectatorModeEnabled = this.plugin.getConfig().getBoolean(spectatorModeEnabledPath, false);
+		this.isSpectatorModeEnabled = this.config.getBoolean(spectatorModeEnabledPath, false);
 		return true;
 	}
 	
 	private boolean loadSpectatorModeTime()
 	{
-		this.spectatorModeTime = this.plugin.getConfig().getInt(spectatorModeTimePath, 120);
+		this.spectatorModeTime = this.config.getInt(spectatorModeTimePath, 120);
 		return true;
 	}
 	
 	private Location loadLocation(String node, World world)
 	{
-		String location = this.plugin.getConfig().getString(node, "");
+		String location = this.config.getString(node, "");
 		String[] splited = location.split(";");
 		if (splited.length != 3)
 		{

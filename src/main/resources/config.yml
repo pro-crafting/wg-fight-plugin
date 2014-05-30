@@ -7,27 +7,3 @@ economy:
 prefix-enabled: true
 metrics: true
 update-check: true
-arenas:
-    wgarena_1:
-        world:
-        mode: kit
-        auto-reset: true
-        water-remove: true
-        ground:
-            height: 4
-            damage: 4
-            schematic:
-        regions:
-            arena:
-            team1:
-            team2:
-        fightStart:
-            team1: x;y;z
-            team2: x;y;z
-        fightEnd: x;y;z
-        scoreboard:
-            enabled: true
-            time: 30
-        spectator-mode:
-            enabled: true
-            time: 120

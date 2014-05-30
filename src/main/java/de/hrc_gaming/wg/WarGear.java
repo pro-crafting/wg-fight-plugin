@@ -12,6 +12,8 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.MetricsLite;
 
+import com.google.common.io.Files;
+
 import de.hrc_gaming.commandframework.CommandArgs;
 import de.hrc_gaming.commandframework.CommandFramework;
 import de.hrc_gaming.commandframework.Completer;
@@ -35,10 +37,16 @@ public class WarGear extends JavaPlugin {
 	private MetricsLite metrics;
 	private Updater updater;
 	private WgListener wgListener;
+	private File arenaFolder;
 	
 	@Override
 	public void onEnable() {
 		this.loadConfig();
+		arenaFolder = new File(this.getDataFolder(), "arenas/");
+		if (!arenaFolder.exists())
+		{
+			this.saveResource("arenas/arena.yml", false);
+		}
 		this.repo = new Repository(this);
 		this.generator = new BlockGenerator(this, 10000);
 		this.arenaManager = new ArenaManager(this);
@@ -101,11 +109,9 @@ public class WarGear extends JavaPlugin {
 	}
 	
 	public void loadConfig()
-	{
-		if(!new File(this.getDataFolder(), "config.yml").exists()){			
-			saveDefaultConfig();
-			this.getLogger().info("config.yml erstellt und geladen.");
-		}
+	{	
+		saveDefaultConfig();
+		this.getLogger().info("config.yml geladen.");
 	}
 	
 	private void startMetrics()
@@ -160,5 +166,10 @@ public class WarGear extends JavaPlugin {
 	public Updater getUpdater()
 	{
 		return this.updater;
+	}
+	
+	public File getArenaFolder()
+	{
+		return this.arenaFolder;
 	}
 }

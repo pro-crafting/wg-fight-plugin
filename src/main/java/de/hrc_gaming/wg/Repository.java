@@ -1,4 +1,6 @@
 package de.hrc_gaming.wg;
+import java.io.File;
+import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +9,7 @@ import net.milkbowl.vault.economy.Economy;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
+import com.google.common.io.Files;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldguard.bukkit.BukkitUtil;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
@@ -93,10 +96,11 @@ public class Repository {
 	public List<String> getArenaNames()
 	{
 		List<String> ret = new ArrayList<String>();
-		for (String arenaName : this.plugin.getConfig().getConfigurationSection("arenas").getKeys(false)) 
+		for (File fileEntry : this.plugin.getArenaFolder().listFiles()) 
 		{
-			if (arenaName != null)
+			if (fileEntry.isFile())
 			{
+				String arenaName = fileEntry.getName().substring(0, fileEntry.getName().indexOf("."));
 				ret.add(arenaName);
 			}
 		}

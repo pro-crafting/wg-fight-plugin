@@ -24,25 +24,26 @@ public class ArenaManager {
 		this.arenas.clear();
 		for (String element : this.plugin.getRepo().getArenaNames())
 		{
-			Arena toAdd = new Arena(this.plugin, element);
-			if (toAdd.load())
-			{
-				this.arenas.put(element.toLowerCase(), toAdd);
-			}
+			loadArena(element);
 		}
 	}
 	
 	public void loadArena(String name)
 	{
+		this.plugin.getLogger().info("Lade Arena "+name);
 		if (this.getArena(name) != null)
 		{
+			this.plugin.getLogger().info("Arena "+name+" ist bereits geladen.");
 			return;
 		}
 		Arena arena = new Arena(this.plugin, name);
 		if (arena.load())
 		{
+			this.plugin.getLogger().info("Arena "+name+" geladen.");
 			this.arenas.put(name.toLowerCase(), arena);
+			return;
 		}
+		this.plugin.getLogger().info("Arena "+name+" konnte nicht geladen werden.");
 	}
 	
 	public void unloadArenas()
