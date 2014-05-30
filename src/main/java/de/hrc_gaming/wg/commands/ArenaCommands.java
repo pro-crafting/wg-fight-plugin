@@ -104,7 +104,7 @@ public class ArenaCommands {
 			usage = "/wgk arena list", permission="wargear.arena.list")
 	public void list(CommandArgs args)
 	{
-		args.getSender().sendMessage("§a---Verf§gbare Arenen---");
+		args.getSender().sendMessage("§a---Verfügbare Arenen---");
 		Set<String> arenas = this.plugin.getArenaManager().getArenas().keySet();
 		for (String arenaName : arenas)
 		{
