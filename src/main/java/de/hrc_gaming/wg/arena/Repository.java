@@ -80,6 +80,9 @@ public class Repository
 	
 	public boolean load()
 	{
+		if (!this.arenaConfig.exists()) return false;
+		this.config = YamlConfiguration.loadConfiguration(this.arenaConfig);
+		
 		if (!this.loadWorld()) return false;
 		if (!this.loadArenaRegion()) return false;
 		if (!this.loadMode()) return false;
