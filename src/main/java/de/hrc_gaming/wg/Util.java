@@ -73,7 +73,7 @@ public class Util {
 	
 	public static void feed(Player player)
 	{
-		player.setFoodLevel(10);
+		player.setFoodLevel(20);
 		player.setSaturation(10);
 	}
 	
