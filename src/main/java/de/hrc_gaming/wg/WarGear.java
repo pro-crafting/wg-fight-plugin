@@ -38,6 +38,7 @@ public class WarGear extends JavaPlugin {
 	private Updater updater;
 	private WgListener wgListener;
 	private File arenaFolder;
+	private OfflineListener offlineListener;
 	
 	@Override
 	public void onEnable() {
@@ -67,6 +68,7 @@ public class WarGear extends JavaPlugin {
 		startMetrics();
 		startUpdater();
 		this.wgListener = new WgListener(this);
+		this.offlineListener = new OfflineListener(this);
 		this.getLogger().info("Plugin erfolgreich geladen!");
 	}
 	

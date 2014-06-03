@@ -68,6 +68,7 @@ public class SpectatorMode {
 
 	private void prepareTeamSpectating(WgTeam team)
 	{
+		this.arena.getTeam().kickOfflinePlayers(team);
 		for (TeamMember member : team.getTeamMembers().values())
 		{
 			Player player = member.getPlayer();
@@ -78,6 +79,7 @@ public class SpectatorMode {
 	
 	private void finishTeamSpectating(WgTeam team)
 	{
+		this.arena.getTeam().kickOfflinePlayers(team);
 		for (TeamMember member : team.getTeamMembers().values())
 		{
 			Player player = member.getPlayer();

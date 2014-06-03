@@ -3,6 +3,7 @@ package de.hrc_gaming.wg.team;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -152,7 +153,7 @@ public class TeamManager implements Listener
 			});
 		}
 	}
-	 
+	
 	public void healTeam(WgTeam team)
 	{
 		for (TeamMember member : team.getTeamMembers().values())
@@ -173,7 +174,7 @@ public class TeamManager implements Listener
 		}
 	}
 	 
-	public WgTeam getTeamOfPlayer(Player p)
+	public WgTeam getTeamOfPlayer(OfflinePlayer p)
 	{
 		if (this.team1.getTeamMember(p) != null)
 		{
@@ -227,7 +228,7 @@ public class TeamManager implements Listener
 		return this.getTeamOfPlayer(p).getTeamMember(p).getAlive();
 	}
 	 
-	public TeamMember getTeamMember(Player p)
+	public TeamMember getTeamMember(OfflinePlayer p)
 	{
 		if (this.team1.getTeamMember(p) != null)
 		{
@@ -240,6 +241,22 @@ public class TeamManager implements Listener
 		return null;
 	}
 
+	public void kickOfflinePlayers(WgTeam team)
+	{
+		for (TeamMember member : team.getTeamMembers().values())
+		{
+			if (member.getPlayer() == null)
+			{
+				kick(member);
+			}
+		}
+	}
+	
+	public void kick(TeamMember member)
+	{
+		this.getTeamOfPlayer(member.getPlayer()).remove(member.getPlayer());
+	}
+	
 	public WgTeam getTeam1() {
 		return team1;
 	}

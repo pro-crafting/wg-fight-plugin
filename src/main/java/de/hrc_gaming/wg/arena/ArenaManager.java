@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 
 import de.hrc_gaming.wg.WarGear;
 
@@ -93,6 +95,17 @@ public class ArenaManager {
 		for (Arena arena : this.arenas.values())
 		{
 			if (arena.contains(loc))
+			{
+				return arena;
+			}
+		}
+		return null;
+	}
+	
+	public Arena getArenaOfTeamMember(OfflinePlayer player) {
+		for (Arena arena : this.arenas.values())
+		{
+			if (arena.getTeam().getTeamMember(player) != null)
 			{
 				return arena;
 			}

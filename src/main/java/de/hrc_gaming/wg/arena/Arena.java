@@ -42,6 +42,7 @@ public class Arena{
 	private ScoreBoardDisplay scores;
 	private Repository repo;
 	private SpectatorMode spectator;
+	private boolean isOpen;
 	
 	public Arena(WarGear plugin, String arenaName)
 	{
@@ -151,6 +152,7 @@ public class Arena{
 			this.remover = new WaterRemover(this.plugin, this);
 			this.scores = new ScoreBoardDisplay(this.plugin, this);
 			this.spectator = new SpectatorMode(this.plugin, this);
+			this.setOpeningFlags(true);
 			return true;
 		}
 		return false;
@@ -161,7 +163,8 @@ public class Arena{
 		HandlerList.unregisterAll(this.team);
 		HandlerList.unregisterAll(this.reseter);
 		HandlerList.unregisterAll(this.scores);
-		remover.stop();
+		this.remover.stop();
+		this.setOpeningFlags(false);
 	}
 	
 	public void setOpeningFlags(Boolean allowed)
@@ -306,6 +309,8 @@ public class Arena{
 		}
 		this.setOpeningFlags(false);
 		this.getTeam().sendTeamOutput();
+		this.getTeam().kickOfflinePlayers(this.getTeam().getTeam1());
+		this.getTeam().kickOfflinePlayers(this.getTeam().getTeam2());
 		this.getFightMode().start();
 		this.updateState(State.PreRunning);
 	}
@@ -355,5 +360,10 @@ public class Arena{
 	public SpectatorMode getSpectatorMode()
 	{
 		return this.spectator;
+	}
+	
+	public boolean isOpen()
+	{
+		return this.isOpen;
 	}
 }

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 public class WgTeam 
@@ -24,7 +25,7 @@ public class WgTeam
 		this.teamMember.put(p.getUniqueId(), new TeamMember(p, isLeader));
 	}
 	
-	public void remove(Player p)
+	public void remove(OfflinePlayer p)
 	{
 		this.teamMember.remove(p.getUniqueId());
 	}
@@ -49,9 +50,9 @@ public class WgTeam
 		return this.teamMember;
 	}
 	
-	public TeamMember getTeamMember(Player p)
+	public TeamMember getTeamMember(OfflinePlayer player)
 	{
-		return this.teamMember.get(p.getUniqueId());
+		return this.teamMember.get(player.getUniqueId());
 	}
 	
 	public boolean isSomoneAlive()
