@@ -78,6 +78,7 @@ public class ScoreBoardDisplay implements Listener
 		Team created = board.registerNewTeam(teamName);
 		created.setDisplayName(displayName);
 		created.setPrefix(prefix);
+		created.setCanSeeFriendlyInvisibles(false);
 		return created;
 	}
 	
