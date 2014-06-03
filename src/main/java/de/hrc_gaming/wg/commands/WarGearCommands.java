@@ -30,6 +30,7 @@ public class WarGearCommands {
 		args.getSender().sendMessage("§B/wgk warp <arenaname> [playername]");
 		args.getSender().sendMessage("§B/wgk quit [team1|team2]");
 		args.getSender().sendMessage("§B/wgk reload");
+		args.getSender().sendMessage("§B/wgk start");
 	}
 	
 	@Command(name = "wgk.reload", description = "Reloadet die Config.", usage="/wgk reload", permission="wargear.reload")
