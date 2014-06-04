@@ -6,6 +6,7 @@ import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
+import de.hrc_gaming.wg.Util;
 import de.hrc_gaming.wg.WarGear;
 import de.hrc_gaming.wg.team.TeamMember;
 import de.hrc_gaming.wg.team.WgTeam;
@@ -73,7 +74,7 @@ public class SpectatorMode {
 		{
 			Player player = member.getPlayer();
 			arena.teleport(player);
-			player.setGameMode(GameMode.CREATIVE);
+			Util.enableFly(player);
 		}
 	}
 	
@@ -83,7 +84,7 @@ public class SpectatorMode {
 		for (TeamMember member : team.getTeamMembers().values())
 		{
 			Player player = member.getPlayer();
-			player.setGameMode(GameMode.SURVIVAL);
+			Util.disableFly(player);
 		}
 	}
 }
