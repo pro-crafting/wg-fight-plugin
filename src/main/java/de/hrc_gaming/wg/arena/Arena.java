@@ -130,14 +130,14 @@ public class Arena{
 	
 	public void open()
 	{
-		this.setOpeningFlags(true);
+		this.setOpen(true);
 		this.remover.start();
 		this.broadcastMessage(ChatColor.GREEN + "Arena Freigegeben!");
 	}
 	
 	public void close()
 	{
-		this.setOpeningFlags(false);
+		this.setOpen(false);
 		this.remover.stop();
 		this.broadcastMessage(ChatColor.GREEN + "Arena gesperrt!");
 	}
@@ -152,7 +152,7 @@ public class Arena{
 			this.remover = new WaterRemover(this.plugin, this);
 			this.scores = new ScoreBoardDisplay(this.plugin, this);
 			this.spectator = new SpectatorMode(this.plugin, this);
-			this.setOpeningFlags(true);
+			this.setOpen(true);
 			return true;
 		}
 		return false;
@@ -164,12 +164,13 @@ public class Arena{
 		HandlerList.unregisterAll(this.reseter);
 		HandlerList.unregisterAll(this.scores);
 		this.remover.stop();
-		this.setOpeningFlags(false);
+		this.setOpen(false);
 	}
 	
-	public void setOpeningFlags(Boolean allowed)
+	public void setOpen(Boolean isOpen)
 	{
-		com.sk89q.worldguard.protection.flags.StateFlag.State value = allowed ? com.sk89q.worldguard.protection.flags.StateFlag.State.ALLOW : com.sk89q.worldguard.protection.flags.StateFlag.State.DENY;
+		this.isOpen = isOpen;
+		com.sk89q.worldguard.protection.flags.StateFlag.State value = isOpen ? com.sk89q.worldguard.protection.flags.StateFlag.State.ALLOW : com.sk89q.worldguard.protection.flags.StateFlag.State.DENY;
 		
 		setOpeningFlags(this.repo.getTeam1Region(), value);
 		setOpeningFlags(this.repo.getTeam2Region(), value);
@@ -307,7 +308,7 @@ public class Arena{
 				this.setFightMode(new ChestMode(this.plugin, this));
 			}
 		}
-		this.setOpeningFlags(false);
+		this.setOpen(false);
 		this.getTeam().sendTeamOutput();
 		this.getTeam().kickOfflinePlayers(this.getTeam().getTeam1());
 		this.getTeam().kickOfflinePlayers(this.getTeam().getTeam2());
