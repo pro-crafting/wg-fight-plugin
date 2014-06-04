@@ -232,9 +232,9 @@ public class Arena{
 				this.getRepo().getWorld().getName().equals(loc.getWorld().getName());
 	}
 	
-	public void teleport(Entity entity)
+	public void teleport(Player player)
 	{
-		entity.teleport(this.getRepo().getFightEndWarp(), TeleportCause.PLUGIN);
+		player.teleport(this.getSpawnLocation(player), TeleportCause.PLUGIN);
 	}
 	
 	public CuboidRegion getPlayGroundRegion()
@@ -347,7 +347,7 @@ public class Arena{
 	
 	public Location getSpawnLocation(Player p)
 	{
-		if (this.state == State.Spectate || this.state == State.Setup)
+		if (this.state != State.Running)
 		{
 			WgTeam playerTeam = this.team.getTeamOfPlayer(p);
 			if (playerTeam != null)

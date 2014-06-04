@@ -72,7 +72,7 @@ public class SpectatorMode {
 		for (TeamMember member : team.getTeamMembers().values())
 		{
 			Player player = member.getPlayer();
-			player.teleport(arena.getSpawnLocation(player));
+			arena.teleport(player);
 			player.setGameMode(GameMode.CREATIVE);
 		}
 	}
