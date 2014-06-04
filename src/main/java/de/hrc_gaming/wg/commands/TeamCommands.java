@@ -1,6 +1,5 @@
 package de.hrc_gaming.wg.commands;
 
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import de.hrc_gaming.commandframework.Command;
@@ -9,8 +8,6 @@ import de.hrc_gaming.wg.Util;
 import de.hrc_gaming.wg.WarGear;
 import de.hrc_gaming.wg.arena.Arena;
 import de.hrc_gaming.wg.arena.State;
-import de.hrc_gaming.wg.modes.ChestMode;
-import de.hrc_gaming.wg.modes.KitMode;
 import de.hrc_gaming.wg.team.WgTeam;
 
 public class TeamCommands {
@@ -70,7 +67,7 @@ public class TeamCommands {
 			p.sendMessage("§cBeide Team's haben einen Teamleiter.");
 			return;
 		}
-		if (isAnywhereInTeam(p))
+		if (this.plugin.getArenaManager().getArenaOfTeamMember(p) == null)
 		{
 			p.sendMessage("§c"+p.getName()+" ist bereits in einen Team.");
 			return;
@@ -124,7 +121,7 @@ public class TeamCommands {
 			senderPlayer.sendMessage("§cDer Command muss vom Teamleiter ausgeführt werden.");
 			return;
 		}
-		if (isAnywhereInTeam(p))
+		if (this.plugin.getArenaManager().getArenaOfTeamMember(p) != null)
 		{
 			senderPlayer.sendMessage("§c"+p.getName()+" ist bereits in einen Team.");
 			return;
@@ -213,7 +210,7 @@ public class TeamCommands {
 			return;
 		}
 		Player senderPlayer = (Player)args.getSender();
-		if (!isAnywhereInTeam(senderPlayer))
+		if (this.plugin.getArenaManager().getArenaOfTeamMember(senderPlayer) == null)
 		{
 			senderPlayer.sendMessage("§cDu bist in keinem Team.");
 			return;
@@ -242,7 +239,7 @@ public class TeamCommands {
 		}
 		if (!(args.getSender() instanceof Player))
 		{
-			args.getSender().sendMessage("§cDer Command muss von einen Spieler ausgef§hrt werden.");
+			args.getSender().sendMessage("§cDer Command muss von einen Spieler ausgeführt werden.");
 			return;
 		}
 		Player senderPlayer = (Player)args.getSender();
@@ -265,17 +262,5 @@ public class TeamCommands {
 		{
 			senderPlayer.sendMessage("§7Dein Team ist nicht mehr bereit.");
 		}
-	}
-	
-	private boolean isAnywhereInTeam(Player p)
-	{
-		for (Arena currArena : this.plugin.getArenaManager().getArenas().values())
-		{
-			if (currArena.getTeam().getTeamOfPlayer(p) != null)
-			{
-				return true;
-			}
-		}
-		return false;
 	}
 }
