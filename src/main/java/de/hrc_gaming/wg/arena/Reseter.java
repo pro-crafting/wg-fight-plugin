@@ -112,7 +112,7 @@ public class Reseter implements Listener, JobStateChangedCallback
 		try {
 			this.pasteGround(this.arena.getRepo().getWorld());
 		} catch (Exception e) {
-			this.plugin.getLogger().info("Boden konne in "+this.arena.getName()+" nicht geresetet werden.");
+			this.plugin.getLogger().info("Boden in "+this.arena.getName()+" konnte nicht geresetet werden.");
 		}
 		if (this.arena.getState() == State.Resetting)
 		{
