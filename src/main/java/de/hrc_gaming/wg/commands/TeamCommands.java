@@ -67,7 +67,7 @@ public class TeamCommands {
 			p.sendMessage("§cBeide Team's haben einen Teamleiter.");
 			return;
 		}
-		if (this.plugin.getArenaManager().getArenaOfTeamMember(p) == null)
+		if (this.plugin.getArenaManager().getArenaOfTeamMember(p) != null)
 		{
 			p.sendMessage("§c"+p.getName()+" ist bereits in einen Team.");
 			return;
