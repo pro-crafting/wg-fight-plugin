@@ -42,7 +42,7 @@ public class OfflineListener implements Listener{
 				{
 					offlineKickCheck();
 				}
-			}, 1000, 1000);
+			}, 20, 20);
 		}
 	}
 	
