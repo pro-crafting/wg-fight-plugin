@@ -102,7 +102,7 @@ public class TeamManager implements Listener
 		else if (teamName == TeamNames.Team2)
 		{
 			team = "[Team2]";
-			for (TeamMember member : this.team1.getTeamMembers().values())
+			for (TeamMember member : this.team2.getTeamMembers().values())
 			{
 				team += " "+ member.getPlayer().getName();
 			}
@@ -119,7 +119,7 @@ public class TeamManager implements Listener
 		}
 		
 		String team2 = "[Team2]";
-		for (TeamMember member : this.team1.getTeamMembers().values())
+		for (TeamMember member : this.team2.getTeamMembers().values())
 		{
 			team2 += " "+ member.getPlayer().getName();
 		}
