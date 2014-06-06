@@ -45,14 +45,18 @@ public class TeamManager implements Listener
 		Location teamWarp = this.getTeamSpawn(team.getTeamName());
 		for (TeamMember player : team.getTeamMembers().values())
 		{
-			player.getPlayer().getInventory().clear();
-			player.getPlayer().getInventory().setArmorContents(null);
-			
-		    player.getPlayer().setGameMode(GameMode.SURVIVAL);
-			Util.disableFly(player.getPlayer());
-			Util.makeHealthy(player.getPlayer());
-			Util.removePotionEffects(player.getPlayer());
-			player.getPlayer().teleport(teamWarp, TeleportCause.PLUGIN);
+			if (player.isOnline())
+			{
+				Player online = player.getPlayer();
+				online.getInventory().clear();
+				online.getInventory().setArmorContents(null);
+				
+				online.setGameMode(GameMode.SURVIVAL);
+				Util.disableFly(online);
+				Util.makeHealthy(online);
+				Util.removePotionEffects(online);
+				arena.teleport(online);
+			}
 		}
 	}
 	
@@ -80,7 +84,7 @@ public class TeamManager implements Listener
 	{
 		for (TeamMember player : team.getTeamMembers().values())
 		{
-			if (player.getPlayer() != null)
+			if (player.isOnline())
 			{
 				player.getPlayer().getInventory().clear();
 				player.getPlayer().teleport(this.arena.getRepo().getFightEndWarp(), TeleportCause.PLUGIN);
@@ -90,40 +94,24 @@ public class TeamManager implements Listener
 	
 	public void sendWinnerOutput(TeamNames teamName)
 	{
-		String team = "";
-		if (teamName == TeamNames.Team1)
-		{
-			team = "[Team1]";
-			for (TeamMember member : this.team1.getTeamMembers().values())
-			{
-				team += " "+ member.getPlayer().getName();
-			}
-		}
-		else if (teamName == TeamNames.Team2)
-		{
-			team = "[Team2]";
-			for (TeamMember member : this.team2.getTeamMembers().values())
-			{
-				team += " "+ member.getPlayer().getName();
-			}
-		}
+		String team = "["+teamName.toString()+"] "+concateTeamPlayers(this.getTeamOfName(teamName));
 		this.arena.broadcastMessage(ChatColor.DARK_GREEN + team + " hat gewonnen!");
+	}
+	
+	private String concateTeamPlayers(WgTeam team)
+	{
+		String ret = "";
+		for (TeamMember member : team.getTeamMembers().values())
+		{
+			ret += member.getOfflinePlayer().getName()+ " ";
+		}
+		return ret.trim();
 	}
 	
 	public void sendTeamOutput()
 	{
-		String team1 = "[Team1]";
-		for (TeamMember member : this.team1.getTeamMembers().values())
-		{
-			team1 += " "+ member.getPlayer().getName();
-		}
-		
-		String team2 = "[Team2]";
-		for (TeamMember member : this.team2.getTeamMembers().values())
-		{
-			team2 += " "+ member.getPlayer().getName();
-		}
-		
+		String team1 = "[Team1] "+concateTeamPlayers(this.getTeam1());
+		String team2 = "[Team2] "+concateTeamPlayers(this.getTeam2());
 		this.arena.broadcastMessage(ChatColor.YELLOW +""+ ChatColor.ITALIC+team1 + " vs. " + team2);
 	}
 	
@@ -158,7 +146,10 @@ public class TeamManager implements Listener
 	{
 		for (TeamMember member : team.getTeamMembers().values())
 		{
-			Util.makeHealthy(member.getPlayer());
+			if (member.isOnline())
+			{
+				Util.makeHealthy(member.getPlayer());
+			}
 		}
 	}
 	 
@@ -239,22 +230,6 @@ public class TeamManager implements Listener
 			return this.team2.getTeamMember(p);
 		}
 		return null;
-	}
-
-	public void kickOfflinePlayers(WgTeam team)
-	{
-		for (TeamMember member : team.getTeamMembers().values())
-		{
-			if (member.getPlayer() == null)
-			{
-				kick(member);
-			}
-		}
-	}
-	
-	public void kick(TeamMember member)
-	{
-		this.getTeamOfPlayer(member.getPlayer()).remove(member.getPlayer());
 	}
 	
 	public WgTeam getTeam1() {

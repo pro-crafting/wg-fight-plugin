@@ -97,18 +97,18 @@ public class ScoreBoardDisplay implements Listener
 		{
 			removeMemberFromTeam(teamLeaderBlue, teamBlue, member);
 		}
-		board.resetScores(member.getPlayer());
+		board.resetScores(member.getOfflinePlayer());
 	}
 	
 	private void removeMemberFromTeam(Team leader, Team memberTeam, TeamMember member)
 	{
 		if (member.getIsTeamLeader())
 		{
-			leader.removePlayer(member.getPlayer());
+			leader.removePlayer(member.getOfflinePlayer());
 		}
 		else
 		{
-			memberTeam.removePlayer(member.getPlayer());
+			memberTeam.removePlayer(member.getOfflinePlayer());
 		}
 	}
 	
@@ -134,11 +134,11 @@ public class ScoreBoardDisplay implements Listener
 	{
 		if (member.getIsTeamLeader())
 		{
-			leader.addPlayer(member.getPlayer());
+			leader.addPlayer(member.getOfflinePlayer());
 		}
 		else
 		{
-			memberTeam.addPlayer(member.getPlayer());
+			memberTeam.addPlayer(member.getOfflinePlayer());
 		}
 	}
 	

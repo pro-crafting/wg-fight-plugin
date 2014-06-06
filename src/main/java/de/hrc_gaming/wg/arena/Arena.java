@@ -8,7 +8,6 @@ import java.util.UUID;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
@@ -310,8 +309,6 @@ public class Arena{
 		}
 		this.setOpen(false);
 		this.getTeam().sendTeamOutput();
-		this.getTeam().kickOfflinePlayers(this.getTeam().getTeam1());
-		this.getTeam().kickOfflinePlayers(this.getTeam().getTeam2());
 		this.getFightMode().start();
 		this.updateState(State.PreRunning);
 	}

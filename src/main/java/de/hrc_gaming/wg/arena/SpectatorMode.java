@@ -2,7 +2,6 @@ package de.hrc_gaming.wg.arena;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -69,22 +68,26 @@ public class SpectatorMode {
 
 	private void prepareTeamSpectating(WgTeam team)
 	{
-		this.arena.getTeam().kickOfflinePlayers(team);
 		for (TeamMember member : team.getTeamMembers().values())
 		{
-			Player player = member.getPlayer();
-			arena.teleport(player);
-			Util.enableFly(player);
+			if (member.isOnline())
+			{
+				Player player = member.getPlayer();
+				arena.teleport(player);
+				Util.enableFly(player);
+			}
 		}
 	}
 	
 	private void finishTeamSpectating(WgTeam team)
 	{
-		this.arena.getTeam().kickOfflinePlayers(team);
 		for (TeamMember member : team.getTeamMembers().values())
 		{
-			Player player = member.getPlayer();
-			Util.disableFly(player);
+			if (member.isOnline())
+			{
+				Player player = member.getPlayer();
+				Util.disableFly(player);
+			}
 		}
 	}
 }

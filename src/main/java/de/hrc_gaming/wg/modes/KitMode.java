@@ -1,7 +1,6 @@
 package de.hrc_gaming.wg.modes;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Difficulty;
 
 import de.hrc_gaming.wg.WarGear;
 import de.hrc_gaming.wg.arena.Arena;
@@ -24,11 +23,17 @@ import de.hrc_gaming.wg.team.TeamMember;
 		counter = 0;
 		for (TeamMember member : this.arena.getTeam().getTeam1().getTeamMembers().values())
 		{
-			this.plugin.getKitApi().giveKit(this.arena.getKit(), member.getPlayer());
+			if (member.isOnline())
+			{
+				this.plugin.getKitApi().giveKit(this.arena.getKit(), member.getPlayer());
+			}
 		}
 		for (TeamMember member : this.arena.getTeam().getTeam2().getTeamMembers().values())
 		{
-			this.plugin.getKitApi().giveKit(this.arena.getKit(), member.getPlayer());
+			if (member.isOnline())
+			{
+				this.plugin.getKitApi().giveKit(this.arena.getKit(), member.getPlayer());
+			}
 		}
 		taskId = this.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(this.plugin, new Runnable(){
 			public void run() {

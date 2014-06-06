@@ -3,6 +3,7 @@ package de.hrc_gaming.wg.team;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 public class TeamMember{
@@ -23,6 +24,11 @@ public class TeamMember{
 		return Bukkit.getPlayer(this.playerId);
 	}
 	
+	public OfflinePlayer getOfflinePlayer()
+	{
+		return Bukkit.getOfflinePlayer(this.playerId);
+	}
+	
 	public Boolean getAlive()
 	{
 		return this.alive;
@@ -36,5 +42,10 @@ public class TeamMember{
 	public void setAlive(Boolean alive)
 	{
 		this.alive = alive;
+	}
+	
+	public boolean isOnline()
+	{
+		return this.getOfflinePlayer().isOnline();
 	}
 }

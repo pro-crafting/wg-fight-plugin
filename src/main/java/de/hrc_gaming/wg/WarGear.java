@@ -12,8 +12,6 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.MetricsLite;
 
-import com.google.common.io.Files;
-
 import de.hrc_gaming.commandframework.CommandArgs;
 import de.hrc_gaming.commandframework.CommandFramework;
 import de.hrc_gaming.commandframework.Completer;

@@ -123,8 +123,6 @@ public class WgListener implements Listener {
 	public void quit(FightQuitEvent event)
 	{
 		State state = event.getArena().getState();
-		event.getArena().getTeam().kickOfflinePlayers(event.getArena().getTeam().getTeam1());
-		event.getArena().getTeam().kickOfflinePlayers(event.getArena().getTeam().getTeam2());
 		if (state != State.PreRunning && state != State.Running)
 		{
 			return;

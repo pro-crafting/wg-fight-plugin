@@ -3,7 +3,6 @@ package de.hrc_gaming.wg;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -64,7 +63,7 @@ public class OfflineListener implements Listener{
 			{
 				OfflinePlayer player = Bukkit.getOfflinePlayer(quitTimes.get(i).getKey());
 				Arena arena = this.plugin.getArenaManager().getArenaOfTeamMember(player);
-				arena.broadcastMessage(player+" ist offline. Er wird daher gekickt.");
+				arena.broadcastMessage(player.getName()+" ist offline. Er wird daher gekickt.");
 				arena.getTeam().getTeamOfPlayer(player).remove(player);
 				quitTimes.remove(i);
 			}
