@@ -5,6 +5,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
+import de.hrc_gaming.wg.OfflineRunable;
 import de.hrc_gaming.wg.Util;
 import de.hrc_gaming.wg.WarGear;
 import de.hrc_gaming.wg.team.TeamMember;
@@ -63,31 +64,35 @@ public class SpectatorMode {
 		{
 			this.arena.broadcastMessage(ChatColor.GOLD + ""+diff+" Sekunden");
 		}
-		counter++;
+		counter++;  
 	}
 
 	private void prepareTeamSpectating(WgTeam team)
 	{
-		for (TeamMember member : team.getTeamMembers().values())
-		{
-			if (member.isOnline())
-			{
+		OfflineRunable teamSpectatingPreparer = new OfflineRunable() {
+			public void run(TeamMember member) {
 				Player player = member.getPlayer();
 				arena.teleport(player);
 				Util.enableFly(player);
 			}
+		};
+		for (TeamMember member : team.getTeamMembers().values())
+		{
+			this.plugin.getOfflineManager().run(teamSpectatingPreparer, member);
 		}
 	}
 	
 	private void finishTeamSpectating(WgTeam team)
 	{
-		for (TeamMember member : team.getTeamMembers().values())
-		{
-			if (member.isOnline())
-			{
+		OfflineRunable teamSpactatingFinisher = new OfflineRunable() {
+			public void run(TeamMember member) {
 				Player player = member.getPlayer();
 				Util.disableFly(player);
 			}
+		};
+		for (TeamMember member : team.getTeamMembers().values())
+		{
+			this.plugin.getOfflineManager().run(teamSpactatingFinisher, member);
 		}
 	}
 }

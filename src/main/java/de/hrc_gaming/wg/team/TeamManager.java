@@ -12,6 +12,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 import de.hrc_gaming.wg.FightQuitReason;
+import de.hrc_gaming.wg.OfflineRunable;
 import de.hrc_gaming.wg.Util;
 import de.hrc_gaming.wg.WarGear;
 import de.hrc_gaming.wg.arena.Arena;
@@ -42,22 +43,21 @@ public class TeamManager implements Listener
 	
 	private void prepareFightForTeam(WgTeam team)
 	{
-		Location teamWarp = this.getTeamSpawn(team.getTeamName());
-		for (TeamMember player : team.getTeamMembers().values())
-		{
-			if (player.isOnline())
-			{
-				Player online = player.getPlayer();
-				online.getInventory().clear();
-				online.getInventory().setArmorContents(null);
+		OfflineRunable fightTeamPreparer = new OfflineRunable() {
+			
+			public void run(TeamMember member) {
+				Player player = member.getPlayer();
+				player.getInventory().clear();
+				player.getInventory().setArmorContents(null);
 				
-				online.setGameMode(GameMode.SURVIVAL);
-				Util.disableFly(online);
-				Util.makeHealthy(online);
-				Util.removePotionEffects(online);
-				arena.teleport(online);
+				player.setGameMode(GameMode.SURVIVAL);
+				Util.disableFly(player);
+				Util.makeHealthy(player);
+				Util.removePotionEffects(player);
+				arena.teleport(player);
 			}
-		}
+		};
+		this.plugin.getOfflineManager().run(fightTeamPreparer, team);
 	}
 	
 	public Location getTeamSpawn(TeamNames team)
@@ -82,13 +82,17 @@ public class TeamManager implements Listener
 	
 	private void quiteFightForTeam(WgTeam team)
 	{
-		for (TeamMember player : team.getTeamMembers().values())
-		{
-			if (player.isOnline())
-			{
-				player.getPlayer().getInventory().clear();
-				player.getPlayer().teleport(this.arena.getRepo().getFightEndWarp(), TeleportCause.PLUGIN);
+		final Location teleportLocation = this.arena.getRepo().getFightEndWarp();
+		OfflineRunable fightQuiter = new OfflineRunable() {
+			
+			public void run(TeamMember member) {
+				member.getPlayer().getInventory().clear();
+				member.getPlayer().teleport(teleportLocation, TeleportCause.PLUGIN);
 			}
+		};
+		for (TeamMember member : team.getTeamMembers().values())
+		{
+			this.plugin.getOfflineManager().run(fightQuiter, member);
 		}
 	}
 	
@@ -144,12 +148,14 @@ public class TeamManager implements Listener
 	
 	public void healTeam(WgTeam team)
 	{
-		for (TeamMember member : team.getTeamMembers().values())
-		{
-			if (member.isOnline())
-			{
+		OfflineRunable healer = new OfflineRunable() {
+			public void run(TeamMember member) {
 				Util.makeHealthy(member.getPlayer());
 			}
+		};
+		for (TeamMember member : team.getTeamMembers().values())
+		{
+			this.plugin.getOfflineManager().run(healer, member);
 		}
 	}
 	 

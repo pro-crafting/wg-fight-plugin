@@ -111,4 +111,15 @@ public class WgTeam
 			return false;
 		return true;
 	}
+
+	public boolean isOnline() {
+		for (TeamMember member : this.teamMember.values())
+		{
+			if (!member.isOnline())
+			{
+				return false;
+			}
+		}
+		return true;
+	}
 }
