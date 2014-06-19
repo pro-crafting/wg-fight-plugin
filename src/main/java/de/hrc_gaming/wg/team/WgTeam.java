@@ -30,7 +30,7 @@ public class WgTeam
 		this.teamMember.remove(p.getUniqueId());
 	}
 	
-	public boolean getIsReady()
+	public boolean isReady()
 	{
 		return this.isReady;
 	}
@@ -55,11 +55,11 @@ public class WgTeam
 		return this.teamMember.get(player.getUniqueId());
 	}
 	
-	public boolean isSomoneAlive()
+	public boolean isAlive()
 	{
 		for (TeamMember current : this.teamMember.values())
 		{
-			if (current.getAlive())
+			if (current.isAlive())
 			{
 				return true;
 			}
@@ -71,7 +71,7 @@ public class WgTeam
 	{
 		for (TeamMember current : this.teamMember.values())
 		{
-			if (current.getIsTeamLeader())
+			if (current.isTeamLeader())
 			{
 				return true;
 			}

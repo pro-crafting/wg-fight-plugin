@@ -29,12 +29,12 @@ public class TeamMember{
 		return Bukkit.getOfflinePlayer(this.playerId);
 	}
 	
-	public Boolean getAlive()
+	public Boolean isAlive()
 	{
 		return this.alive;
 	}
 	
-	public Boolean getIsTeamLeader()
+	public Boolean isTeamLeader()
 	{
 		return this.isTeamLeader;
 	}

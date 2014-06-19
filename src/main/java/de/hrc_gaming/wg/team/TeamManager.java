@@ -132,7 +132,7 @@ public class TeamManager implements Listener
 		}
 		Player died = event.getEntity();
 		final WgTeam team = this.getTeamOfPlayer(died);
-		if (team != null && team.getTeamMember(died).getAlive())
+		if (team != null && team.getTeamMember(died).isAlive())
 		{
 			team.getTeamMember(died).setAlive(false);
 			event.setDeathMessage(ChatColor.DARK_GREEN + died.getName() + "["+team.getTeamName().toString()+"] ist gestorben.");
@@ -186,7 +186,7 @@ public class TeamManager implements Listener
 	 
 	private void checkAlives(WgTeam team)
 	{
-		if (!team.isSomoneAlive())
+		if (!team.isAlive())
 		{
 			WgTeam winnerTeam = this.team1;
 			if (team.getTeamName() == TeamNames.Team1)
@@ -213,16 +213,16 @@ public class TeamManager implements Listener
 	 
 	public boolean areBothTeamsReady()
 	{
-		return this.team1.getIsReady() && this.team2.getIsReady();
+		return this.team1.isReady() && this.team2.isReady();
 	}
 	 
-	public boolean isPlayerAlive(Player p)
+	public boolean isAlive(Player p)
 	{
 		if (this.getTeamOfPlayer(p) == null || this.getTeamOfPlayer(p).getTeamMember(p) == null)
 		{
 			 return false;
 		}
-		return this.getTeamOfPlayer(p).getTeamMember(p).getAlive();
+		return this.getTeamOfPlayer(p).getTeamMember(p).isAlive();
 	}
 	 
 	public TeamMember getTeamMember(OfflinePlayer p)

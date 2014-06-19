@@ -102,7 +102,7 @@ public class ScoreBoardDisplay implements Listener
 	
 	private void removeMemberFromTeam(Team leader, Team memberTeam, TeamMember member)
 	{
-		if (member.getIsTeamLeader())
+		if (member.isTeamLeader())
 		{
 			leader.removePlayer(member.getOfflinePlayer());
 		}
@@ -132,7 +132,7 @@ public class ScoreBoardDisplay implements Listener
 	
 	private void addMemberToTeam(Team leader, Team memberTeam, TeamMember member)
 	{
-		if (member.getIsTeamLeader())
+		if (member.isTeamLeader())
 		{
 			leader.addPlayer(member.getOfflinePlayer());
 		}
@@ -179,7 +179,7 @@ public class ScoreBoardDisplay implements Listener
 		{
 			return;
 		}
-		if (this.arena.getTeam().isPlayerAlive(p))
+		if (this.arena.getTeam().isAlive(p))
 		{
 			board.getObjective("Lebensanzeige").getScore(p).setScore((int)Math.ceil(p.getHealth()));
 		}

@@ -116,7 +116,7 @@ public class TeamCommands {
 		}
 		Player senderPlayer = (Player)args.getSender();
 		WgTeam team = arena.getTeam().getTeamOfPlayer(senderPlayer);
-		if (team != null && team.getTeamMember(senderPlayer) != null && !team.getTeamMember(senderPlayer).getIsTeamLeader())
+		if (team != null && team.getTeamMember(senderPlayer) != null && !team.getTeamMember(senderPlayer).isTeamLeader())
 		{
 			senderPlayer.sendMessage("§cDer Command muss vom Teamleiter ausgeführt werden.");
 			return;
@@ -168,7 +168,7 @@ public class TeamCommands {
 		}
 		Player senderPlayer = (Player)args.getSender();
 		WgTeam team = arena.getTeam().getTeamOfPlayer(senderPlayer);
-		if (!team.getTeamMember(senderPlayer).getIsTeamLeader())
+		if (!team.getTeamMember(senderPlayer).isTeamLeader())
 		{
 			senderPlayer.sendMessage("§cDer Command muss vom Teamleiter ausgeführt werden.");
 			return;
@@ -244,13 +244,13 @@ public class TeamCommands {
 		}
 		Player senderPlayer = (Player)args.getSender();
 		WgTeam team = arena.getTeam().getTeamOfPlayer(senderPlayer);
-		if (!team.getTeamMember(senderPlayer).getIsTeamLeader())
+		if (!team.getTeamMember(senderPlayer).isTeamLeader())
 		{
 			senderPlayer.sendMessage("§cDer Command muss vom Teamleiter ausgeführt werden.");
 			return;
 		}
-		team.setIsReady(!team.getIsReady());
-		if (team.getIsReady())
+		team.setIsReady(!team.isReady());
+		if (team.isReady())
 		{
 			senderPlayer.sendMessage("§7Dein Team ist bereit.");
 			if (arena.getTeam().areBothTeamsReady())

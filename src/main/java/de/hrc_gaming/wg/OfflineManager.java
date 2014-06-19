@@ -79,7 +79,7 @@ public class OfflineManager implements Listener{
 		if (arena != null)
 		{
 			TeamMember member = arena.getTeam().getTeamMember(event.getPlayer());
-			if (member.getAlive())
+			if (member.isAlive())
 			{
 				this.offlineTeamMembers.add(member);
 			}
