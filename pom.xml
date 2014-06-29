@@ -5,12 +5,11 @@
 
 	<groupId>de.hrc_gaming</groupId>
 	<artifactId>WarGear</artifactId>
-	<version>${project.version} ${project.build.number}</version>
+	<version>0.9-SNAPSHOT-${project.build.number}</version>
 
 	<properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.build.number>JENKINS FILLS THIS OUT</project.build.number>
-        <project.version>0.9-SNAPSHOT</project.version>
     </properties>
 
 	<repositories>
@@ -110,6 +109,12 @@
         </dependency>
 	</dependencies>
 	<build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
