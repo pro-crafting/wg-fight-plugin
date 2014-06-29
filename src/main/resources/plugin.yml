@@ -1,5 +1,5 @@
 name: WarGear
-version: 0.9-SNAPSHOT
+version: {$VersionNumber}
 description: Postremus Wargear Fight Plugin
 website: http://dev.bukkit.org/bukkit-plugins/wargear-fight/
 author: postremus
