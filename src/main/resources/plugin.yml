@@ -1,5 +1,5 @@
 name: WarGear
-version: {$VersionNumber}
+version: ${version}
 description: Postremus Wargear Fight Plugin
 website: http://dev.bukkit.org/bukkit-plugins/wargear-fight/
 author: postremus
