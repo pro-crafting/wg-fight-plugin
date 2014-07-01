@@ -148,11 +148,27 @@ public class ScoreBoardDisplay implements Listener
 		{
 			return;
 		}
-		teamRed.unregister();
-		teamBlue.unregister();
-		teamLeaderBlue.unregister();
-		teamLeaderRed.unregister();
-		board.getObjective("Lebensanzeige").unregister();
+		unregisterTeam(teamRed);
+		unregisterTeam(teamBlue);
+		unregisterTeam(teamLeaderBlue);
+		unregisterTeam(teamLeaderRed);
+		unregisterObjective("Lebensanzeige");
+	}
+	
+	private void unregisterTeam(Team team)
+	{
+		if (team != null)
+		{
+			team.unregister();
+		}
+	}
+	
+	private void unregisterObjective(String objective)
+	{
+		if (board.getObjective(objective) != null)
+		{
+			board.getObjective(objective).unregister();
+		}
 	}
 	
 	public void addViewer(Player p)
