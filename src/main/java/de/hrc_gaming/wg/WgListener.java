@@ -13,6 +13,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
+import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
@@ -301,6 +302,16 @@ public class WgListener implements Listener {
 				player.updateInventory();
 				event.setCancelled(true);
 			}
+		}
+	}
+	
+	@EventHandler (priority = EventPriority.HIGHEST, ignoreCancelled=true)
+	public void craftItemHandler(CraftItemEvent event)
+	{
+		if (this.plugin.getArenaManager().getArenaOfTeamMember((Player)event.getWhoClicked()) != null)
+		{
+			((Player)event.getWhoClicked()).sendMessage("§7Du darfst nicht craften.");
+			event.setCancelled(true);
 		}
 	}
 	
