@@ -8,6 +8,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import de.hrc_gaming.wg.FightMode;
 import de.hrc_gaming.wg.WarGear;
 import de.hrc_gaming.wg.arena.Arena;
+import de.hrc_gaming.wg.team.TeamMember;
 
 public abstract class FightBase implements FightMode, Listener
 {
@@ -46,9 +47,11 @@ public abstract class FightBase implements FightMode, Listener
 		{
 			return;
 		}
-		if (this.arena.getTeam().getTeamOfPlayer(event.getPlayer()) != null)
+		TeamMember member = this.arena.getTeam().getTeamMember(event.getPlayer());
+		if (member != null && member.isAlive())
 		{
 			event.getPlayer().damage(arena.getRepo().getGroundDamage());
+			arena.getScore().updateHealthOfPlayer(event.getPlayer());
 		}
 	}
 }
