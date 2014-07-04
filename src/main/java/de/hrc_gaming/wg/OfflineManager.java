@@ -88,7 +88,7 @@ public class OfflineManager implements Listener{
 	
 	private boolean isTooLongOffline(TeamMember member)
 	{
-		return System.currentTimeMillis() - member.getOfflinePlayer().getLastPlayed() > 30;
+		return System.currentTimeMillis() - member.getOfflinePlayer().getLastPlayed() > 30*1000;
 	}
 	
 	private void checkTeamMembers()
