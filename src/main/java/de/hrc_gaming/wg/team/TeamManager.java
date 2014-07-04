@@ -114,9 +114,12 @@ public class TeamManager implements Listener
 	
 	public void sendTeamOutput()
 	{
-		String team1 = "[Team1] "+concateTeamPlayers(this.getTeam1());
-		String team2 = "[Team2] "+concateTeamPlayers(this.getTeam2());
-		this.arena.broadcastMessage(ChatColor.YELLOW +""+ ChatColor.ITALIC+team1 + " vs. " + team2);
+		String team1 = this.plugin.getRepo().getTeam1Prefix()+
+				"[Team1]"+ ChatColor.YELLOW +""+ ChatColor.ITALIC+concateTeamPlayers(this.getTeam1());
+		String team2 = this.plugin.getRepo().getTeam2Prefix()+
+				"[Team2]"+ ChatColor.YELLOW +""+ ChatColor.ITALIC+concateTeamPlayers(this.getTeam2());
+		this.arena.broadcastMessage(ChatColor.YELLOW +""+ ChatColor.ITALIC+team1);
+		this.arena.broadcastMessage(ChatColor.YELLOW +""+ ChatColor.ITALIC+team2);
 	}
 	
 	@EventHandler (priority = EventPriority.HIGH, ignoreCancelled=true)

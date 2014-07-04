@@ -5,6 +5,7 @@ import java.util.List;
 
 import net.milkbowl.vault.economy.Economy;
 
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
@@ -116,5 +117,15 @@ public class Repository {
 			}
 		}
 		return ret;
+	}
+	
+	public String getTeam1Prefix()
+	{
+		return this.plugin.getConfig().getString("prefix-color.team1", ChatColor.RED.toString());
+	}
+	
+	public String getTeam2Prefix()
+	{
+		return this.plugin.getConfig().getString("prefix-color.team2", ChatColor.BLUE.toString());
 	}
 }

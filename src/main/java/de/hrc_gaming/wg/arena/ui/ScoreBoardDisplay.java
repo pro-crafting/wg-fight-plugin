@@ -66,11 +66,11 @@ public class ScoreBoardDisplay implements Listener
 		{
 			return;
 		}
-		teamRed = createTeam("team_red", "Team Red", ChatColor.RED.toString()+"(T)");
-		teamLeaderRed = createTeam("team_red_leader", "Teamleader Red", ChatColor.RED.toString()+"(C)");
+		teamRed = createTeam("team_red", "Team Red", this.plugin.getRepo().getTeam1Prefix()+"(T)");
+		teamLeaderRed = createTeam("team_red_leader", "Teamleader Red", this.plugin.getRepo().getTeam1Prefix()+"(C)");
 		
-		teamBlue = createTeam("team_blue", "Team Blue", ChatColor.BLUE.toString()+"(T)");
-		teamLeaderBlue = createTeam("team_blue_leader", "Teamleader Blue", ChatColor.BLUE.toString()+"(C)");
+		teamBlue = createTeam("team_blue", "Team Blue", this.plugin.getRepo().getTeam2Prefix()+"(T)");
+		teamLeaderBlue = createTeam("team_blue_leader", "Teamleader Blue",this.plugin.getRepo().getTeam2Prefix()+"(C)");
 	}
 	
 	private Team createTeam(String teamName, String displayName, String prefix)

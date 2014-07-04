@@ -93,14 +93,14 @@ public class WgListener implements Listener {
 		{
 			if (team.getTeamName() == TeamNames.Team1)
 			{
-				color = "§c";
+				color = this.plugin.getRepo().getTeam1Prefix();
 			}
 			else if (team.getTeamName() == TeamNames.Team2)
 			{
-				color = "§1";
+				color = this.plugin.getRepo().getTeam2Prefix();
 			}
 		}
-		event.setFormat(color+"["+arena.getName()+"]"+event.getFormat());
+		event.setFormat("§8["+color+arena.getName()+"§8]"+event.getFormat());
 	}
 	
 	 @EventHandler (priority = EventPriority.HIGHEST, ignoreCancelled=true)
