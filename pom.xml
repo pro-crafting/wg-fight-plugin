@@ -132,11 +132,11 @@
 							<relocations>
 								<relocation>
 									<pattern>org.mcstats</pattern>
-									<shadedPattern>de.hrc_gaming.wg.metrics</shadedPattern>
+									<shadedPattern>de.pro_crafting.wg.metrics</shadedPattern>
 								</relocation>
 								<relocation>
 									<pattern>net.gravitydevelopment.updater</pattern>
-									<shadedPattern>de.hrc_gaming.wg.updater</shadedPattern>
+									<shadedPattern>de.pro_crafting.wg.updater</shadedPattern>
 								</relocation>
 							</relocations>
 						</configuration>

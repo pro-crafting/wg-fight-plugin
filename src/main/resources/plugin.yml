@@ -3,6 +3,6 @@ version: ${project.build.version}
 description: Postremus Wargear Fight Plugin
 website: http://dev.bukkit.org/bukkit-plugins/wargear-fight/
 author: postremus
-main: de.hrc_gaming.wg.WarGear
+main: de.pro_crafting.wg.WarGear
 depend: [WorldEdit, WorldGuard]
 soft-depend: [Vault, AdminCmd, Essentials]
