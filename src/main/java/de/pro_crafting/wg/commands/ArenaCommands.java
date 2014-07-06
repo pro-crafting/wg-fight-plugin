@@ -125,6 +125,6 @@ public class ArenaCommands {
 		arena.getScore().clearScoreboard();
 		arena.unload();
 		arena.load();
-		args.getSender().sendMessage("§7Arena §B"+arena.getName()+" §7ist reloaded.");
+		args.getSender().sendMessage("§7Arena §B"+arena.getName()+" §7wurde gereloadet.");
 	}
 }
