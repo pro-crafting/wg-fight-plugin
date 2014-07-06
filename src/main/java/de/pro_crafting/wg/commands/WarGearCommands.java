@@ -1,9 +1,13 @@
 package de.pro_crafting.wg.commands;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.entity.Player;
 
 import de.pro_crafting.commandframework.Command;
 import de.pro_crafting.commandframework.CommandArgs;
+import de.pro_crafting.commandframework.Completer;
 import de.pro_crafting.wg.FightQuitReason;
 import de.pro_crafting.wg.Util;
 import de.pro_crafting.wg.WarGear;
@@ -81,6 +85,27 @@ public class WarGearCommands {
 		}
 		
 		arena.teleport(toWarp);
+	}
+	
+	@Completer(name="wgk.warp")
+	public List<String> completeWarpName(CommandArgs args)
+	{
+		if (args.getArgs().length > 1)
+		{
+			return null;
+		}
+		String startWith = "";
+		if (args.getArgs().length == 1) startWith = args.getArgs()[0];
+		
+		List<String> ret = new ArrayList<String>();
+		for (String arenaName : this.plugin.getArenaManager().getArenas().keySet())
+		{
+			if (arenaName.startsWith(startWith))
+			{
+				ret.add(arenaName);
+			}
+		}
+		return ret;
 	}
 	
 	@Command(name = "wgk.kit", description="Legt das Kit f§r den Fight fest.", usage="/wgk kit name", permission="wargear.kit")
