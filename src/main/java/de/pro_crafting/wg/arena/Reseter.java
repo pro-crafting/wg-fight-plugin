@@ -62,7 +62,8 @@ public class Reseter implements Listener, JobStateChangedCallback
         
         File dir = we.getWorkingDirectoryFile(config.saveDir);
         String schemName = this.arena.getRepo().getGroundSchematic();
-        File schematic = we.getSafeOpenFile(null, dir, schemName, "schematic");
+        if (!schemName.contains(".schematic")) schemName = schemName+".schematic";
+        File schematic = new File(dir, schemName);
         
         EditSession es = new EditSession(new BukkitWorld(arenaWorld), config.maxChangeLimit);
         CuboidClipboard cc = MCEditSchematicFormat.MCEDIT.load(schematic);
