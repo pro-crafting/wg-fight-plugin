@@ -52,7 +52,7 @@ public class Reseter implements Listener, JobStateChangedCallback
 		Location min = BukkitUtil.toLocation(this.arena.getRepo().getWorld(), rg.getMinimumPoint());
 		min.setY(groundHeight);
 		Location max = BukkitUtil.toLocation(this.arena.getRepo().getWorld(), rg.getMaximumPoint());
-		this.plugin.getGenerator().addJob(new CuboidJob(min, max, Material.AIR, this));
+		this.plugin.getGenerator().addJob(new CuboidJob(min, max, Material.AIR, this, (byte)0));
 	}
 	
 	private void pasteGround(World arenaWorld) throws FilenameException, IOException, DataException, MaxChangedBlocksException
