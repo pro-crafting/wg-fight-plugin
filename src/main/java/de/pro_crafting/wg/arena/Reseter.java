@@ -25,10 +25,13 @@ import com.sk89q.worldedit.data.DataException;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.schematic.MCEditSchematicFormat;
 
-import de.pro_crafting.generator.CuboidJob;
-import de.pro_crafting.generator.Job;
 import de.pro_crafting.generator.JobState;
 import de.pro_crafting.generator.JobStateChangedCallback;
+import de.pro_crafting.generator.Point;
+import de.pro_crafting.generator.criteria.CuboidCriteria;
+import de.pro_crafting.generator.job.Job;
+import de.pro_crafting.generator.job.SimpleJob;
+import de.pro_crafting.generator.provider.SingleBlockProvider;
 import de.pro_crafting.wg.WarGear;
 import de.pro_crafting.wg.event.ArenaStateChangedEvent;
 
@@ -52,7 +55,7 @@ public class Reseter implements Listener, JobStateChangedCallback
 		Location min = BukkitUtil.toLocation(this.arena.getRepo().getWorld(), rg.getMinimumPoint());
 		min.setY(groundHeight);
 		Location max = BukkitUtil.toLocation(this.arena.getRepo().getWorld(), rg.getMaximumPoint());
-		this.plugin.getGenerator().addJob(new CuboidJob(min, max, Material.AIR, this, (byte)0));
+		this.plugin.getGenerator().addJob(new SimpleJob(new Point(min), new Point(max), this.arena.getRepo().getWorld(), this, new CuboidCriteria(), new SingleBlockProvider(Material.AIR,  (byte)0)));
 	}
 	
 	private void pasteGround(World arenaWorld) throws FilenameException, IOException, DataException, MaxChangedBlocksException
