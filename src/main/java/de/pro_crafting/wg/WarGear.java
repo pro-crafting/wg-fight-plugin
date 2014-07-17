@@ -47,7 +47,7 @@ public class WarGear extends JavaPlugin {
 			this.saveResource("arenas/arena.yml", false);
 		}
 		this.repo = new Repository(this);
-		this.generator = new BlockGenerator(this, 10000);
+		this.generator = new BlockGenerator(this, 50000);
 		this.arenaManager = new ArenaManager(this);
 		this.kitApi = new KitAPI();
 		this.cmdFramework = new CommandFramework(this);
@@ -108,7 +108,7 @@ public class WarGear extends JavaPlugin {
 		return ret;
 	}
 	
-	public void loadConfig()
+	private void loadConfig()
 	{	
 		saveDefaultConfig();
 		this.getLogger().info("config.yml geladen.");
