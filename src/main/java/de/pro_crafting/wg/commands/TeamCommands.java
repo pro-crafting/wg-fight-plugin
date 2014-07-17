@@ -192,27 +192,22 @@ public class TeamCommands {
 			usage = "/wgk team leave", permission="wargear.team.leave")
 	public void leave(CommandArgs args)
 	{
-		Arena arena = Util.getArenaFromSender(plugin, args.getSender(), args.getArgs());
-		if (arena == null)
-		{
-			args.getSender().sendMessage("§cDu stehst in keiner Arena, oder Sie existiert nicht.");
-			return;
-		}
-		
-		if (arena.getState() == State.Running || arena.getState() == State.PreRunning)
-		{
-			args.getSender().sendMessage("§cWährend eines Fights kannst du nicht aus deinem Team raus.");
-			return;
-		}
 		if (!(args.getSender() instanceof Player))
 		{
 			args.getSender().sendMessage("§cDer Command muss von einen Spieler ausgeführt werden.");
 			return;
 		}
 		Player senderPlayer = (Player)args.getSender();
-		if (this.plugin.getArenaManager().getArenaOfTeamMember(senderPlayer) == null)
+		Arena arena = this.plugin.getArenaManager().getArenaOfTeamMember(senderPlayer);
+		if (arena == null)
 		{
 			senderPlayer.sendMessage("§cDu bist in keinem Team.");
+			return;
+		}
+		
+		if (arena.getState() == State.Running || arena.getState() == State.PreRunning)
+		{
+			args.getSender().sendMessage("§cWährend eines Fights kannst du nicht aus deinem Team raus.");
 			return;
 		}
 		WgTeam team = arena.getTeam().getTeamOfPlayer(senderPlayer);
