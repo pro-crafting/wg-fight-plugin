@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.bukkit.OfflinePlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -68,10 +69,11 @@ public class OfflineManager implements Listener{
 		else
 		{ 
 			runable.run(member);
+			runMember(runable, member);
 		} 
 		return member.isOnline();
 	}
-	
+
 	@EventHandler (priority = EventPriority.MONITOR, ignoreCancelled=true)
 	public void handlePlayerQuits(PlayerQuitEvent event)
 	{
@@ -88,7 +90,7 @@ public class OfflineManager implements Listener{
 	
 	private boolean isTooLongOffline(TeamMember member)
 	{
-		return System.currentTimeMillis() - member.getOfflinePlayer().getLastPlayed() > 30*1000;
+		return (System.currentTimeMillis() - member.getOfflinePlayer().getLastPlayed()) > 30*1000;
 	}
 	
 	private void checkTeamMembers()
@@ -156,10 +158,11 @@ public class OfflineManager implements Listener{
 	
 	private void killTeamMember(TeamMember member)
 	{
-		Arena arena = this.plugin.getArenaManager().getArenaOfTeamMember(member.getOfflinePlayer());
+		OfflinePlayer player = member.getOfflinePlayer();
+		Arena arena = this.plugin.getArenaManager().getArenaOfTeamMember(player);
 		if (arena != null)
 		{
-			arena.getScore().removeTeamMember(member, arena.getTeam().getTeamOfPlayer(member.getOfflinePlayer()).getTeamName());
+			arena.getScore().removeTeamMember(member, arena.getTeam().getTeamOfPlayer(player).getTeamName());
 			member.setAlive(false);
 		}
 	}
@@ -167,6 +170,13 @@ public class OfflineManager implements Listener{
 	private void runTeam(OfflineRunable runable, WgTeam team)
 	{
 		for (TeamMember member : team.getTeamMembers().values())
+		{
+			runMember(runable, member);
+		}
+	}
+	
+	private void runMember(OfflineRunable runable, TeamMember member) {
+		if (member.isOnline())
 		{
 			runable.run(member);
 		}
