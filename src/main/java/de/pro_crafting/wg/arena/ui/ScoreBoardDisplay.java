@@ -2,6 +2,7 @@ package de.pro_crafting.wg.arena.ui;
 
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -9,6 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
@@ -32,6 +34,7 @@ public class ScoreBoardDisplay implements Listener
 	private Team teamLeaderBlue;
 	private ArenaTimer timer;
 	private OfflinePlayer timePlayer;
+	private Objective health;
 	
 	public ScoreBoardDisplay(WarGear plugin, Arena arena)
 	{
@@ -53,11 +56,11 @@ public class ScoreBoardDisplay implements Listener
 		{
 			return;
 		}
-		board.registerNewObjective("Lebensanzeige", "dummy");
-		board.getObjective("Lebensanzeige").setDisplaySlot(DisplaySlot.SIDEBAR);
+		health = board.registerNewObjective("Lebensanzeige", "dummy");
+		health.setDisplaySlot(DisplaySlot.SIDEBAR);
 		initTeams();
-		timePlayer = this.plugin.getServer().getOfflinePlayer(ChatColor.GREEN+"Zeit (m):");
-		board.getObjective("Lebensanzeige").getScore(timePlayer).setScore(this.arena.getRepo().getScoreboardTime());
+		timePlayer = Bukkit.getOfflinePlayer(ChatColor.GREEN+"Zeit (m):");
+		health.getScore(timePlayer).setScore(this.arena.getRepo().getScoreboardTime());
 	}
 	
 	private void initTeams()
@@ -89,26 +92,27 @@ public class ScoreBoardDisplay implements Listener
 			return;
 		}
 		initScoreboard();
+		OfflinePlayer player = member.getOfflinePlayer();
 		if (team == TeamNames.Team1)
 		{
-			removeMemberFromTeam(teamLeaderRed, teamRed, member);
+			removeMemberFromTeam(teamLeaderRed, teamRed, player, member.isTeamLeader());
 		}
 		else if (team == TeamNames.Team2)
 		{
-			removeMemberFromTeam(teamLeaderBlue, teamBlue, member);
+			removeMemberFromTeam(teamLeaderBlue, teamBlue, player, member.isTeamLeader());
 		}
-		board.resetScores(member.getOfflinePlayer());
+		board.resetScores(player);
 	}
 	
-	private void removeMemberFromTeam(Team leader, Team memberTeam, TeamMember member)
+	private void removeMemberFromTeam(Team leader, Team memberTeam, OfflinePlayer player, boolean isTeamLeader)
 	{
-		if (member.isTeamLeader())
+		if (isTeamLeader)
 		{
-			leader.removePlayer(member.getOfflinePlayer());
+			leader.removePlayer(player);
 		}
 		else
 		{
-			memberTeam.removePlayer(member.getOfflinePlayer());
+			memberTeam.removePlayer(player);
 		}
 	}
 	
@@ -119,26 +123,27 @@ public class ScoreBoardDisplay implements Listener
 			return;
 		}
 		initScoreboard();
+		Player player = member.getPlayer();
 		if (team == TeamNames.Team1)
 		{
-			addMemberToTeam(teamLeaderRed, teamRed, member);
+			addMemberToTeam(teamLeaderRed, teamRed, player, member.isAlive());
 		}
 		else if (team == TeamNames.Team2)
 		{
-			addMemberToTeam(teamLeaderBlue, teamBlue, member);
+			addMemberToTeam(teamLeaderBlue, teamBlue, player, member.isAlive());
 		}
-		board.getObjective("Lebensanzeige").getScore(member.getPlayer()).setScore((int)member.getPlayer().getHealth());
+		health.getScore(player).setScore((int)player.getHealth());
 	}
 	
-	private void addMemberToTeam(Team leader, Team memberTeam, TeamMember member)
+	private void addMemberToTeam(Team leader, Team memberTeam, Player player, boolean isTeamLeader)
 	{
-		if (member.isTeamLeader())
+		if (isTeamLeader)
 		{
-			leader.addPlayer(member.getOfflinePlayer());
+			leader.addPlayer(player);
 		}
 		else
 		{
-			memberTeam.addPlayer(member.getOfflinePlayer());
+			memberTeam.addPlayer(player);
 		}
 	}
 	
@@ -152,7 +157,10 @@ public class ScoreBoardDisplay implements Listener
 		unregisterTeam(teamBlue);
 		unregisterTeam(teamLeaderBlue);
 		unregisterTeam(teamLeaderRed);
-		unregisterObjective("Lebensanzeige");
+		if (health != null)
+		{
+			health.unregister();
+		}
 	}
 	
 	private void unregisterTeam(Team team)
@@ -160,14 +168,6 @@ public class ScoreBoardDisplay implements Listener
 		if (team != null)
 		{
 			team.unregister();
-		}
-	}
-	
-	private void unregisterObjective(String objective)
-	{
-		if (board.getObjective(objective) != null)
-		{
-			board.getObjective(objective).unregister();
 		}
 	}
 	
@@ -197,7 +197,7 @@ public class ScoreBoardDisplay implements Listener
 		}
 		if (this.arena.getTeam().isAlive(p))
 		{
-			board.getObjective("Lebensanzeige").getScore(p).setScore((int)Math.ceil(p.getHealth()));
+			health.getScore(p).setScore((int)Math.ceil(p.getHealth()));
 		}
 		else
 		{
@@ -207,7 +207,7 @@ public class ScoreBoardDisplay implements Listener
 	
 	public void updateTime(int time)
 	{
-		board.getObjective("Lebensanzeige").getScore(timePlayer).setScore(time);
+		health.getScore(timePlayer).setScore(time);
 	}
 	
 	@EventHandler (priority = EventPriority.LOWEST)
