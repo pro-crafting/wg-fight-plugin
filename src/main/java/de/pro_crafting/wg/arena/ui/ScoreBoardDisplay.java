@@ -2,7 +2,6 @@ package de.pro_crafting.wg.arena.ui;
 
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -11,6 +10,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
@@ -33,7 +33,7 @@ public class ScoreBoardDisplay implements Listener
 	private Team teamBlue;
 	private Team teamLeaderBlue;
 	private ArenaTimer timer;
-	private OfflinePlayer timePlayer;
+	private Score timeScore;
 	private Objective health;
 	
 	public ScoreBoardDisplay(WarGear plugin, Arena arena)
@@ -59,8 +59,8 @@ public class ScoreBoardDisplay implements Listener
 		health = board.registerNewObjective("Lebensanzeige", "dummy");
 		health.setDisplaySlot(DisplaySlot.SIDEBAR);
 		initTeams();
-		timePlayer = Bukkit.getOfflinePlayer(ChatColor.GREEN+"Zeit (m):");
-		health.getScore(timePlayer).setScore(this.arena.getRepo().getScoreboardTime());
+		timeScore = health.getScore(ChatColor.GREEN+"Zeit (m):");
+		timeScore.setScore(this.arena.getRepo().getScoreboardTime());
 	}
 	
 	private void initTeams()
@@ -101,7 +101,7 @@ public class ScoreBoardDisplay implements Listener
 		{
 			removeMemberFromTeam(teamLeaderBlue, teamBlue, player, member.isTeamLeader());
 		}
-		board.resetScores(player);
+		board.resetScores(player.getName());
 	}
 	
 	private void removeMemberFromTeam(Team leader, Team memberTeam, OfflinePlayer player, boolean isTeamLeader)
@@ -132,7 +132,7 @@ public class ScoreBoardDisplay implements Listener
 		{
 			addMemberToTeam(teamLeaderBlue, teamBlue, player, member.isAlive());
 		}
-		health.getScore(player).setScore((int)player.getHealth());
+		health.getScore(player.getName()).setScore((int)player.getHealth());
 	}
 	
 	private void addMemberToTeam(Team leader, Team memberTeam, Player player, boolean isTeamLeader)
@@ -197,17 +197,17 @@ public class ScoreBoardDisplay implements Listener
 		}
 		if (this.arena.getTeam().isAlive(p))
 		{
-			health.getScore(p).setScore((int)Math.ceil(p.getHealth()));
+			health.getScore(p.getName()).setScore((int)Math.ceil(p.getHealth()));
 		}
 		else
 		{
-			board.resetScores(p);
+			board.resetScores(p.getName());
 		}
 	}
 	
 	public void updateTime(int time)
 	{
-		health.getScore(timePlayer).setScore(time);
+		timeScore.setScore(time);
 	}
 	
 	@EventHandler (priority = EventPriority.LOWEST)
