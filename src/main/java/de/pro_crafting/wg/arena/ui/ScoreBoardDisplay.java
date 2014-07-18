@@ -240,13 +240,12 @@ public class ScoreBoardDisplay implements Listener
 		{
 			this.timer.start();
 		}
-		else if (event.getFrom() == State.Running)
+		else if (event.getFrom() == State.Running || event.getFrom() == State.PreRunning)
 		{
 			if (this.timer.getIsRunning())
 			{
 				this.timer.stop();
 			}
-			clearScoreboard();
 		}
 	}
 }
