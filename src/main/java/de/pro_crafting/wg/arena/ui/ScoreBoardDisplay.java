@@ -245,8 +245,8 @@ public class ScoreBoardDisplay implements Listener
 			if (this.timer.getIsRunning())
 			{
 				this.timer.stop();
-				clearScoreboard();
 			}
+			clearScoreboard();
 		}
 	}
 }
