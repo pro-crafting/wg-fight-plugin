@@ -139,6 +139,7 @@ public class OfflineManager implements Listener{
 				 if (isTooLongOffline(member))
 				 {
 					 killTeamMember(member);
+					 teamIterator.remove();
 				 }
 				 else if (!member.isOnline())
 				 {
@@ -151,7 +152,7 @@ public class OfflineManager implements Listener{
 				 {
 					 runTeam(runable, current.getKey());
 				 }
-				 memberIterator.remove();
+				 teamIterator.remove();
 			 }
 		 }
 	}
