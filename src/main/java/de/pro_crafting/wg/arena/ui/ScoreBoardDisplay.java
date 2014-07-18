@@ -246,6 +246,7 @@ public class ScoreBoardDisplay implements Listener
 			{
 				this.timer.stop();
 			}
+			clearScoreboard();
 		}
 	}
 }
