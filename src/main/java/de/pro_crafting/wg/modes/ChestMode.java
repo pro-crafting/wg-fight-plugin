@@ -32,24 +32,27 @@ public class ChestMode extends FightBase implements FightMode, Listener{
 	public ChestMode(WarGear plugin, Arena arena)
 	{
 		super(plugin, arena);
+		starter = new Runnable() {
+			
+			public void run() {
+				task = ChestMode.this.plugin.getServer().getScheduler().runTaskTimer(ChestMode.this.plugin, new Runnable(){
+					public void run()
+					{
+						chestOpenCountdown();
+					}
+				}, 0, 20);
+			}
+		};
 	}
 	
 	@Override
 	public void start() {
-		super.start();
 		this.fillChest(this.arena.getRepo().getTeam1Warp());
 		this.fillChest(this.arena.getRepo().getTeam2Warp());
-		
 		this.plugin.getServer().getPluginManager().registerEvents(this, this.plugin);
 		PlayerMoveEvent.getHandlerList().unregister(this);
-		
 		counter = 0;
-		task = this.plugin.getServer().getScheduler().runTaskTimer(this.plugin, new Runnable(){
-			public void run()
-			{
-				chestOpenCountdown();
-			}
-		}, 0, 20);
+		super.start();
 	}
 
 	private void fillChest(Location loc)

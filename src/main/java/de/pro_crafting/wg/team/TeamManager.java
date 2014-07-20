@@ -35,31 +35,6 @@ public class TeamManager implements Listener
 		this.arena = arena;
 	}
 	
-	public void prepareFightTeams()
-	{
-		this.prepareFightForTeam(team1);
-		this.prepareFightForTeam(team2);
-	}
-	
-	private void prepareFightForTeam(WgTeam team)
-	{
-		OfflineRunable fightTeamPreparer = new OfflineRunable() {
-			
-			public void run(TeamMember member) {
-				Player player = member.getPlayer();
-				player.getInventory().clear();
-				player.getInventory().setArmorContents(null);
-				
-				player.setGameMode(GameMode.SURVIVAL);
-				Util.disableFly(player);
-				Util.makeHealthy(player);
-				Util.removePotionEffects(player);
-				arena.teleport(player);
-			}
-		};
-		this.plugin.getOfflineManager().run(fightTeamPreparer, team);
-	}
-	
 	public Location getTeamSpawn(TeamNames team)
 	{
 		if (team == TeamNames.Team1)
@@ -90,10 +65,7 @@ public class TeamManager implements Listener
 				member.getPlayer().teleport(teleportLocation, TeleportCause.PLUGIN);
 			}
 		};
-		for (TeamMember member : team.getTeamMembers().values())
-		{
-			this.plugin.getOfflineManager().run(fightQuiter, member);
-		}
+		this.plugin.getOfflineManager().run(fightQuiter, team);
 	}
 	
 	public void sendWinnerOutput(TeamNames teamName)
@@ -156,10 +128,7 @@ public class TeamManager implements Listener
 				Util.makeHealthy(member.getPlayer());
 			}
 		};
-		for (TeamMember member : team.getTeamMembers().values())
-		{
-			this.plugin.getOfflineManager().run(healer, member);
-		}
+		this.plugin.getOfflineManager().run(healer, team);
 	}
 	 
 	public WgTeam getTeamOfName(TeamNames name)

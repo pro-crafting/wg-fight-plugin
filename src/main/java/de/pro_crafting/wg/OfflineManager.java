@@ -43,6 +43,21 @@ public class OfflineManager implements Listener{
 	{
 		if (!team.isOnline())
 		{
+			for (TeamMember member : team.getTeamMembers().values()) {
+				run(runable, member);
+			}
+		}
+		else
+		{
+			runTeam(runable, team);
+		}
+		return team.isOnline();
+	}
+	
+	public boolean runComplete(OfflineRunable runable, WgTeam team)
+	{
+		if (!team.isOnline())
+		{
 			if (!this.teamRunnables.containsKey(team))
 			{
 				this.teamRunnables.put(team, new ArrayList<OfflineRunable>());

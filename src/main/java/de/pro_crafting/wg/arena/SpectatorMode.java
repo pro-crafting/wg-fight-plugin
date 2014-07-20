@@ -77,10 +77,7 @@ public class SpectatorMode {
 				Util.enableFly(player);
 			}
 		};
-		for (TeamMember member : team.getTeamMembers().values())
-		{
-			this.plugin.getOfflineManager().run(teamSpectatingPreparer, member);
-		}
+		this.plugin.getOfflineManager().run(teamSpectatingPreparer, team);
 	}
 	
 	private void finishTeamSpectating(WgTeam team)
@@ -91,9 +88,6 @@ public class SpectatorMode {
 				Util.disableFly(player);
 			}
 		};
-		for (TeamMember member : team.getTeamMembers().values())
-		{
-			this.plugin.getOfflineManager().run(teamSpactatingFinisher, member);
-		}
+		this.plugin.getOfflineManager().run(teamSpactatingFinisher, team);
 	}
 }

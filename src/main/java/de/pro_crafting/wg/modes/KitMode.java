@@ -2,6 +2,7 @@ package de.pro_crafting.wg.modes;
 
 import org.bukkit.ChatColor;
 
+import de.pro_crafting.wg.OfflineRunable;
 import de.pro_crafting.wg.WarGear;
 import de.pro_crafting.wg.arena.Arena;
 import de.pro_crafting.wg.arena.State;
@@ -12,34 +13,31 @@ import de.pro_crafting.wg.team.TeamMember;
 	private int counter;
 	private int taskId;
 	
-	public KitMode(WarGear plugin, Arena arena)
-	{
+	public KitMode(WarGear plugin, Arena arena) {
+	
 		super(plugin, arena);
+		preparer = new OfflineRunable() {
+			
+			public void run(TeamMember member) {
+				KitMode.this.plugin.getKitApi().giveKit(KitMode.this.arena.getKit(), member.getPlayer());
+			}
+		};
+		starter =  new Runnable() {
+			
+			public void run() {
+				KitMode.this.taskId = KitMode.this.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(KitMode.this.plugin, new Runnable(){
+					public void run() {
+						finalStartCountdown();
+					}          
+				}, 0, 20);
+			}
+		};
 	}
 	
 	@Override
 	public void start() {
-		super.start();
 		counter = 0;
-		for (TeamMember member : this.arena.getTeam().getTeam1().getTeamMembers().values())
-		{
-			if (member.isOnline())
-			{
-				this.plugin.getKitApi().giveKit(this.arena.getKit(), member.getPlayer());
-			}
-		}
-		for (TeamMember member : this.arena.getTeam().getTeam2().getTeamMembers().values())
-		{
-			if (member.isOnline())
-			{
-				this.plugin.getKitApi().giveKit(this.arena.getKit(), member.getPlayer());
-			}
-		}
-		taskId = this.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(this.plugin, new Runnable(){
-			public void run() {
-				finalStartCountdown();
-			}          
-		}, 0, 20);
+		super.start();
 	}
 	
 	public void finalStartCountdown()
