@@ -27,6 +27,7 @@ public class ArenaCommands {
 		args.getSender().sendMessage("§B/wgk arena list");
 		args.getSender().sendMessage("§B/wgk arena info");
 		args.getSender().sendMessage("§B/wgk arena reset");
+		args.getSender().sendMessage("§B/wgk arena replace");
 		args.getSender().sendMessage("§B/wgk arena reload");
 	}
 	
@@ -126,5 +127,19 @@ public class ArenaCommands {
 		arena.unload();
 		arena.load();
 		args.getSender().sendMessage("§7Arena §B"+arena.getName()+" §7wurde gereloadet.");
+	}
+	
+	@Command(name = "wgk.arena.replace", description = "Replaced die MGs in der Arena", 
+			usage = "/wgk arena replace", permission="wargear.arena.replace")
+	public void replace(CommandArgs args)
+	{
+		Arena arena = Util.getArenaFromSender(plugin, args.getSender(), args.getArgs());
+		if (arena == null)
+		{
+			args.getSender().sendMessage("§cDu stehst in keiner Arena, oder Sie existiert nicht.");
+			return;
+		}
+		arena.replaceMG();
+		args.getSender().sendMessage("§7MG's in §B"+arena.getName()+" §7wurden replaced.");
 	}
 }

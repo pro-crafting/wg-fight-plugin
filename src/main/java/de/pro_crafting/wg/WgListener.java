@@ -72,6 +72,9 @@ public class WgListener implements Listener {
 			event.getArena().getTeam().healTeam(event.getArena().getTeam().getTeam1());
 			event.getArena().getTeam().healTeam(event.getArena().getTeam().getTeam2());
 		}
+		if (event.getTo() == State.PreRunning) {
+			event.getArena().replaceMG();
+		}
 	}
 	
 	@EventHandler (priority = EventPriority.HIGHEST)

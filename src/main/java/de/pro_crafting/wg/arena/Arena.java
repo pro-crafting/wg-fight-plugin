@@ -7,6 +7,8 @@ import java.util.UUID;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
@@ -19,6 +21,15 @@ import com.sk89q.worldguard.bukkit.BukkitUtil;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
+import de.pro_crafting.generator.JobState;
+import de.pro_crafting.generator.JobStateChangedCallback;
+import de.pro_crafting.generator.Point;
+import de.pro_crafting.generator.criteria.Criteria;
+import de.pro_crafting.generator.criteria.CuboidCriteria;
+import de.pro_crafting.generator.criteria.SingleBlockCriteria;
+import de.pro_crafting.generator.job.Job;
+import de.pro_crafting.generator.job.SimpleJob;
+import de.pro_crafting.generator.provider.SingleBlockProvider;
 import de.pro_crafting.wg.FightMode;
 import de.pro_crafting.wg.WarGear;
 import de.pro_crafting.wg.arena.ui.ScoreBoardDisplay;
@@ -402,5 +413,21 @@ public class Arena{
 		}
 		
 		return PlayerArenaPosition.Outside;
+	}
+	
+	public void replaceMG() {
+		Criteria cuboid = new SingleBlockCriteria(Material.OBSIDIAN);
+		//cuboid.wrap(new SingleBlockCriteria(Material.OBSIDIAN));
+		World world = this.repo.getWorld();
+		CuboidRegion innerRegion = getPlayGroundRegion();
+		Point min = new Point(BukkitUtil.toLocation(world, innerRegion.getMinimumPoint()));
+		Point max = new Point(BukkitUtil.toLocation(world, innerRegion.getMaximumPoint()));
+		this.plugin.getGenerator().addJob(new SimpleJob(min, max, world, new JobStateChangedCallback() {
+			
+			public void jobStateChanged(Job job, JobState fromState) {
+				// TODO Auto-generated method stub
+				
+			}
+		}, cuboid, new SingleBlockProvider(Material.TNT, (byte)0)));
 	}
 }
