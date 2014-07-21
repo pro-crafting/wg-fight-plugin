@@ -126,11 +126,11 @@ public class ScoreBoardDisplay implements Listener
 		Player player = member.getPlayer();
 		if (team == TeamNames.Team1)
 		{
-			addMemberToTeam(teamLeaderRed, teamRed, player, member.isAlive());
+			addMemberToTeam(teamLeaderRed, teamRed, player, member.isTeamLeader());
 		}
 		else if (team == TeamNames.Team2)
 		{
-			addMemberToTeam(teamLeaderBlue, teamBlue, player, member.isAlive());
+			addMemberToTeam(teamLeaderBlue, teamBlue, player, member.isTeamLeader());
 		}
 		health.getScore(player.getName()).setScore((int)player.getHealth());
 	}
