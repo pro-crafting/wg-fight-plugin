@@ -89,11 +89,11 @@ public class ArenaManager {
 		return getArena(arenaName) != null;
 	}
 	
-	public Arena getArenaAtLocation(Location loc)
+	public Arena getArenaAt(Location where)
 	{
 		for (Arena arena : this.arenas.values())
 		{
-			if (arena.contains(loc))
+			if (arena.contains(where))
 			{
 				return arena;
 			}

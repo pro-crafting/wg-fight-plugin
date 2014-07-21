@@ -85,7 +85,7 @@ public class WgListener implements Listener {
 			return;
 		}
 		Player player = event.getPlayer();
-		Arena arena = this.plugin.getArenaManager().getArenaAtLocation(event.getPlayer().getLocation());
+		Arena arena = this.plugin.getArenaManager().getArenaAt(event.getPlayer().getLocation());
 		if (arena == null)
 		{
 			return;
@@ -110,7 +110,7 @@ public class WgListener implements Listener {
 	 public void playerRespawnHandler(PlayerRespawnEvent event)
 	 {
 		 final Player respawned = event.getPlayer();
-		 Arena arena = this.plugin.getArenaManager().getArenaAtLocation(event.getPlayer().getLocation());
+		 Arena arena = this.plugin.getArenaManager().getArenaAt(event.getPlayer().getLocation());
 		 if (arena != null)
 		 {
 			 event.setRespawnLocation(arena.getSpawnLocation(respawned));
@@ -154,8 +154,8 @@ public class WgListener implements Listener {
 		{
 			return;
 		}
-		Arena arenaFrom = this.plugin.getArenaManager().getArenaAtLocation(event.getFrom());
-		Arena arenaTo = this.plugin.getArenaManager().getArenaAtLocation(event.getTo());
+		Arena arenaFrom = this.plugin.getArenaManager().getArenaAt(event.getFrom());
+		Arena arenaTo = this.plugin.getArenaManager().getArenaAt(event.getTo());
 		if (arenaFrom != null && !arenaFrom.equals(arenaTo))
 		{
 			arenaFrom.leave(event.getPlayer());
@@ -169,7 +169,7 @@ public class WgListener implements Listener {
 	@EventHandler (priority = EventPriority.MONITOR, ignoreCancelled=true)
 	public void playerJoinHandler(PlayerJoinEvent event)
 	{
-		Arena arenaTo = this.plugin.getArenaManager().getArenaAtLocation(event.getPlayer().getLocation());
+		Arena arenaTo = this.plugin.getArenaManager().getArenaAt(event.getPlayer().getLocation());
 		if (arenaTo != null)
 		{
 			arenaTo.join(event.getPlayer());
@@ -179,7 +179,7 @@ public class WgListener implements Listener {
 	@EventHandler (priority = EventPriority.MONITOR, ignoreCancelled=true)
 	public void playerQuitHandler(PlayerQuitEvent event)
 	{
-		Arena arenaFrom = this.plugin.getArenaManager().getArenaAtLocation(event.getPlayer().getLocation());
+		Arena arenaFrom = this.plugin.getArenaManager().getArenaAt(event.getPlayer().getLocation());
 		if (arenaFrom != null)
 		{
 			arenaFrom.leave(event.getPlayer());
@@ -189,8 +189,8 @@ public class WgListener implements Listener {
 	@EventHandler (priority = EventPriority.MONITOR, ignoreCancelled=true)
 	public void playerTeleportHandler(PlayerTeleportEvent event)
 	{
-		Arena arenaFrom = this.plugin.getArenaManager().getArenaAtLocation(event.getFrom());
-		Arena arenaTo = this.plugin.getArenaManager().getArenaAtLocation(event.getTo());
+		Arena arenaFrom = this.plugin.getArenaManager().getArenaAt(event.getFrom());
+		Arena arenaTo = this.plugin.getArenaManager().getArenaAt(event.getTo());
 		if (arenaFrom != null && !arenaFrom.equals(arenaTo))
 		{
 			arenaFrom.leave(event.getPlayer());
@@ -209,7 +209,7 @@ public class WgListener implements Listener {
 			return;
 		}
 		final Player player = (Player)event.getEntity();
-		final Arena arena = this.plugin.getArenaManager().getArenaAtLocation(player.getLocation());
+		final Arena arena = this.plugin.getArenaManager().getArenaAt(player.getLocation());
 		if (arena == null)
 		{
 			return;
@@ -263,7 +263,7 @@ public class WgListener implements Listener {
 			return;
 		}
 		final Player player = (Player)event.getEntity();
-		final Arena arena = this.plugin.getArenaManager().getArenaAtLocation(player.getLocation());
+		final Arena arena = this.plugin.getArenaManager().getArenaAt(player.getLocation());
 		if (arena != null)
 		{
 			if (arena.getTeam().getTeamOfPlayer(player) != null)
@@ -302,7 +302,6 @@ public class WgListener implements Listener {
 				player.sendMessage("§7Du darfst kein Essen und keine Tränke benutzen.");
 				player.getInventory().remove(item.getType());
 				player.getInventory().setArmorContents(null);
-				player.updateInventory();
 				event.setCancelled(true);
 			}
 		}

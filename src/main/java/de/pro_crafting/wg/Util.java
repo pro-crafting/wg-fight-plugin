@@ -33,11 +33,11 @@ public class Util {
 		{
 			if (sender instanceof Player)
 			{
-				ret = plugin.getArenaManager().getArenaAtLocation(((Player)sender).getLocation());
+				ret = plugin.getArenaManager().getArenaAt(((Player)sender).getLocation());
 			}
 			else if (sender instanceof BlockCommandSender)
 			{
-				ret = plugin.getArenaManager().getArenaAtLocation(((BlockCommandSender)sender).getBlock().getLocation());
+				ret = plugin.getArenaManager().getArenaAt(((BlockCommandSender)sender).getBlock().getLocation());
 			}
 		}
 		return ret;
