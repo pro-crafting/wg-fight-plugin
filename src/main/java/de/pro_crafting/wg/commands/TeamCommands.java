@@ -9,7 +9,6 @@ import de.pro_crafting.wg.Util;
 import de.pro_crafting.wg.WarGear;
 import de.pro_crafting.wg.arena.Arena;
 import de.pro_crafting.wg.arena.State;
-import de.pro_crafting.wg.team.TeamMember;
 import de.pro_crafting.wg.team.TeamNames;
 import de.pro_crafting.wg.team.WgTeam;
 
@@ -52,7 +51,7 @@ public class TeamCommands {
 		
 		if (arena.getState() == State.Running || arena.getState() == State.PreRunning)
 		{
-			args.getSender().sendMessage("§cHier läuft bereits ein Fight.");
+			args.getSender().sendMessage("§cEs läuft bereits ein Fight in "+arena.getName()+".");
 			return;
 		}
 		if (arena.getState() == State.Idle)
@@ -74,7 +73,7 @@ public class TeamCommands {
 		}
 		if (this.plugin.getArenaManager().getArenaOfTeamMember(p) != null)
 		{
-			p.sendMessage("§c"+p.getName()+" ist bereits in einen Team.");
+			p.sendMessage("§c"+p.getName()+" ist bereits in einem Team.");
 			return;
 		}
 		team.add(p, true);
@@ -85,7 +84,7 @@ public class TeamCommands {
 		arena.getScore().addTeamMember(team.getTeamMember(p), team.getTeamName());
 	}
 	
-	@Command(name = "wgk.team.add", description = "F§gt ein Spieler zu deinem Team hinzu.",
+	@Command(name = "wgk.team.add", description = "Fügt ein Spieler zu deinem Team hinzu.",
 			usage = "/wgk team add", permission="wargear.team.add")
 	public void add(CommandArgs args)
 	{
@@ -105,7 +104,7 @@ public class TeamCommands {
 		
 		if (arena.getState() == State.Running || arena.getState() == State.PreRunning)
 		{
-			args.getSender().sendMessage("§cWährend eines Fights kannst du keine Mitglieder hinzufügen.");
+			args.getSender().sendMessage("§cWährend eines Fightes kannst du keine Mitglieder hinzufügen.");
 			return;
 		}
 		Player p = this.plugin.getServer().getPlayer(playerName);
@@ -116,7 +115,7 @@ public class TeamCommands {
 		}
 		if (!(args.getSender() instanceof Player))
 		{
-			args.getSender().sendMessage("§cDer Command muss von einen Spieler ausgeführt werden.");
+			args.getSender().sendMessage("§cDer Command muss von einem Spieler ausgeführt werden.");
 			return;
 		}
 		Player senderPlayer = (Player)args.getSender();
@@ -124,7 +123,7 @@ public class TeamCommands {
 		WgTeam team = null;
 		if (this.plugin.getArenaManager().getArenaOfTeamMember(p) != null)
 		{
-			senderPlayer.sendMessage("§c"+p.getName()+" ist bereits in einen Team.");
+			senderPlayer.sendMessage("§c"+p.getName()+" ist bereits in einem Team.");
 			return;
 		}
 		if (args.getArgs().length == 1 || !senderPlayer.hasPermission("wargear.team.add.other")) {
@@ -148,7 +147,7 @@ public class TeamCommands {
 			}
 		}
 		team.add(p, false);
-		p.sendMessage("§7Du bist jetzt im Team von §B"+leader.getName()+".");
+		p.sendMessage("§7Du bist jetzt im Team von §B"+leader.getName()+"§7.");
 		p.sendMessage("§7Mit §8\"/wgk team leave\" §7verlässt du das Team.");
 		arena.getScore().addTeamMember(team.getTeamMember(p), team.getTeamName());
 	}
@@ -173,7 +172,7 @@ public class TeamCommands {
 		
 		if (arena.getState() == State.Running || arena.getState() == State.Running)
 		{
-			args.getSender().sendMessage("§Während eines Fights kannst du keine Mitglieder entfernen.");
+			args.getSender().sendMessage("§Während eines Fightes kannst du keine Mitglieder entfernen.");
 			return;
 		}
 		Player p = this.plugin.getServer().getPlayer(playerName);
@@ -225,7 +224,7 @@ public class TeamCommands {
 	{
 		if (!(args.getSender() instanceof Player))
 		{
-			args.getSender().sendMessage("§cDer Command muss von einen Spieler ausgeführt werden.");
+			args.getSender().sendMessage("§cDer Command muss von einem Spieler ausgeführt werden.");
 			return;
 		}
 		Player senderPlayer = (Player)args.getSender();
@@ -238,7 +237,7 @@ public class TeamCommands {
 		
 		if (arena.getState() == State.Running || arena.getState() == State.PreRunning)
 		{
-			args.getSender().sendMessage("§cWährend eines Fights kannst du nicht aus deinem Team raus.");
+			args.getSender().sendMessage("§cWährend eines Fightes kannst du nicht dein Team verlassen.");
 			return;
 		}
 		WgTeam team = arena.getTeam().getTeamOfPlayer(senderPlayer);
@@ -260,12 +259,12 @@ public class TeamCommands {
 		
 		if (arena.getState() == State.Running || arena.getState() == State.PreRunning)
 		{
-			args.getSender().sendMessage("§cWährend eines Fights kannst du das Team nicht bereit schalten.");
+			args.getSender().sendMessage("§cWährend eines Fightes kannst du das Team nicht bereit schalten.");
 			return;
 		}
 		if (!(args.getSender() instanceof Player))
 		{
-			args.getSender().sendMessage("§cDer Command muss von einen Spieler ausgeführt werden.");
+			args.getSender().sendMessage("§cDer Command muss von einem Spieler ausgeführt werden.");
 			return;
 		}
 		Player senderPlayer = (Player)args.getSender();
