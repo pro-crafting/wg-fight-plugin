@@ -25,7 +25,6 @@ import de.pro_crafting.generator.JobState;
 import de.pro_crafting.generator.JobStateChangedCallback;
 import de.pro_crafting.generator.Point;
 import de.pro_crafting.generator.criteria.Criteria;
-import de.pro_crafting.generator.criteria.CuboidCriteria;
 import de.pro_crafting.generator.criteria.SingleBlockCriteria;
 import de.pro_crafting.generator.job.Job;
 import de.pro_crafting.generator.job.SimpleJob;
@@ -162,7 +161,8 @@ public class Arena{
 			this.remover = new WaterRemover(this.plugin, this);
 			this.scores = new ScoreBoardDisplay(this.plugin, this);
 			this.spectator = new SpectatorMode(this.plugin, this);
-			this.setOpen(true);
+			this.setOpen(false);
+			this.setOpeningFlags(this.repo.getArenaRegion(), com.sk89q.worldguard.protection.flags.StateFlag.State.DENY);
 			return true;
 		}
 		return false;
