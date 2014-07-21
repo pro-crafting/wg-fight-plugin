@@ -1,5 +1,6 @@
 package de.pro_crafting.wg.commands;
 
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import de.pro_crafting.commandframework.Command;
@@ -8,6 +9,8 @@ import de.pro_crafting.wg.Util;
 import de.pro_crafting.wg.WarGear;
 import de.pro_crafting.wg.arena.Arena;
 import de.pro_crafting.wg.arena.State;
+import de.pro_crafting.wg.team.TeamMember;
+import de.pro_crafting.wg.team.TeamNames;
 import de.pro_crafting.wg.team.WgTeam;
 
 public class TeamCommands {
@@ -24,7 +27,9 @@ public class TeamCommands {
 		args.getSender().sendMessage("§c§LKein passender Befehl gefunden!");
 		args.getSender().sendMessage("§B/wgk team leader <playername>");
 		args.getSender().sendMessage("§B/wgk team add <playername>");
+		args.getSender().sendMessage("§B/wgk team add <playername> <team1|team2>");
 		args.getSender().sendMessage("§B/wgk team remove <playername>");
+		args.getSender().sendMessage("§B/wgk team remove <playername> <team1|team2>");
 		args.getSender().sendMessage("§B/wgk team leave");
 	}
 	
@@ -115,19 +120,35 @@ public class TeamCommands {
 			return;
 		}
 		Player senderPlayer = (Player)args.getSender();
-		WgTeam team = arena.getTeam().getTeamOfPlayer(senderPlayer);
-		if (team != null && team.getTeamMember(senderPlayer) != null && !team.getTeamMember(senderPlayer).isTeamLeader())
-		{
-			senderPlayer.sendMessage("§cDer Command muss vom Teamleiter ausgeführt werden.");
-			return;
-		}
+		OfflinePlayer leader = null;
+		WgTeam team = null;
 		if (this.plugin.getArenaManager().getArenaOfTeamMember(p) != null)
 		{
 			senderPlayer.sendMessage("§c"+p.getName()+" ist bereits in einen Team.");
 			return;
 		}
+		if (args.getArgs().length == 1 || !senderPlayer.hasPermission("wargear.team.add.other")) {
+			team = arena.getTeam().getTeamOfPlayer(senderPlayer);
+			if (team != null && team.getTeamMember(senderPlayer) != null && !team.getTeamMember(senderPlayer).isTeamLeader())
+			{
+				senderPlayer.sendMessage("§cDer Command muss vom Teamleiter ausgeführt werden.");
+				return;
+			}
+			leader = senderPlayer;
+		} else {
+			String teamString = args.getArgs()[1];
+			TeamNames teamName = TeamNames.Team1;
+			if (teamString.equalsIgnoreCase("team2")) {
+				teamName = TeamNames.Team2;
+			}
+			team = arena.getTeam().getTeamOfName(teamName);
+			leader = team.getTeamLeader().getOfflinePlayer();
+			if (leader == null) {
+				senderPlayer.sendMessage("§cDas Team hat keinen Leader.");
+			}
+		}
 		team.add(p, false);
-		p.sendMessage("§7Du bist jetzt im Team von §B"+senderPlayer.getName()+".");
+		p.sendMessage("§7Du bist jetzt im Team von §B"+leader.getName()+".");
 		p.sendMessage("§7Mit §8\"/wgk team leave\" §7verlässt du das Team.");
 		arena.getScore().addTeamMember(team.getTeamMember(p), team.getTeamName());
 	}
@@ -167,21 +188,31 @@ public class TeamCommands {
 			return;
 		}
 		Player senderPlayer = (Player)args.getSender();
-		WgTeam team = arena.getTeam().getTeamOfPlayer(senderPlayer);
-		if (!team.getTeamMember(senderPlayer).isTeamLeader())
-		{
-			senderPlayer.sendMessage("§cDer Command muss vom Teamleiter ausgeführt werden.");
-			return;
-		}
-		if (team.getTeamMember(p) == null)
-		{
-			senderPlayer.sendMessage("§c"+p.getName()+" ist nicht in deinem Team.");
-			return;
-		}
-		if (senderPlayer.getName().equalsIgnoreCase(playerName))
-		{
-			senderPlayer.sendMessage("§cDer Team Leiter kann sich nicht rauswerfen.");
-			return;
+		WgTeam team = null;
+		if (args.getArgs().length == 1 || !senderPlayer.hasPermission("wargear.team.remove.other")) {
+			team = arena.getTeam().getTeamOfPlayer(senderPlayer);
+			if (!team.getTeamMember(senderPlayer).isTeamLeader())
+			{
+				senderPlayer.sendMessage("§cDer Command muss vom Teamleiter ausgeführt werden.");
+				return;
+			}
+			if (team.getTeamMember(p) == null)
+			{
+				senderPlayer.sendMessage("§c"+p.getName()+" ist nicht in deinem Team.");
+				return;
+			}
+			if (senderPlayer.getName().equalsIgnoreCase(playerName))
+			{
+				senderPlayer.sendMessage("§cDer Team Leiter kann sich nicht rauswerfen.");
+				return;
+			}
+		} else {
+			String teamString = args.getArgs()[1];
+			TeamNames teamName = TeamNames.Team1;
+			if (teamString.equalsIgnoreCase("team2")) {
+				teamName = TeamNames.Team2;
+			}
+			team = arena.getTeam().getTeamOfName(teamName);
 		}
 		p.sendMessage("§7Du bist nicht mehr im Team von §8."+senderPlayer.getName());
 		arena.getScore().removeTeamMember(team.getTeamMember(p), team.getTeamName());
