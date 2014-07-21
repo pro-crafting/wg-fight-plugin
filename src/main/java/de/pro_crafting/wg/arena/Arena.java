@@ -170,10 +170,12 @@ public class Arena{
 	
 	public void unload()
 	{
+		this.scores.clearScoreboard();
 		HandlerList.unregisterAll(this.team);
 		HandlerList.unregisterAll(this.reseter);
 		HandlerList.unregisterAll(this.scores);
 		this.remover.stop();
+		this.players.clear();
 		this.setOpen(false);
 	}
 	

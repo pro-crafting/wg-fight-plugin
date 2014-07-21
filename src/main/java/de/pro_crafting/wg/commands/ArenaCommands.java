@@ -123,7 +123,6 @@ public class ArenaCommands {
 			args.getSender().sendMessage("§cDu stehst in keiner Arena, oder Sie existiert nicht.");
 			return;
 		}
-		arena.getScore().clearScoreboard();
 		arena.unload();
 		arena.load();
 		args.getSender().sendMessage("§7Arena §B"+arena.getName()+" §7wurde gereloadet.");
