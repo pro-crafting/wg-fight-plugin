@@ -7,31 +7,31 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import de.pro_crafting.kit.plugins.AdminCmdKit;
-import de.pro_crafting.kit.plugins.EssentialsKit;
+import de.pro_crafting.kit.plugins.AdminCmdProvider;
+import de.pro_crafting.kit.plugins.EssentialsProvider;
 
 public class KitAPI 
 {
-	private List<KitPlugin> kitPlugins;
+	private List<KitProvider> kitProviders;
 	
 	public KitAPI()
 	{
-		this.kitPlugins = new ArrayList<KitPlugin>();
+		this.kitProviders = new ArrayList<KitProvider>();
 		this.loadKitPlugins();
 	}
 	
 	private void loadKitPlugins()
 	{
-		hookKitPlugin("AdminCmd", AdminCmdKit.class);
-		hookKitPlugin("Essentials", EssentialsKit.class);
+		hookKitPlugin("AdminCmd", AdminCmdProvider.class);
+		hookKitPlugin("Essentials", EssentialsProvider.class);
 	}
 	
-	private void hookKitPlugin(String name, Class<? extends KitPlugin> hookClass)
+	private void hookKitPlugin(String name, Class<? extends KitProvider> hookClass)
 	{
 		if (Bukkit.getPluginManager().getPlugin(name) != null)
 		{
 			try {
-				this.kitPlugins.add(hookClass.getConstructor().newInstance());
+				this.kitProviders.add(hookClass.getConstructor().newInstance());
 			} catch (Exception ex) {
 				
 			}
@@ -41,7 +41,7 @@ public class KitAPI
 	public boolean existsKit(String kitName)
 	{
 		boolean exists = false;
-		for (KitPlugin curr : this.kitPlugins)
+		for (KitProvider curr : this.kitProviders)
 		{
 			if (!exists)
 			{
@@ -53,11 +53,11 @@ public class KitAPI
 	
 	public void giveKit(String kitName, Player p)
 	{
-		for (KitPlugin curr : this.kitPlugins)
+		for (KitProvider curr : this.kitProviders)
 		{
 			if (curr.existsKit(kitName))
 			{
-				curr.giveKit(kitName, p);
+				p.getInventory().addItem(curr.getItems(kitName));
 				return;
 			}
 		}
@@ -65,11 +65,11 @@ public class KitAPI
 	
 	public ItemStack[] getKitItems(String kitName)
 	{
-		for (KitPlugin curr : this.kitPlugins)
+		for (KitProvider curr : this.kitProviders)
 		{
 			if (curr.existsKit(kitName))
 			{
-				return curr.getKitItems(kitName);
+				return curr.getItems(kitName);
 			}
 		}
 		return new ItemStack[0];
