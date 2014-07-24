@@ -16,7 +16,9 @@ import org.bukkit.scheduler.BukkitTask;
 
 import de.pro_crafting.wg.arena.Arena;
 import de.pro_crafting.wg.arena.State;
+import de.pro_crafting.wg.event.WinQuitEvent;
 import de.pro_crafting.wg.team.TeamMember;
+import de.pro_crafting.wg.team.TeamNames;
 import de.pro_crafting.wg.team.WgTeam;
 
 public class OfflineManager implements Listener{
@@ -180,8 +182,8 @@ public class OfflineManager implements Listener{
 		if (arena == null) {
 			return;
 		}
+		WgTeam team = arena.getTeam().getTeamOfPlayer(player);
 		if (arena.getState() == State.Setup) {
-			WgTeam team = arena.getTeam().getTeamOfPlayer(player);
 			if (member.isTeamLeader()) {
 				for (TeamMember teamMember : team.getTeamMembers().values()) {
 					team.remove(teamMember.getOfflinePlayer());
@@ -192,8 +194,13 @@ public class OfflineManager implements Listener{
 				arena.getScore().removeTeamMember(member, team.getTeamName());
 			}
 		} else {
-			arena.getScore().removeTeamMember(member, arena.getTeam().getTeamOfPlayer(player).getTeamName());
+			arena.getScore().removeTeamMember(member, team.getTeamName());
 			member.setAlive(false);
+		}
+		
+		if (!team.isAlive() || !team.isOnline() || team.getTeamMembers().size() == 0) {
+			new WinQuitEvent(arena, "Gegnerisches Team ist offline.", arena.getTeam().getTeamOfName(team.getTeamName() == TeamNames.Team1 ? 
+					TeamNames.Team1 : TeamNames.Team2), team, FightQuitReason.FightLeader);
 		}
 	}
 	
