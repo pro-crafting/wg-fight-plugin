@@ -15,6 +15,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitTask;
 
 import de.pro_crafting.wg.arena.Arena;
+import de.pro_crafting.wg.arena.State;
 import de.pro_crafting.wg.team.TeamMember;
 import de.pro_crafting.wg.team.WgTeam;
 
@@ -176,8 +177,21 @@ public class OfflineManager implements Listener{
 	{
 		OfflinePlayer player = member.getOfflinePlayer();
 		Arena arena = this.plugin.getArenaManager().getArenaOfTeamMember(player);
-		if (arena != null)
-		{
+		if (arena == null) {
+			return;
+		}
+		if (arena.getState() == State.Setup) {
+			WgTeam team = arena.getTeam().getTeamOfPlayer(player);
+			if (member.isTeamLeader()) {
+				for (TeamMember teamMember : team.getTeamMembers().values()) {
+					team.remove(teamMember.getOfflinePlayer());
+					arena.getScore().removeTeamMember(teamMember, team.getTeamName());
+				}
+			} else {
+				team.remove(player);
+				arena.getScore().removeTeamMember(member, team.getTeamName());
+			}
+		} else {
 			arena.getScore().removeTeamMember(member, arena.getTeam().getTeamOfPlayer(player).getTeamName());
 			member.setAlive(false);
 		}
