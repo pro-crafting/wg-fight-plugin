@@ -40,6 +40,7 @@ public class EssentialsProvider implements KitProvider
 	public ItemStack[] getItems(String kitName) {
 		Essentials plugin =  this.getPlugin();
 		
+		kitName = kitName.toLowerCase();
 		Map<String, Object> kit = plugin.getSettings().getKit(kitName);
 		List<String> items = null;
 		User tmp = plugin.getOfflineUser("tmp");
