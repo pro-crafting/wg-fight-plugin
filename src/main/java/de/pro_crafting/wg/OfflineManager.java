@@ -157,11 +157,8 @@ public class OfflineManager implements Listener {
 			return;
 		}
 		WgTeam team = arena.getTeam().getTeamOfPlayer(player);
-		System.out.println("Vor Setup check");
 		if (arena.getState() == State.Setup) {
-			System.out.println("isTeamLeader");
 			if (member.isTeamLeader()) {
-				System.out.println("team leader");
 				Iterator<Entry<UUID, TeamMember>> memberIterator = team.getTeamMembers().entrySet().iterator();
 				while(memberIterator.hasNext()) {
 					TeamMember toRemove = memberIterator.next().getValue();
@@ -169,7 +166,6 @@ public class OfflineManager implements Listener {
 					memberIterator.remove();
 				}
 			} else {
-				System.out.println("Kein Team leader");
 				team.remove(player);
 				arena.getScore().removeTeamMember(member, team.getTeamName());
 			}
@@ -177,12 +173,10 @@ public class OfflineManager implements Listener {
 			arena.getScore().removeTeamMember(member, team.getTeamName());
 			member.setAlive(false);
 		}
-		System.out.println("Vor quit");
 		if ((!team.isAlive() || !team.isOnline() || team.getTeamMembers().size() == 0) && arena.getState() != State.Setup) {
 			new WinQuitEvent(arena, "Gegnerisches Team ist offline.", arena.getTeam().getTeamOfName(team.getTeamName() == TeamNames.Team1 ? 
 					TeamNames.Team1 : TeamNames.Team2), team, FightQuitReason.FightLeader);
 		}
-		System.out.println("Nach quit");
 	}
 
 	private void runTeam(OfflineRunable runable, WgTeam team) {
