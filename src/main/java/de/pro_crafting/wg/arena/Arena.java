@@ -21,9 +21,9 @@ import com.sk89q.worldguard.bukkit.BukkitUtil;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
+import de.pro_crafting.common.Point;
 import de.pro_crafting.generator.JobState;
 import de.pro_crafting.generator.JobStateChangedCallback;
-import de.pro_crafting.generator.Point;
 import de.pro_crafting.generator.criteria.Criteria;
 import de.pro_crafting.generator.criteria.SingleBlockCriteria;
 import de.pro_crafting.generator.job.Job;

@@ -25,9 +25,9 @@ import com.sk89q.worldedit.data.DataException;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.schematic.MCEditSchematicFormat;
 
+import de.pro_crafting.common.Point;
 import de.pro_crafting.generator.JobState;
 import de.pro_crafting.generator.JobStateChangedCallback;
-import de.pro_crafting.generator.Point;
 import de.pro_crafting.generator.criteria.CuboidCriteria;
 import de.pro_crafting.generator.job.Job;
 import de.pro_crafting.generator.job.SimpleJob;
