@@ -2,6 +2,7 @@ package de.pro_crafting.wg.arena;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -86,6 +87,7 @@ public class SpectatorMode {
 			public void run(TeamMember member) {
 				Player player = member.getPlayer();
 				Util.disableFly(player);
+				player.setGameMode(GameMode.SURVIVAL);
 			}
 		};
 		this.plugin.getOfflineManager().run(teamSpactatingFinisher, team);
