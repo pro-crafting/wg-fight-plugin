@@ -145,4 +145,10 @@ public class Util {
 
         return loc;
     }
+	
+	public static String convertColors(String s)
+	{
+		if(s == null) return null;
+		return s.replaceAll("&([0-9a-f])", "\u00A7$1");
+	}
 }

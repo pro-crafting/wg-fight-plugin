@@ -121,11 +121,11 @@ public class Repository {
 	
 	public String getTeam1Prefix()
 	{
-		return this.plugin.getConfig().getString("prefix-color.team1", ChatColor.RED.toString());
+		return Util.convertColors(this.plugin.getConfig().getString("prefix-color.team1", ChatColor.RED.toString()));
 	}
 	
 	public String getTeam2Prefix()
 	{
-		return this.plugin.getConfig().getString("prefix-color.team2", ChatColor.BLUE.toString());
+		return Util.convertColors(this.plugin.getConfig().getString("prefix-color.team2", ChatColor.BLUE.toString()));
 	}
 }
