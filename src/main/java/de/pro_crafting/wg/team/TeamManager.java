@@ -110,7 +110,12 @@ public class TeamManager implements Listener
 		if (team != null && team.getTeamMember(died).isAlive())
 		{
 			team.getTeamMember(died).setAlive(false);
-			event.setDeathMessage(ChatColor.DARK_GREEN + died.getName() + "["+team.getTeamName().toString()+"] ist gestorben.");
+			String color = this.plugin.getRepo().getTeam1Prefix();
+			if (team.getTeamName() == TeamNames.Team2) {
+				color = this.plugin.getRepo().getTeam2Prefix();
+			}
+			String message = "§8["+color+arena.getName()+"§8] "+ChatColor.DARK_GREEN+died.getName()+" ist gestorben.";
+			event.setDeathMessage(message);
 			this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable()
 			{
 				public void run()
