@@ -2,6 +2,7 @@ package de.pro_crafting.wg.arena;
 
 import java.io.File;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -35,6 +36,8 @@ public class Repository
 	private int scoreboardTime;
 	private boolean isSpectatorModeEnabled;
 	private int spectatorModeTime;
+	private String team1Prefix;
+	private String team2Prefix;
 	
 	private String worldPath;
 	private String arenaRegionPath;
@@ -53,6 +56,8 @@ public class Repository
 	private String scoreboardTimePath;
 	private String spectatorModeEnabledPath;
 	private String spectatorModeTimePath;
+	private String team1PrefixPath;
+	private String team2PrefixPath;
 	
 	public Repository(WarGear plugin, Arena arena)
 	{
@@ -76,6 +81,8 @@ public class Repository
 		scoreboardTimePath = "scoreboard.time";
 		spectatorModeEnabledPath = "spectator-mode.enabled";
 		spectatorModeTimePath = "spectator-mode.time";
+		team1PrefixPath = "prefix.team1";
+		team1PrefixPath = "prefix.team2";
 	}
 	
 	public boolean load()
@@ -100,6 +107,8 @@ public class Repository
 		if (!this.loadScoreboardTime()) return false;
 		if (!this.loadSpectatorModeEnabled()) return false;
 		if (!this.loadSpectatorModeTime()) return false;
+		if (!this.loadTeam1Prefix()) return false;
+		if (!this.loadTeam2Prefix()) return false;
 		
 		this.team1Warp = Util.lookAt(this.team1Warp, this.team2Warp);
 		this.team2Warp = Util.lookAt(this.team2Warp, this.team1Warp);
@@ -218,6 +227,16 @@ public class Repository
 	private boolean loadSpectatorModeTime()
 	{
 		this.spectatorModeTime = this.config.getInt(spectatorModeTimePath, 120);
+		return true;
+	}
+	
+	private boolean loadTeam1Prefix() {
+		this.team1Prefix = Util.convertColors(this.config.getString(team1PrefixPath, ChatColor.RED.toString()));
+		return true;
+	}
+	
+	private boolean loadTeam2Prefix() {
+		this.team2Prefix = Util.convertColors(this.config.getString(team2PrefixPath, ChatColor.BLUE.toString()));
 		return true;
 	}
 	
@@ -435,4 +454,14 @@ public class Repository
 		this.spectatorModeTime = spectatorModeTime;
 	}
 	
+	
+	public String getTeam1Prefix()
+	{
+		return this.team1Prefix;
+	}
+	
+	public String getTeam2Prefix()
+	{
+		return this.team2Prefix;
+	}
 }

@@ -86,9 +86,9 @@ public class TeamManager implements Listener
 	
 	public void sendTeamOutput()
 	{
-		String team1 = this.plugin.getRepo().getTeam1Prefix()+
+		String team1 = arena.getRepo().getTeam1Prefix()+
 				"[Team1]"+ ChatColor.YELLOW +""+ ChatColor.ITALIC+concateTeamPlayers(this.getTeam1());
-		String team2 = this.plugin.getRepo().getTeam2Prefix()+
+		String team2 = arena.getRepo().getTeam2Prefix()+
 				"[Team2]"+ ChatColor.YELLOW +""+ ChatColor.ITALIC+concateTeamPlayers(this.getTeam2());
 		this.arena.broadcastMessage(ChatColor.YELLOW +""+ ChatColor.ITALIC+team1);
 		this.arena.broadcastMessage(ChatColor.YELLOW +""+ ChatColor.ITALIC+team2);
@@ -110,9 +110,9 @@ public class TeamManager implements Listener
 		if (team != null && team.getTeamMember(died).isAlive())
 		{
 			team.getTeamMember(died).setAlive(false);
-			String color = this.plugin.getRepo().getTeam1Prefix();
+			String color = arena.getRepo().getTeam1Prefix();
 			if (team.getTeamName() == TeamNames.Team2) {
-				color = this.plugin.getRepo().getTeam2Prefix();
+				color = arena.getRepo().getTeam2Prefix();
 			}
 			String message = "§8["+color+arena.getName()+"§8] "+ChatColor.DARK_GREEN+died.getName()+" ist gestorben.";
 			event.setDeathMessage(message);

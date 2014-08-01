@@ -8,6 +8,9 @@ scoreboard:
 spectator-mode:
     enabled: true
     time: 120
+prefix:
+    team1: '&c'
+    team2: '&3'
 ground:
     height: 4
     damage: 4

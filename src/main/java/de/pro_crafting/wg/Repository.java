@@ -118,14 +118,4 @@ public class Repository {
 		}
 		return ret;
 	}
-	
-	public String getTeam1Prefix()
-	{
-		return Util.convertColors(this.plugin.getConfig().getString("prefix-color.team1", ChatColor.RED.toString()));
-	}
-	
-	public String getTeam2Prefix()
-	{
-		return Util.convertColors(this.plugin.getConfig().getString("prefix-color.team2", ChatColor.BLUE.toString()));
-	}
 }

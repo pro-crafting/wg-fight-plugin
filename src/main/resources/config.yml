@@ -7,6 +7,3 @@ economy:
 prefix-enabled: true
 metrics: true
 update-check: true
-prefix-color:
-    team1: '&c'
-    team2: '&3'
