@@ -235,7 +235,7 @@ public class TeamCommands {
 			return;
 		}
 		
-		if (arena.getState() == State.Running || arena.getState() == State.PreRunning)
+		if (arena.getState() != State.Setup)
 		{
 			args.getSender().sendMessage("§cWährend eines Fightes kannst du nicht dein Team verlassen.");
 			return;
