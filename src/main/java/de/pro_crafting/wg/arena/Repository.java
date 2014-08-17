@@ -82,7 +82,7 @@ public class Repository
 		spectatorModeEnabledPath = "spectator-mode.enabled";
 		spectatorModeTimePath = "spectator-mode.time";
 		team1PrefixPath = "prefix.team1";
-		team1PrefixPath = "prefix.team2";
+		team2PrefixPath = "prefix.team2";
 	}
 	
 	public boolean load()
