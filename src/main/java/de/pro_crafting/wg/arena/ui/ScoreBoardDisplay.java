@@ -56,7 +56,7 @@ public class ScoreBoardDisplay implements Listener
 		{
 			return;
 		}
-		health = board.registerNewObjective("Lebensanzeige", "dummy");
+		health = board.registerNewObjective("§bLeben", "dummy");
 		health.setDisplaySlot(DisplaySlot.SIDEBAR);
 		initTeams();
 		timeScore = health.getScore(ChatColor.GREEN+"Zeit (m):");
