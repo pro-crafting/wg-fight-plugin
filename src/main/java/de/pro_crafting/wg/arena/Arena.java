@@ -378,19 +378,18 @@ public class Arena{
 		return this.isOpen;
 	}
 	
-	public PlayerArenaPosition getPosition(Player player) {
+	public ArenaPosition getPosition(Location where) {
 		CuboidRegion innerRegion = getPlayGroundRegion();
-		Location where = player.getLocation();
 		Vector vector = BukkitUtil.toVector(where);
 		
-		if (!this.repo.getWorld().getUID().equals(player.getWorld().getUID())) {
-			return PlayerArenaPosition.Outside;
+		if (!this.repo.getWorld().getUID().equals(where.getWorld().getUID())) {
+			return ArenaPosition.Outside;
 		}
 		if (!contains(where)) {
-			return PlayerArenaPosition.Outside;
+			return ArenaPosition.Outside;
 		}
 		if (!innerRegion.contains(vector)) {
-			return PlayerArenaPosition.Platform;
+			return ArenaPosition.Platform;
 		}
 		
 		double distanceTeam1Squared = vector.distanceSq(this.repo.getTeam1Region().getMinimumPoint()) + 
@@ -400,21 +399,21 @@ public class Arena{
 				vector.distanceSq(this.repo.getTeam2Region().getMaximumPoint());
 		
 		if (this.repo.getTeam1Region().contains(vector)) {
-			return PlayerArenaPosition.Team1WG;
+			return ArenaPosition.Team1WG;
 		}
 		if (this.repo.getTeam2Region().contains(vector)) {
-			return PlayerArenaPosition.Team2WG;
+			return ArenaPosition.Team2WG;
 		}
 		
 		if ((distanceTeam1Squared - distanceTeam2Squared) > 0) {
 			if (this.repo.getTeam2Region().contains(vector)) {
-				return PlayerArenaPosition.Team2PlayField;
+				return ArenaPosition.Team2PlayField;
 			}
 		} else {
-			return PlayerArenaPosition.Team1PlayField;
+			return ArenaPosition.Team1PlayField;
 		}
 		
-		return PlayerArenaPosition.Outside;
+		return ArenaPosition.Outside;
 	}
 	
 	public void replaceMG() {

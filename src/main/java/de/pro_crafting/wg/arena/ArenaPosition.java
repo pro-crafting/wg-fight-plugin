@@ -1,6 +1,6 @@
 package de.pro_crafting.wg.arena;
 
-public enum PlayerArenaPosition {
+public enum ArenaPosition {
 	Outside,
 	Platform,
 	Team1PlayField,
