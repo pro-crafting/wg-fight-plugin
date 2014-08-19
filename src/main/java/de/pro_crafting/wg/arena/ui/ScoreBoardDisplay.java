@@ -52,7 +52,7 @@ public class ScoreBoardDisplay implements Listener
 		{
 			return;
 		}
-		if (board.getObjective("Lebensanzeige") != null)
+		if (health != null)
 		{
 			return;
 		}
