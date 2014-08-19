@@ -177,9 +177,9 @@ public class WgListener implements Listener {
 			WgTeam team = arenaTo.getTeam().getTeamOfPlayer(player);
 			if (team == null && to != ArenaPosition.Platform) {
 				resetPlayerMovement(ArenaPosition.Platform, from, event.getFrom(), player, arenaTo);
-			} else if (team.getTeamName() == TeamNames.Team1 && (to == ArenaPosition.Team2PlayField || to == ArenaPosition.Team2WG)) {
+			} else if (team != null && team.getTeamName() == TeamNames.Team1 && (to == ArenaPosition.Team2PlayField || to == ArenaPosition.Team2WG)) {
 				resetPlayerMovement(ArenaPosition.Team1PlayField, from, event.getFrom(), player, arenaTo);
-			} else if (team.getTeamName() == TeamNames.Team2 && (to == ArenaPosition.Team1PlayField || to == ArenaPosition.Team1WG)) {
+			} else if (team != null && team.getTeamName() == TeamNames.Team2 && (to == ArenaPosition.Team1PlayField || to == ArenaPosition.Team1WG)) {
 				resetPlayerMovement(ArenaPosition.Team2PlayField, from, event.getFrom(), player, arenaTo);
 			}
 		}
