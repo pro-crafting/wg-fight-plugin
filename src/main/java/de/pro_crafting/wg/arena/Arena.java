@@ -382,9 +382,6 @@ public class Arena{
 		CuboidRegion innerRegion = getPlayGroundRegion();
 		Vector vector = BukkitUtil.toVector(where);
 		
-		if (!this.repo.getWorld().getUID().equals(where.getWorld().getUID())) {
-			return ArenaPosition.Outside;
-		}
 		if (!contains(where)) {
 			return ArenaPosition.Outside;
 		}
@@ -406,14 +403,10 @@ public class Arena{
 		}
 		
 		if ((distanceTeam1Squared - distanceTeam2Squared) > 0) {
-			if (this.repo.getTeam2Region().contains(vector)) {
-				return ArenaPosition.Team2PlayField;
-			}
+			return ArenaPosition.Team2PlayField;
 		} else {
 			return ArenaPosition.Team1PlayField;
 		}
-		
-		return ArenaPosition.Outside;
 	}
 	
 	public void replaceMG() {
