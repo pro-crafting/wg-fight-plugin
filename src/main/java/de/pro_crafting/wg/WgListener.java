@@ -3,6 +3,7 @@ package de.pro_crafting.wg;
 import net.gravitydevelopment.updater.Updater.UpdateResult;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -23,8 +24,10 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
 
 import de.pro_crafting.wg.arena.Arena;
+import de.pro_crafting.wg.arena.ArenaPosition;
 import de.pro_crafting.wg.arena.State;
 import de.pro_crafting.wg.event.ArenaStateChangedEvent;
 import de.pro_crafting.wg.event.FightQuitEvent;
@@ -154,15 +157,40 @@ public class WgListener implements Listener {
 		{
 			return;
 		}
+		Player player = event.getPlayer();
 		Arena arenaFrom = this.plugin.getArenaManager().getArenaAt(event.getFrom());
 		Arena arenaTo = this.plugin.getArenaManager().getArenaAt(event.getTo());
 		if (arenaFrom != null && !arenaFrom.equals(arenaTo))
 		{
-			arenaFrom.leave(event.getPlayer());
+			arenaFrom.leave(player);
 		}
 		if (arenaTo != null)
 		{
-			arenaTo.join(event.getPlayer());
+			arenaTo.join(player);
+			
+			if (player.hasPermission("wargear.arena.bypass")) {
+				return;
+			}
+			
+			ArenaPosition to = arenaTo.getPosition(event.getTo());
+			ArenaPosition from = arenaTo.getPosition(event.getFrom());
+			WgTeam team = arenaTo.getTeam().getTeamOfPlayer(player);
+			if (team == null && to != ArenaPosition.Platform) {
+				resetPlayerMovement(ArenaPosition.Platform, from, event.getFrom(), player, arenaTo);
+			} else if (team.getTeamName() == TeamNames.Team1 && (to == ArenaPosition.Team2PlayField || to == ArenaPosition.Team2WG)) {
+				resetPlayerMovement(ArenaPosition.Team1PlayField, from, event.getFrom(), player, arenaTo);
+			} else if (team.getTeamName() == TeamNames.Team2 && (to == ArenaPosition.Team1PlayField || to == ArenaPosition.Team1WG)) {
+				resetPlayerMovement(ArenaPosition.Team2PlayField, from, event.getFrom(), player, arenaTo);
+			}
+		}
+	}
+	
+	private void resetPlayerMovement(ArenaPosition position, ArenaPosition from, Location loc, Player player, Arena arena) {
+		if (from == position) {
+			arena.teleport(player);
+		} else {
+			player.teleport(loc);
+			player.setVelocity(new Vector(0, 0, 0));
 		}
 	}
 	
