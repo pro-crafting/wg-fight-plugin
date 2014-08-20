@@ -52,7 +52,7 @@ public class ScoreBoardDisplay implements Listener
 		{
 			return;
 		}
-		if (health != null)
+		if (board.getObjective(DisplaySlot.SIDEBAR) != null)
 		{
 			return;
 		}
