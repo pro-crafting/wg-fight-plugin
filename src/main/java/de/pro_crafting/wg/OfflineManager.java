@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -17,6 +18,7 @@ import org.bukkit.scheduler.BukkitTask;
 
 import de.pro_crafting.wg.arena.Arena;
 import de.pro_crafting.wg.arena.State;
+import de.pro_crafting.wg.event.FightQuitEvent;
 import de.pro_crafting.wg.event.WinQuitEvent;
 import de.pro_crafting.wg.team.TeamMember;
 import de.pro_crafting.wg.team.TeamNames;
@@ -25,14 +27,14 @@ import de.pro_crafting.wg.team.WgTeam;
 public class OfflineManager implements Listener {
 	private WarGear plugin;
 	private Map<WgTeam, List<OfflineRunable>> teamRunnables;
-	private Map<TeamMember, List<OfflineRunable>> memberRunnables;
+	private Map<String, List<OfflineRunable>> memberRunnables;
 	private List<TeamMember> offlineTeamMembers;
 	private BukkitTask task;
 
 	public OfflineManager(WarGear plugin) {
 		this.plugin = plugin;
 		this.teamRunnables = new HashMap<WgTeam, List<OfflineRunable>>();
-		this.memberRunnables = new HashMap<TeamMember, List<OfflineRunable>>();
+		this.memberRunnables = new HashMap<String, List<OfflineRunable>>();
 		this.offlineTeamMembers = new ArrayList<TeamMember>();
 		this.task = this.plugin.getServer().getScheduler()
 				.runTaskTimer(plugin, new Runnable() {
@@ -69,13 +71,12 @@ public class OfflineManager implements Listener {
 	public boolean run(OfflineRunable runable, TeamMember member) {
 		if (!member.isOnline()) {
 			if (!this.memberRunnables.containsKey(member)) {
-				this.memberRunnables.put(member,
+				this.memberRunnables.put(member.getOfflinePlayer().getUniqueId().toString(),
 						new ArrayList<OfflineRunable>());
 			}
-			this.memberRunnables.get(member).add(runable);
+			this.memberRunnables.get(member.getOfflinePlayer().getUniqueId().toString()).add(runable);
 		} else {
 			runable.run(member);
-			runMember(runable, member);
 		}
 		return member.isOnline();
 	}
@@ -111,19 +112,20 @@ public class OfflineManager implements Listener {
 			}
 		}
 
-		Iterator<Entry<TeamMember, List<OfflineRunable>>> memberIterator = this.memberRunnables
+		Iterator<Entry<String, List<OfflineRunable>>> memberIterator = this.memberRunnables
 				.entrySet().iterator();
 		while (memberIterator.hasNext()) {
-			Entry<TeamMember, List<OfflineRunable>> current = memberIterator
+			Entry<String, List<OfflineRunable>> current = memberIterator
 					.next();
-			if (current.getKey().isOnline()) {
+			TeamMember member = this.plugin.getArenaManager().getArenaOfTeamMember(Bukkit.getOfflinePlayer(UUID.fromString(current.getKey()))).getTeam().getTeamMember(Bukkit.getOfflinePlayer(UUID.fromString(current.getKey())));
+			if (member.isOnline()) {
 				for (OfflineRunable runable : current.getValue()) {
-					runable.run(current.getKey());
+					runable.run(member);
 				}
 				memberIterator.remove();
-			} else if (isTooLongOffline(current.getKey())) {
+			} else if (isTooLongOffline(member)) {
 				memberIterator.remove();
-				killTeamMember(current.getKey());
+				killTeamMember(member);
 			}
 		}
 
@@ -173,9 +175,10 @@ public class OfflineManager implements Listener {
 			arena.getScore().removeTeamMember(member, team.getTeamName());
 			member.setAlive(false);
 		}
-		if ((!team.isAlive() || !team.isOnline() || team.getTeamMembers().size() == 0) && arena.getState() != State.Setup) {
-			new WinQuitEvent(arena, "Gegnerisches Team ist offline.", arena.getTeam().getTeamOfName(team.getTeamName() == TeamNames.Team1 ? 
+		if ((!team.isAlive() || !team.isOnline() || team.getTeamMembers().size() == 0) && (arena.getState() == State.PreRunning || arena.getState() == State.Running)) {
+			FightQuitEvent event = new WinQuitEvent(arena, "Gegnerisches Team ist offline.", arena.getTeam().getTeamOfName(team.getTeamName() == TeamNames.Team1 ? 
 					TeamNames.Team1 : TeamNames.Team2), team, FightQuitReason.FightLeader);
+			Bukkit.getPluginManager().callEvent(event);
 		}
 	}
 
