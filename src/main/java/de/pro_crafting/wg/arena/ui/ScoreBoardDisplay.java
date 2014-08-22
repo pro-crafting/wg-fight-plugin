@@ -157,7 +157,7 @@ public class ScoreBoardDisplay implements Listener
 		unregisterTeam(teamBlue);
 		unregisterTeam(teamLeaderBlue);
 		unregisterTeam(teamLeaderRed);
-		if (health != null)
+		if (board.getObjective(DisplaySlot.SIDEBAR) != null)
 		{
 			health.unregister();
 		}
@@ -165,7 +165,7 @@ public class ScoreBoardDisplay implements Listener
 	
 	private void unregisterTeam(Team team)
 	{
-		if (team != null)
+		if (board.getTeam(team.getName()) != null)
 		{
 			team.unregister();
 		}
@@ -223,6 +223,7 @@ public class ScoreBoardDisplay implements Listener
 		}
 		if (event.getTo() == State.Setup)
 		{
+			clearScoreboard();
 			initScoreboard();
 		}
 		else if (event.getTo() == State.PreRunning)
@@ -240,7 +241,7 @@ public class ScoreBoardDisplay implements Listener
 		{
 			this.timer.start();
 		}
-		else if (event.getFrom() == State.Running || event.getFrom() == State.PreRunning)
+		else if (event.getFrom() == State.Running)
 		{
 			if (this.timer.getIsRunning())
 			{
