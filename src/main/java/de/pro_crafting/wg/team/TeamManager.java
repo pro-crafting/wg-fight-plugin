@@ -95,7 +95,7 @@ public class TeamManager implements Listener
 	}
 	
 	@EventHandler (priority = EventPriority.HIGH, ignoreCancelled=true)
-    public void deathEventHandler(PlayerDeathEvent event)
+    public void playerDeath(PlayerDeathEvent event)
 	{
 		if (arena.getState() != State.Running)
 		{
