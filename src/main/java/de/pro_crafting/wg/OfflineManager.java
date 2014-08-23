@@ -21,7 +21,7 @@ import de.pro_crafting.wg.arena.State;
 import de.pro_crafting.wg.event.FightQuitEvent;
 import de.pro_crafting.wg.event.WinQuitEvent;
 import de.pro_crafting.wg.team.TeamMember;
-import de.pro_crafting.wg.team.TeamNames;
+import de.pro_crafting.wg.team.PlayerRole;
 import de.pro_crafting.wg.team.WgTeam;
 
 public class OfflineManager implements Listener {
@@ -176,8 +176,8 @@ public class OfflineManager implements Listener {
 			member.setAlive(false);
 		}
 		if ((!team.isAlive() || !team.isOnline() || team.getTeamMembers().size() == 0) && (arena.getState() == State.PreRunning || arena.getState() == State.Running)) {
-			FightQuitEvent event = new WinQuitEvent(arena, "Gegnerisches Team ist offline.", arena.getTeam().getTeamOfName(team.getTeamName() == TeamNames.Team1 ? 
-					TeamNames.Team1 : TeamNames.Team2), team, FightQuitReason.FightLeader);
+			FightQuitEvent event = new WinQuitEvent(arena, "Gegnerisches Team ist offline.", arena.getTeam().getTeamOfName(team.getTeamName() == PlayerRole.Team1 ? 
+					PlayerRole.Team1 : PlayerRole.Team2), team, FightQuitReason.FightLeader);
 			Bukkit.getPluginManager().callEvent(event);
 		}
 	}

@@ -29,15 +29,15 @@ public class TeamManager implements Listener
 	public TeamManager(WarGear plugin, Arena arena)
 	{
 		this.plugin = plugin;
-		this.team1 = new WgTeam(TeamNames.Team1);
-		this.team2 = new WgTeam(TeamNames.Team2);
+		this.team1 = new WgTeam(PlayerRole.Team1);
+		this.team2 = new WgTeam(PlayerRole.Team2);
 		this.plugin.getServer().getPluginManager().registerEvents(this, this.plugin);
 		this.arena = arena;
 	}
 	
-	public Location getTeamSpawn(TeamNames team)
+	public Location getTeamSpawn(PlayerRole team)
 	{
-		if (team == TeamNames.Team1)
+		if (team == PlayerRole.Team1)
 		{
 			return arena.getRepo().getTeam1Warp();
 		}
@@ -51,8 +51,8 @@ public class TeamManager implements Listener
 	{
 		quiteFightForTeam(this.team1);
 		quiteFightForTeam(this.team2);
-		this.team1 = new WgTeam(TeamNames.Team1);
-		this.team2 = new WgTeam(TeamNames.Team2);
+		this.team1 = new WgTeam(PlayerRole.Team1);
+		this.team2 = new WgTeam(PlayerRole.Team2);
 	}
 	
 	private void quiteFightForTeam(WgTeam team)
@@ -68,7 +68,7 @@ public class TeamManager implements Listener
 		this.plugin.getOfflineManager().run(fightQuiter, team);
 	}
 	
-	public void sendWinnerOutput(TeamNames teamName)
+	public void sendWinnerOutput(PlayerRole teamName)
 	{
 		String team = "["+teamName.toString()+"] "+concateTeamPlayers(this.getTeamOfName(teamName));
 		this.arena.broadcastMessage(ChatColor.DARK_GREEN + team + " hat gewonnen!");
@@ -111,7 +111,7 @@ public class TeamManager implements Listener
 		{
 			team.getTeamMember(died).setAlive(false);
 			String color = arena.getRepo().getTeam1Prefix();
-			if (team.getTeamName() == TeamNames.Team2) {
+			if (team.getTeamName() == PlayerRole.Team2) {
 				color = arena.getRepo().getTeam2Prefix();
 			}
 			String message = "§8["+color+arena.getName()+"§8] "+ChatColor.DARK_GREEN+died.getName()+" ist gestorben.";
@@ -136,9 +136,9 @@ public class TeamManager implements Listener
 		this.plugin.getOfflineManager().run(healer, team);
 	}
 	 
-	public WgTeam getTeamOfName(TeamNames name)
+	public WgTeam getTeamOfName(PlayerRole name)
 	{
-		if (name == TeamNames.Team1)
+		if (name == PlayerRole.Team1)
 		{
 			return this.team1;
 		}
@@ -166,7 +166,7 @@ public class TeamManager implements Listener
 		if (!team.isAlive())
 		{
 			WgTeam winnerTeam = this.team1;
-			if (team.getTeamName() == TeamNames.Team1)
+			if (team.getTeamName() == PlayerRole.Team1)
 			{
 				winnerTeam = this.team2;
 			}

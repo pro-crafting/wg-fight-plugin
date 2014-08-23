@@ -9,7 +9,7 @@ import de.pro_crafting.wg.Util;
 import de.pro_crafting.wg.WarGear;
 import de.pro_crafting.wg.arena.Arena;
 import de.pro_crafting.wg.arena.State;
-import de.pro_crafting.wg.team.TeamNames;
+import de.pro_crafting.wg.team.PlayerRole;
 import de.pro_crafting.wg.team.WgTeam;
 
 public class TeamCommands {
@@ -136,9 +136,9 @@ public class TeamCommands {
 			leader = senderPlayer;
 		} else {
 			String teamString = args.getArgs()[1];
-			TeamNames teamName = TeamNames.Team1;
+			PlayerRole teamName = PlayerRole.Team1;
 			if (teamString.equalsIgnoreCase("team2")) {
-				teamName = TeamNames.Team2;
+				teamName = PlayerRole.Team2;
 			}
 			team = arena.getTeam().getTeamOfName(teamName);
 			leader = team.getTeamLeader().getOfflinePlayer();
@@ -207,9 +207,9 @@ public class TeamCommands {
 			}
 		} else {
 			String teamString = args.getArgs()[1];
-			TeamNames teamName = TeamNames.Team1;
+			PlayerRole teamName = PlayerRole.Team1;
 			if (teamString.equalsIgnoreCase("team2")) {
-				teamName = TeamNames.Team2;
+				teamName = PlayerRole.Team2;
 			}
 			team = arena.getTeam().getTeamOfName(teamName);
 		}

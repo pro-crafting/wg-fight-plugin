@@ -11,9 +11,9 @@ public class WgTeam
 {
 	private Map<UUID, TeamMember> teamMember;
 	private boolean isReady;
-	private TeamNames teamName;
+	private PlayerRole teamName;
 	
-	public WgTeam(TeamNames teamName)
+	public WgTeam(PlayerRole teamName)
 	{
 		this.teamName = teamName;
 		isReady = false;
@@ -40,7 +40,7 @@ public class WgTeam
 		this.isReady = isReady;
 	}
 	
-	public TeamNames getTeamName()
+	public PlayerRole getTeamName()
 	{
 		return this.teamName;
 	}

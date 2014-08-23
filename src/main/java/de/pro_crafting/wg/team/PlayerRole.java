@@ -1,6 +1,7 @@
 package de.pro_crafting.wg.team;
 
-public enum TeamNames {
+public enum PlayerRole {
 	Team1,
-	Team2
+	Team2,
+	Viewer
 }

@@ -1,4 +1,4 @@
-package de.pro_crafting.wg;
+package de.pro_crafting.wg.modes;
 
 public interface FightMode {
 

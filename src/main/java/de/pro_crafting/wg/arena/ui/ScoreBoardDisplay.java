@@ -20,7 +20,7 @@ import de.pro_crafting.wg.arena.Arena;
 import de.pro_crafting.wg.arena.State;
 import de.pro_crafting.wg.event.ArenaStateChangedEvent;
 import de.pro_crafting.wg.team.TeamMember;
-import de.pro_crafting.wg.team.TeamNames;
+import de.pro_crafting.wg.team.PlayerRole;
 
 public class ScoreBoardDisplay implements Listener
 {
@@ -85,7 +85,7 @@ public class ScoreBoardDisplay implements Listener
 		return created;
 	}
 	
-	public void removeTeamMember(TeamMember member, TeamNames team)
+	public void removeTeamMember(TeamMember member, PlayerRole team)
 	{
 		if (!this.arena.getRepo().isScoreboardEnabled())
 		{
@@ -93,11 +93,11 @@ public class ScoreBoardDisplay implements Listener
 		}
 		initScoreboard();
 		OfflinePlayer player = member.getOfflinePlayer();
-		if (team == TeamNames.Team1)
+		if (team == PlayerRole.Team1)
 		{
 			removeMemberFromTeam(teamLeaderRed, teamRed, player, member.isTeamLeader());
 		}
-		else if (team == TeamNames.Team2)
+		else if (team == PlayerRole.Team2)
 		{
 			removeMemberFromTeam(teamLeaderBlue, teamBlue, player, member.isTeamLeader());
 		}
@@ -116,7 +116,7 @@ public class ScoreBoardDisplay implements Listener
 		}
 	}
 	
-	public void addTeamMember(TeamMember member, TeamNames team)
+	public void addTeamMember(TeamMember member, PlayerRole team)
 	{
 		if (!this.arena.getRepo().isScoreboardEnabled())
 		{
@@ -124,11 +124,11 @@ public class ScoreBoardDisplay implements Listener
 		}
 		initScoreboard();
 		Player player = member.getPlayer();
-		if (team == TeamNames.Team1)
+		if (team == PlayerRole.Team1)
 		{
 			addMemberToTeam(teamLeaderRed, teamRed, player, member.isTeamLeader());
 		}
-		else if (team == TeamNames.Team2)
+		else if (team == PlayerRole.Team2)
 		{
 			addMemberToTeam(teamLeaderBlue, teamBlue, player, member.isTeamLeader());
 		}
