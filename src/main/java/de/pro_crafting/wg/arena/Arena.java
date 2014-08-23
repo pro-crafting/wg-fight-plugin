@@ -321,7 +321,6 @@ public class Arena{
 			}
 		}
 		this.setOpen(false);
-		this.getTeam().sendTeamOutput();
 		this.getFightMode().start();
 		this.updateState(State.PreRunning);
 	}
