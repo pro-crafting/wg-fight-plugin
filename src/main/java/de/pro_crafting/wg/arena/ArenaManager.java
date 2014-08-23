@@ -6,6 +6,8 @@ import java.util.Map;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 
+import de.pro_crafting.wg.PlayerGroup;
+import de.pro_crafting.wg.PlayerRole;
 import de.pro_crafting.wg.WarGear;
 
 public class ArenaManager {
@@ -110,5 +112,11 @@ public class ArenaManager {
 			}
 		}
 		return null;
+	}
+	
+	public PlayerGroup getGroup(OfflinePlayer player) {
+		Arena arena = this.getArenaOfTeamMember(player);
+		PlayerRole role = arena.getTeam().getTeamOfPlayer(player).getTeamName();
+		return new PlayerGroup(arena, role);
 	}
 }

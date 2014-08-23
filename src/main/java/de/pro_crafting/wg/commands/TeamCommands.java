@@ -5,11 +5,11 @@ import org.bukkit.entity.Player;
 
 import de.pro_crafting.commandframework.Command;
 import de.pro_crafting.commandframework.CommandArgs;
+import de.pro_crafting.wg.PlayerRole;
 import de.pro_crafting.wg.Util;
 import de.pro_crafting.wg.WarGear;
 import de.pro_crafting.wg.arena.Arena;
 import de.pro_crafting.wg.arena.State;
-import de.pro_crafting.wg.team.PlayerRole;
 import de.pro_crafting.wg.team.WgTeam;
 
 public class TeamCommands {

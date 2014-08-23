@@ -15,12 +15,12 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
 
+import de.pro_crafting.wg.PlayerRole;
 import de.pro_crafting.wg.WarGear;
 import de.pro_crafting.wg.arena.Arena;
 import de.pro_crafting.wg.arena.State;
 import de.pro_crafting.wg.event.ArenaStateChangedEvent;
 import de.pro_crafting.wg.team.TeamMember;
-import de.pro_crafting.wg.team.PlayerRole;
 
 public class ScoreBoardDisplay implements Listener
 {

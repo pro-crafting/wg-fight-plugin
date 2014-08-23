@@ -33,7 +33,6 @@ import de.pro_crafting.wg.event.ArenaStateChangedEvent;
 import de.pro_crafting.wg.event.FightQuitEvent;
 import de.pro_crafting.wg.event.WinQuitEvent;
 import de.pro_crafting.wg.modes.KitMode;
-import de.pro_crafting.wg.team.PlayerRole;
 import de.pro_crafting.wg.team.WgTeam;
 
 public class WgListener implements Listener {

@@ -7,6 +7,8 @@ import java.util.UUID;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
+import de.pro_crafting.wg.PlayerRole;
+
 public class WgTeam 
 {
 	private Map<UUID, TeamMember> teamMember;

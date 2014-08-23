@@ -21,7 +21,6 @@ import de.pro_crafting.wg.arena.State;
 import de.pro_crafting.wg.event.FightQuitEvent;
 import de.pro_crafting.wg.event.WinQuitEvent;
 import de.pro_crafting.wg.team.TeamMember;
-import de.pro_crafting.wg.team.PlayerRole;
 import de.pro_crafting.wg.team.WgTeam;
 
 public class OfflineManager implements Listener {
