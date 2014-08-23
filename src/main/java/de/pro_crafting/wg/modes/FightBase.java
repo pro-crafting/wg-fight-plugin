@@ -7,7 +7,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-import de.pro_crafting.wg.FightMode;
 import de.pro_crafting.wg.OfflineRunable;
 import de.pro_crafting.wg.Util;
 import de.pro_crafting.wg.WarGear;
