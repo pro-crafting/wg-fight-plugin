@@ -236,12 +236,8 @@ public class WgListener implements Listener {
 			return;
 		}
 		final Player player = (Player)event.getEntity();
-		final Arena arena = this.plugin.getArenaManager().getArenaAt(player.getLocation());
+		final Arena arena = this.plugin.getArenaManager().getArenaOfTeamMember(player);
 		if (arena == null)
-		{
-			return;
-		}
-		if (arena.getTeam().getTeamOfPlayer(player) == null)
 		{
 			return;
 		}
@@ -277,7 +273,7 @@ public class WgListener implements Listener {
 		}
 		if (damager != null && arena.getTeam().getTeamOfPlayer(player).equals(arena.getTeam().getTeamOfPlayer(damager)))
 		{
-			damager.sendMessage("§7Du darfst keinen Spieler aus deinem Team Schaden zufügen.");
+			damager.sendMessage("§7Du darfst Spielern aus deinem Team keinen Schaden zufügen.");
 			event.setCancelled(true);
 		}
 	}
