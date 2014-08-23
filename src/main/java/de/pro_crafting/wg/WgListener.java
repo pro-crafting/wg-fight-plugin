@@ -310,7 +310,7 @@ public class WgListener implements Listener {
 	{
 		Player player = event.getPlayer();
 		Block block = event.getClickedBlock();
-		if (isAnywhereInTeam(player) && block != null && block.getType() == Material.CAKE_BLOCK)
+		if (this.plugin.getArenaManager().getArenaOfTeamMember(player) != null && block != null && block.getType() == Material.CAKE_BLOCK)
 		{
 			player.sendMessage("§7Du darfst kein Essen benutzen.");
 			event.setCancelled(true);
@@ -322,7 +322,7 @@ public class WgListener implements Listener {
 	{
 		Player player = event.getPlayer();
 		ItemStack item = event.getItem();
-		if (isAnywhereInTeam(player))
+		if (this.plugin.getArenaManager().getArenaOfTeamMember(player) != null)
 		{
 			if (item.getType().isEdible() || item.getType() == Material.POTION)
 			{
@@ -342,17 +342,5 @@ public class WgListener implements Listener {
 			((Player)event.getWhoClicked()).sendMessage("§7Du darfst nicht craften.");
 			event.setCancelled(true);
 		}
-	}
-	
-	private boolean isAnywhereInTeam(Player p)
-	{
-		for (Arena currArena : this.plugin.getArenaManager().getArenas().values())
-		{
-			if (currArena.getTeam().getTeamOfPlayer(p) != null)
-			{
-				return true;
-			}
-		}
-		return false;
 	}
 }
