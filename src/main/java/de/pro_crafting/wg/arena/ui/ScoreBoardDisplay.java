@@ -149,7 +149,7 @@ public class ScoreBoardDisplay implements Listener
 	
 	public void clearScoreboard()
 	{
-		if (!this.arena.getRepo().isScoreboardEnabled())
+		if (!this.arena.getRepo().isScoreboardEnabled() || board == null)
 		{
 			return;
 		}
