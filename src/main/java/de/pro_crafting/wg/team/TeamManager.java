@@ -4,22 +4,15 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
-import de.pro_crafting.wg.FightQuitReason;
 import de.pro_crafting.wg.OfflineRunable;
 import de.pro_crafting.wg.PlayerRole;
 import de.pro_crafting.wg.Util;
 import de.pro_crafting.wg.WarGear;
 import de.pro_crafting.wg.arena.Arena;
-import de.pro_crafting.wg.arena.State;
-import de.pro_crafting.wg.event.WinQuitEvent;
 
-public class TeamManager implements Listener
+public class TeamManager
 {
 	private WarGear plugin;
 	private Arena arena;
@@ -31,7 +24,6 @@ public class TeamManager implements Listener
 		this.plugin = plugin;
 		this.team1 = new WgTeam(PlayerRole.Team1);
 		this.team2 = new WgTeam(PlayerRole.Team2);
-		this.plugin.getServer().getPluginManager().registerEvents(this, this.plugin);
 		this.arena = arena;
 	}
 	
@@ -94,38 +86,6 @@ public class TeamManager implements Listener
 		this.arena.broadcastMessage(ChatColor.YELLOW +""+ ChatColor.ITALIC+team2);
 	}
 	
-	@EventHandler (priority = EventPriority.HIGH, ignoreCancelled=true)
-    public void playerDeath(PlayerDeathEvent event)
-	{
-		if (arena.getState() != State.Running)
-		{
-			return;
-		}
-		if (!arena.contains(event.getEntity().getLocation()))
-		{
-			return;
-		}
-		Player died = event.getEntity();
-		final WgTeam team = this.getTeamOfPlayer(died);
-		if (team != null && team.getTeamMember(died).isAlive())
-		{
-			team.getTeamMember(died).setAlive(false);
-			String color = arena.getRepo().getTeam1Prefix();
-			if (team.getTeamName() == PlayerRole.Team2) {
-				color = arena.getRepo().getTeam2Prefix();
-			}
-			String message = "§8["+color+arena.getName()+"§8] "+ChatColor.DARK_GREEN+died.getName()+" ist gestorben.";
-			event.setDeathMessage(message);
-			this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable()
-			{
-				public void run()
-				{
-					TeamManager.this.checkAlives(team);
-				}
-			});
-		}
-	}
-	
 	public void healTeam(WgTeam team)
 	{
 		OfflineRunable healer = new OfflineRunable() {
@@ -159,20 +119,6 @@ public class TeamManager implements Listener
 			return this.team2;
 		}
 		return null;
-	}
-	 
-	private void checkAlives(WgTeam team)
-	{
-		if (!team.isAlive())
-		{
-			WgTeam winnerTeam = this.team1;
-			if (team.getTeamName() == PlayerRole.Team1)
-			{
-				winnerTeam = this.team2;
-			}
-			String message = "Jeder aus dem ["+team.getTeamName().toString().toUpperCase()+"] ist tot.";
-			this.plugin.getServer().getPluginManager().callEvent(new WinQuitEvent(arena, message, winnerTeam, team, FightQuitReason.Death));
-		}
 	}
 	 
 	public WgTeam getTeamWithOutLeader()

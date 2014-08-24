@@ -2,6 +2,7 @@ package de.pro_crafting.wg;
 
 import net.gravitydevelopment.updater.Updater.UpdateResult;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -14,6 +15,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -337,6 +339,54 @@ public class WgListener implements Listener {
 		{
 			((Player)event.getWhoClicked()).sendMessage("§7Du darfst nicht craften.");
 			event.setCancelled(true);
+		}
+	}
+	
+	@EventHandler (priority = EventPriority.HIGH, ignoreCancelled=true)
+    public void playerDeath(PlayerDeathEvent event)
+	{
+		Player player = event.getEntity();
+		final Arena arena = this.plugin.getArenaManager().getArenaAt(player.getLocation());
+		if (arena == null)
+		{
+			return;
+		}
+		if (arena.getState() != State.Running)
+		{
+			return;
+		}
+		final WgTeam team = arena.getTeam().getTeamOfPlayer(player);
+		if (team != null && team.getTeamMember(player).isAlive())
+		{
+			team.getTeamMember(player).setAlive(false);
+			String color = arena.getRepo().getTeam1Prefix();
+			if (team.getTeamName() == PlayerRole.Team2) {
+				color = arena.getRepo().getTeam2Prefix();
+			}
+			String message = "§8["+color+arena.getName()+"§8] "+ChatColor.DARK_GREEN+player.getName()+" ist gestorben.";
+			event.setDeathMessage(message);
+			Bukkit.getScheduler().runTask(this.plugin, new Runnable()
+			{
+				public void run()
+				{
+					WgListener.this.checkAlives(team, arena);
+				}
+			});
+		}
+	}
+	
+	 
+	private void checkAlives(WgTeam team, Arena arena)
+	{
+		if (!team.isAlive())
+		{
+			WgTeam winnerTeam = arena.getTeam().getTeam1();
+			if (team.getTeamName() == PlayerRole.Team1)
+			{
+				winnerTeam = arena.getTeam().getTeam2();
+			}
+			String message = "Jeder aus dem ["+team.getTeamName().toString().toUpperCase()+"] ist tot.";
+			this.plugin.getServer().getPluginManager().callEvent(new WinQuitEvent(arena, message, winnerTeam, team, FightQuitReason.Death));
 		}
 	}
 }
