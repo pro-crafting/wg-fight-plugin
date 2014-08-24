@@ -336,7 +336,7 @@ public class WgListener implements Listener {
 		}
 	}
 	
-	@EventHandler (priority = EventPriority.HIGH, ignoreCancelled=true)
+	@EventHandler (priority = EventPriority.HIGHEST, ignoreCancelled=true)
     public void playerDeath(PlayerDeathEvent event)
 	{
 		Player player = event.getEntity();
@@ -358,7 +358,8 @@ public class WgListener implements Listener {
 				color = arena.getRepo().getTeam2Prefix();
 			}
 			String message = "§8["+color+arena.getName()+"§8] "+ChatColor.DARK_GREEN+player.getName()+" ist gestorben.";
-			event.setDeathMessage(message);
+			event.setDeathMessage(null);
+			arena.broadcastMessage(message);
 			Bukkit.getScheduler().runTask(this.plugin, new Runnable()
 			{
 				public void run()
