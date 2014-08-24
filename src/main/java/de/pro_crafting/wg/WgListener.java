@@ -152,12 +152,6 @@ public class WgListener implements Listener {
 	@EventHandler (priority = EventPriority.MONITOR, ignoreCancelled=true)
 	public void playerMoveHandler(PlayerMoveEvent event)
 	{
-		if (event.getTo().getBlockX() == event.getFrom().getBlockX() &&
-				event.getTo().getBlockY() == event.getFrom().getBlockY() &&
-				event.getTo().getBlockZ() == event.getFrom().getBlockZ())
-		{
-			return;
-		}
 		Player player = event.getPlayer();
 		Arena arenaFrom = this.plugin.getArenaManager().getArenaAt(event.getFrom());
 		Arena arenaTo = this.plugin.getArenaManager().getArenaAt(event.getTo());
@@ -177,11 +171,11 @@ public class WgListener implements Listener {
 			ArenaPosition from = arenaTo.getPosition(event.getFrom());
 			WgTeam team = arenaTo.getTeam().getTeamOfPlayer(player);
 			if (team == null && to != ArenaPosition.Platform) {
-				resetPlayerMovement(ArenaPosition.Platform, from, event.getFrom(), player, arenaTo);
+				resetPlayerMovement(to, from, event.getFrom(), player, arenaTo);
 			} else if (team != null && team.getTeamName() == PlayerRole.Team1 && (to == ArenaPosition.Team2PlayField || to == ArenaPosition.Team2WG)) {
-				resetPlayerMovement(ArenaPosition.Team1PlayField, from, event.getFrom(), player, arenaTo);
+				resetPlayerMovement(to, from, event.getFrom(), player, arenaTo);
 			} else if (team != null && team.getTeamName() == PlayerRole.Team2 && (to == ArenaPosition.Team1PlayField || to == ArenaPosition.Team1WG)) {
-				resetPlayerMovement(ArenaPosition.Team2PlayField, from, event.getFrom(), player, arenaTo);
+				resetPlayerMovement(to, from, event.getFrom(), player, arenaTo);
 			}
 		}
 	}
