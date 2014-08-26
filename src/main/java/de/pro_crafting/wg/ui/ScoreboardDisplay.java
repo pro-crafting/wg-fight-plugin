@@ -204,7 +204,7 @@ public class ScoreboardDisplay implements Listener{
 			BukkitTask task = Bukkit.getScheduler().runTaskTimer(this.plugin, (Runnable)new ArenaTimerRunnable(this.plugin, arena), 0, 20*60);
 			timers.put(arena, task);
 		}
-		else if (event.getFrom() == State.Running) {
+		else if (event.getTo() == State.Spectate) {
 			stopTimer(arena);
 			clearScoreboard(arena);
 		}
