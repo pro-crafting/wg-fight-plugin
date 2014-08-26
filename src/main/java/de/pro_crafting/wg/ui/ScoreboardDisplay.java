@@ -28,21 +28,35 @@ public class ScoreboardDisplay implements Listener{
 	private WarGear plugin;	
 	
 	private final String healthName = "§bLeben";
-	/*private final String infoTeam1 = "Info - Team1";
-	private final String infoTeam2 = "Info - Team2";
-	private final String info = "Info";*/
+	private final String infoName = "§bInfo";
 	
 	private final String teamRed = "team_red";
 	private final String teamLeaderRed = "team_red_leader";
 	private final String teamBlue = "team_blue";
 	private final String teamLeaderBlue = "team_blue_leader";
 	
+	private final String timeName = ChatColor.GREEN+"Zeit (m):";
+	
 	private Map<Arena, BukkitTask> timers;
+	private BukkitTask objectiveSwitcher;
 	
 	public ScoreboardDisplay(WarGear plugin) {
 		this.plugin = plugin;
 		this.timers = new HashMap<Arena, BukkitTask>();
 		Bukkit.getPluginManager().registerEvents(this, this.plugin);
+		this.objectiveSwitcher = Bukkit.getScheduler().runTaskTimer(this.plugin, new Runnable() {
+			private boolean info;
+			public void run() {
+				String toShow = healthName;
+				if (info) {
+					toShow = infoName;
+				}
+				for (Arena arena : ScoreboardDisplay.this.plugin.getArenaManager().getArenas().values()) {
+					ScoreboardDisplay.this.plugin.getScoreboardManager().showObjective(arena, toShow, DisplaySlot.SIDEBAR);
+				}
+				info = !info;
+			}
+		}, 0, 5*20);
 	}
 	
 	private void initScoreboard(Arena arena) {
@@ -54,7 +68,9 @@ public class ScoreboardDisplay implements Listener{
 			return;
 		}
 		this.plugin.getScoreboardManager().createObjective(arena, healthName, DisplaySlot.SIDEBAR, Criteria.Dummy);
-		this.plugin.getScoreboardManager().setScore(arena, ChatColor.GREEN+"Zeit (m):", arena.getRepo().getScoreboardTime(), healthName);
+		this.plugin.getScoreboardManager().createObjective(arena, infoName, DisplaySlot.SIDEBAR, Criteria.Dummy);
+		
+		this.plugin.getScoreboardManager().setScore(arena, timeName, arena.getRepo().getScoreboardTime(), infoName);
 		
 		initTeams(arena, board);
 	}
@@ -171,7 +187,7 @@ public class ScoreboardDisplay implements Listener{
 	}
 	
 	public void updateTime(Arena arena, int time) {
-		this.plugin.getScoreboardManager().setScore(arena, ChatColor.GREEN+"Zeit (m):", time, this.healthName);
+		this.plugin.getScoreboardManager().setScore(arena, timeName, time, this.infoName);
 	}
 	
 	void stopTimer(Arena arena) {
