@@ -29,6 +29,7 @@ public class ScoreboardDisplay implements Listener{
 	
 	private final String healthName = "§bLeben";
 	private final String infoName = "§bInfo";
+	private final String belowNameHealthName = "/ 20";
 	
 	private final String teamRed = "team_red";
 	private final String teamLeaderRed = "team_red_leader";
@@ -69,6 +70,7 @@ public class ScoreboardDisplay implements Listener{
 		}
 		this.plugin.getScoreboardManager().createObjective(arena, healthName, DisplaySlot.SIDEBAR, Criteria.Health);
 		this.plugin.getScoreboardManager().createObjective(arena, infoName, DisplaySlot.SIDEBAR, Criteria.Dummy);
+		this.plugin.getScoreboardManager().createObjective(arena, belowNameHealthName, DisplaySlot.BELOW_NAME, Criteria.Health);
 		
 		this.plugin.getScoreboardManager().setScore(arena, timeName, arena.getRepo().getScoreboardTime(), infoName);
 		
@@ -159,6 +161,7 @@ public class ScoreboardDisplay implements Listener{
 			addMemberToTeam(arena, this.getTeamLeaderBlue(arena), this.getTeamBlue(arena), player, member.isTeamLeader());
 		}
 		this.plugin.getScoreboardManager().setScore(arena, player.getName(), (int)Math.ceil(player.getHealth()), this.healthName);
+		this.plugin.getScoreboardManager().setScore(arena, player.getName(), (int)Math.ceil(player.getHealth()), belowNameHealthName);
 	}
 	
 	private void addMemberToTeam(Arena arena, Team leader, Team memberTeam, Player player, boolean isTeamLeader) {
