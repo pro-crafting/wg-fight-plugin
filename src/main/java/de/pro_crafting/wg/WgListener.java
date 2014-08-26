@@ -14,7 +14,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -246,13 +245,6 @@ public class WgListener implements Listener {
 		{
 			checkTeamDamaging((EntityDamageByEntityEvent)event, player, arena);
 		}
-		
-		this.plugin.getServer().getScheduler().runTask(this.plugin, new Runnable(){
-			public void run()
-			{
-				WgListener.this.plugin.getScoreboard().updateHealthOfPlayer(arena, player);
-			}
-		});
 	}
 	
 	private void checkTeamDamaging(EntityDamageByEntityEvent event, Player player, Arena arena)
@@ -273,29 +265,7 @@ public class WgListener implements Listener {
 			event.setCancelled(true);
 		}
 	}
-	
-	@EventHandler (priority = EventPriority.MONITOR, ignoreCancelled=true)
-	public void entityRegainHealthHandler(EntityRegainHealthEvent event)
-	{
-		if (!(event.getEntity() instanceof Player))
-		{
-			return;
-		}
-		final Player player = (Player)event.getEntity();
-		final Arena arena = this.plugin.getArenaManager().getArenaAt(player.getLocation());
-		if (arena != null)
-		{
-			if (arena.getTeam().getTeamOfPlayer(player) != null)
-			{
-				this.plugin.getServer().getScheduler().runTask(this.plugin, new Runnable(){
-					public void run()
-					{
-						WgListener.this.plugin.getScoreboard().updateHealthOfPlayer(arena, player);
-					}
-				});
-			}
-		}
-	}
+
 	
 	@EventHandler (priority = EventPriority.HIGHEST, ignoreCancelled=false)
 	public void playerInteractHandler(PlayerInteractEvent event)
