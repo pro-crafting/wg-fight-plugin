@@ -81,7 +81,7 @@ public class TeamCommands {
 		p.sendMessage("§7Mit §B\"/wgk team add <spieler>\" §7fügst du Spieler zu deinem Team hinzu.");
 		p.sendMessage("§7Mit §B\"/wgk team remove <spieler>\" §7entfernst du Spieler aus deinem Team.");
 		p.sendMessage("§7Mit §B\"/wgk team ready\" §7schaltest du dein Team bereit.");
-		arena.getScore().addTeamMember(team.getTeamMember(p), team.getTeamName());
+		this.plugin.getScoreboard().addTeamMember(arena, team.getTeamMember(p), team.getTeamName());
 	}
 	
 	@Command(name = "wgk.team.add", description = "Fügt ein Spieler zu deinem Team hinzu.",
@@ -149,7 +149,7 @@ public class TeamCommands {
 		team.add(p, false);
 		p.sendMessage("§7Du bist jetzt im Team von §B"+leader.getName()+"§7.");
 		p.sendMessage("§7Mit §8\"/wgk team leave\" §7verlässt du das Team.");
-		arena.getScore().addTeamMember(team.getTeamMember(p), team.getTeamName());
+		this.plugin.getScoreboard().addTeamMember(arena, team.getTeamMember(p), team.getTeamName());
 	}
 	
 	@Command(name = "wgk.team.remove", description = "Entfernt einen Spieler zu deinem Team hinzu.",
@@ -214,7 +214,7 @@ public class TeamCommands {
 			team = arena.getTeam().getTeamOfName(teamName);
 		}
 		p.sendMessage("§7Du bist nicht mehr im Team von §8."+senderPlayer.getName());
-		arena.getScore().removeTeamMember(team.getTeamMember(p), team.getTeamName());
+		this.plugin.getScoreboard().removeTeamMember(arena, team.getTeamMember(p), team.getTeamName());
 		team.remove(p);
 	}
 	
@@ -241,7 +241,7 @@ public class TeamCommands {
 			return;
 		}
 		WgTeam team = arena.getTeam().getTeamOfPlayer(senderPlayer);
-		arena.getScore().removeTeamMember(team.getTeamMember(senderPlayer), team.getTeamName());
+		this.plugin.getScoreboard().removeTeamMember(arena, team.getTeamMember(senderPlayer), team.getTeamName());
 		team.remove(senderPlayer);
 		senderPlayer.sendMessage("§7Du bist raus aus dem Team.");
 	}

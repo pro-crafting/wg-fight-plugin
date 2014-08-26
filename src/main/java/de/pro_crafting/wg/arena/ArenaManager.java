@@ -9,6 +9,7 @@ import org.bukkit.OfflinePlayer;
 import de.pro_crafting.wg.PlayerGroup;
 import de.pro_crafting.wg.PlayerRole;
 import de.pro_crafting.wg.WarGear;
+import de.pro_crafting.wg.team.WgTeam;
 
 public class ArenaManager {
 
@@ -116,7 +117,11 @@ public class ArenaManager {
 	
 	public PlayerGroup getGroup(OfflinePlayer player) {
 		Arena arena = this.getArenaOfTeamMember(player);
-		PlayerRole role = arena.getTeam().getTeamOfPlayer(player).getTeamName();
+		PlayerRole role = PlayerRole.Viewer;
+		WgTeam team = arena.getTeam().getTeamOfPlayer(player);
+		if (team != null) {
+			role = arena.getTeam().getTeamOfPlayer(player).getTeamName();
+		}
 		return new PlayerGroup(arena, role);
 	}
 }

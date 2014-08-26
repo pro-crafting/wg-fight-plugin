@@ -250,7 +250,7 @@ public class WgListener implements Listener {
 		this.plugin.getServer().getScheduler().runTask(this.plugin, new Runnable(){
 			public void run()
 			{
-				arena.getScore().updateHealthOfPlayer(player);
+				WgListener.this.plugin.getScoreboard().updateHealthOfPlayer(arena, player);
 			}
 		});
 	}
@@ -290,7 +290,7 @@ public class WgListener implements Listener {
 				this.plugin.getServer().getScheduler().runTask(this.plugin, new Runnable(){
 					public void run()
 					{
-						arena.getScore().updateHealthOfPlayer(player);
+						WgListener.this.plugin.getScoreboard().updateHealthOfPlayer(arena, player);
 					}
 				});
 			}

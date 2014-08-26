@@ -163,15 +163,15 @@ public class OfflineManager implements Listener {
 				Iterator<Entry<UUID, TeamMember>> memberIterator = team.getTeamMembers().entrySet().iterator();
 				while(memberIterator.hasNext()) {
 					TeamMember toRemove = memberIterator.next().getValue();
-					arena.getScore().removeTeamMember(toRemove, team.getTeamName());
+					this.plugin.getScoreboard().removeTeamMember(arena, toRemove, team.getTeamName());
 					memberIterator.remove();
 				}
 			} else {
 				team.remove(player);
-				arena.getScore().removeTeamMember(member, team.getTeamName());
+				this.plugin.getScoreboard().removeTeamMember(arena, member, team.getTeamName());
 			}
 		} else {
-			arena.getScore().removeTeamMember(member, team.getTeamName());
+			this.plugin.getScoreboard().removeTeamMember(arena, member, team.getTeamName());
 			member.setAlive(false);
 		}
 		if ((!team.isAlive() || !team.isOnline() || team.getTeamMembers().size() == 0) && (arena.getState() == State.PreRunning || arena.getState() == State.Running)) {

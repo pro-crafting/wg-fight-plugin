@@ -2,6 +2,7 @@ package de.pro_crafting.wg.arena;
 
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,8 +30,9 @@ import de.pro_crafting.generator.criteria.SingleBlockCriteria;
 import de.pro_crafting.generator.job.Job;
 import de.pro_crafting.generator.job.SimpleJob;
 import de.pro_crafting.generator.provider.SingleBlockProvider;
+import de.pro_crafting.wg.PlayerGroup;
+import de.pro_crafting.wg.PlayerRole;
 import de.pro_crafting.wg.WarGear;
-import de.pro_crafting.wg.arena.ui.ScoreBoardDisplay;
 import de.pro_crafting.wg.event.ArenaStateChangedEvent;
 import de.pro_crafting.wg.modes.ChestMode;
 import de.pro_crafting.wg.modes.FightMode;
@@ -48,7 +50,6 @@ public class Arena{
 	private WaterRemover remover;
 	private State state;
 	private List<UUID> players;
-	private ScoreBoardDisplay scores;
 	private Repository repo;
 	private SpectatorMode spectator;
 	private boolean isOpen;
@@ -119,7 +120,7 @@ public class Arena{
 		if (!this.players.contains(p.getUniqueId()))
 		{
 			this.players.add(p.getUniqueId());
-			this.scores.addViewer(p);
+			this.plugin.getScoreboard().addViewer(this, p);
 		}
 	}
 	
@@ -128,7 +129,7 @@ public class Arena{
 		if (this.players.contains(p.getUniqueId()))
 		{
 			this.players.remove(p.getUniqueId());
-			this.scores.removeViewer(p);
+			this.plugin.getScoreboard().removeViewer(this, p);
 		}
 	}
 	
@@ -159,7 +160,6 @@ public class Arena{
 			this.setFightMode(new KitMode(this.plugin, this));
 			this.reseter = new Reseter(this.plugin, this);
 			this.remover = new WaterRemover(this.plugin, this);
-			this.scores = new ScoreBoardDisplay(this.plugin, this);
 			this.spectator = new SpectatorMode(this.plugin, this);
 			this.setOpen(false);
 			this.setOpeningFlags(this.repo.getArenaRegion(), com.sk89q.worldguard.protection.flags.StateFlag.State.DENY);
@@ -170,9 +170,7 @@ public class Arena{
 	
 	public void unload()
 	{
-		this.scores.clearScoreboard();
 		HandlerList.unregisterAll(this.reseter);
-		HandlerList.unregisterAll(this.scores);
 		this.remover.stop();
 		this.players.clear();
 		this.setOpen(false);
@@ -348,10 +346,6 @@ public class Arena{
 			return false;
 		return true;
 	}
-
-	public ScoreBoardDisplay getScore() {
-		return scores;
-	}
 	
 	public Location getSpawnLocation(Player p)
 	{
@@ -421,5 +415,9 @@ public class Arena{
 				
 			}
 		}, cuboid, new SingleBlockProvider(Material.TNT, (byte)0)));
+	}
+	
+	public List<PlayerGroup> getAllGroups() {
+		return Arrays.asList(new PlayerGroup(this, PlayerRole.Viewer), new PlayerGroup(this, PlayerRole.Team1), new PlayerGroup(this, PlayerRole.Team2));
 	}
 }

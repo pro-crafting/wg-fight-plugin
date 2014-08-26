@@ -15,12 +15,15 @@ import org.mcstats.MetricsLite;
 import de.pro_crafting.commandframework.CommandArgs;
 import de.pro_crafting.commandframework.CommandFramework;
 import de.pro_crafting.commandframework.Completer;
+import de.pro_crafting.common.scoreboard.ScoreboardManager;
 import de.pro_crafting.generator.BlockGenerator;
 import de.pro_crafting.kit.KitAPI;
+import de.pro_crafting.wg.arena.Arena;
 import de.pro_crafting.wg.arena.ArenaManager;
 import de.pro_crafting.wg.commands.ArenaCommands;
 import de.pro_crafting.wg.commands.TeamCommands;
 import de.pro_crafting.wg.commands.WarGearCommands;
+import de.pro_crafting.wg.ui.ScoreboardDisplay;
 
 public class WarGear extends JavaPlugin {
 	private Repository repo;
@@ -37,6 +40,8 @@ public class WarGear extends JavaPlugin {
 	private WgListener wgListener;
 	private File arenaFolder;
 	private OfflineManager offlineManager;
+	private ScoreboardManager<Arena> scoreboardManager;
+	private ScoreboardDisplay scoreboard;
 	
 	@Override
 	public void onEnable() {
@@ -67,6 +72,8 @@ public class WarGear extends JavaPlugin {
 		startUpdater();
 		this.wgListener = new WgListener(this);
 		this.offlineManager = new OfflineManager(this);
+		this.scoreboardManager = new ScoreboardManager<Arena>();
+		this.scoreboard = new ScoreboardDisplay(this);
 		this.getLogger().info("Plugin erfolgreich geladen!");
 	}
 	
@@ -175,5 +182,13 @@ public class WarGear extends JavaPlugin {
 
 	public OfflineManager getOfflineManager() {
 		return this.offlineManager;
+	}
+	
+	public ScoreboardManager<Arena> getScoreboardManager() {
+		return this.scoreboardManager;
+	}
+	
+	public ScoreboardDisplay getScoreboard() {
+		return this.scoreboard;
 	}
 }

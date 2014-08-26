@@ -78,7 +78,7 @@ public abstract class FightBase implements FightMode, Listener
 		if (member != null && member.isAlive())
 		{
 			event.getPlayer().damage(arena.getRepo().getGroundDamage());
-			arena.getScore().updateHealthOfPlayer(event.getPlayer());
+			this.plugin.getScoreboard().updateHealthOfPlayer(arena, event.getPlayer());
 		}
 	}
 }
