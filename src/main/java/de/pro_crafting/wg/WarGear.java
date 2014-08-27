@@ -31,9 +31,6 @@ public class WarGear extends JavaPlugin {
 	private ArenaManager arenaManager;
 	private KitAPI kitApi;
 	private CommandFramework cmdFramework;
-	private WarGearCommands wgCommands;
-	private TeamCommands teamCommands;
-	private ArenaCommands arenaCommands;
 	private WgEconomy eco;
 	private MetricsLite metrics;
 	private Updater updater;
@@ -46,35 +43,31 @@ public class WarGear extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		this.loadConfig();
-		arenaFolder = new File(this.getDataFolder(), "arenas/");
-		if (!arenaFolder.exists())
-		{
-			this.saveResource("arenas/arena.yml", false);
-		}
 		this.repo = new Repository(this);
 		this.generator = new BlockGenerator(this, 50000);
 		this.arenaManager = new ArenaManager(this);
 		this.kitApi = new KitAPI();
-		this.cmdFramework = new CommandFramework(this);
-		this.wgCommands = new WarGearCommands(this);
-		this.teamCommands = new TeamCommands(this);
-		this.arenaCommands = new ArenaCommands(this);
-		this.cmdFramework.registerCommands(this.wgCommands);
-		this.cmdFramework.registerCommands(this.teamCommands);
-		this.cmdFramework.registerCommands(this.arenaCommands);
-		this.cmdFramework.registerCommands(this);
-		this.cmdFramework.registerHelp();
 		if (this.repo.isEconomyEnabled())
 		{
 			this.eco = new WgEconomy(this);
 		}
 		startMetrics();
 		startUpdater();
+		registerCommands();
 		this.wgListener = new WgListener(this);
 		this.offlineManager = new OfflineManager(this);
 		this.scoreboardManager = new ScoreboardManager<Arena>();
 		this.scoreboard = new ScoreboardDisplay(this);
 		this.getLogger().info("Plugin erfolgreich geladen!");
+	}
+	
+	private void registerCommands() {
+		this.cmdFramework = new CommandFramework(this);
+		this.cmdFramework.registerCommands(new WarGearCommands(this));
+		this.cmdFramework.registerCommands(new TeamCommands(this));
+		this.cmdFramework.registerCommands(new ArenaCommands(this));
+		this.cmdFramework.registerCommands(this);
+		this.cmdFramework.registerHelp();
 	}
 	
 	@Override
@@ -91,23 +84,18 @@ public class WarGear extends JavaPlugin {
     }
 	
 	@Completer (name="wgk")
-	public List<String> completeCommands(CommandArgs args)
-	{
+	public List<String> completeCommands(CommandArgs args) {
 		List<String> ret = new ArrayList<String>();
 		String label = args.getCommand().getLabel();
-		for (String arg : args.getArgs())
-		{
+		for (String arg : args.getArgs()) {
 			label += " " + arg;
 		}
-		for(String currentLabel : this.cmdFramework.getCommandLabels())
-		{
+		for(String currentLabel : this.cmdFramework.getCommandLabels()) {
 			String current = currentLabel.replace('.', ' ');
-			if (current.contains(label))
-			{
+			if (current.contains(label)) {
 				current = current.substring(label.lastIndexOf(' ')).trim();
 				current = current.substring(0, current.indexOf(' ') != -1 ? current.indexOf(' ') : current.length()).trim();
-				if (!ret.contains(current))
-				{
+				if (!ret.contains(current)) {
 					ret.add(current);
 				}
 			}
@@ -115,20 +103,21 @@ public class WarGear extends JavaPlugin {
 		return ret;
 	}
 	
-	private void loadConfig()
-	{	
+	private void loadConfig() {
 		saveDefaultConfig();
 		this.getLogger().info("config.yml geladen.");
+		
+		arenaFolder = new File(this.getDataFolder(), "arenas/");
+		if (!arenaFolder.exists()) {
+			this.saveResource("arenas/arena.yml", false);
+		}
 	}
 	
-	private void startMetrics()
-	{
-		if (repo.areMetricsEnabled())
-		{
+	private void startMetrics() {
+		if (repo.areMetricsEnabled()) {
 			try {
 				metrics = new MetricsLite(this);
-				if (metrics.start())
-				{
+				if (metrics.start()) {
 					this.getLogger().info("Metrics gestartet!");
 				}
 			} catch (IOException e) {
@@ -137,41 +126,33 @@ public class WarGear extends JavaPlugin {
 		}
 	}
 	
-	private void startUpdater()
-	{
-		if (repo.isUpdateCheckEnabled())
-		{
+	private void startUpdater() {
+		if (repo.isUpdateCheckEnabled()) {
 			updater = new Updater(this, 66631, this.getFile(), Updater.UpdateType.NO_DOWNLOAD, false);
 		}
 	}
 	
-	public Repository getRepo()
-	{
+	public Repository getRepo() {
 		return this.repo;
 	}
 	
-	public BlockGenerator getGenerator()
-	{
+	public BlockGenerator getGenerator() {
 		return this.generator;
 	}
 	
-	public ArenaManager getArenaManager()
-	{
+	public ArenaManager getArenaManager() {
 		return this.arenaManager;
 	}
 	
-	public KitAPI getKitApi()
-	{
+	public KitAPI getKitApi() {
 		return this.kitApi;
 	}
 	
-	public CommandFramework GetCmdFramework()
-	{
+	public CommandFramework GetCmdFramework() {
 		return this.cmdFramework;
 	}
 	
-	public Updater getUpdater()
-	{
+	public Updater getUpdater() {
 		return this.updater;
 	}
 	
