@@ -32,6 +32,7 @@ import de.pro_crafting.wg.arena.ArenaPosition;
 import de.pro_crafting.wg.arena.State;
 import de.pro_crafting.wg.event.ArenaStateChangedEvent;
 import de.pro_crafting.wg.event.FightQuitEvent;
+import de.pro_crafting.wg.event.PlayerArenaChangeEvent;
 import de.pro_crafting.wg.event.WinQuitEvent;
 import de.pro_crafting.wg.modes.KitMode;
 import de.pro_crafting.wg.team.WgTeam;
@@ -157,10 +158,13 @@ public class WgListener implements Listener {
 		if (arenaFrom != null && !arenaFrom.equals(arenaTo))
 		{
 			arenaFrom.leave(player);
+			Bukkit.getPluginManager().callEvent(new PlayerArenaChangeEvent(player, arenaFrom, arenaTo));
 		}
 		if (arenaTo != null)
 		{
 			arenaTo.join(player);
+			
+			Bukkit.getPluginManager().callEvent(new PlayerArenaChangeEvent(player, arenaFrom, arenaTo));
 			
 			if (player.hasPermission("wargear.arena.bypass")) {
 				return;
@@ -195,6 +199,7 @@ public class WgListener implements Listener {
 		if (arenaTo != null)
 		{
 			arenaTo.join(event.getPlayer());
+			Bukkit.getPluginManager().callEvent(new PlayerArenaChangeEvent(event.getPlayer(), null, arenaTo));
 		}
 	}
 	
@@ -205,6 +210,7 @@ public class WgListener implements Listener {
 		if (arenaFrom != null)
 		{
 			arenaFrom.leave(event.getPlayer());
+			Bukkit.getPluginManager().callEvent(new PlayerArenaChangeEvent(event.getPlayer(), arenaFrom, null));
 		}
 	}
 	
@@ -216,10 +222,12 @@ public class WgListener implements Listener {
 		if (arenaFrom != null && !arenaFrom.equals(arenaTo))
 		{
 			arenaFrom.leave(event.getPlayer());
+			Bukkit.getPluginManager().callEvent(new PlayerArenaChangeEvent(event.getPlayer(), arenaFrom, arenaTo));
 		}
 		if (arenaTo != null && !arenaTo.equals(arenaFrom))
 		{
 			arenaTo.join(event.getPlayer());
+			Bukkit.getPluginManager().callEvent(new PlayerArenaChangeEvent(event.getPlayer(), arenaFrom, arenaTo));
 		}
 	}
 	
