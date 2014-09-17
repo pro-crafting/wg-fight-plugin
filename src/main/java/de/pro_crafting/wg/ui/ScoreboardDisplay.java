@@ -70,7 +70,7 @@ public class ScoreboardDisplay implements Listener{
 		}
 		this.plugin.getScoreboardManager().createObjective(arena, healthName, DisplaySlot.SIDEBAR, Criteria.Dummy);
 		this.plugin.getScoreboardManager().createObjective(arena, infoName, DisplaySlot.SIDEBAR, Criteria.Dummy);
-		this.plugin.getScoreboardManager().createObjective(arena, belowNameHealthName, DisplaySlot.BELOW_NAME, Criteria.Health);
+		this.plugin.getScoreboardManager().createObjective(arena, belowNameHealthName, DisplaySlot.BELOW_NAME, Criteria.Dummy);
 		
 		this.plugin.getScoreboardManager().setScore(arena, timeName, arena.getRepo().getScoreboardTime(), infoName);
 		
@@ -177,15 +177,18 @@ public class ScoreboardDisplay implements Listener{
 		this.plugin.getScoreboardManager().clearScoreboard(arena);
 	}
 	
-	public void updateHealthOfPlayer(Arena arena, Player p) {
+	public void updateHealthOfPlayer(Arena arena, Player player) {
 		if (!arena.getRepo().isScoreboardEnabled()) {
 			return;
 		}
-		if (arena.getTeam().isAlive(p)) {
-			this.plugin.getScoreboardManager().setScore(arena, p.getName(), (int)Math.ceil(p.getHealth()), this.healthName);
+		String name = player.getName();
+		if (arena.getTeam().isAlive(player)) {
+			int health = (int)Math.ceil(player.getHealth());
+			this.plugin.getScoreboardManager().setScore(arena, name, health, this.healthName);
+			this.plugin.getScoreboardManager().setScore(arena, name, health, this.belowNameHealthName);
 		}
 		else {
-			this.plugin.getScoreboardManager().removeScore(arena, p.getName());
+			this.plugin.getScoreboardManager().removeScore(arena, name);
 		}
 	}
 	
