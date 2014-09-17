@@ -49,7 +49,7 @@ public class TeamManager
 	
 	private void quiteFightForTeam(WgTeam team)
 	{
-		final Location teleportLocation = this.arena.getRepo().getFightEndWarp();
+		final Location teleportLocation = this.arena.getRepo().getSpawnWarp();
 		OfflineRunable fightQuiter = new OfflineRunable() {
 			
 			public void run(TeamMember member) {

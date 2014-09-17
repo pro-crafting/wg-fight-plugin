@@ -78,7 +78,7 @@ public class ArenaCommands {
 		args.getSender().sendMessage("§7Region Team2: §B" + arena.getRepo().getTeam2Region().getId());
 		args.getSender().sendMessage("§7Warp Team1: §B" + getStringFromLocation(arena.getRepo().getTeam1Warp()));
 		args.getSender().sendMessage("§7Warp Team2: §B" + getStringFromLocation(arena.getRepo().getTeam2Warp()));
-		args.getSender().sendMessage("§7Warp Fight Ende: §B" + getStringFromLocation(arena.getRepo().getFightEndWarp()));
+		args.getSender().sendMessage("§7Warp Fight Ende: §B" + getStringFromLocation(arena.getRepo().getSpawnWarp()));
 	}
 	
 	private String getStringFromLocation(Location loc)

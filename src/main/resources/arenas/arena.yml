@@ -22,4 +22,4 @@ regions:
 fightStart:
     team1: x;y;z
     team2: x;y;z
-fightEnd: x;y;z
+spawn: x;y;z

@@ -29,7 +29,7 @@ public class Repository
 	private ProtectedRegion team2Region;
 	private Location team1Warp;
 	private Location team2Warp;
-	private Location fightEndWarp;
+	private Location spawnWarp;
 	private boolean waterRemove;
 	private int groundDamage;
 	private boolean isScoreboardEnabled;
@@ -49,7 +49,7 @@ public class Repository
 	private String team2RegionPath;
 	private String team1Path;
 	private String team2Path;
-	private String fightEndPath;
+	private String spawnPath;
 	private String waterRemovePath;
 	private String groundDamagePath;
 	private String scoreboardEnabledPath;
@@ -76,7 +76,7 @@ public class Repository
 		arenaRegionPath = "regions.arena";
 		team1Path = "fightStart.team1";
 		team2Path = "fightStart.team2";
-		fightEndPath = "fightEnd";
+		spawnPath = "spawn";
 		scoreboardEnabledPath = "scoreboard.enabled";
 		scoreboardTimePath = "scoreboard.time";
 		spectatorModeEnabledPath = "spectator-mode.enabled";
@@ -100,7 +100,7 @@ public class Repository
 		if (!this.loadTeam2Region()) return false;
 		if (!this.loadTeam1Warp()) return false;
 		if (!this.loadTeam2Warp()) return false;
-		if (!this.loadFightEndWarp()) return false;
+		if (!this.loadSpawnWarp()) return false;
 		if (!this.loadGroundDamage()) return false;
 		if (!this.loadWaterRemove()) return false;
 		if (!this.loadScoreboardEnabled()) return false;
@@ -188,10 +188,10 @@ public class Repository
 		return this.team2Warp != null;
 	}
 	
-	private boolean loadFightEndWarp()
+	private boolean loadSpawnWarp()
 	{
-		this.fightEndWarp = this.loadLocation(this.fightEndPath, getWorld());
-		return this.fightEndWarp != null;
+		this.spawnWarp = this.loadLocation(this.spawnPath, getWorld());
+		return this.spawnWarp != null;
 	}
 	
 	private boolean loadGroundDamage()
@@ -396,14 +396,14 @@ public class Repository
 		this.team2Warp = warp;
 	}
 	
-	public Location getFightEndWarp()
+	public Location getSpawnWarp()
 	{
-		return this.fightEndWarp;
+		return this.spawnWarp;
 	}
 	
-	public void setFightEndWarp(Location warp)
+	public void setSpawnWarp(Location warp)
 	{
-		this.fightEndWarp = warp;
+		this.spawnWarp = warp;
 	}
 
 	public boolean isWaterRemove() {

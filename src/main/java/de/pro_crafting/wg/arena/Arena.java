@@ -357,7 +357,7 @@ public class Arena{
 				return this.team.getTeamSpawn(playerTeam.getTeamName());
 			}
 		}
-		return this.repo.getFightEndWarp();
+		return this.repo.getSpawnWarp();
 	}
 	
 	public SpectatorMode getSpectatorMode()
