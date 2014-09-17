@@ -68,7 +68,7 @@ public class ScoreboardDisplay implements Listener{
 		if (board.getObjective(DisplaySlot.SIDEBAR) != null) {
 			return;
 		}
-		this.plugin.getScoreboardManager().createObjective(arena, healthName, DisplaySlot.SIDEBAR, Criteria.Health);
+		this.plugin.getScoreboardManager().createObjective(arena, healthName, DisplaySlot.SIDEBAR, Criteria.Dummy);
 		this.plugin.getScoreboardManager().createObjective(arena, infoName, DisplaySlot.SIDEBAR, Criteria.Dummy);
 		this.plugin.getScoreboardManager().createObjective(arena, belowNameHealthName, DisplaySlot.BELOW_NAME, Criteria.Health);
 		
@@ -175,6 +175,18 @@ public class ScoreboardDisplay implements Listener{
 	
 	public void clearScoreboard(Arena arena) {
 		this.plugin.getScoreboardManager().clearScoreboard(arena);
+	}
+	
+	public void updateHealthOfPlayer(Arena arena, Player p) {
+		if (!arena.getRepo().isScoreboardEnabled()) {
+			return;
+		}
+		if (arena.getTeam().isAlive(p)) {
+			this.plugin.getScoreboardManager().setScore(arena, p.getName(), (int)Math.ceil(p.getHealth()), this.healthName);
+		}
+		else {
+			this.plugin.getScoreboardManager().removeScore(arena, p.getName());
+		}
 	}
 	
 	public void updateTime(Arena arena, int time) {

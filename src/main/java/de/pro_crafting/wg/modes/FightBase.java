@@ -13,15 +13,13 @@ import de.pro_crafting.wg.WarGear;
 import de.pro_crafting.wg.arena.Arena;
 import de.pro_crafting.wg.team.TeamMember;
 
-public abstract class FightBase implements FightMode, Listener
-{
+public abstract class FightBase implements FightMode, Listener {
 	protected WarGear plugin;
 	protected Arena arena;
 	protected OfflineRunable preparer;
 	protected Runnable starter;
 	
-	public FightBase(WarGear plugin, Arena arena)
-	{
+	public FightBase(WarGear plugin, Arena arena) {
 		this.plugin = plugin;
 		this.arena = arena;
 	}
@@ -54,8 +52,7 @@ public abstract class FightBase implements FightMode, Listener
 		starter.run();
 	}
 
-	public void stop() 
-	{
+	public void stop() {
 		PlayerMoveEvent.getHandlerList().unregister(this);
 	}
 	
@@ -64,20 +61,17 @@ public abstract class FightBase implements FightMode, Listener
 	}
 
 	@EventHandler
-	public void playerMoveHandler(PlayerMoveEvent event)
-	{
-		if (event.getTo().getY() > this.arena.getRepo().getGroundHeight())
-		{
+	public void playerMoveHandler(PlayerMoveEvent event) {
+		if (event.getTo().getY() > this.arena.getRepo().getGroundHeight()) {
 			return;
 		}
-		if (!arena.contains(event.getTo()))
-		{
+		if (!arena.contains(event.getTo())) {
 			return;
 		}
 		TeamMember member = this.arena.getTeam().getTeamMember(event.getPlayer());
-		if (member != null && member.isAlive())
-		{
+		if (member != null && member.isAlive()) {
 			event.getPlayer().damage(arena.getRepo().getGroundDamage());
+			this.plugin.getScoreboard().updateHealthOfPlayer(arena, event.getPlayer());
 		}
 	}
 }
