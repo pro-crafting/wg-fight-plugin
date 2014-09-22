@@ -29,7 +29,8 @@ public class OfflineManager implements Listener {
 	private Map<String, List<OfflineRunable>> memberRunnables;
 	private List<TeamMember> offlineTeamMembers;
 	private BukkitTask task;
-
+	private int kickTime;
+	
 	public OfflineManager(WarGear plugin) {
 		this.plugin = plugin;
 		this.teamRunnables = new HashMap<WgTeam, List<OfflineRunable>>();
@@ -42,6 +43,7 @@ public class OfflineManager implements Listener {
 					}
 				}, 0, 20);
 		this.plugin.getServer().getPluginManager().registerEvents(this, plugin);
+		this.kickTime = this.plugin.getRepo().getOfflineKickTime();
 	}
 
 	public boolean run(OfflineRunable runable, WgTeam team) {
@@ -95,7 +97,7 @@ public class OfflineManager implements Listener {
 
 	private boolean isTooLongOffline(TeamMember member) {
 		return (System.currentTimeMillis() - member.getOfflinePlayer()
-				.getLastPlayed()) > 30 * 1000;
+				.getLastPlayed()) > kickTime * 1000;
 	}
 
 	private void checkTeamMembers() {

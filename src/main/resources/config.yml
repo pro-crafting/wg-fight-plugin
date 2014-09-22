@@ -7,3 +7,4 @@ economy:
 prefix-enabled: true
 metrics: true
 update-check: true
+offline-kick-time: 30

@@ -64,6 +64,11 @@ public class Repository {
 		return this.plugin.getConfig().getBoolean("update-check", false);
 	}
 	
+	public int getOfflineKickTime()
+	{
+		return this.plugin.getConfig().getInt("offline-kick-time", 30);
+	}
+	
 	public WorldGuardPlugin getWorldGuard() {
 		return (WorldGuardPlugin) this.plugin.getServer().getPluginManager().getPlugin("WorldGuard");
 	}
