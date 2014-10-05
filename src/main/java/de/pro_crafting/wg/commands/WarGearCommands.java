@@ -24,7 +24,7 @@ public class WarGearCommands {
 		this.plugin = plugin;
 	}
 	
-	@Command(name = "wgk", aliases = { "wgk.help" }, description = "Zeigt die Hilfe an.", usage = "/wgk", permission="wargear")
+	@Command(name = "wgk", aliases = { "wgk.help" }, description = "Zeigt die Hilfe an.", usage = "/wgk", permission="wargear.help")
 	public void WarGear(CommandArgs args)
 	{
 		args.getSender().sendMessage("§c§LKein passender Befehl gefunden!");
