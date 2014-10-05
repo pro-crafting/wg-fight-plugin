@@ -118,7 +118,12 @@ public class OfflineManager implements Listener {
 		while (memberIterator.hasNext()) {
 			Entry<String, List<OfflineRunable>> current = memberIterator
 					.next();
-			TeamMember member = this.plugin.getArenaManager().getArenaOfTeamMember(Bukkit.getOfflinePlayer(UUID.fromString(current.getKey()))).getTeam().getTeamMember(Bukkit.getOfflinePlayer(UUID.fromString(current.getKey())));
+			Arena arena = this.plugin.getArenaManager().getArenaOfTeamMember(Bukkit.getOfflinePlayer(UUID.fromString(current.getKey())));
+			if (arena == null) {
+				memberIterator.remove();
+				continue;
+			}
+			TeamMember member = arena.getTeam().getTeamMember(Bukkit.getOfflinePlayer(UUID.fromString(current.getKey())));
 			if (member.isOnline()) {
 				for (OfflineRunable runable : current.getValue()) {
 					runable.run(member);
