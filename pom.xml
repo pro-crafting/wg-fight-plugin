@@ -15,7 +15,7 @@
 	<parent>
 		<groupId>de.pro_crafting</groupId>
 		<artifactId>Core</artifactId>
-		<version>0.1.0-SNAPSHOT</version>
+		<version>0.1.1-SNAPSHOT</version>
 	</parent>
 	
 	<repositories>
@@ -47,7 +47,7 @@
         
         <repository>
 			<id>postremus1996-snapshot</id>
-			<url>http://web.crafteddimensions.eu/test/Postremus/</url>
+			<url>http://maven.myplayplanet.net</url>
 		</repository>
 	</repositories>
 
