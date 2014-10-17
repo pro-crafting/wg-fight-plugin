@@ -119,7 +119,7 @@
         <dependency>
         	<groupId>de.pro_crafting</groupId>
             <artifactId>BlockGenerator</artifactId>
-            <version>0.1.1-SNAPSHOT</version>
+            <version>0.1.2-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         

@@ -23,6 +23,7 @@ import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 import de.pro_crafting.common.Point;
+import de.pro_crafting.common.Size;
 import de.pro_crafting.generator.JobState;
 import de.pro_crafting.generator.JobStateChangedCallback;
 import de.pro_crafting.generator.criteria.Criteria;
@@ -402,19 +403,18 @@ public class Arena{
 	}
 	
 	public void replaceMG() {
-		Criteria cuboid = new SingleBlockCriteria(Material.OBSIDIAN);
 		//cuboid.wrap(new SingleBlockCriteria(Material.OBSIDIAN));
 		World world = this.repo.getWorld();
 		CuboidRegion innerRegion = getPlayGroundRegion();
-		Point min = new Point(BukkitUtil.toLocation(world, innerRegion.getMinimumPoint()));
-		Point max = new Point(BukkitUtil.toLocation(world, innerRegion.getMaximumPoint()));
-		this.plugin.getGenerator().addJob(new SimpleJob(min, max, world, new JobStateChangedCallback() {
+		Point origin = new Point(BukkitUtil.toLocation(world, innerRegion.getMinimumPoint()));
+		Size size = new Size(innerRegion.getWidth(), innerRegion.getHeight(), innerRegion.getLength());
+		this.plugin.getGenerator().addJob(new SimpleJob(origin, size, world, new JobStateChangedCallback() {
 			
 			public void jobStateChanged(Job job, JobState fromState) {
 				// TODO Auto-generated method stub
 				
 			}
-		}, cuboid, new SingleBlockProvider(Material.TNT, (byte)0)));
+		}, new SingleBlockProvider(new SingleBlockCriteria(Material.OBSIDIAN), Material.TNT, (byte)0)));
 	}
 	
 	public List<PlayerGroup> getAllGroups() {
