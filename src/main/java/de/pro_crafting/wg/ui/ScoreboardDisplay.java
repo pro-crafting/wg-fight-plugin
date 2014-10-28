@@ -138,7 +138,10 @@ public class ScoreboardDisplay implements Listener{
 			else if (team == PlayerRole.Team2) {
 				removeMemberFromTeam(arena, this.getTeamLeaderBlue(arena), this.getTeamBlue(arena), onlineplayer, member.isTeamLeader());
 			}
-			this.plugin.getScoreboardManager().removeScore(arena, onlineplayer.getDisplayName());
+			this.plugin.getScoreboardManager().removeScore(arena, onlineplayer.getPlayerListName());
+			if(this.isNicked(onlineplayer)){
+				onlineplayer.setPlayerListName(onlineplayer.getDisplayName());
+			}
 		} else {
 			if (team == PlayerRole.Team1) {
 				removeMemberFromTeam(arena, this.getTeamLeaderRed(arena), this.getTeamRed(arena), player, member.isTeamLeader());
@@ -171,8 +174,40 @@ public class ScoreboardDisplay implements Listener{
 		else if (team == PlayerRole.Team2) {
 			addMemberToTeam(arena, this.getTeamLeaderBlue(arena), this.getTeamBlue(arena), player, member.isTeamLeader());
 		}
-		this.plugin.getScoreboardManager().setScore(arena, player.getDisplayName(), (int)Math.ceil(player.getHealth()), this.healthName);
+		if(this.isNicked(player)){
+			String nick = player.getDisplayName();
+			if(nick.length() > 11){
+				nick = nick.substring(0, 11);
+			}
+			if (team == PlayerRole.Team1) {
+				if(member.isTeamLeader()){
+					player.setPlayerListName(this.getTeamLeaderRed(arena).getPrefix() + nick);
+				} else {
+					player.setPlayerListName(this.getTeamRed(arena).getPrefix() + nick);
+				}
+				
+			} else {
+				if(member.isTeamLeader()){
+					player.setPlayerListName(this.getTeamLeaderBlue(arena).getPrefix() + nick);
+				} else {
+					player.setPlayerListName(this.getTeamRed(arena).getPrefix() + nick);
+				}
+			}
+			this.plugin.getScoreboardManager().setScore(arena, player.getPlayerListName(), (int)Math.ceil(player.getHealth()), this.healthName);
+			
+		} else {
+			this.plugin.getScoreboardManager().setScore(arena, player.getDisplayName(), (int)Math.ceil(player.getHealth()), this.healthName);
+		}
+		
 		this.plugin.getScoreboardManager().setScore(arena, player.getDisplayName(), (int)Math.ceil(player.getHealth()), belowNameHealthName);
+	}
+	
+	private boolean isNicked(Player player){
+		if(player.getDisplayName().equals(player.getName())){
+			return false;
+		} else {
+			return true;
+		}
 	}
 	
 	private void addMemberToTeam(Arena arena, Team leader, Team memberTeam, Player player, boolean isTeamLeader) {
@@ -195,7 +230,7 @@ public class ScoreboardDisplay implements Listener{
 		String name = player.getDisplayName();
 		if (arena.getTeam().isAlive(player)) {
 			int health = (int)Math.ceil(player.getHealth());
-			this.plugin.getScoreboardManager().setScore(arena, name, health, this.healthName);
+			this.plugin.getScoreboardManager().setScore(arena, player.getPlayerListName(), health, this.healthName);
 			this.plugin.getScoreboardManager().setScore(arena, name, health, this.belowNameHealthName);
 		}
 		else {
