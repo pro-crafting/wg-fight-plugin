@@ -310,7 +310,7 @@ public class WgListener implements Listener {
 			if (team.getTeamName() == PlayerRole.Team2) {
 				color = arena.getRepo().getTeam2Prefix();
 			}
-			String message = "§8["+color+arena.getName()+"§8] "+ChatColor.DARK_GREEN+player.getName()+" ist gestorben.";
+			String message = "§8["+color+arena.getName()+"§8] "+ChatColor.DARK_GREEN+player.getDisplayName()+" ist gestorben.";
 			event.setDeathMessage(null);
 			arena.broadcastMessage(message);
 			Bukkit.getScheduler().runTask(this.plugin, new Runnable() {

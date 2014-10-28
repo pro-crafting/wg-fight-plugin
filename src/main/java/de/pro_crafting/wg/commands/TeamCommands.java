@@ -73,7 +73,7 @@ public class TeamCommands {
 		}
 		if (this.plugin.getArenaManager().getArenaOfTeamMember(p) != null)
 		{
-			p.sendMessage("§c"+p.getName()+" ist bereits in einem Team.");
+			p.sendMessage("§c"+p.getDisplayName()+" ist bereits in einem Team.");
 			return;
 		}
 		team.add(p, true);
@@ -123,7 +123,7 @@ public class TeamCommands {
 		WgTeam team = null;
 		if (this.plugin.getArenaManager().getArenaOfTeamMember(p) != null)
 		{
-			senderPlayer.sendMessage("§c"+p.getName()+" ist bereits in einem Team.");
+			senderPlayer.sendMessage("§c"+p.getDisplayName()+" ist bereits in einem Team.");
 			return;
 		}
 		if (args.getArgs().length == 1 || !senderPlayer.hasPermission("wargear.team.add.other")) {
@@ -197,10 +197,10 @@ public class TeamCommands {
 			}
 			if (team.getTeamMember(p) == null)
 			{
-				senderPlayer.sendMessage("§c"+p.getName()+" ist nicht in deinem Team.");
+				senderPlayer.sendMessage("§c"+p.getDisplayName()+" ist nicht in deinem Team.");
 				return;
 			}
-			if (senderPlayer.getName().equalsIgnoreCase(playerName))
+			if (senderPlayer.getDisplayName().equalsIgnoreCase(playerName))
 			{
 				senderPlayer.sendMessage("§cDer Team Leiter kann sich nicht rauswerfen.");
 				return;
@@ -213,7 +213,7 @@ public class TeamCommands {
 			}
 			team = arena.getTeam().getTeamOfName(teamName);
 		}
-		p.sendMessage("§7Du bist nicht mehr im Team von §8."+senderPlayer.getName());
+		p.sendMessage("§7Du bist nicht mehr im Team von §8."+senderPlayer.getDisplayName());
 		this.plugin.getScoreboard().removeTeamMember(arena, team.getTeamMember(p), team.getTeamName());
 		team.remove(p);
 	}

@@ -130,13 +130,24 @@ public class ScoreboardDisplay implements Listener{
 		}
 		initScoreboard(arena);
 		OfflinePlayer player = member.getOfflinePlayer();
-		if (team == PlayerRole.Team1) {
-			removeMemberFromTeam(arena, this.getTeamLeaderRed(arena), this.getTeamRed(arena), player, member.isTeamLeader());
+		if(player.isOnline()){
+			Player onlineplayer = (Player)player;
+			if (team == PlayerRole.Team1) {
+				removeMemberFromTeam(arena, this.getTeamLeaderRed(arena), this.getTeamRed(arena), onlineplayer, member.isTeamLeader());
+			}
+			else if (team == PlayerRole.Team2) {
+				removeMemberFromTeam(arena, this.getTeamLeaderBlue(arena), this.getTeamBlue(arena), onlineplayer, member.isTeamLeader());
+			}
+			this.plugin.getScoreboardManager().removeScore(arena, onlineplayer.getDisplayName());
+		} else {
+			if (team == PlayerRole.Team1) {
+				removeMemberFromTeam(arena, this.getTeamLeaderRed(arena), this.getTeamRed(arena), player, member.isTeamLeader());
+			}
+			else if (team == PlayerRole.Team2) {
+				removeMemberFromTeam(arena, this.getTeamLeaderBlue(arena), this.getTeamBlue(arena), player, member.isTeamLeader());
+			}
+			this.plugin.getScoreboardManager().removeScore(arena, player.getName());
 		}
-		else if (team == PlayerRole.Team2) {
-			removeMemberFromTeam(arena, this.getTeamLeaderBlue(arena), this.getTeamBlue(arena), player, member.isTeamLeader());
-		}
-		this.plugin.getScoreboardManager().removeScore(arena, player.getName());
 	}
 	
 	private void removeMemberFromTeam(Arena arena, Team leader, Team memberTeam, OfflinePlayer player, boolean isTeamLeader) {
@@ -160,8 +171,8 @@ public class ScoreboardDisplay implements Listener{
 		else if (team == PlayerRole.Team2) {
 			addMemberToTeam(arena, this.getTeamLeaderBlue(arena), this.getTeamBlue(arena), player, member.isTeamLeader());
 		}
-		this.plugin.getScoreboardManager().setScore(arena, player.getName(), (int)Math.ceil(player.getHealth()), this.healthName);
-		this.plugin.getScoreboardManager().setScore(arena, player.getName(), (int)Math.ceil(player.getHealth()), belowNameHealthName);
+		this.plugin.getScoreboardManager().setScore(arena, player.getDisplayName(), (int)Math.ceil(player.getHealth()), this.healthName);
+		this.plugin.getScoreboardManager().setScore(arena, player.getDisplayName(), (int)Math.ceil(player.getHealth()), belowNameHealthName);
 	}
 	
 	private void addMemberToTeam(Arena arena, Team leader, Team memberTeam, Player player, boolean isTeamLeader) {
@@ -181,7 +192,7 @@ public class ScoreboardDisplay implements Listener{
 		if (!arena.getRepo().isScoreboardEnabled()) {
 			return;
 		}
-		String name = player.getName();
+		String name = player.getDisplayName();
 		if (arena.getTeam().isAlive(player)) {
 			int health = (int)Math.ceil(player.getHealth());
 			this.plugin.getScoreboardManager().setScore(arena, name, health, this.healthName);
