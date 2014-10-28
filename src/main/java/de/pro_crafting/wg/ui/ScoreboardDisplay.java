@@ -203,11 +203,7 @@ public class ScoreboardDisplay implements Listener{
 	}
 	
 	private boolean isNicked(Player player){
-		if(player.getDisplayName().equals(player.getName())){
-			return false;
-		} else {
-			return true;
-		}
+		return !player.getDisplayName().equals(player.getName());
 	}
 	
 	private void addMemberToTeam(Arena arena, Team leader, Team memberTeam, Player player, boolean isTeamLeader) {
