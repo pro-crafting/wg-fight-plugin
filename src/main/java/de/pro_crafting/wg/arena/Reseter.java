@@ -63,14 +63,13 @@ public class Reseter implements Listener, JobStateChangedCallback
 	private void pasteGround(World arenaWorld) throws FilenameException, IOException, DataException, MaxChangedBlocksException
 	{
 	    WorldEdit we = this.plugin.getRepo().getWorldEdit().getWorldEdit();
-        LocalConfiguration config = we.getConfiguration();
         
-        File dir = we.getWorkingDirectoryFile(config.saveDir);
+        File dir = we.getWorkingDirectoryFile(we.getConfiguration().saveDir);
         String schemName = this.arena.getRepo().getGroundSchematic();
         if (!schemName.contains(".schematic")) schemName = schemName+".schematic";
         File schematic = new File(dir, schemName);
         
-        EditSession es = new EditSession(new BukkitWorld(arenaWorld), config.maxChangeLimit);
+        EditSession es = we.getEditSessionFactory().getEditSession(new BukkitWorld(arenaWorld), 1000000);
         CuboidClipboard cc = MCEditSchematicFormat.MCEDIT.load(schematic);
         es.enableQueue();
         es.setFastMode(true);
