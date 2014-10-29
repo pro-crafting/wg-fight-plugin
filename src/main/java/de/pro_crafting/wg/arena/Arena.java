@@ -147,7 +147,9 @@ public class Arena{
 			this.remover = new WaterRemover(this.plugin, this);
 			this.spectator = new SpectatorMode(this.plugin, this);
 			this.setOpen(false);
+			
 			this.setOpeningFlags(this.repo.getArenaRegion(), com.sk89q.worldguard.protection.flags.StateFlag.State.DENY);
+			this.setInnerRegionFlags(this.repo.getInnerRegion());
 			return true;
 		}
 		return false;
@@ -166,6 +168,15 @@ public class Arena{
 		
 		setOpeningFlags(this.repo.getTeam1Region(), value);
 		setOpeningFlags(this.repo.getTeam2Region(), value);
+	}
+	
+	private void setInnerRegionFlags(ProtectedRegion region) {
+		com.sk89q.worldguard.protection.flags.StateFlag.State value = com.sk89q.worldguard.protection.flags.StateFlag.State.ALLOW;
+		region.setFlag(DefaultFlag.TNT, value);
+		region.setFlag(DefaultFlag.PVP, value);
+		region.setFlag(DefaultFlag.FIRE_SPREAD, value);
+		region.setFlag(DefaultFlag.GHAST_FIREBALL, value);
+		region.setFlag(DefaultFlag.CHEST_ACCESS, value);
 	}
 	
 	private void setOpeningFlags(ProtectedRegion region, com.sk89q.worldguard.protection.flags.StateFlag.State value) {
