@@ -55,8 +55,7 @@ public class Arena{
 	private SpectatorMode spectator;
 	private boolean isOpen;
 	
-	public Arena(WarGear plugin, String arenaName)
-	{
+	public Arena(WarGear plugin, String arenaName) {
 		this.plugin = plugin;	
 		this.name = arenaName;
 		
@@ -66,13 +65,11 @@ public class Arena{
 		this.repo = new Repository(this.plugin, this);
 	}
 	
-	public String getName()
-	{
+	public String getName() {
 		return this.name;
 	}
 	
-	public void setName(String name)
-	{
+	public void setName(String name) {
 		this.name = name;
 	}
 
@@ -80,18 +77,15 @@ public class Arena{
 		return team;
 	}
 	
-	public Reseter getReseter()
-	{
+	public Reseter getReseter() {
 		return this.reseter;
 	}
 	
-	public WaterRemover getRemover()
-	{
+	public WaterRemover getRemover() {
 		return this.remover;
 	}
 	
-	public State getState()
-	{
+	public State getState() {
 		return this.state;
 	}
 	
@@ -111,52 +105,42 @@ public class Arena{
 		this.fightMode = fightMode;
 	}
 	
-	public List<UUID> getPlayers()
-	{
+	public List<UUID> getPlayers() {
 		return this.players;
 	}
 	
-	public void join(Player p)
-	{
-		if (!this.players.contains(p.getUniqueId()))
-		{
+	public void join(Player p) {
+		if (!this.players.contains(p.getUniqueId())) {
 			this.players.add(p.getUniqueId());
 			this.plugin.getScoreboard().addViewer(this, p);
 		}
 	}
 	
-	public void leave(Player p)
-	{
-		if (this.players.contains(p.getUniqueId()))
-		{
+	public void leave(Player p) {
+		if (this.players.contains(p.getUniqueId())) {
 			this.players.remove(p.getUniqueId());
 			this.plugin.getScoreboard().removeViewer(this, p);
 		}
 	}
 	
-	public Repository getRepo()
-	{
+	public Repository getRepo() {
 		return this.repo;
 	}
 	
-	public void open()
-	{
+	public void open() {
 		this.setOpen(true);
 		this.remover.start();
 		this.broadcastMessage(ChatColor.GREEN + "Arena Freigegeben!");
 	}
 	
-	public void close()
-	{
+	public void close() {
 		this.setOpen(false);
 		this.remover.stop();
 		this.broadcastMessage(ChatColor.GREEN + "Arena gesperrt!");
 	}
 	
-	public boolean load()
-	{
-		if (this.repo.load())
-		{
+	public boolean load() {
+		if (this.repo.load()) {
 			this.team = new TeamManager(plugin, this);
 			this.setFightMode(new KitMode(this.plugin, this));
 			this.reseter = new Reseter(this.plugin, this);
@@ -169,16 +153,14 @@ public class Arena{
 		return false;
 	}
 	
-	public void unload()
-	{
+	public void unload() {
 		HandlerList.unregisterAll(this.reseter);
 		this.remover.stop();
 		this.players.clear();
 		this.setOpen(false);
 	}
 	
-	public void setOpen(Boolean isOpen)
-	{
+	public void setOpen(Boolean isOpen) {
 		this.isOpen = isOpen;
 		com.sk89q.worldguard.protection.flags.StateFlag.State value = isOpen ? com.sk89q.worldguard.protection.flags.StateFlag.State.ALLOW : com.sk89q.worldguard.protection.flags.StateFlag.State.DENY;
 		
@@ -186,8 +168,7 @@ public class Arena{
 		setOpeningFlags(this.repo.getTeam2Region(), value);
 	}
 	
-	private void setOpeningFlags(ProtectedRegion region, com.sk89q.worldguard.protection.flags.StateFlag.State value)
-	{
+	private void setOpeningFlags(ProtectedRegion region, com.sk89q.worldguard.protection.flags.StateFlag.State value) {
 		region.setFlag(DefaultFlag.TNT, value);
 		region.setFlag(DefaultFlag.BUILD, value);
 		region.setFlag(DefaultFlag.PVP, value);
@@ -196,79 +177,61 @@ public class Arena{
 		region.setFlag(DefaultFlag.CHEST_ACCESS, value);
 	}
 	
-	public void broadcastMessage(String message)
-	{
-		for (Player player : this.plugin.getRepo().getPlayerOfRegion(this.repo.getArenaRegion()))
-		{
+	public void broadcastMessage(String message) {
+		for (Player player : this.plugin.getRepo().getPlayerOfRegion(this.repo.getArenaRegion())) {
 			player.sendMessage(message);
 		}
 	}
 	
-	public void broadcastOutside(String message)
-	{
-		for (Player player : this.plugin.getServer().getOnlinePlayers())
-		{
-			if (!this.contains(player.getLocation()))
-			{
+	public void broadcastOutside(String message) {
+		for (Player player : this.plugin.getServer().getOnlinePlayers()) {
+			if (!this.contains(player.getLocation())) {
 				player.sendMessage(message);
 			}
 		}
 	}
 	
-	public void updateState(State to)
-	{
+	public void updateState(State to) {
 		State from = this.state;
 		this.state = processStateChange(to);
 		ArenaStateChangedEvent arenaStateEvent = new ArenaStateChangedEvent(this, from, this.state);
 		this.plugin.getServer().getPluginManager().callEvent(arenaStateEvent);
 	}
 
-	private State processStateChange(State to)
-	{
-		if (to == State.Spectate && !this.repo.isScoreboardEnabled())
-		{
+	private State processStateChange(State to) {
+		if (to == State.Spectate && !this.repo.isScoreboardEnabled()) {
 			to = State.Resetting;
 		}
-		if (to == State.Resetting && !this.repo.getAutoReset())
-		{
+		if (to == State.Resetting && !this.repo.getAutoReset()) {
 			to = State.Idle;
 		}
 		return to;
 	}
 	
-	public boolean contains(Location loc)
-	{
+	public boolean contains(Location loc) {
 		return this.repo.getArenaRegion().contains(BukkitUtil.toVector(loc)) &&
 				this.getRepo().getWorld().getName().equals(loc.getWorld().getName());
 	}
 	
-	public void teleport(Player player)
-	{
+	public void teleport(Player player) {
 		player.teleport(this.getSpawnLocation(player), TeleportCause.PLUGIN);
 	}
 	
-	public void startFight(CommandSender sender)
-	{
-		if (this.getKit() == null || this.getKit().length() == 0)
-		{
-			if (this.plugin.getRepo().getDefaultKitName() == null || this.plugin.getRepo().getDefaultKitName().length() == 0)
-			{
-				sender.sendMessage("§cEs wurde kein Kit ausgewählt oder ein Standard Kit angegeben.");
+	public void startFight(CommandSender sender) {
+		if (this.getKit() == null || this.getKit().length() == 0) {
+			if (this.plugin.getRepo().getDefaultKitName() == null || this.plugin.getRepo().getDefaultKitName().length() == 0) {
+				sender.sendMessage("§cEs wurde kein Kit ausgewählt.");
 				return;
 			}
-			else
-			{
+			else {
 				this.setKit(this.plugin.getRepo().getDefaultKitName());
 			}
 		}
-		if (!this.getFightMode().getName().equalsIgnoreCase(this.getRepo().getFightMode()))
-		{
-			if (this.getRepo().getFightMode().equalsIgnoreCase("kit"))
-			{
+		if (!this.getFightMode().getName().equalsIgnoreCase(this.getRepo().getFightMode())) {
+			if (this.getRepo().getFightMode().equalsIgnoreCase("kit")) {
 				this.setFightMode(new KitMode(this.plugin, this));
 			}
-			else
-			{
+			else {
 				this.setFightMode(new ChestMode(this.plugin, this));
 			}
 		}
@@ -302,26 +265,21 @@ public class Arena{
 		return true;
 	}
 	
-	public Location getSpawnLocation(Player p)
-	{
-		if (this.state != State.Running)
-		{
+	public Location getSpawnLocation(Player p) {
+		if (this.state != State.Running) {
 			WgTeam playerTeam = this.team.getTeamOfPlayer(p);
-			if (playerTeam != null)
-			{
+			if (playerTeam != null) {
 				return this.team.getTeamSpawn(playerTeam.getTeamName());
 			}
 		}
 		return this.repo.getSpawnWarp();
 	}
 	
-	public SpectatorMode getSpectatorMode()
-	{
+	public SpectatorMode getSpectatorMode() {
 		return this.spectator;
 	}
 	
-	public boolean isOpen()
-	{
+	public boolean isOpen() {
 		return this.isOpen;
 	}
 	
