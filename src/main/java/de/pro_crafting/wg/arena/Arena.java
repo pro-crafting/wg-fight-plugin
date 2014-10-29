@@ -247,52 +247,6 @@ public class Arena{
 		player.teleport(this.getSpawnLocation(player), TeleportCause.PLUGIN);
 	}
 	
-	public CuboidRegion getPlayGroundRegion()
-	{
-		List<BlockVector> vectors = new ArrayList<BlockVector>();
-		vectors.add(this.repo.getTeam1Region().getMinimumPoint());
-		vectors.add(this.repo.getTeam2Region().getMinimumPoint());
-		vectors.add(this.repo.getTeam1Region().getMaximumPoint());
-		vectors.add(this.repo.getTeam2Region().getMaximumPoint());
-		SimpleEntry<Vector, Vector> minMax = getMinMax(vectors);
-		return new CuboidRegion(minMax.getKey(), minMax.getValue());
-	}
-	
-	private SimpleEntry<Vector, Vector> getMinMax(List<BlockVector> toCheck)
-	{
-		Vector min = new BlockVector(toCheck.get(0));
-		Vector max = new BlockVector(toCheck.get(0));
-		for (BlockVector vec : toCheck)
-		{
-			if (vec.getBlockX() < min.getBlockX())
-			{
-				min = min.setX(vec.getBlockX());
-			}
-			if (vec.getBlockY() < min.getBlockY())
-			{
-				min = min.setY(vec.getBlockY());
-			}
-			if (vec.getBlockZ() < min.getBlockZ())
-			{
-				min = min.setZ(vec.getBlockZ());
-			}
-			if (vec.getBlockX() > max.getBlockX())
-			{
-				max = max.setX(vec.getBlockX());
-			}
-			if (vec.getBlockY() > max.getBlockY())
-			{
-				max = max.setY(vec.getBlockY());
-			}
-			if (vec.getBlockZ() > max.getBlockZ())
-			{
-				max = max.setZ(vec.getBlockZ());
-			}
-		}
-		SimpleEntry<Vector, Vector> ret = new SimpleEntry<Vector, Vector>(min, max);
-		return ret;
-	}
-	
 	public void startFight(CommandSender sender)
 	{
 		if (this.getKit() == null || this.getKit().length() == 0)
@@ -369,6 +323,11 @@ public class Arena{
 	public boolean isOpen()
 	{
 		return this.isOpen;
+	}
+	
+	public CuboidRegion getPlayGroundRegion() {
+		ProtectedRegion innerRegion = this.repo.getInnerRegion();
+		return new CuboidRegion(innerRegion.getMinimumPoint(), innerRegion.getMaximumPoint());
 	}
 	
 	public ArenaPosition getPosition(Location where) {
