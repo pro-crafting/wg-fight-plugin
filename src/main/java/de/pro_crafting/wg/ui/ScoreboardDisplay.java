@@ -130,13 +130,27 @@ public class ScoreboardDisplay implements Listener{
 		}
 		initScoreboard(arena);
 		OfflinePlayer player = member.getOfflinePlayer();
-		if (team == PlayerRole.Team1) {
-			removeMemberFromTeam(arena, this.getTeamLeaderRed(arena), this.getTeamRed(arena), player, member.isTeamLeader());
+		if(player.isOnline()){
+			Player onlineplayer = (Player)player;
+			if (team == PlayerRole.Team1) {
+				removeMemberFromTeam(arena, this.getTeamLeaderRed(arena), this.getTeamRed(arena), onlineplayer, member.isTeamLeader());
+			}
+			else if (team == PlayerRole.Team2) {
+				removeMemberFromTeam(arena, this.getTeamLeaderBlue(arena), this.getTeamBlue(arena), onlineplayer, member.isTeamLeader());
+			}
+			this.plugin.getScoreboardManager().removeScore(arena, onlineplayer.getPlayerListName());
+			if(this.isNicked(onlineplayer)){
+				onlineplayer.setPlayerListName(onlineplayer.getDisplayName());
+			}
+		} else {
+			if (team == PlayerRole.Team1) {
+				removeMemberFromTeam(arena, this.getTeamLeaderRed(arena), this.getTeamRed(arena), player, member.isTeamLeader());
+			}
+			else if (team == PlayerRole.Team2) {
+				removeMemberFromTeam(arena, this.getTeamLeaderBlue(arena), this.getTeamBlue(arena), player, member.isTeamLeader());
+			}
+			this.plugin.getScoreboardManager().removeScore(arena, player.getName());
 		}
-		else if (team == PlayerRole.Team2) {
-			removeMemberFromTeam(arena, this.getTeamLeaderBlue(arena), this.getTeamBlue(arena), player, member.isTeamLeader());
-		}
-		this.plugin.getScoreboardManager().removeScore(arena, player.getName());
 	}
 	
 	private void removeMemberFromTeam(Arena arena, Team leader, Team memberTeam, OfflinePlayer player, boolean isTeamLeader) {
@@ -160,8 +174,36 @@ public class ScoreboardDisplay implements Listener{
 		else if (team == PlayerRole.Team2) {
 			addMemberToTeam(arena, this.getTeamLeaderBlue(arena), this.getTeamBlue(arena), player, member.isTeamLeader());
 		}
-		this.plugin.getScoreboardManager().setScore(arena, player.getName(), (int)Math.ceil(player.getHealth()), this.healthName);
-		this.plugin.getScoreboardManager().setScore(arena, player.getName(), (int)Math.ceil(player.getHealth()), belowNameHealthName);
+		if(this.isNicked(player)){
+			String nick = player.getDisplayName();
+			if(nick.length() > 11){
+				nick = nick.substring(0, 11);
+			}
+			if (team == PlayerRole.Team1) {
+				if(member.isTeamLeader()){
+					player.setPlayerListName(this.getTeamLeaderRed(arena).getPrefix() + nick);
+				} else {
+					player.setPlayerListName(this.getTeamRed(arena).getPrefix() + nick);
+				}
+				
+			} else {
+				if(member.isTeamLeader()){
+					player.setPlayerListName(this.getTeamLeaderBlue(arena).getPrefix() + nick);
+				} else {
+					player.setPlayerListName(this.getTeamRed(arena).getPrefix() + nick);
+				}
+			}
+			this.plugin.getScoreboardManager().setScore(arena, player.getPlayerListName(), (int)Math.ceil(player.getHealth()), this.healthName);
+			
+		} else {
+			this.plugin.getScoreboardManager().setScore(arena, player.getDisplayName(), (int)Math.ceil(player.getHealth()), this.healthName);
+		}
+		
+		this.plugin.getScoreboardManager().setScore(arena, player.getDisplayName(), (int)Math.ceil(player.getHealth()), belowNameHealthName);
+	}
+	
+	private boolean isNicked(Player player){
+		return !player.getDisplayName().equals(player.getName());
 	}
 	
 	private void addMemberToTeam(Arena arena, Team leader, Team memberTeam, Player player, boolean isTeamLeader) {
@@ -181,10 +223,10 @@ public class ScoreboardDisplay implements Listener{
 		if (!arena.getRepo().isScoreboardEnabled()) {
 			return;
 		}
-		String name = player.getName();
+		String name = player.getDisplayName();
 		if (arena.getTeam().isAlive(player)) {
 			int health = (int)Math.ceil(player.getHealth());
-			this.plugin.getScoreboardManager().setScore(arena, name, health, this.healthName);
+			this.plugin.getScoreboardManager().setScore(arena, player.getPlayerListName(), health, this.healthName);
 			this.plugin.getScoreboardManager().setScore(arena, name, health, this.belowNameHealthName);
 		}
 		else {
