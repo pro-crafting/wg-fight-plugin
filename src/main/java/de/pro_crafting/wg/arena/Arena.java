@@ -310,18 +310,18 @@ public class Arena{
 			return ArenaPosition.Platform;
 		}
 		
-		double distanceTeam1Squared = vector.distanceSq(this.repo.getTeam1Region().getMinimumPoint()) + 
-				vector.distanceSq(this.repo.getTeam1Region().getMaximumPoint());
-		
-		double distanceTeam2Squared = vector.distanceSq(this.repo.getTeam2Region().getMinimumPoint()) + 
-				vector.distanceSq(this.repo.getTeam2Region().getMaximumPoint());
-		
 		if (this.repo.getTeam1Region().contains(vector)) {
 			return ArenaPosition.Team1WG;
 		}
 		if (this.repo.getTeam2Region().contains(vector)) {
 			return ArenaPosition.Team2WG;
 		}
+		
+		double distanceTeam1Squared = vector.distanceSq(this.repo.getTeam1Region().getMinimumPoint()) + 
+				vector.distanceSq(this.repo.getTeam1Region().getMaximumPoint());
+		
+		double distanceTeam2Squared = vector.distanceSq(this.repo.getTeam2Region().getMinimumPoint()) + 
+				vector.distanceSq(this.repo.getTeam2Region().getMaximumPoint());
 		
 		if ((distanceTeam1Squared - distanceTeam2Squared) > 0) {
 			return ArenaPosition.Team2PlayField;
