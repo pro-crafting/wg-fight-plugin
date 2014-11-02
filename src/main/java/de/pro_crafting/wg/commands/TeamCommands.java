@@ -147,7 +147,13 @@ public class TeamCommands {
 			}
 		}
 		team.add(p, false);
-		p.sendMessage("§7Du bist jetzt im Team von §B"+leader.getName()+"§7.");
+		if(leader.isOnline()){
+			Player onlineleader = (Player) team.getTeamLeader().getPlayer();
+			p.sendMessage("§7Du bist jetzt im Team von §B"+onlineleader.getDisplayName()+"§7.");
+		} else {
+			p.sendMessage("§7Du bist jetzt im Team von §B"+leader.getName()+"§7.");
+		}
+		
 		p.sendMessage("§7Mit §8\"/wgk team leave\" §7verlässt du das Team.");
 		this.plugin.getScoreboard().addTeamMember(arena, team.getTeamMember(p), team.getTeamName());
 	}
