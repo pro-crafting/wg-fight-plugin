@@ -183,7 +183,7 @@ public class OfflineManager implements Listener {
 		}
 		if ((!team.isAlive() || !team.isOnline() || team.getTeamMembers().size() == 0) && (arena.getState() == State.PreRunning || arena.getState() == State.Running)) {
 			FightQuitEvent event = new WinQuitEvent(arena, "Gegnerisches Team ist offline.", arena.getTeam().getTeamOfName(team.getTeamName() == PlayerRole.Team1 ? 
-					PlayerRole.Team1 : PlayerRole.Team2), team, FightQuitReason.FightLeader);
+					PlayerRole.Team2 : PlayerRole.Team1), team, FightQuitReason.FightLeader);
 			Bukkit.getPluginManager().callEvent(event);
 		}
 	}
