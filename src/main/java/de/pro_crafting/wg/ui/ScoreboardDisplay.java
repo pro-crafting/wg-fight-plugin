@@ -23,6 +23,7 @@ import de.pro_crafting.wg.arena.Arena;
 import de.pro_crafting.wg.arena.State;
 import de.pro_crafting.wg.event.ArenaStateChangedEvent;
 import de.pro_crafting.wg.team.TeamMember;
+import de.pro_crafting.wg.team.WgTeam;
 
 public class ScoreboardDisplay implements Listener{
 	private WarGear plugin;	
@@ -139,9 +140,6 @@ public class ScoreboardDisplay implements Listener{
 				removeMemberFromTeam(arena, this.getTeamLeaderBlue(arena), this.getTeamBlue(arena), onlineplayer, member.isTeamLeader());
 			}
 			this.plugin.getScoreboardManager().removeScore(arena, onlineplayer.getPlayerListName());
-			if(this.isNicked(onlineplayer)){
-				onlineplayer.setPlayerListName(onlineplayer.getDisplayName());
-			}
 		} else {
 			if (team == PlayerRole.Team1) {
 				removeMemberFromTeam(arena, this.getTeamLeaderRed(arena), this.getTeamRed(arena), player, member.isTeamLeader());
@@ -186,7 +184,7 @@ public class ScoreboardDisplay implements Listener{
 					player.setPlayerListName(this.getTeamRed(arena).getPrefix() + nick);
 				}
 				
-			} else {
+			} else if (team == PlayerRole.Team2) {
 				if(member.isTeamLeader()){
 					player.setPlayerListName(this.getTeamLeaderBlue(arena).getPrefix() + nick);
 				} else {
@@ -198,12 +196,11 @@ public class ScoreboardDisplay implements Listener{
 		} else {
 			this.plugin.getScoreboardManager().setScore(arena, player.getDisplayName(), (int)Math.ceil(player.getHealth()), this.healthName);
 		}
-		
 		this.plugin.getScoreboardManager().setScore(arena, player.getDisplayName(), (int)Math.ceil(player.getHealth()), belowNameHealthName);
 	}
 	
 	private boolean isNicked(Player player){
-		return !player.getDisplayName().equals(player.getName());
+		return !player.getName().equals(player.getDisplayName());
 	}
 	
 	private void addMemberToTeam(Arena arena, Team leader, Team memberTeam, Player player, boolean isTeamLeader) {
@@ -271,6 +268,19 @@ public class ScoreboardDisplay implements Listener{
 		else if (event.getTo() == State.Spectate) {
 			stopTimer(arena);
 			clearScoreboard(arena);
+			removeNicked(arena.getTeam().getTeam1());
+			removeNicked(arena.getTeam().getTeam2());
+		}
+	}
+	
+	private void removeNicked(WgTeam team) {
+		for (TeamMember member : team.getTeamMembers().values()) {
+			if (member.isOnline()) {
+				Player p = member.getPlayer();
+				if (this.isNicked(p)) {
+					p.setPlayerListName(p.getDisplayName());
+				}
+			}
 		}
 	}
 }

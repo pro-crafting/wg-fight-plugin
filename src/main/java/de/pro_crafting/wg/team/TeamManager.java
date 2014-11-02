@@ -71,7 +71,12 @@ public class TeamManager
 		String ret = "";
 		for (TeamMember member : team.getTeamMembers().values())
 		{
-			ret += member.getOfflinePlayer().getName()+ " ";
+			if(member.isOnline()){
+				ret += member.getPlayer().getDisplayName()+ " ";
+			} else {
+				ret += member.getOfflinePlayer().getName()+ " ";
+			}
+			
 		}
 		return ret.trim();
 	}
