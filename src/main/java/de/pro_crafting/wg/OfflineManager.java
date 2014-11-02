@@ -109,7 +109,7 @@ public class OfflineManager implements Listener {
 				offlineIterator.remove();
 			} else if (isTooLongOffline(current)) {
 				offlineIterator.remove();
-				killTeamMember(current);
+				kickOfflineMember(current);
 			}
 		}
 
@@ -131,7 +131,7 @@ public class OfflineManager implements Listener {
 				memberIterator.remove();
 			} else if (isTooLongOffline(member)) {
 				memberIterator.remove();
-				killTeamMember(member);
+				kickOfflineMember(member);
 			}
 		}
 
@@ -142,8 +142,7 @@ public class OfflineManager implements Listener {
 			boolean everyoneOnline = true;
 			for (TeamMember member : current.getKey().getTeamMembers().values()) {
 				if (isTooLongOffline(member)) {
-					killTeamMember(member);
-					teamIterator.remove();
+					kickOfflineMember(member);
 				} else if (!member.isOnline()) {
 					everyoneOnline = false;
 				}
@@ -157,8 +156,7 @@ public class OfflineManager implements Listener {
 		}
 	}
 
-	private void killTeamMember(TeamMember member)
-	{
+	private void kickOfflineMember(TeamMember member) {
 		OfflinePlayer player = member.getOfflinePlayer();
 		Arena arena = this.plugin.getArenaManager().getArenaOfTeamMember(player);
 		if (arena == null) {
@@ -181,7 +179,7 @@ public class OfflineManager implements Listener {
 			this.plugin.getScoreboard().removeTeamMember(arena, member, team.getTeamName());
 			member.setAlive(false);
 		}
-		if ((!team.isAlive() || !team.isOnline() || team.getTeamMembers().size() == 0) && (arena.getState() == State.PreRunning || arena.getState() == State.Running)) {
+		if ((!team.isAlive() || team.getTeamMembers().size() == 0) && (arena.getState() == State.PreRunning || arena.getState() == State.Running)) {
 			FightQuitEvent event = new WinQuitEvent(arena, "Gegnerisches Team ist offline.", arena.getTeam().getTeamOfName(team.getTeamName() == PlayerRole.Team1 ? 
 					PlayerRole.Team2 : PlayerRole.Team1), team, FightQuitReason.FightLeader);
 			Bukkit.getPluginManager().callEvent(event);
