@@ -17,7 +17,6 @@ ground:
     schematic:
 regions:
     arena:
-    inner:
     team1:
     team2:
 fightStart:

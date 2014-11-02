@@ -38,7 +38,6 @@ public class Repository
 	private int spectatorModeTime;
 	private String team1Prefix;
 	private String team2Prefix;
-	private ProtectedRegion innerRegion;
 	
 	private String worldPath;
 	private String arenaRegionPath;
@@ -59,7 +58,6 @@ public class Repository
 	private String spectatorModeTimePath;
 	private String team1PrefixPath;
 	private String team2PrefixPath;
-	private String innerRegionPath;
 	
 	public Repository(WarGear plugin, Arena arena)
 	{
@@ -76,7 +74,6 @@ public class Repository
 		team1RegionPath = "regions.team1";
 		team2RegionPath = "regions.team2";
 		arenaRegionPath = "regions.arena";
-		innerRegionPath = "regions.inner";
 		team1Path = "fightStart.team1";
 		team2Path = "fightStart.team2";
 		spawnPath = "spawn";
@@ -112,7 +109,6 @@ public class Repository
 		if (!this.loadSpectatorModeTime()) return false;
 		if (!this.loadTeam1Prefix()) return false;
 		if (!this.loadTeam2Prefix()) return false;
-		if (!this.loadInnerRegion()) return false;
 		
 		this.team1Warp = Util.lookAt(this.team1Warp, this.team2Warp);
 		this.team2Warp = Util.lookAt(this.team2Warp, this.team1Warp);
@@ -135,13 +131,6 @@ public class Repository
 		String id = this.config.getString(this.arenaRegionPath);
 		this.arenaRegion = this.getWorldGuardRegion(id);
 		return this.arenaRegion != null;
-	}
-	
-	private boolean loadInnerRegion()
-	{
-		String id = this.config.getString(this.innerRegionPath);
-		this.innerRegion = this.getWorldGuardRegion(id);
-		return this.innerRegion != null;
 	}
 	
 	private boolean loadMode()
@@ -474,9 +463,5 @@ public class Repository
 	public String getTeam2Prefix()
 	{
 		return this.team2Prefix;
-	}
-	
-	public ProtectedRegion getInnerRegion() {
-		return this.innerRegion;
 	}
 }
