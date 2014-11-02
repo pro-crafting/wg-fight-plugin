@@ -175,6 +175,7 @@ public class Arena{
 		this.remover.stop();
 		this.players.clear();
 		this.setOpen(false);
+		this.plugin.getScoreboard().clearScoreboard(this);
 	}
 	
 	public void setOpen(Boolean isOpen)
