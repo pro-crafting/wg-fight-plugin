@@ -140,6 +140,9 @@ public class ScoreboardDisplay implements Listener{
 				removeMemberFromTeam(arena, this.getTeamLeaderBlue(arena), this.getTeamBlue(arena), onlineplayer, member.isTeamLeader());
 			}
 			this.plugin.getScoreboardManager().removeScore(arena, onlineplayer.getPlayerListName());
+			if (this.isNicked(onlineplayer)) {
+				onlineplayer.setPlayerListName(onlineplayer.getDisplayName());
+			}
 		} else {
 			if (team == PlayerRole.Team1) {
 				removeMemberFromTeam(arena, this.getTeamLeaderRed(arena), this.getTeamRed(arena), player, member.isTeamLeader());
