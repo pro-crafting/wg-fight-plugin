@@ -53,25 +53,9 @@ public abstract class FightBase implements FightMode, Listener {
 	}
 
 	public void stop() {
-		PlayerMoveEvent.getHandlerList().unregister(this);
 	}
 	
 	public String getName() {
 		return "base, you stupid boy";
-	}
-
-	@EventHandler
-	public void playerMoveHandler(PlayerMoveEvent event) {
-		if (event.getTo().getY() > this.arena.getRepo().getGroundHeight()) {
-			return;
-		}
-		if (!arena.contains(event.getTo())) {
-			return;
-		}
-		TeamMember member = this.arena.getTeam().getTeamMember(event.getPlayer());
-		if (member != null && member.isAlive()) {
-			event.getPlayer().damage(arena.getRepo().getGroundDamage());
-			this.plugin.getScoreboard().updateHealthOfPlayer(arena, event.getPlayer());
-		}
 	}
 }

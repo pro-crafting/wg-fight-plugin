@@ -37,6 +37,7 @@ import de.pro_crafting.wg.event.FightQuitEvent;
 import de.pro_crafting.wg.event.PlayerArenaChangeEvent;
 import de.pro_crafting.wg.event.WinQuitEvent;
 import de.pro_crafting.wg.modes.KitMode;
+import de.pro_crafting.wg.team.TeamMember;
 import de.pro_crafting.wg.team.WgTeam;
 
 public class WgListener implements Listener {
@@ -137,6 +138,7 @@ public class WgListener implements Listener {
 		}
 		if (arenaTo != null) {
 			arenaTo.join(player);
+			doGroundDamage(event.getTo(), arenaTo, event.getPlayer());
 			
 			Bukkit.getPluginManager().callEvent(new PlayerArenaChangeEvent(player, arenaFrom, arenaTo));
 			
@@ -154,6 +156,20 @@ public class WgListener implements Listener {
 			} else if (team != null && team.getTeamName() == PlayerRole.Team2 && (to == ArenaPosition.Team1PlayField || to == ArenaPosition.Team1WG)) {
 				resetPlayerMovement(to, from, event.getFrom(), player, arenaTo);
 			}
+		}
+	}
+	
+	private void doGroundDamage(Location to, Arena arenaTo, Player player) {
+		if (to.getY() > arenaTo.getRepo().getGroundHeight()) {
+			return;
+		}
+		if (!arenaTo.contains(to)) {
+			return;
+		}
+		TeamMember member = arenaTo.getTeam().getTeamMember(player);
+		if (member != null && member.isAlive()) {
+			player.damage(arenaTo.getRepo().getGroundDamage());
+			this.plugin.getScoreboard().updateHealthOfPlayer(arenaTo, player);
 		}
 	}
 	
