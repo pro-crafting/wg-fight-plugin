@@ -85,15 +85,10 @@ public class WgListener implements Listener {
 		if (arena == null) {
 			return;
 		}
-		String color = "§7";
+		String color = "";
 		WgTeam team = arena.getTeam().getTeamOfPlayer(player);
 		if (team != null) {
-			if (team.getTeamName() == PlayerRole.Team1) {
-				color = arena.getRepo().getTeam1Prefix();
-			}
-			else if (team.getTeamName() == PlayerRole.Team2) {
-				color = arena.getRepo().getTeam2Prefix();
-			}
+			color = arena.getTeam().getPrefix(team.getTeamName());
 		}
 		event.setFormat("§8["+color+arena.getName()+"§8]"+event.getFormat());
 	}
@@ -306,10 +301,7 @@ public class WgListener implements Listener {
 		final WgTeam team = arena.getTeam().getTeamOfPlayer(player);
 		if (team != null && team.getTeamMember(player).isAlive()) {
 			team.getTeamMember(player).setAlive(false);
-			String color = arena.getRepo().getTeam1Prefix();
-			if (team.getTeamName() == PlayerRole.Team2) {
-				color = arena.getRepo().getTeam2Prefix();
-			}
+			String color = arena.getTeam().getPrefix(team.getTeamName());
 			String message = "§8["+color+arena.getName()+"§8] "+ChatColor.DARK_GREEN+player.getDisplayName()+" ist gestorben.";
 			event.setDeathMessage(null);
 			arena.broadcastMessage(message);

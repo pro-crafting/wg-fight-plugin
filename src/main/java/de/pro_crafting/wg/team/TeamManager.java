@@ -112,7 +112,16 @@ public class TeamManager
 			return this.team2;
 		}
 	}
-	 
+	
+	public String getPrefix(PlayerRole role) {
+		if (role == PlayerRole.Team1) {
+			return this.arena.getRepo().getTeam1Prefix();
+		} else if (role == PlayerRole.Team2) {
+			return this.arena.getRepo().getTeam2Prefix();
+		}
+		return "§7";
+	}
+	
 	public WgTeam getTeamOfPlayer(OfflinePlayer p)
 	{
 		if (this.team1.getTeamMember(p) != null)
