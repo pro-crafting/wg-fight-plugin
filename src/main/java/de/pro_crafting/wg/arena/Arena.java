@@ -216,22 +216,21 @@ public class Arena{
 		}
 	}
 	
-	public void updateState(State to)
-	{
+	public void updateState(State to) {
 		State from = this.state;
-		this.state = processStateChange(to);
+		to = processStateChange(to);
 		ArenaStateChangeEvent arenaStateEvent = new ArenaStateChangeEvent(this, from, this.state);
 		this.plugin.getServer().getPluginManager().callEvent(arenaStateEvent);
+		if (!arenaStateEvent.isCancelled()) {
+			this.state = arenaStateEvent.getTo();
+		}
 	}
 
-	private State processStateChange(State to)
-	{
-		if (to == State.Spectate && !this.repo.isScoreboardEnabled())
-		{
+	private State processStateChange(State to) {
+		if (to == State.Spectate && !this.repo.isScoreboardEnabled()) {
 			to = State.Resetting;
 		}
-		if (to == State.Resetting && !this.repo.getAutoReset())
-		{
+		if (to == State.Resetting && !this.repo.getAutoReset()) {
 			to = State.Idle;
 		}
 		return to;

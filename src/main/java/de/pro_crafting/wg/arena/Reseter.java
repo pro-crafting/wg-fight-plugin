@@ -91,7 +91,7 @@ public class Reseter implements Listener, JobStateChangedCallback
 		}
 	}
 	
-	@EventHandler (priority = EventPriority.LOWEST)
+	@EventHandler (priority = EventPriority.MONITOR, ignoreCancelled=true)
 	public void arenaStateChangedHandler(ArenaStateChangeEvent event)
 	{
 		if (!event.getArena().equals(this.arena))

@@ -58,7 +58,7 @@ public class WgListener implements Listener {
 		}
 	}
 	
-	@EventHandler (priority = EventPriority.LOWEST)
+	@EventHandler (priority = EventPriority.MONITOR, ignoreCancelled=true)
 	public void arenaStateChangedHandler(ArenaStateChangeEvent event) {
 		if (event.getTo() == State.Idle) {
 			event.getArena().getTeam().quitFight();
