@@ -1,14 +1,12 @@
 package de.pro_crafting.wg;
 
-import java.util.UUID;
-
-import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 import de.pro_crafting.wg.event.DrawQuitEvent;
 import de.pro_crafting.wg.event.WinQuitEvent;
+import de.pro_crafting.wg.team.TeamMember;
 import de.pro_crafting.wg.team.WgTeam;
 
 public class WgEconomy implements Listener{
@@ -36,15 +34,15 @@ public class WgEconomy implements Listener{
 	
 	private void giveTeamMoney(WgTeam team, double amount)
 	{
-		for (UUID id : team.getTeamMembers().keySet())
+		for (TeamMember member : team.getTeamMembers())
 		{
 			if (amount < 0)
 			{
-				this.plugin.getRepo().getEco().withdrawPlayer(Bukkit.getPlayer(id), amount);
+				this.plugin.getRepo().getEco().withdrawPlayer(member.getOfflinePlayer(), amount);
 			}
 			else
 			{
-				this.plugin.getRepo().getEco().depositPlayer(Bukkit.getPlayer(id), amount);
+				this.plugin.getRepo().getEco().depositPlayer(member.getOfflinePlayer(), amount);
 			}
 		}
 	}

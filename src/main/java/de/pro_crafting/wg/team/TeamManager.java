@@ -69,7 +69,7 @@ public class TeamManager
 	private String concateTeamPlayers(WgTeam team)
 	{
 		String ret = "";
-		for (TeamMember member : team.getTeamMembers().values())
+		for (TeamMember member : team.getTeamMembers())
 		{
 			if(member.isOnline()){
 				ret += member.getPlayer().getDisplayName()+ " ";

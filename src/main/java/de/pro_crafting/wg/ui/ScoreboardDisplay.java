@@ -277,7 +277,7 @@ public class ScoreboardDisplay implements Listener{
 	}
 	
 	private void removeNicked(WgTeam team) {
-		for (TeamMember member : team.getTeamMembers().values()) {
+		for (TeamMember member : team.getTeamMembers()) {
 			if (member.isOnline()) {
 				Player p = member.getPlayer();
 				if (this.isNicked(p)) {

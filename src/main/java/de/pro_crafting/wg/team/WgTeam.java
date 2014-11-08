@@ -1,5 +1,6 @@
 package de.pro_crafting.wg.team;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -47,9 +48,9 @@ public class WgTeam
 		return this.teamName;
 	}
 	
-	public Map<UUID, TeamMember> getTeamMembers()
+	public Collection<TeamMember> getTeamMembers()
 	{
-		return this.teamMember;
+		return this.teamMember.values();
 	}
 	
 	public TeamMember getTeamMember(OfflinePlayer player)
