@@ -412,8 +412,4 @@ public class Arena{
 		this.plugin.getGenerator().addJob(new SimpleJob(origin, size, world, null, 
 				new SingleBlockProvider(new SingleBlockCriteria(Material.OBSIDIAN), Material.TNT, (byte)0)));
 	}
-	
-	public List<PlayerGroup> getAllGroups() {
-		return Arrays.asList(new PlayerGroup(this, PlayerRole.Viewer), new PlayerGroup(this, PlayerRole.Team1), new PlayerGroup(this, PlayerRole.Team2));
-	}
 }
