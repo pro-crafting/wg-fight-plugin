@@ -98,7 +98,7 @@ public class WarGearCommands {
 		if (args.getArgs().length == 1) startWith = args.getArgs()[0];
 		
 		List<String> ret = new ArrayList<String>();
-		for (String arenaName : this.plugin.getArenaManager().getArenas().keySet())
+		for (String arenaName : this.plugin.getArenaManager().getArenaNames())
 		{
 			if (arenaName.startsWith(startWith))
 			{

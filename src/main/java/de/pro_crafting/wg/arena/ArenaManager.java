@@ -1,7 +1,9 @@
 package de.pro_crafting.wg.arena;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -82,9 +84,12 @@ public class ArenaManager {
 		return arenas.get(name.toLowerCase());
 	}
 	
-	public Map<String, Arena> getArenas()
-	{
-		return this.arenas;
+	public Collection<Arena> getArenas() {
+		return this.arenas.values();
+	}
+	
+	public Set<String> getArenaNames() {
+		return this.arenas.keySet();
 	}
 	
 	public boolean isArenaLoaded(String arenaName)

@@ -53,7 +53,7 @@ public class ScoreboardDisplay implements Listener{
 				if (info) {
 					toShow = infoName;
 				}
-				for (Arena arena : ScoreboardDisplay.this.plugin.getArenaManager().getArenas().values()) {
+				for (Arena arena : ScoreboardDisplay.this.plugin.getArenaManager().getArenas()) {
 					ScoreboardDisplay.this.plugin.getScoreboardManager().showObjective(arena, toShow, DisplaySlot.SIDEBAR);
 				}
 				info = !info;

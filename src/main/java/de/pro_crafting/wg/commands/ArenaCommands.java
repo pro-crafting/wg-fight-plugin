@@ -106,7 +106,7 @@ public class ArenaCommands {
 	public void list(CommandArgs args)
 	{
 		args.getSender().sendMessage("§a---Verfügbare Arenen---");
-		Set<String> arenas = this.plugin.getArenaManager().getArenas().keySet();
+		Set<String> arenas = this.plugin.getArenaManager().getArenaNames();
 		for (String arenaName : arenas)
 		{
 			args.getSender().sendMessage("§7"+arenaName);
