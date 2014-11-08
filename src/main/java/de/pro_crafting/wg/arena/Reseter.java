@@ -34,7 +34,7 @@ import de.pro_crafting.generator.job.Job;
 import de.pro_crafting.generator.job.SimpleJob;
 import de.pro_crafting.generator.provider.SingleBlockProvider;
 import de.pro_crafting.wg.WarGear;
-import de.pro_crafting.wg.event.ArenaStateChangedEvent;
+import de.pro_crafting.wg.event.ArenaStateChangeEvent;
 
 public class Reseter implements Listener, JobStateChangedCallback
 {
@@ -92,7 +92,7 @@ public class Reseter implements Listener, JobStateChangedCallback
 	}
 	
 	@EventHandler (priority = EventPriority.LOWEST)
-	public void arenaStateChangedHandler(ArenaStateChangedEvent event)
+	public void arenaStateChangedHandler(ArenaStateChangeEvent event)
 	{
 		if (!event.getArena().equals(this.arena))
 		{

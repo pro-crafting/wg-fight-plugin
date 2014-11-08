@@ -21,7 +21,7 @@ import de.pro_crafting.wg.PlayerRole;
 import de.pro_crafting.wg.WarGear;
 import de.pro_crafting.wg.arena.Arena;
 import de.pro_crafting.wg.arena.State;
-import de.pro_crafting.wg.event.ArenaStateChangedEvent;
+import de.pro_crafting.wg.event.ArenaStateChangeEvent;
 import de.pro_crafting.wg.team.TeamMember;
 import de.pro_crafting.wg.team.WgTeam;
 
@@ -246,7 +246,7 @@ public class ScoreboardDisplay implements Listener{
 	}
 	
 	@EventHandler (priority = EventPriority.LOWEST)
-	public void arenaStateChangedHandler(ArenaStateChangedEvent event)
+	public void arenaStateChangedHandler(ArenaStateChangeEvent event)
 	{
 		Arena arena = event.getArena();
 		if (!arena.getRepo().isScoreboardEnabled()) {

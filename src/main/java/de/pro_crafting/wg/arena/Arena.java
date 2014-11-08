@@ -34,7 +34,7 @@ import de.pro_crafting.generator.provider.SingleBlockProvider;
 import de.pro_crafting.wg.PlayerGroup;
 import de.pro_crafting.wg.PlayerRole;
 import de.pro_crafting.wg.WarGear;
-import de.pro_crafting.wg.event.ArenaStateChangedEvent;
+import de.pro_crafting.wg.event.ArenaStateChangeEvent;
 import de.pro_crafting.wg.modes.ChestMode;
 import de.pro_crafting.wg.modes.FightMode;
 import de.pro_crafting.wg.modes.KitMode;
@@ -220,7 +220,7 @@ public class Arena{
 	{
 		State from = this.state;
 		this.state = processStateChange(to);
-		ArenaStateChangedEvent arenaStateEvent = new ArenaStateChangedEvent(this, from, this.state);
+		ArenaStateChangeEvent arenaStateEvent = new ArenaStateChangeEvent(this, from, this.state);
 		this.plugin.getServer().getPluginManager().callEvent(arenaStateEvent);
 	}
 

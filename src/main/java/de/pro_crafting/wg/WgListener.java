@@ -32,7 +32,7 @@ import org.bukkit.util.Vector;
 import de.pro_crafting.wg.arena.Arena;
 import de.pro_crafting.wg.arena.ArenaPosition;
 import de.pro_crafting.wg.arena.State;
-import de.pro_crafting.wg.event.ArenaStateChangedEvent;
+import de.pro_crafting.wg.event.ArenaStateChangeEvent;
 import de.pro_crafting.wg.event.FightQuitEvent;
 import de.pro_crafting.wg.event.PlayerArenaChangeEvent;
 import de.pro_crafting.wg.event.WinQuitEvent;
@@ -59,7 +59,7 @@ public class WgListener implements Listener {
 	}
 	
 	@EventHandler (priority = EventPriority.LOWEST)
-	public void arenaStateChangedHandler(ArenaStateChangedEvent event) {
+	public void arenaStateChangedHandler(ArenaStateChangeEvent event) {
 		if (event.getTo() == State.Idle) {
 			event.getArena().getTeam().quitFight();
 			event.getArena().setFightMode(new KitMode(this.plugin, event.getArena()));

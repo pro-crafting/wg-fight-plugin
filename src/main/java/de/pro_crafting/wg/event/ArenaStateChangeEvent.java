@@ -6,32 +6,27 @@ import org.bukkit.event.HandlerList;
 import de.pro_crafting.wg.arena.Arena;
 import de.pro_crafting.wg.arena.State;
 
-public class ArenaStateChangedEvent extends Event
-{
+public class ArenaStateChangeEvent extends Event {
 	private static final HandlerList handlers = new HandlerList();
 	private Arena arena;
 	private State from;
 	private State to;
 	
-	public ArenaStateChangedEvent(Arena arena, State from, State to)
-	{
+	public ArenaStateChangeEvent(Arena arena, State from, State to) {
 		this.arena = arena;
 		this.from = from;
 		this.to = to;
 	}
 	
-    public Arena getArena()
-    {
+    public Arena getArena() {
     	return this.arena;
     }
 	
-	public State getFrom()
-	{
+	public State getFrom() {
 		return from;
 	}
 	
-	public State getTo()
-	{
+	public State getTo() {
 		return to;
 	}
 	
