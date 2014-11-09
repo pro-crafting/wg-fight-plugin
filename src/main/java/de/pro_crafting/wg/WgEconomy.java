@@ -6,8 +6,8 @@ import org.bukkit.event.Listener;
 
 import de.pro_crafting.wg.event.DrawQuitEvent;
 import de.pro_crafting.wg.event.WinQuitEvent;
-import de.pro_crafting.wg.team.TeamMember;
-import de.pro_crafting.wg.team.WgTeam;
+import de.pro_crafting.wg.group.TeamMember;
+import de.pro_crafting.wg.group.WgTeam;
 
 public class WgEconomy implements Listener{
 	private WarGear plugin;

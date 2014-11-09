@@ -9,8 +9,8 @@ import org.bukkit.scheduler.BukkitTask;
 import de.pro_crafting.wg.OfflineRunable;
 import de.pro_crafting.wg.Util;
 import de.pro_crafting.wg.WarGear;
-import de.pro_crafting.wg.team.TeamMember;
-import de.pro_crafting.wg.team.WgTeam;
+import de.pro_crafting.wg.group.TeamMember;
+import de.pro_crafting.wg.group.WgTeam;
 
 public class SpectatorMode {
 	private WarGear plugin;

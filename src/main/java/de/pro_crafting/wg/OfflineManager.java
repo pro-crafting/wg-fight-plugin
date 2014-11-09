@@ -20,8 +20,9 @@ import de.pro_crafting.wg.arena.Arena;
 import de.pro_crafting.wg.arena.State;
 import de.pro_crafting.wg.event.FightQuitEvent;
 import de.pro_crafting.wg.event.WinQuitEvent;
-import de.pro_crafting.wg.team.TeamMember;
-import de.pro_crafting.wg.team.WgTeam;
+import de.pro_crafting.wg.group.PlayerRole;
+import de.pro_crafting.wg.group.TeamMember;
+import de.pro_crafting.wg.group.WgTeam;
 
 public class OfflineManager implements Listener {
 	private WarGear plugin;

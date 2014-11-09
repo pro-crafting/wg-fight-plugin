@@ -2,7 +2,7 @@ package de.pro_crafting.wg.event;
 
 import de.pro_crafting.wg.FightQuitReason;
 import de.pro_crafting.wg.arena.Arena;
-import de.pro_crafting.wg.team.WgTeam;
+import de.pro_crafting.wg.group.WgTeam;
 
 public class WinQuitEvent extends FightQuitEvent
 {	

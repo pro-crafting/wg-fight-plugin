@@ -9,7 +9,7 @@ import de.pro_crafting.wg.OfflineRunable;
 import de.pro_crafting.wg.Util;
 import de.pro_crafting.wg.WarGear;
 import de.pro_crafting.wg.arena.Arena;
-import de.pro_crafting.wg.team.TeamMember;
+import de.pro_crafting.wg.group.TeamMember;
 
 public abstract class FightBase implements FightMode, Listener {
 	protected WarGear plugin;

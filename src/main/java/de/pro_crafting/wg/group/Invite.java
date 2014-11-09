@@ -1,4 +1,4 @@
-package de.pro_crafting.wg.team;
+package de.pro_crafting.wg.group;
 
 import java.util.UUID;
 

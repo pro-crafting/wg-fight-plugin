@@ -8,10 +8,10 @@ import java.util.Set;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 
-import de.pro_crafting.wg.PlayerGroup;
-import de.pro_crafting.wg.PlayerRole;
 import de.pro_crafting.wg.WarGear;
-import de.pro_crafting.wg.team.WgTeam;
+import de.pro_crafting.wg.group.PlayerGroup;
+import de.pro_crafting.wg.group.PlayerRole;
+import de.pro_crafting.wg.group.WgTeam;
 
 public class ArenaManager {
 

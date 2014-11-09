@@ -1,4 +1,4 @@
-package de.pro_crafting.wg.team;
+package de.pro_crafting.wg.group;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -7,8 +7,6 @@ import java.util.UUID;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-
-import de.pro_crafting.wg.PlayerRole;
 
 public class WgTeam 
 {

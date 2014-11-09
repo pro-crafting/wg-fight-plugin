@@ -1,4 +1,4 @@
-package de.pro_crafting.wg.team;
+package de.pro_crafting.wg.group;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 import de.pro_crafting.wg.OfflineRunable;
-import de.pro_crafting.wg.PlayerRole;
 import de.pro_crafting.wg.Util;
 import de.pro_crafting.wg.WarGear;
 import de.pro_crafting.wg.arena.Arena;

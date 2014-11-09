@@ -28,11 +28,11 @@ import de.pro_crafting.generator.job.SimpleJob;
 import de.pro_crafting.generator.provider.SingleBlockProvider;
 import de.pro_crafting.wg.WarGear;
 import de.pro_crafting.wg.event.ArenaStateChangeEvent;
+import de.pro_crafting.wg.group.TeamManager;
+import de.pro_crafting.wg.group.WgTeam;
 import de.pro_crafting.wg.modes.ChestMode;
 import de.pro_crafting.wg.modes.FightMode;
 import de.pro_crafting.wg.modes.KitMode;
-import de.pro_crafting.wg.team.TeamManager;
-import de.pro_crafting.wg.team.WgTeam;
 
 public class Arena{
 	private WarGear plugin;

@@ -1,4 +1,4 @@
-package de.pro_crafting.wg;
+package de.pro_crafting.wg.group;
 
 import de.pro_crafting.wg.arena.Arena;
 
