@@ -9,8 +9,8 @@ import org.bukkit.scheduler.BukkitTask;
 import de.pro_crafting.wg.OfflineRunable;
 import de.pro_crafting.wg.Util;
 import de.pro_crafting.wg.WarGear;
-import de.pro_crafting.wg.group.TeamMember;
-import de.pro_crafting.wg.group.WgTeam;
+import de.pro_crafting.wg.group.GroupMember;
+import de.pro_crafting.wg.group.Group;
 
 public class SpectatorMode {
 	private WarGear plugin;
@@ -26,8 +26,8 @@ public class SpectatorMode {
 
 	public void start() {
 		this.arena.broadcastMessage(ChatColor.GOLD+"Begutachtet die WarGears!");
-		prepareTeamSpectating(this.arena.getTeam().getTeam1());
-		prepareTeamSpectating(this.arena.getTeam().getTeam2());
+		prepareTeamSpectating(this.arena.getGroupManager().getTeam1());
+		prepareTeamSpectating(this.arena.getGroupManager().getTeam2());
 		counter = 0;
 		task = Bukkit.getScheduler().runTaskTimer(this.plugin, new Runnable(){
 			public void run()
@@ -43,8 +43,8 @@ public class SpectatorMode {
 		int diff = time - counter;
 		if (counter == time)
 		{
-			finishTeamSpectating(this.arena.getTeam().getTeam1());
-			finishTeamSpectating(this.arena.getTeam().getTeam2());
+			finishTeamSpectating(this.arena.getGroupManager().getTeam1());
+			finishTeamSpectating(this.arena.getGroupManager().getTeam2());
 			this.arena.broadcastMessage(ChatColor.AQUA + "Zeit vorbei!");
 			task.cancel();
 			this.arena.updateState(State.Resetting);
@@ -69,10 +69,10 @@ public class SpectatorMode {
 		counter++;  
 	}
 
-	private void prepareTeamSpectating(WgTeam team)
+	private void prepareTeamSpectating(Group team)
 	{
 		OfflineRunable teamSpectatingPreparer = new OfflineRunable() {
-			public void run(TeamMember member) {
+			public void run(GroupMember member) {
 				Player player = member.getPlayer();
 				arena.teleport(player);
 				Util.enableFly(player);
@@ -81,10 +81,10 @@ public class SpectatorMode {
 		this.plugin.getOfflineManager().run(teamSpectatingPreparer, team);
 	}
 	
-	private void finishTeamSpectating(WgTeam team)
+	private void finishTeamSpectating(Group team)
 	{
 		OfflineRunable teamSpactatingFinisher = new OfflineRunable() {
-			public void run(TeamMember member) {
+			public void run(GroupMember member) {
 				Player player = member.getPlayer();
 				Util.disableFly(player);
 				player.setGameMode(GameMode.SURVIVAL);

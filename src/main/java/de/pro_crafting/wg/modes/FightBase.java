@@ -9,7 +9,7 @@ import de.pro_crafting.wg.OfflineRunable;
 import de.pro_crafting.wg.Util;
 import de.pro_crafting.wg.WarGear;
 import de.pro_crafting.wg.arena.Arena;
-import de.pro_crafting.wg.group.TeamMember;
+import de.pro_crafting.wg.group.GroupMember;
 
 public abstract class FightBase implements FightMode, Listener {
 	protected WarGear plugin;
@@ -25,11 +25,11 @@ public abstract class FightBase implements FightMode, Listener {
 	public void start() { 
 		this.plugin.getServer().broadcastMessage(ChatColor.YELLOW+"Gleich: WarGear-Kampf in der "+this.arena.getName()+" Arena");
 		this.arena.broadcastOutside("§7Mit §B\"/wgk warp "+this.arena.getName().toLowerCase()+"\" §7 kommst du in die Arena.");
-		arena.getTeam().sendTeamOutput();
+		arena.getGroupManager().sendTeamOutput();
 		
 		OfflineRunable fightTeamPreparer = new OfflineRunable() {
 			
-			public void run(TeamMember member) {
+			public void run(GroupMember member) {
 				Player player = member.getPlayer();
 				player.getInventory().clear();
 				player.getInventory().setArmorContents(null);
@@ -45,8 +45,8 @@ public abstract class FightBase implements FightMode, Listener {
 			}
 		};
 		
-		this.plugin.getOfflineManager().run(fightTeamPreparer, this.arena.getTeam().getTeam1());
-		this.plugin.getOfflineManager().run(fightTeamPreparer, this.arena.getTeam().getTeam2());
+		this.plugin.getOfflineManager().run(fightTeamPreparer, this.arena.getGroupManager().getTeam1());
+		this.plugin.getOfflineManager().run(fightTeamPreparer, this.arena.getGroupManager().getTeam2());
 		starter.run();
 	}
 

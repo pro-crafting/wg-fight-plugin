@@ -2,21 +2,21 @@ package de.pro_crafting.wg.event;
 
 import de.pro_crafting.wg.FightQuitReason;
 import de.pro_crafting.wg.arena.Arena;
-import de.pro_crafting.wg.group.WgTeam;
+import de.pro_crafting.wg.group.Group;
 
 public class WinQuitEvent extends FightQuitEvent
 {	
-	public WinQuitEvent(Arena arena, String message, WgTeam winnerTeam, WgTeam looserTeam, FightQuitReason reason)
+	public WinQuitEvent(Arena arena, String message, Group winnerTeam, Group looserTeam, FightQuitReason reason)
 	{
 		super(arena, message, winnerTeam, looserTeam, reason);
 	}
     
-    public WgTeam getWinnerTeam()
+    public Group getWinnerTeam()
     {
     	return super.team1;
     }
     
-    public WgTeam getLooserTeam()
+    public Group getLooserTeam()
     {
     	return super.team2;
     }

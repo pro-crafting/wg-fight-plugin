@@ -2,11 +2,11 @@ package de.pro_crafting.wg.group;
 
 import de.pro_crafting.wg.arena.Arena;
 
-public class PlayerGroup {
+public class PlayerGroupKey {
 	private Arena arena;
 	private PlayerRole role;
 	
-	public PlayerGroup(Arena arena, PlayerRole role) {
+	public PlayerGroupKey(Arena arena, PlayerRole role) {
 		this.arena = arena;
 		this.role = role;
 	}
@@ -38,7 +38,7 @@ public class PlayerGroup {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		PlayerGroup other = (PlayerGroup) obj;
+		PlayerGroupKey other = (PlayerGroupKey) obj;
 		if (this.arena == null) {
 			if (other.arena != null)
 				return false;

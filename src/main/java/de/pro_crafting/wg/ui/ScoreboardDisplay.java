@@ -22,8 +22,8 @@ import de.pro_crafting.wg.arena.Arena;
 import de.pro_crafting.wg.arena.State;
 import de.pro_crafting.wg.event.ArenaStateChangeEvent;
 import de.pro_crafting.wg.group.PlayerRole;
-import de.pro_crafting.wg.group.TeamMember;
-import de.pro_crafting.wg.group.WgTeam;
+import de.pro_crafting.wg.group.GroupMember;
+import de.pro_crafting.wg.group.Group;
 
 public class ScoreboardDisplay implements Listener{
 	private WarGear plugin;	
@@ -125,7 +125,7 @@ public class ScoreboardDisplay implements Listener{
 		p.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
 	}
 	
-	public void removeTeamMember(Arena arena, TeamMember member, PlayerRole team) {
+	public void removeTeamMember(Arena arena, GroupMember member, PlayerRole team) {
 		if (!arena.getRepo().isScoreboardEnabled()) {
 			return;
 		}
@@ -163,7 +163,7 @@ public class ScoreboardDisplay implements Listener{
 		}
 	}
 	
-	public void addTeamMember(Arena arena, TeamMember member, PlayerRole team) {
+	public void addTeamMember(Arena arena, GroupMember member, PlayerRole team) {
 		if (!arena.getRepo().isScoreboardEnabled()) {
 			return;
 		}
@@ -224,7 +224,7 @@ public class ScoreboardDisplay implements Listener{
 			return;
 		}
 		String name = player.getDisplayName();
-		if (arena.getTeam().isAlive(player)) {
+		if (arena.getGroupManager().isAlive(player)) {
 			int health = (int)Math.ceil(player.getHealth());
 			this.plugin.getScoreboardManager().setScore(arena, player.getPlayerListName(), health, this.healthName);
 			this.plugin.getScoreboardManager().setScore(arena, name, health, this.belowNameHealthName);
@@ -271,13 +271,13 @@ public class ScoreboardDisplay implements Listener{
 		else if (event.getTo() == State.Spectate) {
 			stopTimer(arena);
 			clearScoreboard(arena);
-			removeNicked(arena.getTeam().getTeam1());
-			removeNicked(arena.getTeam().getTeam2());
+			removeNicked(arena.getGroupManager().getTeam1());
+			removeNicked(arena.getGroupManager().getTeam2());
 		}
 	}
 	
-	private void removeNicked(WgTeam team) {
-		for (TeamMember member : team.getTeamMembers()) {
+	private void removeNicked(Group team) {
+		for (GroupMember member : team.getTeamMembers()) {
 			if (member.isOnline()) {
 				Player p = member.getPlayer();
 				if (this.isNicked(p)) {

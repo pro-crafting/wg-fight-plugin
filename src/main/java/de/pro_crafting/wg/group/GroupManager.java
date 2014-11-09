@@ -11,18 +11,18 @@ import de.pro_crafting.wg.Util;
 import de.pro_crafting.wg.WarGear;
 import de.pro_crafting.wg.arena.Arena;
 
-public class TeamManager
+public class GroupManager
 {
 	private WarGear plugin;
 	private Arena arena;
-	private WgTeam team1;
-	private WgTeam team2;
+	private Group team1;
+	private Group team2;
 	
-	public TeamManager(WarGear plugin, Arena arena)
+	public GroupManager(WarGear plugin, Arena arena)
 	{
 		this.plugin = plugin;
-		this.team1 = new WgTeam(PlayerRole.Team1);
-		this.team2 = new WgTeam(PlayerRole.Team2);
+		this.team1 = new Group(PlayerRole.Team1);
+		this.team2 = new Group(PlayerRole.Team2);
 		this.arena = arena;
 	}
 	
@@ -42,16 +42,16 @@ public class TeamManager
 	{
 		quiteFightForTeam(this.team1);
 		quiteFightForTeam(this.team2);
-		this.team1 = new WgTeam(PlayerRole.Team1);
-		this.team2 = new WgTeam(PlayerRole.Team2);
+		this.team1 = new Group(PlayerRole.Team1);
+		this.team2 = new Group(PlayerRole.Team2);
 	}
 	
-	private void quiteFightForTeam(WgTeam team)
+	private void quiteFightForTeam(Group team)
 	{
 		final Location teleportLocation = this.arena.getRepo().getSpawnWarp();
 		OfflineRunable fightQuiter = new OfflineRunable() {
 			
-			public void run(TeamMember member) {
+			public void run(GroupMember member) {
 				member.getPlayer().getInventory().clear();
 				member.getPlayer().teleport(teleportLocation, TeleportCause.PLUGIN);
 			}
@@ -65,10 +65,10 @@ public class TeamManager
 		this.arena.broadcastMessage(ChatColor.DARK_GREEN + team + " hat gewonnen!");
 	}
 	
-	private String concateTeamPlayers(WgTeam team)
+	private String concateTeamPlayers(Group team)
 	{
 		String ret = "";
-		for (TeamMember member : team.getTeamMembers())
+		for (GroupMember member : team.getTeamMembers())
 		{
 			if(member.isOnline()){
 				ret += member.getPlayer().getDisplayName()+ " ";
@@ -90,17 +90,17 @@ public class TeamManager
 		this.arena.broadcastMessage(ChatColor.YELLOW +""+ ChatColor.ITALIC+team2);
 	}
 	
-	public void healTeam(WgTeam team)
+	public void healTeam(Group team)
 	{
 		OfflineRunable healer = new OfflineRunable() {
-			public void run(TeamMember member) {
+			public void run(GroupMember member) {
 				Util.makeHealthy(member.getPlayer());
 			}
 		};
 		this.plugin.getOfflineManager().run(healer, team);
 	}
 	 
-	public WgTeam getTeamOfName(PlayerRole name)
+	public Group getTeamOfName(PlayerRole name)
 	{
 		if (name == PlayerRole.Team1)
 		{
@@ -121,7 +121,7 @@ public class TeamManager
 		return "§7";
 	}
 	
-	public WgTeam getTeamOfPlayer(OfflinePlayer p)
+	public Group getTeamOfPlayer(OfflinePlayer p)
 	{
 		if (this.team1.getTeamMember(p) != null)
 		{
@@ -134,7 +134,7 @@ public class TeamManager
 		return null;
 	}
 	 
-	public WgTeam getTeamWithOutLeader()
+	public Group getTeamWithOutLeader()
 	{
 		if (!this.team1.hasTeamLeader())
 		{
@@ -161,7 +161,7 @@ public class TeamManager
 		return this.getTeamOfPlayer(p).getTeamMember(p).isAlive();
 	}
 	 
-	public TeamMember getTeamMember(OfflinePlayer p)
+	public GroupMember getTeamMember(OfflinePlayer p)
 	{
 		if (this.team1.getTeamMember(p) != null)
 		{
@@ -174,11 +174,11 @@ public class TeamManager
 		return null;
 	}
 	
-	public WgTeam getTeam1() {
+	public Group getTeam1() {
 		return team1;
 	}
 
-	public WgTeam getTeam2() {
+	public Group getTeam2() {
 		return team2;
 	}
 }

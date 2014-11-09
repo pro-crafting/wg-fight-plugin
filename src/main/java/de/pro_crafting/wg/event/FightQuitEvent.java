@@ -5,17 +5,17 @@ import org.bukkit.event.HandlerList;
 
 import de.pro_crafting.wg.FightQuitReason;
 import de.pro_crafting.wg.arena.Arena;
-import de.pro_crafting.wg.group.WgTeam;
+import de.pro_crafting.wg.group.Group;
 
 public abstract class FightQuitEvent extends Event{
 	private static final HandlerList handlers = new HandlerList();
 	private Arena arena;
 	private String message;
-	protected WgTeam team1;
-	protected WgTeam team2;
+	protected Group team1;
+	protected Group team2;
 	private FightQuitReason reason;
 	
-	public FightQuitEvent(Arena arena, String message, WgTeam team1, WgTeam team2, FightQuitReason reason)
+	public FightQuitEvent(Arena arena, String message, Group team1, Group team2, FightQuitReason reason)
 	{
 		this.arena = arena;
 		this.message = message;

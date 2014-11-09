@@ -28,8 +28,8 @@ import de.pro_crafting.generator.job.SimpleJob;
 import de.pro_crafting.generator.provider.SingleBlockProvider;
 import de.pro_crafting.wg.WarGear;
 import de.pro_crafting.wg.event.ArenaStateChangeEvent;
-import de.pro_crafting.wg.group.TeamManager;
-import de.pro_crafting.wg.group.WgTeam;
+import de.pro_crafting.wg.group.GroupManager;
+import de.pro_crafting.wg.group.Group;
 import de.pro_crafting.wg.modes.ChestMode;
 import de.pro_crafting.wg.modes.FightMode;
 import de.pro_crafting.wg.modes.KitMode;
@@ -37,7 +37,7 @@ import de.pro_crafting.wg.modes.KitMode;
 public class Arena{
 	private WarGear plugin;
 	private String name;
-	private TeamManager team;
+	private GroupManager team;
 	private String kitname;
 	private FightMode fightMode;
 	private Reseter reseter;
@@ -69,7 +69,7 @@ public class Arena{
 		this.name = name;
 	}
 
-	public TeamManager getTeam() {
+	public GroupManager getGroupManager() {
 		return team;
 	}
 	
@@ -150,7 +150,7 @@ public class Arena{
 	{
 		if (this.repo.load())
 		{
-			this.team = new TeamManager(plugin, this);
+			this.team = new GroupManager(plugin, this);
 			this.setFightMode(new KitMode(this.plugin, this));
 			this.reseter = new Reseter(this.plugin, this);
 			this.remover = new WaterRemover(this.plugin, this);
@@ -345,7 +345,7 @@ public class Arena{
 	{
 		if (this.state != State.Running)
 		{
-			WgTeam playerTeam = this.team.getTeamOfPlayer(p);
+			Group playerTeam = this.team.getTeamOfPlayer(p);
 			if (playerTeam != null)
 			{
 				return this.team.getTeamSpawn(playerTeam.getTeamName());

@@ -254,7 +254,7 @@ public class ChestMode extends FightBase implements FightMode, Listener{
 		{
 			return;
 		}
-		if (this.arena.getTeam().getTeamOfPlayer(event.getPlayer()) == null)
+		if (this.arena.getGroupManager().getTeamOfPlayer(event.getPlayer()) == null)
 		{
 			event.setCancelled(true);
 		}

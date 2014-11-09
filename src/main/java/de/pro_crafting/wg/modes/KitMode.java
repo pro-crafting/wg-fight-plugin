@@ -6,7 +6,7 @@ import de.pro_crafting.wg.OfflineRunable;
 import de.pro_crafting.wg.WarGear;
 import de.pro_crafting.wg.arena.Arena;
 import de.pro_crafting.wg.arena.State;
-import de.pro_crafting.wg.group.TeamMember;
+import de.pro_crafting.wg.group.GroupMember;
 
  public class KitMode extends FightBase{
 
@@ -18,7 +18,7 @@ import de.pro_crafting.wg.group.TeamMember;
 		super(plugin, arena);
 		preparer = new OfflineRunable() {
 			
-			public void run(TeamMember member) {
+			public void run(GroupMember member) {
 				KitMode.this.plugin.getKitApi().giveKit(KitMode.this.arena.getKit(), member.getPlayer());
 			}
 		};

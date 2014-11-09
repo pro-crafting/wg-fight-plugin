@@ -6,13 +6,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
-public class TeamMember{
+public class GroupMember{
 
 	private UUID playerId;
 	private Boolean alive;
 	private Boolean isTeamLeader;
 	
-	public TeamMember(Player player, boolean isTeamLeader)
+	public GroupMember(Player player, boolean isTeamLeader)
 	{
 		this.playerId = player.getUniqueId();
 		this.alive = true;
@@ -72,7 +72,7 @@ public class TeamMember{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		TeamMember other = (TeamMember) obj;
+		GroupMember other = (GroupMember) obj;
 		if (this.alive == null) {
 			if (other.alive != null)
 				return false;

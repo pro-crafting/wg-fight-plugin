@@ -8,27 +8,27 @@ import java.util.UUID;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
-public class WgTeam 
+public class Group 
 {
-	private Map<UUID, TeamMember> teamMember;
+	private Map<UUID, GroupMember> groupMember;
 	private boolean isReady;
 	private PlayerRole teamName;
 	
-	public WgTeam(PlayerRole teamName)
+	public Group(PlayerRole teamName)
 	{
 		this.teamName = teamName;
 		isReady = false;
-		this.teamMember = new HashMap<UUID, TeamMember>();
+		this.groupMember = new HashMap<UUID, GroupMember>();
 	}
 	
 	public void add(Player p, boolean isLeader)
 	{
-		this.teamMember.put(p.getUniqueId(), new TeamMember(p, isLeader));
+		this.groupMember.put(p.getUniqueId(), new GroupMember(p, isLeader));
 	}
 	
 	public void remove(OfflinePlayer p)
 	{
-		this.teamMember.remove(p.getUniqueId());
+		this.groupMember.remove(p.getUniqueId());
 	}
 	
 	public boolean isReady()
@@ -46,19 +46,19 @@ public class WgTeam
 		return this.teamName;
 	}
 	
-	public Collection<TeamMember> getTeamMembers()
+	public Collection<GroupMember> getTeamMembers()
 	{
-		return this.teamMember.values();
+		return this.groupMember.values();
 	}
 	
-	public TeamMember getTeamMember(OfflinePlayer player)
+	public GroupMember getTeamMember(OfflinePlayer player)
 	{
-		return this.teamMember.get(player.getUniqueId());
+		return this.groupMember.get(player.getUniqueId());
 	}
 	
 	public boolean isAlive()
 	{
-		for (TeamMember current : this.teamMember.values())
+		for (GroupMember current : this.groupMember.values())
 		{
 			if (current.isAlive())
 			{
@@ -70,7 +70,7 @@ public class WgTeam
 	
 	public boolean hasTeamLeader()
 	{
-		for (TeamMember current : this.teamMember.values())
+		for (GroupMember current : this.groupMember.values())
 		{
 			if (current.isTeamLeader())
 			{
@@ -80,8 +80,8 @@ public class WgTeam
 		return false;
 	}
 	
-	public TeamMember getTeamLeader() {
-		for (TeamMember current : this.teamMember.values())
+	public GroupMember getTeamLeader() {
+		for (GroupMember current : this.groupMember.values())
 		{
 			if (current.isTeamLeader())
 			{
@@ -97,7 +97,7 @@ public class WgTeam
 		int result = 1;
 		result = prime * result + (isReady ? 1231 : 1237);
 		result = prime * result
-				+ ((teamMember == null) ? 0 : teamMember.hashCode());
+				+ ((groupMember == null) ? 0 : groupMember.hashCode());
 		result = prime * result
 				+ ((teamName == null) ? 0 : teamName.hashCode());
 		return result;
@@ -111,13 +111,13 @@ public class WgTeam
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		WgTeam other = (WgTeam) obj;
+		Group other = (Group) obj;
 		if (isReady != other.isReady)
 			return false;
-		if (teamMember == null) {
-			if (other.teamMember != null)
+		if (groupMember == null) {
+			if (other.groupMember != null)
 				return false;
-		} else if (!teamMember.equals(other.teamMember))
+		} else if (!groupMember.equals(other.groupMember))
 			return false;
 		if (teamName != other.teamName)
 			return false;
@@ -125,7 +125,7 @@ public class WgTeam
 	}
 
 	public boolean isOnline() {
-		for (TeamMember member : this.teamMember.values())
+		for (GroupMember member : this.groupMember.values())
 		{
 			if (!member.isOnline())
 			{

@@ -6,8 +6,8 @@ import org.bukkit.event.Listener;
 
 import de.pro_crafting.wg.event.DrawQuitEvent;
 import de.pro_crafting.wg.event.WinQuitEvent;
-import de.pro_crafting.wg.group.TeamMember;
-import de.pro_crafting.wg.group.WgTeam;
+import de.pro_crafting.wg.group.GroupMember;
+import de.pro_crafting.wg.group.Group;
 
 public class WgEconomy implements Listener{
 	private WarGear plugin;
@@ -32,9 +32,9 @@ public class WgEconomy implements Listener{
 		this.giveTeamMoney(event.getTeam2(), this.plugin.getRepo().getDrawAmount());
 	}
 	
-	private void giveTeamMoney(WgTeam team, double amount)
+	private void giveTeamMoney(Group team, double amount)
 	{
-		for (TeamMember member : team.getTeamMembers())
+		for (GroupMember member : team.getTeamMembers())
 		{
 			if (amount < 0)
 			{

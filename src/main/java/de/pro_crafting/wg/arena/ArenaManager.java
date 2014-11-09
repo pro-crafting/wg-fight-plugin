@@ -9,9 +9,9 @@ import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 
 import de.pro_crafting.wg.WarGear;
-import de.pro_crafting.wg.group.PlayerGroup;
+import de.pro_crafting.wg.group.PlayerGroupKey;
 import de.pro_crafting.wg.group.PlayerRole;
-import de.pro_crafting.wg.group.WgTeam;
+import de.pro_crafting.wg.group.Group;
 
 public class ArenaManager {
 
@@ -112,7 +112,7 @@ public class ArenaManager {
 	public Arena getArenaOfTeamMember(OfflinePlayer player) {
 		for (Arena arena : this.arenas.values())
 		{
-			if (arena.getTeam().getTeamMember(player) != null)
+			if (arena.getGroupManager().getTeamMember(player) != null)
 			{
 				return arena;
 			}
@@ -120,13 +120,13 @@ public class ArenaManager {
 		return null;
 	}
 	
-	public PlayerGroup getGroup(OfflinePlayer player) {
+	public PlayerGroupKey getGroup(OfflinePlayer player) {
 		Arena arena = this.getArenaOfTeamMember(player);
 		PlayerRole role = PlayerRole.Viewer;
-		WgTeam team = arena.getTeam().getTeamOfPlayer(player);
+		Group team = arena.getGroupManager().getTeamOfPlayer(player);
 		if (team != null) {
-			role = arena.getTeam().getTeamOfPlayer(player).getTeamName();
+			role = arena.getGroupManager().getTeamOfPlayer(player).getTeamName();
 		}
-		return new PlayerGroup(arena, role);
+		return new PlayerGroupKey(arena, role);
 	}
 }
