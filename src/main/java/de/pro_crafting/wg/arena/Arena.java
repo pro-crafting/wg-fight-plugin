@@ -187,7 +187,7 @@ public class Arena{
 	
 	public void broadcastMessage(String message)
 	{
-		for (Player player : this.plugin.getRepo().getPlayerOfRegion(this.repo.getArenaRegion()))
+		for (Player player : Util.getPlayerOfRegion(this.repo.getArenaRegion()))
 		{
 			player.sendMessage(message);
 		}

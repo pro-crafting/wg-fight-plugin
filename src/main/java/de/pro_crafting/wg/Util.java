@@ -151,4 +151,17 @@ public class Util {
 		if(s == null) return null;
 		return s.replaceAll("&([0-9a-f])", "\u00A7$1");
 	}
+	
+	public static List<Player> getPlayerOfRegion(ProtectedRegion region)
+	{
+		List<Player> ret = new ArrayList<Player>();
+		for (Player player : Bukkit.getOnlinePlayers())
+		{
+			if (region.contains(BukkitUtil.toVector(player.getLocation())))
+			{
+				ret.add(player);
+			}
+		}
+		return ret;
+	}
 }

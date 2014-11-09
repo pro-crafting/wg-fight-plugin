@@ -109,17 +109,4 @@ public class Repository {
 		}
 		return ret;
 	}
-	
-	public List<Player> getPlayerOfRegion(ProtectedRegion region)
-	{
-		List<Player> ret = new ArrayList<Player>();
-		for (Player player : this.plugin.getServer().getOnlinePlayers())
-		{
-			if (region.contains(BukkitUtil.toVector(player.getLocation())))
-			{
-				ret.add(player);
-			}
-		}
-		return ret;
-	}
 }
