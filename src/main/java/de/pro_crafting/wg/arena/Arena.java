@@ -2,7 +2,6 @@ package de.pro_crafting.wg.arena;
 
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,15 +23,9 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 import de.pro_crafting.common.Point;
 import de.pro_crafting.common.Size;
-import de.pro_crafting.generator.JobState;
-import de.pro_crafting.generator.JobStateChangedCallback;
-import de.pro_crafting.generator.criteria.Criteria;
 import de.pro_crafting.generator.criteria.SingleBlockCriteria;
-import de.pro_crafting.generator.job.Job;
 import de.pro_crafting.generator.job.SimpleJob;
 import de.pro_crafting.generator.provider.SingleBlockProvider;
-import de.pro_crafting.wg.PlayerGroup;
-import de.pro_crafting.wg.PlayerRole;
 import de.pro_crafting.wg.WarGear;
 import de.pro_crafting.wg.event.ArenaStateChangeEvent;
 import de.pro_crafting.wg.modes.ChestMode;
