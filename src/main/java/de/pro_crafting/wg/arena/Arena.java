@@ -78,11 +78,6 @@ public class Arena{
 		return this.reseter;
 	}
 	
-	public WaterRemover getRemover()
-	{
-		return this.remover;
-	}
-	
 	public State getState()
 	{
 		return this.state;
