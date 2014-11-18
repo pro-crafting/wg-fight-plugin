@@ -5,13 +5,10 @@ import java.util.List;
 
 import net.milkbowl.vault.economy.Economy;
 
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-import com.sk89q.worldguard.bukkit.BukkitUtil;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 public class Repository {
 	private WarGear plugin;
