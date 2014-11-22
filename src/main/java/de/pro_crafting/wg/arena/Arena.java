@@ -206,9 +206,8 @@ public class Arena{
 	}
 	
 	public void updateState(State to) {
-		State from = this.state;
 		to = processStateChange(to);
-		ArenaStateChangeEvent arenaStateEvent = new ArenaStateChangeEvent(this, from, this.state);
+		ArenaStateChangeEvent arenaStateEvent = new ArenaStateChangeEvent(this, this.state, to);
 		this.plugin.getServer().getPluginManager().callEvent(arenaStateEvent);
 		if (!arenaStateEvent.isCancelled()) {
 			this.state = arenaStateEvent.getTo();
