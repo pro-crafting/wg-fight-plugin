@@ -161,6 +161,10 @@ public class WgListener implements Listener {
 	}
 	
 	private void doGroundDamage(Location to, Arena arenaTo, Player player) {
+		if (arenaTo.getState() != State.Running) {
+			return;
+		}
+		
 		if (to.getY() > arenaTo.getRepo().getGroundHeight()) {
 			return;
 		}
