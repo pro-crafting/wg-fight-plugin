@@ -50,7 +50,7 @@ public class TeamCommands {
 			return;
 		}
 		
-		String playerName = args.getArgs()[0];
+		String playerName = args.getArgs(0);
 		
 		if (arena.getState() == State.Running || arena.getState() == State.PreRunning)
 		{
@@ -103,7 +103,7 @@ public class TeamCommands {
 			return;
 		}
 		
-		String playerName = args.getArgs()[0];
+		String playerName = args.getArgs(0);
 		
 		if (arena.getState() == State.Running || arena.getState() == State.PreRunning)
 		{
@@ -125,7 +125,7 @@ public class TeamCommands {
 			senderPlayer.sendMessage("§c"+p.getDisplayName()+" ist bereits in einem Team.");
 			return;
 		}
-		if (args.getArgs().length == 1 || !senderPlayer.hasPermission("wargear.team.add.other")) {
+		if (args.length() == 1 || !senderPlayer.hasPermission("wargear.team.add.other")) {
 			team = arena.getGroupManager().getTeamOfPlayer(senderPlayer);
 			if (team != null && team.getTeamMember(senderPlayer) != null && !team.getTeamMember(senderPlayer).isTeamLeader())
 			{
@@ -134,7 +134,7 @@ public class TeamCommands {
 			}
 			leader = senderPlayer;
 		} else {
-			String teamString = args.getArgs()[1];
+			String teamString = args.getArgs(1);
 			PlayerRole teamName = PlayerRole.Team1;
 			if (teamString.equalsIgnoreCase("team2")) {
 				teamName = PlayerRole.Team2;
@@ -173,7 +173,7 @@ public class TeamCommands {
 			return;
 		}
 		
-		String playerName = args.getArgs()[0];
+		String playerName = args.getArgs(0);
 		
 		if (arena.getState() == State.Running || arena.getState() == State.Running)
 		{
@@ -189,7 +189,7 @@ public class TeamCommands {
 
 		Player senderPlayer = args.getPlayer();
 		Group team = null;
-		if (args.getArgs().length == 1 || !senderPlayer.hasPermission("wargear.team.remove.other")) {
+		if (args.length() == 1 || !senderPlayer.hasPermission("wargear.team.remove.other")) {
 			team = arena.getGroupManager().getTeamOfPlayer(senderPlayer);
 			if (!team.getTeamMember(senderPlayer).isTeamLeader())
 			{
@@ -207,7 +207,7 @@ public class TeamCommands {
 				return;
 			}
 		} else {
-			String teamString = args.getArgs()[1];
+			String teamString = args.getArgs(1);
 			PlayerRole teamName = PlayerRole.Team1;
 			if (teamString.equalsIgnoreCase("team2")) {
 				teamName = PlayerRole.Team2;
@@ -234,7 +234,7 @@ public class TeamCommands {
 			return;
 		}
 		
-		String playerName = args.getArgs()[0];
+		String playerName = args.getArgs(0);
 		
 		if (arena.getState() == State.Running || arena.getState() == State.PreRunning)
 		{

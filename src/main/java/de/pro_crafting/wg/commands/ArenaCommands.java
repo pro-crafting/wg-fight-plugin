@@ -139,6 +139,6 @@ public class ArenaCommands {
 			return;
 		}
 		arena.replaceMG();
-		args.getSender().sendMessage("§7MG's in §B"+arena.getName()+" §7wurden replaced.");
+		args.getSender().sendMessage("§7Obsidian in §B"+arena.getName()+" §7wurde replaced.");
 	}
 }
