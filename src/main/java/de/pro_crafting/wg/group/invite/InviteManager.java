@@ -107,10 +107,10 @@ public class InviteManager {
 				GroupMember teamleader = invite.getGroupKey().getGroup().getTeamLeader();
 				OfflinePlayer invited = Bukkit.getOfflinePlayer(invite.getInvited());
 				if (teamleader.isOnline()) {
-					teamleader.getPlayer().sendMessage("§7"+invited.getName()+" hat deine Einladung nicht angenommen.");
+					teamleader.getPlayer().sendMessage("§B"+invited.getName()+"§7 hat deine Einladung nicht angenommen.");
 				}
 				if (invited.isOnline()) {
-					((Player)invited).sendMessage("§7Die Einladung von " +teamleader.getName()+ " ist abgelaufen.");
+					((Player)invited).sendMessage("§7Die Einladung von §B" +teamleader.getName()+ "§7 ist abgelaufen.");
 				}
 				inviteIt.remove();
 				continue;
