@@ -3,6 +3,7 @@ package de.pro_crafting.wg.commands;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import de.pro_crafting.commandframework.Command;
@@ -49,12 +50,12 @@ public class WarGearCommands {
 	@Command(name = "wgk.warp", description = "Teleport zu der Arena.", usage="/wgk warp <arenaname> [player]", permission="wargear.warp")
 	public void warp(CommandArgs args)
 	{
-		if (args.getArgs().length < 1)
+		if (args.length() < 1)
 		{
 			args.getSender().sendMessage("§cEs muss eine Arena angegeben werden.");
 			return;
 		}
-		String arenaName = args.getArgs()[0];
+		String arenaName = args.getArgs(0);
 		Arena arena = this.plugin.getArenaManager().getArena(arenaName);
 		if (arena == null)
 		{
@@ -63,11 +64,11 @@ public class WarGearCommands {
 		}
 		
 		Player toWarp = args.getPlayer();
-		if (args.getArgs().length >= 2)
+		if (args.length() >= 2)
 		{
 			if (!args.getSender().hasPermission("wargear.warp.other"))
 			{
-				args.getSender().sendMessage("§cDu nichts Rechte dafür.");
+				args.getSender().sendMessage("§cDu hast keine Rechte dafür.");
 				return;
 			}
 			if (this.plugin.getServer().getPlayer(args.getArgs()[1]) == null)
@@ -111,26 +112,27 @@ public class WarGearCommands {
 	@Command(name = "wgk.kit", description="Legt das Kit f§r den Fight fest.", usage="/wgk kit name", permission="wargear.kit")
 	public void kit(CommandArgs args)
 	{
-		Arena arena = Util.getArenaFromSender(plugin, args.getSender(), args.getArgs());
+		CommandSender sender = args.getSender();
+		Arena arena = Util.getArenaFromSender(plugin, sender, args.getArgs());
 		if (arena == null)
 		{
-			args.getSender().sendMessage("§cDu stehst in keiner Arena, oder Sie existiert nicht.");
+			sender.sendMessage("§cDu stehst in keiner Arena, oder Sie existiert nicht.");
 			return;
 		}
-		if (args.getArgs().length == 0)
+		if (args.length() == 0)
 		{
-			args.getSender().sendMessage("§cDu hast kein Kit angegeben.");
+			sender.sendMessage("§cDu hast kein Kit angegeben.");
 			return;
 		}
 		if (arena.getState() != State.Setup)
 		{
-			args.getSender().sendMessage("§cEs muss bereits min. ein Team geben.");
+			sender.sendMessage("§cEs muss bereits mindestens ein Team geben.");
 			return;
 		}
 		String kitName = args.getArgs()[0];
 		if (!this.plugin.getKitApi().existsKit(kitName))
 		{
-			args.getSender().sendMessage("§cDas Kit " + kitName + " gibt es nicht.");
+			sender.sendMessage("§cDas Kit " + kitName + " gibt es nicht.");
 			return;
 		}
 		arena.setKit(kitName);
@@ -152,17 +154,17 @@ public class WarGearCommands {
 			return;
 		}
 		
-		if (args.getArgs().length == 0)
+		if (args.length() == 0)
 		{
 			DrawQuitEvent event = new DrawQuitEvent(arena, "Unentschieden", arena.getGroupManager().getTeam1(), arena.getGroupManager().getTeam2(), FightQuitReason.FightLeader);
 			this.plugin.getServer().getPluginManager().callEvent(event);
 		}
-		else if (args.getArgs()[0].equalsIgnoreCase("team1"))
+		else if (args.getArgs(0).equalsIgnoreCase("team1"))
 		{
 			WinQuitEvent event = new WinQuitEvent(arena, "", arena.getGroupManager().getTeam1(), arena.getGroupManager().getTeam2(), FightQuitReason.FightLeader);
 			this.plugin.getServer().getPluginManager().callEvent(event);
 		}
-		else if (args.getArgs()[0].equalsIgnoreCase("team2"))
+		else if (args.getArgs(0).equalsIgnoreCase("team2"))
 		{
 			WinQuitEvent event = new WinQuitEvent(arena, "", arena.getGroupManager().getTeam2(), arena.getGroupManager().getTeam1(), FightQuitReason.FightLeader);
 			this.plugin.getServer().getPluginManager().callEvent(event);

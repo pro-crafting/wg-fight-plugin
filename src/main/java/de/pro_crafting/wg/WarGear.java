@@ -67,6 +67,8 @@ public class WarGear extends JavaPlugin {
 		this.cmdFramework.registerCommands(new ArenaCommands(this));
 		this.cmdFramework.registerCommands(this);
 		this.cmdFramework.registerHelp();
+		
+		this.cmdFramework.setInGameOnlyMessage("Der Command muss von einem Spieler ausgeführt werden.");
 	}
 	
 	@Override
