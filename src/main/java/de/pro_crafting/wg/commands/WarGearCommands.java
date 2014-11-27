@@ -71,12 +71,12 @@ public class WarGearCommands {
 				args.getSender().sendMessage("§cDu hast keine Rechte dafür.");
 				return;
 			}
-			if (this.plugin.getServer().getPlayer(args.getArgs()[1]) == null)
+			if (this.plugin.getServer().getPlayer(args.getArgs(1)) == null)
 			{
-				args.getSender().sendMessage("§c"+args.getArgs()[1]+" Ist nicht online.");
+				args.getSender().sendMessage("§c"+args.getArgs(1)+" Ist nicht online.");
 				return;
 			}
-			toWarp = this.plugin.getServer().getPlayer(args.getArgs()[1]);
+			toWarp = this.plugin.getServer().getPlayer(args.getArgs(1));
 		}
 		
 		if (toWarp == null)
@@ -96,7 +96,7 @@ public class WarGearCommands {
 			return null;
 		}
 		String startWith = "";
-		if (args.getArgs().length == 1) startWith = args.getArgs()[0];
+		if (args.getArgs().length == 1) startWith = args.getArgs(0);
 		
 		List<String> ret = new ArrayList<String>();
 		for (String arenaName : this.plugin.getArenaManager().getArenaNames())
@@ -109,7 +109,7 @@ public class WarGearCommands {
 		return ret;
 	}
 	
-	@Command(name = "wgk.kit", description="Legt das Kit f§r den Fight fest.", usage="/wgk kit name", permission="wargear.kit")
+	@Command(name = "wgk.kit", description="Legt das Kit für den Fight fest.", usage="/wgk kit name", permission="wargear.kit")
 	public void kit(CommandArgs args)
 	{
 		CommandSender sender = args.getSender();
@@ -129,7 +129,7 @@ public class WarGearCommands {
 			sender.sendMessage("§cEs muss bereits mindestens ein Team geben.");
 			return;
 		}
-		String kitName = args.getArgs()[0];
+		String kitName = args.getArgs(0);
 		if (!this.plugin.getKitApi().existsKit(kitName))
 		{
 			sender.sendMessage("§cDas Kit " + kitName + " gibt es nicht.");
