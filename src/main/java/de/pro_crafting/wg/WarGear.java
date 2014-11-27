@@ -23,6 +23,7 @@ import de.pro_crafting.wg.arena.ArenaManager;
 import de.pro_crafting.wg.commands.ArenaCommands;
 import de.pro_crafting.wg.commands.TeamCommands;
 import de.pro_crafting.wg.commands.WarGearCommands;
+import de.pro_crafting.wg.group.invite.InviteManager;
 import de.pro_crafting.wg.ui.ScoreboardDisplay;
 
 public class WarGear extends JavaPlugin {
@@ -39,6 +40,7 @@ public class WarGear extends JavaPlugin {
 	private OfflineManager offlineManager;
 	private ScoreboardManager<Arena> scoreboardManager;
 	private ScoreboardDisplay scoreboard;
+	private InviteManager inviteManager;
 	
 	@Override
 	public void onEnable() {
@@ -58,6 +60,9 @@ public class WarGear extends JavaPlugin {
 		this.offlineManager = new OfflineManager(this);
 		this.scoreboardManager = new ScoreboardManager<Arena>();
 		this.scoreboard = new ScoreboardDisplay(this);
+		
+		this.inviteManager = new InviteManager(this);
+		
 		this.getLogger().info("Plugin erfolgreich geladen!");
 	}
 	
@@ -171,5 +176,9 @@ public class WarGear extends JavaPlugin {
 	
 	public ScoreboardDisplay getScoreboard() {
 		return this.scoreboard;
+	}
+	
+	public InviteManager getInviteManager() {
+		return this.inviteManager;
 	}
 }

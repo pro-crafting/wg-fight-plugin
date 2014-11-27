@@ -1,5 +1,8 @@
 package de.pro_crafting.wg.group;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -17,6 +20,7 @@ public class GroupManager
 	private Arena arena;
 	private Group team1;
 	private Group team2;
+	private Map<PlayerRole, PlayerGroupKey> groupKeys;
 	
 	public GroupManager(WarGear plugin, Arena arena)
 	{
@@ -24,6 +28,10 @@ public class GroupManager
 		this.team1 = new Group(PlayerRole.Team1);
 		this.team2 = new Group(PlayerRole.Team2);
 		this.arena = arena;
+		this.groupKeys = new HashMap<PlayerRole, PlayerGroupKey>();
+		this.groupKeys.put(PlayerRole.Team1, new PlayerGroupKey(arena, PlayerRole.Team1));
+		this.groupKeys.put(PlayerRole.Team2, new PlayerGroupKey(arena, PlayerRole.Team2));
+		this.groupKeys.put(PlayerRole.Viewer, new PlayerGroupKey(arena, PlayerRole.Viewer));
 	}
 	
 	public Location getTeamSpawn(PlayerRole team)
@@ -121,6 +129,14 @@ public class GroupManager
 		return "§7";
 	}
 	
+	public PlayerRole getRole(OfflinePlayer player) {
+		Group group = getTeamOfPlayer(player);
+		if (group != null) {
+			return group.getTeamName();
+		}
+		return PlayerRole.Viewer;
+	}
+	
 	public Group getTeamOfPlayer(OfflinePlayer p)
 	{
 		if (this.team1.getTeamMember(p) != null)
@@ -133,7 +149,7 @@ public class GroupManager
 		}
 		return null;
 	}
-	 
+	
 	public Group getTeamWithOutLeader()
 	{
 		if (!this.team1.hasTeamLeader())
@@ -180,5 +196,9 @@ public class GroupManager
 
 	public Group getTeam2() {
 		return team2;
+	}
+	
+	public PlayerGroupKey getGroupKey(OfflinePlayer player) {
+		return this.groupKeys.get(this.getRole(player));
 	}
 }

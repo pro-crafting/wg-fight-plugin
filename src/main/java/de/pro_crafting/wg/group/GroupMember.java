@@ -49,6 +49,10 @@ public class GroupMember{
 		return this.getOfflinePlayer().isOnline();
 	}
 
+	public String getName() {
+		return this.isOnline() ? this.getPlayer().getDisplayName() : this.getOfflinePlayer().getName();
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
