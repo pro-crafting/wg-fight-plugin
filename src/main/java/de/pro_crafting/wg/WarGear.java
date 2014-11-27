@@ -7,7 +7,6 @@ import java.util.List;
 
 import net.gravitydevelopment.updater.Updater;
 
-import org.bukkit.command.CommandSender;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.MetricsLite;
@@ -77,11 +76,6 @@ public class WarGear extends JavaPlugin {
 		this.arenaManager.unloadArenas();
 		this.getLogger().info("Plugin erfolgreich deaktiviert!");
 	}
-	
-	@Override
-    public boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String label, String[] args) {
-        return this.cmdFramework.handleCommand(sender, label, command, args);
-    }
 	
 	@Completer (name="wgk")
 	public List<String> completeCommands(CommandArgs args) {
