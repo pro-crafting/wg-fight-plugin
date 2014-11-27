@@ -29,6 +29,9 @@ public class TeamCommands {
 		args.getSender().sendMessage("§B/wgk team add <playername> <team1|team2>");
 		args.getSender().sendMessage("§B/wgk team remove <playername>");
 		args.getSender().sendMessage("§B/wgk team remove <playername> <team1|team2>");
+		args.getSender().sendMessage("§B/wgk team invite <playername> <team1|team2>");
+		args.getSender().sendMessage("§B/wgk team accept");
+		args.getSender().sendMessage("§B/wgk team decline");
 		args.getSender().sendMessage("§B/wgk team leave");
 	}
 	
@@ -78,7 +81,7 @@ public class TeamCommands {
 		}
 		team.add(p, true);
 		p.teleport(arena.getGroupManager().getTeamSpawn(team.getTeamName()));
-		p.sendMessage("§7Mit §B\"/wgk team add <spieler>\" §7fügst du Spieler zu deinem Team hinzu.");
+		p.sendMessage("§7Mit §B\"/wgk team invite <spieler>\" §7fügst du Spieler zu deinem Team hinzu.");
 		p.sendMessage("§7Mit §B\"/wgk team remove <spieler>\" §7entfernst du Spieler aus deinem Team.");
 		p.sendMessage("§7Mit §B\"/wgk team ready\" §7schaltest du dein Team bereit.");
 		this.plugin.getScoreboard().addTeamMember(arena, team.getTeamMember(p), team.getTeamName());
