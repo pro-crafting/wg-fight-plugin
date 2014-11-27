@@ -146,7 +146,6 @@ public class TeamCommands {
 				senderPlayer.sendMessage("§cDas Team hat keinen Leader.");
 			}
 		}
-		team.add(p, false);
 		if(leader.isOnline()){
 			Player onlineleader = (Player) team.getTeamLeader().getPlayer();
 			p.sendMessage("§7Du bist jetzt im Team von §B"+onlineleader.getDisplayName()+"§7.");
@@ -155,6 +154,7 @@ public class TeamCommands {
 		}
 		
 		p.sendMessage("§7Mit §8\"/wgk team leave\" §7verlässt du das Team.");
+		team.add(p, false);
 		this.plugin.getScoreboard().addTeamMember(arena, team.getTeamMember(p), team.getTeamName());
 	}
 	
@@ -224,6 +224,93 @@ public class TeamCommands {
 		team.remove(p);
 	}
 	
+	@Command(name = "wgk.team.invite", description = "Lädt einen Spieler zu dein Team ein",
+			usage = "/wgk team invite <name>", permission="wargear.team.invite")
+	public void invite(CommandArgs args) {
+		Arena arena = Util.getArenaFromSender(plugin, args.getSender(), args.getArgs());
+		if (arena == null)
+		{
+			args.getSender().sendMessage("§cDu stehst in keiner Arena, oder Sie existiert nicht.");
+			return;
+		}
+		if (args.getArgs().length == 0)
+		{
+			args.getSender().sendMessage("§cDu musst einen Spieler angeben.");
+			return;
+		}
+		
+		String playerName = args.getArgs()[0];
+		
+		if (arena.getState() == State.Running || arena.getState() == State.PreRunning)
+		{
+			args.getSender().sendMessage("§cWährend eines Fightes kannst du keine Mitglieder einladen.");
+			return;
+		}
+		Player p = this.plugin.getServer().getPlayer(playerName);
+		if (p == null)
+		{
+			args.getSender().sendMessage("§c"+playerName +" ist kein Spieler.");
+			return;
+		}
+		if (!(args.getSender() instanceof Player))
+		{
+			args.getSender().sendMessage("§cDer Command muss von einem Spieler ausgeführt werden.");
+			return;
+		}
+		Player senderPlayer = (Player)args.getSender();
+		OfflinePlayer leader = null;
+		Group team = null;
+		if (this.plugin.getArenaManager().getArenaOfTeamMember(p) != null)
+		{
+			senderPlayer.sendMessage("§c"+p.getDisplayName()+" ist bereits in einem Team.");
+			return;
+		}
+		if (args.getArgs().length == 1 || !senderPlayer.hasPermission("wargear.team.invite.other")) {
+			team = arena.getGroupManager().getTeamOfPlayer(senderPlayer);
+			if (team != null && team.getTeamMember(senderPlayer) != null && !team.getTeamMember(senderPlayer).isTeamLeader())
+			{
+				senderPlayer.sendMessage("§cDer Command muss vom Teamleiter ausgeführt werden.");
+				return;
+			}
+			leader = senderPlayer;
+		} else {
+			String teamString = args.getArgs()[1];
+			PlayerRole teamName = PlayerRole.Team1;
+			if (teamString.equalsIgnoreCase("team2")) {
+				teamName = PlayerRole.Team2;
+			}
+			team = arena.getGroupManager().getTeamOfName(teamName);
+			leader = team.getTeamLeader().getOfflinePlayer();
+			if (leader == null) {
+				senderPlayer.sendMessage("§cDas Team hat keinen Leader.");
+			}
+		}
+		this.plugin.getInviteManager().addInvite(arena.getGroupManager().getGroupKey(leader), p);
+		
+	}
+	
+	@Command(name = "wgk.team.accept", description = "Akzeptiert eine Einladung.",
+			usage = "/wgk team accept", permission="wargear.team.accept")
+	public void accept(CommandArgs args) { 
+		if (!(args.getSender() instanceof Player))
+		{
+			args.getSender().sendMessage("§cDer Command muss von einem Spieler ausgeführt werden.");
+			return;
+		}
+		this.plugin.getInviteManager().acceptInvite(args.getPlayer());
+	}
+	
+	@Command(name = "wgk.team.decline", description = "Lehnt eine Einladung ab.",
+			usage = "/wgk team decline", permission="wargear.team.decline")
+	public void decline(CommandArgs args) { 
+		if (!(args.getSender() instanceof Player))
+		{
+			args.getSender().sendMessage("§cDer Command muss von einem Spieler ausgeführt werden.");
+			return;
+		}
+		this.plugin.getInviteManager().declineInvite(args.getPlayer());
+	}
+	
 	@Command(name = "wgk.team.leave", description = "Entfernt dich aus dem Team.",
 			usage = "/wgk team leave", permission="wargear.team.leave")
 	public void leave(CommandArgs args)
@@ -251,7 +338,7 @@ public class TeamCommands {
 		team.remove(senderPlayer);
 		senderPlayer.sendMessage("§7Du bist raus aus dem Team.");
 	}
-		
+	
 	@Command(name = "wgk.team.ready", description = "Schaltet dein Team bereit",
 			usage = "/wgk team ready", permission="wargear.team.ready")
 	public void ready(CommandArgs args)
