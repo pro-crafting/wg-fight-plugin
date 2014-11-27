@@ -51,7 +51,7 @@ public class InviteManager {
 		invited.sendMessage("§B"+teamLeader.getName()+"§7 hat dich zu einem Fight in §B"+arena.getName()+"§7 eingeladen.");
 		invited.sendMessage("§7Du hast 60 Sekunden zum Annehmen.");
 		invited.sendMessage("§7Mit §B\"/wgk team accept\"§7 nimmst du die Einladung an.");
-		invited.sendMessage("§7Mit §B\"/wgk team deny\"§7 lehnst du die Einladung ab.");
+		invited.sendMessage("§7Mit §B\"/wgk team decline\"§7 lehnst du die Einladung ab.");
 	}
 	
 	public void acceptInvite(Player invited) {
