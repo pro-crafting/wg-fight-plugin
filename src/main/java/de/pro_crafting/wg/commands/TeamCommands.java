@@ -54,7 +54,7 @@ public class TeamCommands {
 		
 		String playerName = args.getArgs(0);
 		
-		if (arena.getState() == State.Running || arena.getState() == State.PreRunning)
+		if (arena.getState() != State.Idle && arena.getState() != State.Setup)
 		{
 			args.getSender().sendMessage("§cEs läuft bereits ein Fight in "+arena.getName()+".");
 			return;
@@ -107,7 +107,7 @@ public class TeamCommands {
 		
 		String playerName = args.getArgs(0);
 		
-		if (arena.getState() == State.Running || arena.getState() == State.PreRunning)
+		if (arena.getState() != State.Setup)
 		{
 			args.getSender().sendMessage("§cWährend eines Fightes kannst du keine Mitglieder hinzufügen.");
 			return;
@@ -223,7 +223,7 @@ public class TeamCommands {
 		
 		String playerName = args.getArgs(0);
 		
-		if (arena.getState() == State.Running || arena.getState() == State.PreRunning)
+		if (arena.getState() != State.Setup)
 		{
 			args.getSender().sendMessage("§cWährend eines Fightes kannst du keine Mitglieder einladen.");
 			return;
