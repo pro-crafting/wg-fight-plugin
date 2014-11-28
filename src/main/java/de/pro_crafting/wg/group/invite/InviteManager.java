@@ -74,6 +74,7 @@ public class InviteManager {
 			teamLeader.getPlayer().sendMessage("§B"+invited.getDisplayName()+"§7 ist deinem Team beigetreten.");
 		}
 		invited.sendMessage("§7Du hast die Einladung von §B"+teamLeader.getName()+"§7 angenommen.");
+		invited.sendMessage("§7Mit §8\"/wgk team leave\" §7verlässt du das Team.");
 		invites.remove(invited.getUniqueId());
 		
 		inv.getGroupKey().getGroup().add(invited, false);
