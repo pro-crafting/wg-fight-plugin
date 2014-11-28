@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import de.pro_crafting.kit.plugins.AdminCmdProvider;
+import de.pro_crafting.kit.plugins.CommandBookProvider;
 import de.pro_crafting.kit.plugins.EssentialsProvider;
 
 public class KitAPI 
@@ -24,6 +25,7 @@ public class KitAPI
 	{
 		hookKitPlugin("AdminCmd", AdminCmdProvider.class);
 		hookKitPlugin("Essentials", EssentialsProvider.class);
+		hookKitPlugin("CommandBook", CommandBookProvider.class);
 	}
 	
 	private void hookKitPlugin(String name, Class<? extends KitProvider> hookClass)
@@ -57,7 +59,7 @@ public class KitAPI
 		{
 			if (curr.existsKit(kitName))
 			{
-				p.getInventory().addItem(curr.getItems(kitName));
+				curr.distribute(kitName, p);
 				return;
 			}
 		}

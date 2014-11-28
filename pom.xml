@@ -65,7 +65,14 @@
 			<version>5.9</version>
 			<scope>provided</scope>
 		</dependency>
-
+		
+		<dependency>
+			<groupId>com.sk89q</groupId>
+			<artifactId>commandbook</artifactId>
+			<version>2.4</version>
+			<scope>provided</scope>
+		</dependency>
+		
 		<dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>bukkit</artifactId>
