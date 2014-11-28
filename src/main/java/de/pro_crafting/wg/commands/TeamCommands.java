@@ -9,8 +9,10 @@ import de.pro_crafting.wg.Util;
 import de.pro_crafting.wg.WarGear;
 import de.pro_crafting.wg.arena.Arena;
 import de.pro_crafting.wg.arena.State;
-import de.pro_crafting.wg.group.PlayerRole;
 import de.pro_crafting.wg.group.Group;
+import de.pro_crafting.wg.group.GroupMember;
+import de.pro_crafting.wg.group.PlayerGroupKey;
+import de.pro_crafting.wg.group.PlayerRole;
 
 public class TeamCommands {
 	private WarGear plugin;
@@ -159,64 +161,49 @@ public class TeamCommands {
 	
 	@Command(name = "wgk.team.remove", description = "Entfernt einen Spieler zu deinem Team hinzu.",
 			usage = "/wgk team remove", permission="wargear.team.remove", inGameOnly=true)
-	public void remove(CommandArgs args)
-	{
-		Arena arena = Util.getArenaFromSender(plugin, args.getSender(), args.getArgs());
-		if (arena == null)
-		{
-			args.getSender().sendMessage("§cDu stehst in keiner Arena, oder Sie existiert nicht.");
-			return;
-		}
-		if (args.length() == 0)
-		{
+	public void remove(CommandArgs args) {
+		if (args.length() == 0) {
 			args.getSender().sendMessage("§cDu musst einen Spieler angeben.");
 			return;
 		}
 		
 		String playerName = args.getArgs(0);
+		Player senderPlayer = args.getPlayer();
 		
-		if (arena.getState() == State.Running || arena.getState() == State.Running)
-		{
-			args.getSender().sendMessage("§Während eines Fightes kannst du keine Mitglieder entfernen.");
-			return;
-		}
 		Player p = this.plugin.getServer().getPlayer(playerName);
-		if (p == null)
-		{
+		if (p == null) {
 			args.getSender().sendMessage("§c"+playerName +" ist kein Spieler.");
 			return;
 		}
-
-		Player senderPlayer = args.getPlayer();
-		Group team = null;
-		if (args.length() == 1 || !senderPlayer.hasPermission("wargear.team.remove.other")) {
-			team = arena.getGroupManager().getTeamOfPlayer(senderPlayer);
-			if (!team.getTeamMember(senderPlayer).isTeamLeader())
-			{
-				senderPlayer.sendMessage("§cDer Command muss vom Teamleiter ausgeführt werden.");
-				return;
-			}
-			if (team.getTeamMember(p) == null)
-			{
-				senderPlayer.sendMessage("§c"+p.getDisplayName()+" ist nicht in deinem Team.");
-				return;
-			}
-			if (senderPlayer.getDisplayName().equalsIgnoreCase(playerName))
-			{
-				senderPlayer.sendMessage("§cDer Team Leiter kann sich nicht rauswerfen.");
-				return;
-			}
-		} else {
-			String teamString = args.getArgs(1);
-			PlayerRole teamName = PlayerRole.Team1;
-			if (teamString.equalsIgnoreCase("team2")) {
-				teamName = PlayerRole.Team2;
-			}
-			team = arena.getGroupManager().getTeamOfName(teamName);
+		
+		Arena arena = this.plugin.getArenaManager().getArenaOfTeamMember(p);
+		
+		if (arena == null) {
+			args.getSender().sendMessage("§B"+p.getDisplayName()+"§c ist in keinem Team.");
+			return;
 		}
+		
+		if (arena.getState() != State.Setup) {
+			args.getSender().sendMessage("§cDer Fight von §B"+p.getDisplayName()+"§7 läuft zurzeit.");
+			return;
+		}
+		
+		PlayerGroupKey playerKey = arena.getGroupManager().getGroupKey(p);
+		GroupMember teamleader = playerKey.getGroup().getTeamLeader();
+		
+		if (senderPlayer.equals(teamleader.getOfflinePlayer().getUniqueId())) {
+			if (p.getUniqueId().equals(teamleader.getOfflinePlayer().getUniqueId())) {
+				senderPlayer.sendMessage("§cDer Team Leiter kann sich nicht selbst herauswerfen.");
+				return;
+			}
+		} else if (!senderPlayer.hasPermission("wargear.team.remove.other")) {
+			args.getSender().sendMessage("§cDu bist nicht der Team Leiter.");
+			return;
+		}
+		
 		p.sendMessage("§7Du bist nicht mehr im Team von §B"+senderPlayer.getDisplayName());
-		this.plugin.getScoreboard().removeTeamMember(arena, team.getTeamMember(p), team.getTeamName());
-		team.remove(p);
+		this.plugin.getScoreboard().removeTeamMember(arena, playerKey.getGroup().getTeamMember(p), playerKey.getRole());
+		playerKey.getGroup().remove(p);
 	}
 	
 	@Command(name = "wgk.team.invite", description = "Lädt einen Spieler zu dein Team ein",
