@@ -69,8 +69,8 @@ public class WgListener implements Listener {
 			event.getArena().getSpectatorMode().start();
 		}
 		if (event.getTo() == State.Running) {
-			event.getArena().getGroupManager().healTeam(event.getArena().getGroupManager().getTeam1());
-			event.getArena().getGroupManager().healTeam(event.getArena().getGroupManager().getTeam2());
+			event.getArena().getGroupManager().healGroup(event.getArena().getGroupManager().getGroup1());
+			event.getArena().getGroupManager().healGroup(event.getArena().getGroupManager().getGroup2());
 		}
 		if (event.getTo() == State.PreRunning) {
 			event.getArena().replaceMG();
@@ -88,9 +88,9 @@ public class WgListener implements Listener {
 			return;
 		}
 		String color = "";
-		Group team = arena.getGroupManager().getTeamOfPlayer(player);
+		Group team = arena.getGroupManager().getGroupOfPlayer(player);
 		if (team != null) {
-			color = arena.getGroupManager().getPrefix(team.getTeamName());
+			color = arena.getGroupManager().getPrefix(team.getRole());
 		}
 		event.setFormat("§8["+color+arena.getName()+"§8]"+event.getFormat());
 	}
@@ -122,7 +122,7 @@ public class WgListener implements Listener {
 		}
 		if (event instanceof WinQuitEvent) {
 			WinQuitEvent winEvent = (WinQuitEvent)event;
-			event.getArena().getGroupManager().sendWinnerOutput(winEvent.getWinnerTeam().getTeamName());
+			event.getArena().getGroupManager().sendWinnerOutput(winEvent.getWinnerTeam().getRole());
 		}
 		event.getArena().getFightMode().stop();
 		event.getArena().updateState(State.Spectate);
@@ -149,12 +149,12 @@ public class WgListener implements Listener {
 			
 			ArenaPosition to = arenaTo.getPosition(event.getTo());
 			ArenaPosition from = arenaTo.getPosition(event.getFrom());
-			Group team = arenaTo.getGroupManager().getTeamOfPlayer(player);
+			Group team = arenaTo.getGroupManager().getGroupOfPlayer(player);
 			if (team == null && to != ArenaPosition.Platform) {
 				resetPlayerMovement(to, from, event.getFrom(), player, arenaTo);
-			} else if (team != null && team.getTeamName() == PlayerRole.Team1 && (to == ArenaPosition.Team2PlayField || to == ArenaPosition.Team2WG)) {
+			} else if (team != null && team.getRole() == PlayerRole.Team1 && (to == ArenaPosition.Team2PlayField || to == ArenaPosition.Team2WG)) {
 				resetPlayerMovement(to, from, event.getFrom(), player, arenaTo);
-			} else if (team != null && team.getTeamName() == PlayerRole.Team2 && (to == ArenaPosition.Team1PlayField || to == ArenaPosition.Team1WG)) {
+			} else if (team != null && team.getRole() == PlayerRole.Team2 && (to == ArenaPosition.Team1PlayField || to == ArenaPosition.Team1WG)) {
 				resetPlayerMovement(to, from, event.getFrom(), player, arenaTo);
 			}
 		}
@@ -171,7 +171,7 @@ public class WgListener implements Listener {
 		if (!arenaTo.contains(to)) {
 			return;
 		}
-		GroupMember member = arenaTo.getGroupManager().getTeamMember(player);
+		GroupMember member = arenaTo.getGroupManager().getGroupMember(player);
 		if (member != null && member.isAlive()) {
 			player.damage(arenaTo.getRepo().getGroundDamage());
 			this.plugin.getScoreboard().updateHealthOfPlayer(arenaTo, player);
@@ -255,7 +255,7 @@ public class WgListener implements Listener {
 		} else if (event.getDamager() instanceof Player) {
 			damager = (Player) event.getDamager();
 		}
-		if (damager != null && arena.getGroupManager().getTeamOfPlayer(player).equals(arena.getGroupManager().getTeamOfPlayer(damager))) {
+		if (damager != null && arena.getGroupManager().getGroupOfPlayer(player).equals(arena.getGroupManager().getGroupOfPlayer(damager))) {
 			damager.sendMessage("§7Du darfst Spielern aus deinem Team keinen Schaden zufügen.");
 			event.setCancelled(true);
 		}
@@ -269,7 +269,7 @@ public class WgListener implements Listener {
 		final Player player = (Player)event.getEntity();
 		final Arena arena = this.plugin.getArenaManager().getArenaAt(player.getLocation());
 		if (arena != null) {
-			if (arena.getGroupManager().getTeamOfPlayer(player) != null) {
+			if (arena.getGroupManager().getGroupOfPlayer(player) != null) {
 				this.plugin.getServer().getScheduler().runTask(this.plugin, new Runnable(){
 					public void run() {
 						WgListener.this.plugin.getScoreboard().updateHealthOfPlayer(arena, player);
@@ -319,10 +319,10 @@ public class WgListener implements Listener {
 		if (arena == null || arena.getState() != State.Running) {
 			return;
 		}
-		final Group team = arena.getGroupManager().getTeamOfPlayer(player);
-		if (team != null && team.getTeamMember(player).isAlive()) {
-			team.getTeamMember(player).setAlive(false);
-			String color = arena.getGroupManager().getPrefix(team.getTeamName());
+		final Group team = arena.getGroupManager().getGroupOfPlayer(player);
+		if (team != null && team.getMember(player).isAlive()) {
+			team.getMember(player).setAlive(false);
+			String color = arena.getGroupManager().getPrefix(team.getRole());
 			String message = "§8["+color+arena.getName()+"§8] "+ChatColor.DARK_GREEN+player.getDisplayName()+" ist gestorben.";
 			event.setDeathMessage(null);
 			arena.broadcastMessage(message);
@@ -337,11 +337,11 @@ public class WgListener implements Listener {
 	 
 	private void checkAlives(Group team, Arena arena) {
 		if (!team.isAlive()) {
-			Group winnerTeam = arena.getGroupManager().getTeam1();
-			if (team.getTeamName() == PlayerRole.Team1) {
-				winnerTeam = arena.getGroupManager().getTeam2();
+			Group winnerTeam = arena.getGroupManager().getGroup1();
+			if (team.getRole() == PlayerRole.Team1) {
+				winnerTeam = arena.getGroupManager().getGroup2();
 			}
-			String message = "Jeder aus dem ["+team.getTeamName().toString().toUpperCase()+"] ist tot.";
+			String message = "Jeder aus dem ["+team.getRole().toString().toUpperCase()+"] ist tot.";
 			this.plugin.getServer().getPluginManager().callEvent(new WinQuitEvent(arena, message, winnerTeam, team, FightQuitReason.Death));
 		}
 	}

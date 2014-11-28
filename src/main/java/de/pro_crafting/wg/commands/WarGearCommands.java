@@ -156,17 +156,17 @@ public class WarGearCommands {
 		
 		if (args.length() == 0)
 		{
-			DrawQuitEvent event = new DrawQuitEvent(arena, "Unentschieden", arena.getGroupManager().getTeam1(), arena.getGroupManager().getTeam2(), FightQuitReason.FightLeader);
+			DrawQuitEvent event = new DrawQuitEvent(arena, "Unentschieden", arena.getGroupManager().getGroup1(), arena.getGroupManager().getGroup2(), FightQuitReason.FightLeader);
 			this.plugin.getServer().getPluginManager().callEvent(event);
 		}
 		else if (args.getArgs(0).equalsIgnoreCase("team1"))
 		{
-			WinQuitEvent event = new WinQuitEvent(arena, "", arena.getGroupManager().getTeam1(), arena.getGroupManager().getTeam2(), FightQuitReason.FightLeader);
+			WinQuitEvent event = new WinQuitEvent(arena, "", arena.getGroupManager().getGroup1(), arena.getGroupManager().getGroup2(), FightQuitReason.FightLeader);
 			this.plugin.getServer().getPluginManager().callEvent(event);
 		}
 		else if (args.getArgs(0).equalsIgnoreCase("team2"))
 		{
-			WinQuitEvent event = new WinQuitEvent(arena, "", arena.getGroupManager().getTeam2(), arena.getGroupManager().getTeam1(), FightQuitReason.FightLeader);
+			WinQuitEvent event = new WinQuitEvent(arena, "", arena.getGroupManager().getGroup2(), arena.getGroupManager().getGroup1(), FightQuitReason.FightLeader);
 			this.plugin.getServer().getPluginManager().callEvent(event);
 		}
 	}
@@ -187,7 +187,7 @@ public class WarGearCommands {
 			return;
 		}
 		
-		if (arena.getGroupManager().getTeam1().getTeamMembers().size() == 0 || arena.getGroupManager().getTeam2().getTeamMembers().size() == 0)
+		if (arena.getGroupManager().getGroup1().getMembers().size() == 0 || arena.getGroupManager().getGroup2().getMembers().size() == 0)
 		{
 			args.getSender().sendMessage("§cBeide Teams müssen einen Spieler haben.");
 			return;

@@ -26,8 +26,8 @@ public class SpectatorMode {
 
 	public void start() {
 		this.arena.broadcastMessage(ChatColor.GOLD+"Begutachtet die WarGears!");
-		prepareTeamSpectating(this.arena.getGroupManager().getTeam1());
-		prepareTeamSpectating(this.arena.getGroupManager().getTeam2());
+		prepareTeamSpectating(this.arena.getGroupManager().getGroup1());
+		prepareTeamSpectating(this.arena.getGroupManager().getGroup2());
 		counter = 0;
 		task = Bukkit.getScheduler().runTaskTimer(this.plugin, new Runnable(){
 			public void run()
@@ -43,8 +43,8 @@ public class SpectatorMode {
 		int diff = time - counter;
 		if (counter == time)
 		{
-			finishTeamSpectating(this.arena.getGroupManager().getTeam1());
-			finishTeamSpectating(this.arena.getGroupManager().getTeam2());
+			finishTeamSpectating(this.arena.getGroupManager().getGroup1());
+			finishTeamSpectating(this.arena.getGroupManager().getGroup2());
 			this.arena.broadcastMessage(ChatColor.AQUA + "Zeit vorbei!");
 			task.cancel();
 			this.arena.updateState(State.Resetting);

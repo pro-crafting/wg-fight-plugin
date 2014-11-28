@@ -6,46 +6,38 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
-public class GroupMember{
-
+public class GroupMember {
 	private UUID playerId;
 	private Boolean alive;
-	private Boolean isTeamLeader;
+	private Boolean isLeader;
 	
-	public GroupMember(Player player, boolean isTeamLeader)
-	{
+	public GroupMember(Player player, boolean isTeamLeader) {
 		this.playerId = player.getUniqueId();
 		this.alive = true;
-		this.isTeamLeader = isTeamLeader;
+		this.isLeader = isTeamLeader;
 	}
 	
-	public Player getPlayer()
-	{
+	public Player getPlayer() {
 		return Bukkit.getPlayer(this.playerId);
 	}
 	
-	public OfflinePlayer getOfflinePlayer()
-	{
+	public OfflinePlayer getOfflinePlayer() {
 		return Bukkit.getOfflinePlayer(this.playerId);
 	}
 	
-	public Boolean isAlive()
-	{
+	public Boolean isAlive() {
 		return this.alive;
 	}
 	
-	public Boolean isTeamLeader()
-	{
-		return this.isTeamLeader;
-	}
-	
-	public void setAlive(Boolean alive)
-	{
+	public void setAlive(Boolean alive) {
 		this.alive = alive;
 	}
 	
-	public boolean isOnline()
-	{
+	public Boolean isLeader() {
+		return this.isLeader;
+	}
+	
+	public boolean isOnline() {
 		return this.getOfflinePlayer().isOnline();
 	}
 
@@ -61,7 +53,7 @@ public class GroupMember{
 				+ ((this.alive == null) ? 0 : this.alive.hashCode());
 		result = prime
 				* result
-				+ ((this.isTeamLeader == null) ? 0 : this.isTeamLeader
+				+ ((this.isLeader == null) ? 0 : this.isLeader
 						.hashCode());
 		result = prime * result
 				+ ((this.playerId == null) ? 0 : this.playerId.hashCode());
@@ -82,10 +74,10 @@ public class GroupMember{
 				return false;
 		} else if (!this.alive.equals(other.alive))
 			return false;
-		if (this.isTeamLeader == null) {
-			if (other.isTeamLeader != null)
+		if (this.isLeader == null) {
+			if (other.isLeader != null)
 				return false;
-		} else if (!this.isTeamLeader.equals(other.isTeamLeader))
+		} else if (!this.isLeader.equals(other.isLeader))
 			return false;
 		if (this.playerId == null) {
 			if (other.playerId != null)

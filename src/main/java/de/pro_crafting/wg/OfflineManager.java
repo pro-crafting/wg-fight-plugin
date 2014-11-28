@@ -49,7 +49,7 @@ public class OfflineManager implements Listener {
 
 	public boolean run(OfflineRunable runable, Group team) {
 		if (!team.isOnline()) {
-			for (GroupMember member : team.getTeamMembers()) {
+			for (GroupMember member : team.getMembers()) {
 				run(runable, member);
 			}
 		} else {
@@ -89,7 +89,7 @@ public class OfflineManager implements Listener {
 				event.getPlayer());
 		if (arena != null) {
 			GroupMember member = arena.getGroupManager()
-					.getTeamMember(event.getPlayer());
+					.getGroupMember(event.getPlayer());
 			if (member.isAlive()) {
 				this.offlineTeamMembers.add(member);
 			}
@@ -124,7 +124,7 @@ public class OfflineManager implements Listener {
 				memberIterator.remove();
 				continue;
 			}
-			GroupMember member = arena.getGroupManager().getTeamMember(Bukkit.getOfflinePlayer(UUID.fromString(current.getKey())));
+			GroupMember member = arena.getGroupManager().getGroupMember(Bukkit.getOfflinePlayer(UUID.fromString(current.getKey())));
 			if (member.isOnline()) {
 				for (OfflineRunable runable : current.getValue()) {
 					runable.run(member);
@@ -141,7 +141,7 @@ public class OfflineManager implements Listener {
 		while (teamIterator.hasNext()) {
 			Entry<Group, List<OfflineRunable>> current = teamIterator.next();
 			boolean everyoneOnline = true;
-			for (GroupMember member : current.getKey().getTeamMembers()) {
+			for (GroupMember member : current.getKey().getMembers()) {
 				if (isTooLongOffline(member)) {
 					kickOfflineMember(member);
 				} else if (!member.isOnline()) {
@@ -163,31 +163,31 @@ public class OfflineManager implements Listener {
 		if (arena == null) {
 			return;
 		}
-		Group team = arena.getGroupManager().getTeamOfPlayer(player);
+		Group team = arena.getGroupManager().getGroupOfPlayer(player);
 		if (arena.getState() == State.Setup) {
-			if (offlineMember.isTeamLeader()) {
-				List<GroupMember> members = new ArrayList<GroupMember>(team.getTeamMembers());
+			if (offlineMember.isLeader()) {
+				List<GroupMember> members = new ArrayList<GroupMember>(team.getMembers());
 				for (GroupMember member : members) {
-					this.plugin.getScoreboard().removeTeamMember(arena, member, team.getTeamName());
+					this.plugin.getScoreboard().removeTeamMember(arena, member, team.getRole());
 					team.remove(member.getOfflinePlayer());
 				}
 			} else {
 				team.remove(player);
-				this.plugin.getScoreboard().removeTeamMember(arena, offlineMember, team.getTeamName());
+				this.plugin.getScoreboard().removeTeamMember(arena, offlineMember, team.getRole());
 			}
 		} else {
-			this.plugin.getScoreboard().removeTeamMember(arena, offlineMember, team.getTeamName());
+			this.plugin.getScoreboard().removeTeamMember(arena, offlineMember, team.getRole());
 			offlineMember.setAlive(false);
 		}
-		if ((!team.isAlive() || team.getTeamMembers().size() == 0) && (arena.getState() == State.PreRunning || arena.getState() == State.Running)) {
-			FightQuitEvent event = new WinQuitEvent(arena, "Gegnerisches Team ist offline.", arena.getGroupManager().getTeamOfName(team.getTeamName() == PlayerRole.Team1 ? 
+		if ((!team.isAlive() || team.getMembers().size() == 0) && (arena.getState() == State.PreRunning || arena.getState() == State.Running)) {
+			FightQuitEvent event = new WinQuitEvent(arena, "Gegnerisches Team ist offline.", arena.getGroupManager().getTeamOfGroup(team.getRole() == PlayerRole.Team1 ? 
 					PlayerRole.Team2 : PlayerRole.Team1), team, FightQuitReason.FightLeader);
 			Bukkit.getPluginManager().callEvent(event);
 		}
 	}
 
 	private void runTeam(OfflineRunable runable, Group team) {
-		for (GroupMember member : team.getTeamMembers()) {
+		for (GroupMember member : team.getMembers()) {
 			runMember(runable, member);
 		}
 	}

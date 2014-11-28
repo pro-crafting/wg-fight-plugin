@@ -34,7 +34,7 @@ public class WgEconomy implements Listener{
 	
 	private void giveTeamMoney(Group team, double amount)
 	{
-		for (GroupMember member : team.getTeamMembers())
+		for (GroupMember member : team.getMembers())
 		{
 			if (amount < 0)
 			{
