@@ -71,11 +71,12 @@ public class ArenaCommands {
 		args.getSender().sendMessage("§7Arena Name: §B" + arena.getName());
 		args.getSender().sendMessage("§7Welt: §B" + arena.getRepo().getWorld().getName());
 		args.getSender().sendMessage("§7Fight Modus: §B" + arena.getRepo().getFightMode());
-		args.getSender().sendMessage("§7Bodenh§he: §B" + arena.getRepo().getGroundHeight());
+		args.getSender().sendMessage("§7Bodenhöhe: §B" + arena.getRepo().getGroundHeight());
 		args.getSender().sendMessage("§7BodenSchematic: §B" + arena.getRepo().getGroundSchematic());
 		args.getSender().sendMessage("§7Auto Reset: §B" + arena.getRepo().getAutoReset());
 		args.getSender().sendMessage("§7Region Team1: §B" + arena.getRepo().getTeam1Region().getId());
 		args.getSender().sendMessage("§7Region Team2: §B" + arena.getRepo().getTeam2Region().getId());
+		args.getSender().sendMessage("§7Region Inner: §B" + arena.getRepo().getInnerRegion().getId());
 		args.getSender().sendMessage("§7Warp Team1: §B" + getStringFromLocation(arena.getRepo().getTeam1Warp()));
 		args.getSender().sendMessage("§7Warp Team2: §B" + getStringFromLocation(arena.getRepo().getTeam2Warp()));
 		args.getSender().sendMessage("§7Warp Fight Ende: §B" + getStringFromLocation(arena.getRepo().getSpawnWarp()));
