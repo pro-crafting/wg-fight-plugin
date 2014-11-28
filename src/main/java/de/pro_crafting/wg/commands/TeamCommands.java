@@ -28,10 +28,10 @@ public class TeamCommands {
 		args.getSender().sendMessage("§c§LKein passender Befehl gefunden!");
 		args.getSender().sendMessage("§B/wgk team leader <playername>");
 		args.getSender().sendMessage("§B/wgk team add <playername>");
-		args.getSender().sendMessage("§B/wgk team add <playername> <team1|team2>");
+		args.getSender().sendMessage("§B/wgk team add <playername> [team1|team2]");
 		args.getSender().sendMessage("§B/wgk team remove <playername>");
-		args.getSender().sendMessage("§B/wgk team remove <playername> <team1|team2>");
-		args.getSender().sendMessage("§B/wgk team invite <playername> <team1|team2>");
+		args.getSender().sendMessage("§B/wgk team remove <playername>");
+		args.getSender().sendMessage("§B/wgk team invite <playername> [team1|team2]");
 		args.getSender().sendMessage("§B/wgk team accept");
 		args.getSender().sendMessage("§B/wgk team decline");
 		args.getSender().sendMessage("§B/wgk team leave");
