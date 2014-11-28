@@ -214,7 +214,7 @@ public class TeamCommands {
 			}
 			team = arena.getGroupManager().getTeamOfName(teamName);
 		}
-		p.sendMessage("§7Du bist nicht mehr im Team von §8."+senderPlayer.getDisplayName());
+		p.sendMessage("§7Du bist nicht mehr im Team von §B"+senderPlayer.getDisplayName());
 		this.plugin.getScoreboard().removeTeamMember(arena, team.getTeamMember(p), team.getTeamName());
 		team.remove(p);
 	}
