@@ -1,5 +1,6 @@
 package de.pro_crafting.kit.plugins;
 
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import be.Balor.Kit.KitInstance;
@@ -16,5 +17,9 @@ public class AdminCmdProvider implements KitProvider
 	public ItemStack[] getItems(String kitName) {
 		KitInstance kit = ACHelper.getInstance().getKit(kitName);
 		return kit.getItemStacks().toArray(new ItemStack[] {});
+	}
+
+	public void distribute(String kitName, Player player) {
+		player.getInventory().addItem(getItems(kitName));
 	}
 }

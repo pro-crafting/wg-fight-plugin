@@ -57,7 +57,7 @@ public class KitAPI
 		{
 			if (curr.existsKit(kitName))
 			{
-				p.getInventory().addItem(curr.getItems(kitName));
+				curr.distribute(kitName, p);
 				return;
 			}
 		}
