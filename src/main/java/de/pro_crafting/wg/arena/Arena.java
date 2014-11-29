@@ -304,10 +304,10 @@ public class Arena{
 	{
 		if (this.state != State.Running)
 		{
-			Group playerTeam = this.team.getTeamOfPlayer(p);
+			Group playerTeam = this.team.getGroupOfPlayer(p);
 			if (playerTeam != null)
 			{
-				return this.team.getTeamSpawn(playerTeam.getTeamName());
+				return this.team.getGroupSpawn(playerTeam.getRole());
 			}
 		}
 		return this.repo.getSpawnWarp();

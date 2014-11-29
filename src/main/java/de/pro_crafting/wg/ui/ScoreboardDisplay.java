@@ -134,10 +134,10 @@ public class ScoreboardDisplay implements Listener{
 		if(player.isOnline()){
 			Player onlineplayer = (Player)player;
 			if (team == PlayerRole.Team1) {
-				removeMemberFromTeam(arena, this.getTeamLeaderRed(arena), this.getTeamRed(arena), onlineplayer, member.isTeamLeader());
+				removeMemberFromTeam(arena, this.getTeamLeaderRed(arena), this.getTeamRed(arena), onlineplayer, member.isLeader());
 			}
 			else if (team == PlayerRole.Team2) {
-				removeMemberFromTeam(arena, this.getTeamLeaderBlue(arena), this.getTeamBlue(arena), onlineplayer, member.isTeamLeader());
+				removeMemberFromTeam(arena, this.getTeamLeaderBlue(arena), this.getTeamBlue(arena), onlineplayer, member.isLeader());
 			}
 			this.plugin.getScoreboardManager().removeScore(arena, onlineplayer.getPlayerListName());
 			if (this.isNicked(onlineplayer)) {
@@ -145,10 +145,10 @@ public class ScoreboardDisplay implements Listener{
 			}
 		} else {
 			if (team == PlayerRole.Team1) {
-				removeMemberFromTeam(arena, this.getTeamLeaderRed(arena), this.getTeamRed(arena), player, member.isTeamLeader());
+				removeMemberFromTeam(arena, this.getTeamLeaderRed(arena), this.getTeamRed(arena), player, member.isLeader());
 			}
 			else if (team == PlayerRole.Team2) {
-				removeMemberFromTeam(arena, this.getTeamLeaderBlue(arena), this.getTeamBlue(arena), player, member.isTeamLeader());
+				removeMemberFromTeam(arena, this.getTeamLeaderBlue(arena), this.getTeamBlue(arena), player, member.isLeader());
 			}
 			this.plugin.getScoreboardManager().removeScore(arena, player.getName());
 		}
@@ -170,10 +170,10 @@ public class ScoreboardDisplay implements Listener{
 		initScoreboard(arena);
 		Player player = member.getPlayer();
 		if (team == PlayerRole.Team1) {
-			addMemberToTeam(arena, this.getTeamLeaderRed(arena), this.getTeamRed(arena), player, member.isTeamLeader());
+			addMemberToTeam(arena, this.getTeamLeaderRed(arena), this.getTeamRed(arena), player, member.isLeader());
 		}
 		else if (team == PlayerRole.Team2) {
-			addMemberToTeam(arena, this.getTeamLeaderBlue(arena), this.getTeamBlue(arena), player, member.isTeamLeader());
+			addMemberToTeam(arena, this.getTeamLeaderBlue(arena), this.getTeamBlue(arena), player, member.isLeader());
 		}
 		if(this.isNicked(player)){
 			String nick = player.getDisplayName();
@@ -181,14 +181,14 @@ public class ScoreboardDisplay implements Listener{
 				nick = nick.substring(0, 11);
 			}
 			if (team == PlayerRole.Team1) {
-				if(member.isTeamLeader()){
+				if(member.isLeader()){
 					player.setPlayerListName(this.getTeamLeaderRed(arena).getPrefix() + nick);
 				} else {
 					player.setPlayerListName(this.getTeamRed(arena).getPrefix() + nick);
 				}
 				
 			} else if (team == PlayerRole.Team2) {
-				if(member.isTeamLeader()){
+				if(member.isLeader()){
 					player.setPlayerListName(this.getTeamLeaderBlue(arena).getPrefix() + nick);
 				} else {
 					player.setPlayerListName(this.getTeamRed(arena).getPrefix() + nick);
@@ -271,13 +271,13 @@ public class ScoreboardDisplay implements Listener{
 		else if (event.getTo() == State.Spectate) {
 			stopTimer(arena);
 			clearScoreboard(arena);
-			removeNicked(arena.getGroupManager().getTeam1());
-			removeNicked(arena.getGroupManager().getTeam2());
+			removeNicked(arena.getGroupManager().getGroup1());
+			removeNicked(arena.getGroupManager().getGroup2());
 		}
 	}
 	
 	private void removeNicked(Group team) {
-		for (GroupMember member : team.getTeamMembers()) {
+		for (GroupMember member : team.getMembers()) {
 			if (member.isOnline()) {
 				Player p = member.getPlayer();
 				if (this.isNicked(p)) {

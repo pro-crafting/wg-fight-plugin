@@ -34,7 +34,7 @@ public class InviteManager {
 	public void addInvite(PlayerGroupKey key, Player invited) {
 		Arena arena = key.getArena();
 		
-		GroupMember teamLeader = key.getGroup().getTeamLeader();
+		GroupMember teamLeader = key.getGroup().getLeader();
 		
 		if (invites.containsKey(invited.getUniqueId())) {
 			if (teamLeader.isOnline()) {
@@ -68,7 +68,7 @@ public class InviteManager {
 			return;
 		}
 		
-		GroupMember teamLeader = inv.getGroupKey().getGroup().getTeamLeader();
+		GroupMember teamLeader = inv.getGroupKey().getGroup().getLeader();
 		
 		if (teamLeader.isOnline()) {
 			teamLeader.getPlayer().sendMessage("§B"+invited.getDisplayName()+"§7 ist deinem Team beigetreten.");
@@ -78,7 +78,7 @@ public class InviteManager {
 		invites.remove(invited.getUniqueId());
 		
 		inv.getGroupKey().getGroup().add(invited, false);
-		this.plugin.getScoreboard().addTeamMember(arena, inv.getGroupKey().getGroup().getTeamMember(invited), inv.getGroupKey().getRole());
+		this.plugin.getScoreboard().addTeamMember(arena, inv.getGroupKey().getGroup().getMember(invited), inv.getGroupKey().getRole());
 	}
 	
 	public void declineInvite(Player invited) {
@@ -88,7 +88,7 @@ public class InviteManager {
 			return;
 		}
 		
-		GroupMember teamLeader = inv.getGroupKey().getGroup().getTeamLeader();
+		GroupMember teamLeader = inv.getGroupKey().getGroup().getLeader();
 		
 		if (teamLeader.isOnline()) {
 			teamLeader.getPlayer().sendMessage("§B"+invited.getDisplayName()+"§7 hat deine Einladung abgelehnt.");
@@ -105,7 +105,7 @@ public class InviteManager {
 			Invite invite = next.getValue();
 			
 			if (invite.getRemainigTime() == 0) {
-				GroupMember teamleader = invite.getGroupKey().getGroup().getTeamLeader();
+				GroupMember teamleader = invite.getGroupKey().getGroup().getLeader();
 				OfflinePlayer invited = Bukkit.getOfflinePlayer(invite.getInvited());
 				if (teamleader.isOnline()) {
 					teamleader.getPlayer().sendMessage("§B"+invited.getName()+"§7 hat deine Einladung nicht angenommen.");

@@ -19,7 +19,7 @@ public class ArenaTimerRunnable implements Runnable {
 	public void run() {
 		this.plugin.getScoreboard().updateTime(arena, time);
 		if (this.time == 0) {
-			DrawQuitEvent draw = new DrawQuitEvent(this.arena, "Zeit abgelaufen - Unentschieden", this.arena.getGroupManager().getTeam1(), this.arena.getGroupManager().getTeam2(), FightQuitReason.Time);
+			DrawQuitEvent draw = new DrawQuitEvent(this.arena, "Zeit abgelaufen - Unentschieden", this.arena.getGroupManager().getGroup1(), this.arena.getGroupManager().getGroup2(), FightQuitReason.Time);
 			this.plugin.getServer().getPluginManager().callEvent(draw);
 			this.plugin.getScoreboard().stopTimer(this.arena);
 		}

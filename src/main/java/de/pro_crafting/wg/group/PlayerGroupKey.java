@@ -20,7 +20,7 @@ public class PlayerGroupKey {
 	}
 	
 	public Group getGroup() {
-		return getArena().getGroupManager().getTeamOfName(getRole());
+		return getArena().getGroupManager().getTeamOfGroup(getRole());
 	}
 	
 	@Override

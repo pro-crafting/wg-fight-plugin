@@ -112,7 +112,7 @@ public class ArenaManager {
 	public Arena getArenaOfTeamMember(OfflinePlayer player) {
 		for (Arena arena : this.arenas.values())
 		{
-			if (arena.getGroupManager().getTeamMember(player) != null)
+			if (arena.getGroupManager().getGroupMember(player) != null)
 			{
 				return arena;
 			}
@@ -123,9 +123,9 @@ public class ArenaManager {
 	public PlayerGroupKey getGroup(OfflinePlayer player) {
 		Arena arena = this.getArenaOfTeamMember(player);
 		PlayerRole role = PlayerRole.Viewer;
-		Group team = arena.getGroupManager().getTeamOfPlayer(player);
+		Group team = arena.getGroupManager().getGroupOfPlayer(player);
 		if (team != null) {
-			role = arena.getGroupManager().getTeamOfPlayer(player).getTeamName();
+			role = arena.getGroupManager().getGroupOfPlayer(player).getRole();
 		}
 		return new PlayerGroupKey(arena, role);
 	}
