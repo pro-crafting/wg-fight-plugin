@@ -110,27 +110,23 @@ public class TeamCommands {
 	
 	private Entry<PlayerGroupKey, Player> canBeAdded(CommandArgs args) {
 		Arena arena = Util.getArenaFromSender(plugin, args.getSender(), args.getArgs());
-		if (arena == null)
-		{
+		if (arena == null) {
 			args.getSender().sendMessage("§cDu stehst in keiner Arena, oder Sie existiert nicht.");
 			return null;
 		}
-		if (args.length() == 0)
-		{
+		if (args.length() == 0) {
 			args.getSender().sendMessage("§cDu musst einen Spieler angeben.");
 			return null;
 		}
 		
 		String playerName = args.getArgs(0);
 		
-		if (arena.getState() != State.Setup)
-		{
+		if (arena.getState() != State.Setup) {
 			args.getSender().sendMessage("§cWährend eines Fightes kannst du keine Mitglieder einladen.");
 			return null;
 		}
 		Player p = this.plugin.getServer().getPlayer(playerName);
-		if (p == null)
-		{
+		if (p == null) {
 			args.getSender().sendMessage("§c"+playerName +" ist kein Spieler.");
 			return null;
 		}
@@ -138,15 +134,17 @@ public class TeamCommands {
 		Player senderPlayer = args.getPlayer();
 		OfflinePlayer leader = null;
 		Group team = null;
-		if (this.plugin.getArenaManager().getArenaOfTeamMember(p) != null)
-		{
+		if (this.plugin.getArenaManager().getArenaOfTeamMember(p) != null) {
 			senderPlayer.sendMessage("§c"+p.getDisplayName()+" ist bereits in einem Team.");
 			return null;
 		}
 		if (args.length() == 1 || !senderPlayer.hasPermission("wargear.team.invite.other")) {
 			team = arena.getGroupManager().getTeamOfPlayer(senderPlayer);
-			if (team != null && team.getTeamMember(senderPlayer) != null && !team.getTeamMember(senderPlayer).isTeamLeader())
-			{
+			if (team == null) {
+				senderPlayer.sendMessage("§cDafür musst du in einem Team sein.");
+				return null;
+			}
+			if (team.getTeamMember(senderPlayer) != null && !team.getTeamMember(senderPlayer).isTeamLeader()) {
 				senderPlayer.sendMessage("§cDer Command muss vom Teamleiter ausgeführt werden.");
 				return null;
 			}
