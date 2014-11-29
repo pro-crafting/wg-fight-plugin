@@ -249,7 +249,7 @@ public class TeamCommands {
 			senderPlayer.sendMessage("§cDu bist in keinem Team.");
 			return;
 		}
-		this.plugin.getScoreboard().removeTeamMember(arena, team.getMember(senderPlayer), team.getRole()());
+		this.plugin.getScoreboard().removeTeamMember(arena, team.getMember(senderPlayer), team.getRole());
 		team.remove(senderPlayer);
 		senderPlayer.sendMessage("§7Du bist raus aus dem Team.");
 	}
