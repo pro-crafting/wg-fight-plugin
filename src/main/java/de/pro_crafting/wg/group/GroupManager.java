@@ -61,8 +61,8 @@ public class GroupManager {
 	}
 	
 	public void sendWinnerOutput(PlayerRole role) {
-		String group = "["+role.toString()+"] "+concateGroupPlayers(this.getTeamOfGroup(role));
-		this.arena.broadcastMessage(ChatColor.DARK_GREEN + group + " hat gewonnen!");
+		String group = getRolePrefix(role)+"§2"+concateGroupPlayers(this.getTeamOfGroup(role));
+		this.arena.broadcastMessage(group + " hat gewonnen!");
 	}
 	
 	private String concateGroupPlayers(Group group) {
@@ -80,11 +80,15 @@ public class GroupManager {
 	
 	public void sendGroupOutput() {
 		String group1 = arena.getRepo().getTeam1Prefix()+
-				"[Team1]"+ ChatColor.YELLOW +""+ ChatColor.ITALIC+concateGroupPlayers(this.getGroup1());
+				getRolePrefix(PlayerRole.Team1)+ ChatColor.YELLOW +""+ ChatColor.ITALIC+concateGroupPlayers(this.getGroup1());
 		String group2 = arena.getRepo().getTeam2Prefix()+
-				"[Team2]"+ ChatColor.YELLOW +""+ ChatColor.ITALIC+concateGroupPlayers(this.getGroup2());
+				getRolePrefix(PlayerRole.Team2)+ ChatColor.YELLOW +""+ ChatColor.ITALIC+concateGroupPlayers(this.getGroup2());
 		this.arena.broadcastMessage(ChatColor.YELLOW +""+ ChatColor.ITALIC+group1);
 		this.arena.broadcastMessage(ChatColor.YELLOW +""+ ChatColor.ITALIC+group2);
+	}
+	
+	private String getRolePrefix(PlayerRole role) {
+		return "§8["+getPrefix(role)+role.toString()+"§8]";
 	}
 	
 	public void healGroup(Group group) {
