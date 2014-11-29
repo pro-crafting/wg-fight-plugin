@@ -26,17 +26,17 @@ import de.pro_crafting.wg.group.Group;
 
 public class OfflineManager implements Listener {
 	private WarGear plugin;
-	private Map<Group, List<OfflineRunable>> teamRunnables;
+	private Map<Group, List<OfflineRunable>> groupRunnables;
 	private Map<String, List<OfflineRunable>> memberRunnables;
-	private List<GroupMember> offlineTeamMembers;
+	private List<GroupMember> offlineGroupMembers;
 	private BukkitTask task;
 	private int kickTime;
 	
 	public OfflineManager(WarGear plugin) {
 		this.plugin = plugin;
-		this.teamRunnables = new HashMap<Group, List<OfflineRunable>>();
+		this.groupRunnables = new HashMap<Group, List<OfflineRunable>>();
 		this.memberRunnables = new HashMap<String, List<OfflineRunable>>();
-		this.offlineTeamMembers = new ArrayList<GroupMember>();
+		this.offlineGroupMembers = new ArrayList<GroupMember>();
 		this.task = this.plugin.getServer().getScheduler()
 				.runTaskTimer(plugin, new Runnable() {
 					public void run() {
@@ -47,27 +47,27 @@ public class OfflineManager implements Listener {
 		this.kickTime = this.plugin.getRepo().getOfflineKickTime();
 	}
 
-	public boolean run(OfflineRunable runable, Group team) {
-		if (!team.isOnline()) {
-			for (GroupMember member : team.getMembers()) {
+	public boolean run(OfflineRunable runable, Group group) {
+		if (!group.isOnline()) {
+			for (GroupMember member : group.getMembers()) {
 				run(runable, member);
 			}
 		} else {
-			runTeam(runable, team);
+			runTeam(runable, group);
 		}
-		return team.isOnline();
+		return group.isOnline();
 	}
 
-	public boolean runComplete(OfflineRunable runable, Group team) {
-		if (!team.isOnline()) {
-			if (!this.teamRunnables.containsKey(team)) {
-				this.teamRunnables.put(team, new ArrayList<OfflineRunable>());
+	public boolean runComplete(OfflineRunable runable, Group group) {
+		if (!group.isOnline()) {
+			if (!this.groupRunnables.containsKey(group)) {
+				this.groupRunnables.put(group, new ArrayList<OfflineRunable>());
 			}
-			this.teamRunnables.get(team).add(runable);
+			this.groupRunnables.get(group).add(runable);
 		} else {
-			runTeam(runable, team);
+			runTeam(runable, group);
 		}
-		return team.isOnline();
+		return group.isOnline();
 	}
 
 	public boolean run(OfflineRunable runable, GroupMember member) {
@@ -91,7 +91,7 @@ public class OfflineManager implements Listener {
 			GroupMember member = arena.getGroupManager()
 					.getGroupMember(event.getPlayer());
 			if (member.isAlive()) {
-				this.offlineTeamMembers.add(member);
+				this.offlineGroupMembers.add(member);
 			}
 		}
 	}
@@ -102,7 +102,7 @@ public class OfflineManager implements Listener {
 	}
 
 	private void checkTeamMembers() {
-		Iterator<GroupMember> offlineIterator = this.offlineTeamMembers
+		Iterator<GroupMember> offlineIterator = this.offlineGroupMembers
 				.iterator();
 		while (offlineIterator.hasNext()) {
 			GroupMember current = offlineIterator.next();
@@ -136,10 +136,10 @@ public class OfflineManager implements Listener {
 			}
 		}
 
-		Iterator<Entry<Group, List<OfflineRunable>>> teamIterator = this.teamRunnables
+		Iterator<Entry<Group, List<OfflineRunable>>> groupIterator = this.groupRunnables
 				.entrySet().iterator();
-		while (teamIterator.hasNext()) {
-			Entry<Group, List<OfflineRunable>> current = teamIterator.next();
+		while (groupIterator.hasNext()) {
+			Entry<Group, List<OfflineRunable>> current = groupIterator.next();
 			boolean everyoneOnline = true;
 			for (GroupMember member : current.getKey().getMembers()) {
 				if (isTooLongOffline(member)) {
@@ -152,7 +152,7 @@ public class OfflineManager implements Listener {
 				for (OfflineRunable runable : current.getValue()) {
 					runTeam(runable, current.getKey());
 				}
-				teamIterator.remove();
+				groupIterator.remove();
 			}
 		}
 	}
@@ -186,8 +186,8 @@ public class OfflineManager implements Listener {
 		}
 	}
 
-	private void runTeam(OfflineRunable runable, Group team) {
-		for (GroupMember member : team.getMembers()) {
+	private void runTeam(OfflineRunable runable, Group group) {
+		for (GroupMember member : group.getMembers()) {
 			runMember(runable, member);
 		}
 	}
