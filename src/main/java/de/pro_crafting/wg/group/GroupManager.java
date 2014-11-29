@@ -42,13 +42,13 @@ public class GroupManager {
 	}
 	
 	public void quitFight() {
-		quiteFightFoGroupm(this.group1);
-		quiteFightFoGroupm(this.group2);
+		quiteFightFoGroup(this.group1);
+		quiteFightFoGroup(this.group2);
 		this.group1 = new Group(PlayerRole.Team1);
 		this.group2 = new Group(PlayerRole.Team2);
 	}
 	
-	private void quiteFightFoGroupm(Group group) {
+	private void quiteFightFoGroup(Group group) {
 		final Location teleportLocation = this.arena.getRepo().getSpawnWarp();
 		OfflineRunable fightQuiter = new OfflineRunable() {
 			
