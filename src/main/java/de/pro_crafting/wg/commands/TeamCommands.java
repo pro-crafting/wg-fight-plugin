@@ -4,6 +4,7 @@ import java.util.AbstractMap;
 import java.util.Map.Entry;
 
 import org.bukkit.OfflinePlayer;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import de.pro_crafting.commandframework.Command;
@@ -20,67 +21,59 @@ import de.pro_crafting.wg.group.PlayerRole;
 public class TeamCommands {
 	private WarGear plugin;
 	
-	public TeamCommands(WarGear plugin)
-	{
+	public TeamCommands(WarGear plugin) {
 		this.plugin = plugin;
 	}
 	
 	@Command(name = "wgk.team", aliases = { "wgk.team.help" }, description = "Zeigt die Hilfe an.", usage = "/wgk team", permission="wargear.team")
-	public void team(CommandArgs args)
-	{
-		args.getSender().sendMessage("§c§LKein passender Befehl gefunden!");
-		args.getSender().sendMessage("§B/wgk team leader <playername>");
-		args.getSender().sendMessage("§B/wgk team add <playername>");
-		args.getSender().sendMessage("§B/wgk team add <playername> [team1|team2]");
-		args.getSender().sendMessage("§B/wgk team remove <playername>");
-		args.getSender().sendMessage("§B/wgk team remove <playername>");
-		args.getSender().sendMessage("§B/wgk team invite <playername> [team1|team2]");
-		args.getSender().sendMessage("§B/wgk team accept");
-		args.getSender().sendMessage("§B/wgk team decline");
-		args.getSender().sendMessage("§B/wgk team leave");
+	public void team(CommandArgs args) {
+		CommandSender sender = args.getSender();
+		sender.sendMessage("§c§LKein passender Befehl gefunden!");
+		sender.sendMessage("§B/wgk team leader <playername>");
+		sender.sendMessage("§B/wgk team add <playername>");
+		sender.sendMessage("§B/wgk team add <playername> [team1|team2]");
+		sender.sendMessage("§B/wgk team remove <playername>");
+		sender.sendMessage("§B/wgk team remove <playername>");
+		sender.sendMessage("§B/wgk team invite <playername> [team1|team2]");
+		sender.sendMessage("§B/wgk team accept");
+		sender.sendMessage("§B/wgk team decline");
+		sender.sendMessage("§B/wgk team leave");
 	}
 	
 	@Command(name = "wgk.team.leader", description = "Setzt den Leiter eines Teams.", usage = "/wgk team leader", permission="wargear.team.leader")
 	public void leader(CommandArgs args)
 	{
 		Arena arena = Util.getArenaFromSender(plugin, args.getSender(), args.getArgs());
-		if (arena == null)
-		{
+		if (arena == null) {
 			args.getSender().sendMessage("§cDu stehst in keiner Arena, oder Sie existiert nicht.");
 			return;
 		}
-		if (args.length() == 0)
-		{
+		if (args.length() == 0) {
 			args.getSender().sendMessage("§cDu musst einen Spieler angeben.");
 			return;
 		}
 		
 		String playerName = args.getArgs(0);
 		
-		if (arena.getState() != State.Idle && arena.getState() != State.Setup)
-		{
+		if (arena.getState() != State.Idle && arena.getState() != State.Setup) {
 			args.getSender().sendMessage("§cEs läuft bereits ein Fight in "+arena.getName()+".");
 			return;
 		}
-		if (arena.getState() == State.Idle)
-		{
+		if (arena.getState() == State.Idle) {
 			arena.updateState(State.Setup);
 		}
 		
 		Player p = this.plugin.getServer().getPlayer(playerName);
-		if (p == null)
-		{
+		if (p == null) {
 			args.getSender().sendMessage("§c"+playerName +" ist kein Spieler.");
 			return;
 		}
 		Group team = arena.getGroupManager().getTeamWithOutLeader();
-		if (team == null)
-		{
+		if (team == null) {
 			p.sendMessage("§cBeide Team's haben einen Teamleiter.");
 			return;
 		}
-		if (this.plugin.getArenaManager().getArenaOfTeamMember(p) != null)
-		{
+		if (this.plugin.getArenaManager().getArenaOfTeamMember(p) != null) {
 			p.sendMessage("§c"+p.getDisplayName()+" ist bereits in einem Team.");
 			return;
 		}
@@ -110,27 +103,23 @@ public class TeamCommands {
 	
 	private Entry<PlayerGroupKey, Player> canBeAdded(CommandArgs args) {
 		Arena arena = Util.getArenaFromSender(plugin, args.getSender(), args.getArgs());
-		if (arena == null)
-		{
+		if (arena == null) {
 			args.getSender().sendMessage("§cDu stehst in keiner Arena, oder Sie existiert nicht.");
 			return null;
 		}
-		if (args.length() == 0)
-		{
+		if (args.length() == 0) {
 			args.getSender().sendMessage("§cDu musst einen Spieler angeben.");
 			return null;
 		}
 		
 		String playerName = args.getArgs(0);
 		
-		if (arena.getState() != State.Setup)
-		{
+		if (arena.getState() != State.Setup) {
 			args.getSender().sendMessage("§cWährend eines Fightes kannst du keine Mitglieder einladen.");
 			return null;
 		}
 		Player p = this.plugin.getServer().getPlayer(playerName);
-		if (p == null)
-		{
+		if (p == null) {
 			args.getSender().sendMessage("§c"+playerName +" ist kein Spieler.");
 			return null;
 		}
@@ -138,15 +127,17 @@ public class TeamCommands {
 		Player senderPlayer = args.getPlayer();
 		OfflinePlayer leader = null;
 		Group team = null;
-		if (this.plugin.getArenaManager().getArenaOfTeamMember(p) != null)
-		{
+		if (this.plugin.getArenaManager().getArenaOfTeamMember(p) != null) {
 			senderPlayer.sendMessage("§c"+p.getDisplayName()+" ist bereits in einem Team.");
 			return null;
 		}
 		if (args.length() == 1 || !senderPlayer.hasPermission("wargear.team.invite.other")) {
 			team = arena.getGroupManager().getTeamOfPlayer(senderPlayer);
-			if (team != null && team.getTeamMember(senderPlayer) != null && !team.getTeamMember(senderPlayer).isTeamLeader())
-			{
+			if (team == null) {
+				senderPlayer.sendMessage("§cDafür musst du in einem Team sein.");
+				return null;
+			}
+			if (team.getTeamMember(senderPlayer) != null && !team.getTeamMember(senderPlayer).isTeamLeader()) {
 				senderPlayer.sendMessage("§cDer Command muss vom Teamleiter ausgeführt werden.");
 				return null;
 			}
@@ -192,19 +183,19 @@ public class TeamCommands {
 		
 		Player p = this.plugin.getServer().getPlayer(playerName);
 		if (p == null) {
-			args.getSender().sendMessage("§c"+playerName +" ist kein Spieler.");
+			senderPlayer.sendMessage("§c"+playerName +" ist kein Spieler.");
 			return;
 		}
 		
 		Arena arena = this.plugin.getArenaManager().getArenaOfTeamMember(p);
 		
 		if (arena == null) {
-			args.getSender().sendMessage("§B"+p.getDisplayName()+"§c ist in keinem Team.");
+			senderPlayer.sendMessage("§B"+p.getDisplayName()+"§c ist in keinem Team.");
 			return;
 		}
 		
 		if (arena.getState() != State.Setup) {
-			args.getSender().sendMessage("§cDer Fight von §B"+p.getDisplayName()+"§7 läuft zurzeit.");
+			senderPlayer.sendMessage("§cDer Fight von §B"+p.getDisplayName()+"§7 läuft zurzeit.");
 			return;
 		}
 		
@@ -217,11 +208,12 @@ public class TeamCommands {
 				return;
 			}
 		} else if (!senderPlayer.hasPermission("wargear.team.remove.other")) {
-			args.getSender().sendMessage("§cDu bist nicht der Team Leiter.");
+			senderPlayer.sendMessage("§cDu bist nicht der Team Leiter.");
 			return;
 		}
 		
 		p.sendMessage("§7Du bist nicht mehr im Team von §B"+senderPlayer.getDisplayName());
+		p.sendMessage("§B"+senderPlayer.getDisplayName()+"§7 ist nicht mehr in deinem Team.");
 		this.plugin.getScoreboard().removeTeamMember(arena, playerKey.getGroup().getTeamMember(p), playerKey.getRole());
 		playerKey.getGroup().remove(p);
 	}
@@ -240,22 +232,23 @@ public class TeamCommands {
 	
 	@Command(name = "wgk.team.leave", description = "Entfernt dich aus dem Team.",
 			usage = "/wgk team leave", permission="wargear.team.leave", inGameOnly=true)
-	public void leave(CommandArgs args)
-	{
+	public void leave(CommandArgs args) {
 		Player senderPlayer = args.getPlayer();
 		Arena arena = this.plugin.getArenaManager().getArenaOfTeamMember(senderPlayer);
-		if (arena == null)
-		{
+		if (arena == null) {
 			senderPlayer.sendMessage("§cDu bist in keinem Team.");
 			return;
 		}
 		
-		if (arena.getState() != State.Setup)
-		{
+		if (arena.getState() != State.Setup) {
 			args.getSender().sendMessage("§cWährend eines Fightes kannst du nicht dein Team verlassen.");
 			return;
 		}
 		Group team = arena.getGroupManager().getTeamOfPlayer(senderPlayer);
+		if (team == null) {
+			senderPlayer.sendMessage("§cDu bist in keinem Team.");
+			return;
+		}
 		this.plugin.getScoreboard().removeTeamMember(arena, team.getTeamMember(senderPlayer), team.getTeamName());
 		team.remove(senderPlayer);
 		senderPlayer.sendMessage("§7Du bist raus aus dem Team.");
@@ -266,35 +259,33 @@ public class TeamCommands {
 	public void ready(CommandArgs args)
 	{
 		Arena arena = Util.getArenaFromSender(plugin, args.getSender(), args.getArgs());
-		if (arena == null)
-		{
+		if (arena == null) {
 			args.getSender().sendMessage("§cDu stehst in keiner Arena, oder Sie existiert nicht.");
 			return;
 		}	
 		
-		if (arena.getState() != State.Setup)
-		{
+		if (arena.getState() != State.Setup) {
 			args.getSender().sendMessage("§cWährend eines Fightes kannst du das Team nicht bereit schalten.");
 			return;
 		}
 		Player senderPlayer = args.getPlayer();
 		Group team = arena.getGroupManager().getTeamOfPlayer(senderPlayer);
-		if (team == null)
-		{
+		if (team == null) {
 			senderPlayer.sendMessage("§cDu bist in keinem Team.");
 			return;
 		}
+		if (!team.getTeamLeader().getOfflinePlayer().getUniqueId().equals(senderPlayer.getUniqueId())) {
+			senderPlayer.sendMessage("§cDu bist nicht der Team Leiter.");
+			return;
+		}
 		team.setIsReady(!team.isReady());
-		if (team.isReady())
-		{
+		if (team.isReady()) {
 			senderPlayer.sendMessage("§7Dein Team ist bereit.");
-			if (arena.getGroupManager().areBothTeamsReady())
-			{
+			if (arena.getGroupManager().areBothTeamsReady()) {
 				arena.startFight(args.getSender());
 			}
 		}
-		else
-		{
+		else {
 			senderPlayer.sendMessage("§7Dein Team ist nicht mehr bereit.");
 		}
 	}
