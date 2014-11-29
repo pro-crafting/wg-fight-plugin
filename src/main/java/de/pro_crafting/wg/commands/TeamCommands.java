@@ -183,19 +183,19 @@ public class TeamCommands {
 		
 		Player p = this.plugin.getServer().getPlayer(playerName);
 		if (p == null) {
-			args.getSender().sendMessage("§c"+playerName +" ist kein Spieler.");
+			senderPlayer.sendMessage("§c"+playerName +" ist kein Spieler.");
 			return;
 		}
 		
 		Arena arena = this.plugin.getArenaManager().getArenaOfTeamMember(p);
 		
 		if (arena == null) {
-			args.getSender().sendMessage("§B"+p.getDisplayName()+"§c ist in keinem Team.");
+			senderPlayer.sendMessage("§B"+p.getDisplayName()+"§c ist in keinem Team.");
 			return;
 		}
 		
 		if (arena.getState() != State.Setup) {
-			args.getSender().sendMessage("§cDer Fight von §B"+p.getDisplayName()+"§7 läuft zurzeit.");
+			senderPlayer.sendMessage("§cDer Fight von §B"+p.getDisplayName()+"§7 läuft zurzeit.");
 			return;
 		}
 		
@@ -208,11 +208,12 @@ public class TeamCommands {
 				return;
 			}
 		} else if (!senderPlayer.hasPermission("wargear.team.remove.other")) {
-			args.getSender().sendMessage("§cDu bist nicht der Team Leiter.");
+			senderPlayer.sendMessage("§cDu bist nicht der Team Leiter.");
 			return;
 		}
 		
 		p.sendMessage("§7Du bist nicht mehr im Team von §B"+senderPlayer.getDisplayName());
+		p.sendMessage("§B"+senderPlayer.getDisplayName()+"§7 ist nicht mehr in deinem Team.");
 		this.plugin.getScoreboard().removeTeamMember(arena, playerKey.getGroup().getTeamMember(p), playerKey.getRole());
 		playerKey.getGroup().remove(p);
 	}
