@@ -87,11 +87,7 @@ public class WgListener implements Listener {
 		if (arena == null) {
 			return;
 		}
-		String color = "";
-		Group team = arena.getGroupManager().getGroupOfPlayer(player);
-		if (team != null) {
-			color = arena.getGroupManager().getPrefix(team.getRole());
-		}
+		String color = arena.getGroupManager().getPrefix(arena.getGroupManager().getRole(player));
 		event.setFormat("§8["+color+arena.getName()+"§8]"+event.getFormat());
 	}
 	
