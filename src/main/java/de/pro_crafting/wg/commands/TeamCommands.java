@@ -238,22 +238,23 @@ public class TeamCommands {
 	
 	@Command(name = "wgk.team.leave", description = "Entfernt dich aus dem Team.",
 			usage = "/wgk team leave", permission="wargear.team.leave", inGameOnly=true)
-	public void leave(CommandArgs args)
-	{
+	public void leave(CommandArgs args) {
 		Player senderPlayer = args.getPlayer();
 		Arena arena = this.plugin.getArenaManager().getArenaOfTeamMember(senderPlayer);
-		if (arena == null)
-		{
+		if (arena == null) {
 			senderPlayer.sendMessage("§cDu bist in keinem Team.");
 			return;
 		}
 		
-		if (arena.getState() != State.Setup)
-		{
+		if (arena.getState() != State.Setup) {
 			args.getSender().sendMessage("§cWährend eines Fightes kannst du nicht dein Team verlassen.");
 			return;
 		}
 		Group team = arena.getGroupManager().getTeamOfPlayer(senderPlayer);
+		if (team == null) {
+			senderPlayer.sendMessage("§cDu bist in keinem Team.");
+			return;
+		}
 		this.plugin.getScoreboard().removeTeamMember(arena, team.getTeamMember(senderPlayer), team.getTeamName());
 		team.remove(senderPlayer);
 		senderPlayer.sendMessage("§7Du bist raus aus dem Team.");
