@@ -264,35 +264,33 @@ public class TeamCommands {
 	public void ready(CommandArgs args)
 	{
 		Arena arena = Util.getArenaFromSender(plugin, args.getSender(), args.getArgs());
-		if (arena == null)
-		{
+		if (arena == null) {
 			args.getSender().sendMessage("§cDu stehst in keiner Arena, oder Sie existiert nicht.");
 			return;
 		}	
 		
-		if (arena.getState() != State.Setup)
-		{
+		if (arena.getState() != State.Setup) {
 			args.getSender().sendMessage("§cWährend eines Fightes kannst du das Team nicht bereit schalten.");
 			return;
 		}
 		Player senderPlayer = args.getPlayer();
 		Group team = arena.getGroupManager().getTeamOfPlayer(senderPlayer);
-		if (team == null)
-		{
+		if (team == null) {
 			senderPlayer.sendMessage("§cDu bist in keinem Team.");
 			return;
 		}
+		if (!team.getTeamLeader().getOfflinePlayer().getUniqueId().equals(senderPlayer.getUniqueId())) {
+			senderPlayer.sendMessage("§cDu bist nicht der Team Leiter.");
+			return;
+		}
 		team.setIsReady(!team.isReady());
-		if (team.isReady())
-		{
+		if (team.isReady()) {
 			senderPlayer.sendMessage("§7Dein Team ist bereit.");
-			if (arena.getGroupManager().areBothTeamsReady())
-			{
+			if (arena.getGroupManager().areBothTeamsReady()) {
 				arena.startFight(args.getSender());
 			}
 		}
-		else
-		{
+		else {
 			senderPlayer.sendMessage("§7Dein Team ist nicht mehr bereit.");
 		}
 	}
