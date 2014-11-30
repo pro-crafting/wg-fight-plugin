@@ -82,10 +82,10 @@ public class ScoreboardDisplay implements Listener{
 		init(arena.getGroupManager().getGroupKey(PlayerRole.Viewer));
 		setScore(arena, timeName, arena.getRepo().getScoreboardTime(), infoName);
 		
-		this.plugin.getScoreboardManager().setScore(arena.getGroupManager().getGroupKey(PlayerRole.Team1), team1CannonName, 10, infoName);
-		this.plugin.getScoreboardManager().setScore(arena.getGroupManager().getGroupKey(PlayerRole.Viewer), team1CannonName, 10, infoName);
-		this.plugin.getScoreboardManager().setScore(arena.getGroupManager().getGroupKey(PlayerRole.Viewer), team2CannonName, 20, infoName);
-		this.plugin.getScoreboardManager().setScore(arena.getGroupManager().getGroupKey(PlayerRole.Team2), team2CannonName, 20, infoName);
+		/*this.plugin.getScoreboardManager().setScore(arena.getGroupManager().getGroupKey(PlayerRole.Team1), team1CannonName, 0, infoName);
+		this.plugin.getScoreboardManager().setScore(arena.getGroupManager().getGroupKey(PlayerRole.Viewer), team1CannonName, 0, infoName);
+		this.plugin.getScoreboardManager().setScore(arena.getGroupManager().getGroupKey(PlayerRole.Viewer), team2CannonName, 0, infoName);
+		this.plugin.getScoreboardManager().setScore(arena.getGroupManager().getGroupKey(PlayerRole.Team2), team2CannonName, 0, infoName);*/
 	}
 	
 	private void init(PlayerGroupKey groupKey) {
@@ -240,6 +240,17 @@ public class ScoreboardDisplay implements Listener{
 		}
 		else {
 			removeScore(arena, name);
+		}
+	}
+	
+	public void updateCannons(Arena arena, PlayerRole role, int count) {
+		GroupManager groupManager = arena.getGroupManager();
+		if (role == PlayerRole.Team1) {
+			this.plugin.getScoreboardManager().setScore(groupManager.getGroupKey(PlayerRole.Viewer), team1CannonName, count, infoName);
+			this.plugin.getScoreboardManager().setScore(groupManager.getGroupKey(PlayerRole.Team1), team1CannonName, count, infoName);
+		} else {
+			this.plugin.getScoreboardManager().setScore(groupManager.getGroupKey(PlayerRole.Viewer), team2CannonName, count, infoName);
+			this.plugin.getScoreboardManager().setScore(groupManager.getGroupKey(PlayerRole.Team2), team2CannonName, count, infoName);
 		}
 	}
 	
