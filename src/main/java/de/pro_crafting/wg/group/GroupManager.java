@@ -173,6 +173,10 @@ public class GroupManager {
 	}
 	
 	public PlayerGroupKey getGroupKey(OfflinePlayer player) {
-		return this.groupKeys.get(this.getRole(player));
+		return getGroupKey(this.getRole(player));
+	}
+	
+	public PlayerGroupKey getGroupKey(PlayerRole role) {
+		return this.groupKeys.get(role);
 	}
 }

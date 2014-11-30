@@ -110,7 +110,7 @@ public class Arena{
 		if (!this.players.contains(p.getUniqueId()))
 		{
 			this.players.add(p.getUniqueId());
-			this.plugin.getScoreboard().addViewer(this, p);
+			this.plugin.getScoreboard().addViewer(this.getGroupManager().getGroupKey(p), p);
 		}
 	}
 	
