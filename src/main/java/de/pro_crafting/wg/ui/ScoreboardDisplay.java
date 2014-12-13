@@ -21,9 +21,11 @@ import de.pro_crafting.wg.WarGear;
 import de.pro_crafting.wg.arena.Arena;
 import de.pro_crafting.wg.arena.State;
 import de.pro_crafting.wg.event.ArenaStateChangeEvent;
-import de.pro_crafting.wg.group.PlayerRole;
-import de.pro_crafting.wg.group.GroupMember;
 import de.pro_crafting.wg.group.Group;
+import de.pro_crafting.wg.group.GroupManager;
+import de.pro_crafting.wg.group.GroupMember;
+import de.pro_crafting.wg.group.PlayerGroupKey;
+import de.pro_crafting.wg.group.PlayerRole;
 
 public class ScoreboardDisplay implements Listener{
 	private WarGear plugin;	
@@ -38,6 +40,8 @@ public class ScoreboardDisplay implements Listener{
 	private final String teamLeaderBlue = "team_blue_leader";
 	
 	private final String timeName = ChatColor.GREEN+"Zeit (m):";
+	private final String team1CannonName = ChatColor.DARK_GREEN+"Kanonen";
+	private final String team2CannonName = ChatColor.AQUA+"Kanonen";
 	
 	private Map<Arena, BukkitTask> timers;
 	private BukkitTask objectiveSwitcher;
@@ -54,28 +58,41 @@ public class ScoreboardDisplay implements Listener{
 					toShow = infoName;
 				}
 				for (Arena arena : ScoreboardDisplay.this.plugin.getArenaManager().getArenas()) {
-					ScoreboardDisplay.this.plugin.getScoreboardManager().showObjective(arena, toShow, DisplaySlot.SIDEBAR);
+					switchScoreboardObjective(arena, toShow);
 				}
 				info = !info;
 			}
 		}, 0, 5*20);
 	}
 	
+	private void switchScoreboardObjective(Arena arena, String toShow) {
+		GroupManager groupManager = arena.getGroupManager();
+		ScoreboardDisplay.this.plugin.getScoreboardManager().showObjective(groupManager.getGroupKey(PlayerRole.Team1), toShow, DisplaySlot.SIDEBAR);
+		ScoreboardDisplay.this.plugin.getScoreboardManager().showObjective(groupManager.getGroupKey(PlayerRole.Team2), toShow, DisplaySlot.SIDEBAR);
+		ScoreboardDisplay.this.plugin.getScoreboardManager().showObjective(groupManager.getGroupKey(PlayerRole.Viewer), toShow, DisplaySlot.SIDEBAR);
+	
+	}
+	
 	private void initScoreboard(Arena arena) {
 		if (!arena.getRepo().isScoreboardEnabled()) {
 			return;
 		}
-		Scoreboard board = this.plugin.getScoreboardManager().getScoreboard(arena);
+		init(arena.getGroupManager().getGroupKey(PlayerRole.Team1));
+		init(arena.getGroupManager().getGroupKey(PlayerRole.Team2));
+		init(arena.getGroupManager().getGroupKey(PlayerRole.Viewer));
+		setScore(arena, timeName, arena.getRepo().getScoreboardTime(), infoName);
+	}
+	
+	private void init(PlayerGroupKey groupKey) {
+		Scoreboard board = this.plugin.getScoreboardManager().getScoreboard(groupKey);
 		if (board.getObjective(DisplaySlot.SIDEBAR) != null) {
 			return;
 		}
-		this.plugin.getScoreboardManager().createObjective(arena, healthName, DisplaySlot.SIDEBAR, Criteria.Dummy);
-		this.plugin.getScoreboardManager().createObjective(arena, infoName, DisplaySlot.SIDEBAR, Criteria.Dummy);
-		this.plugin.getScoreboardManager().createObjective(arena, belowNameHealthName, DisplaySlot.BELOW_NAME, Criteria.Dummy);
+		this.plugin.getScoreboardManager().createObjective(groupKey, healthName, DisplaySlot.SIDEBAR, Criteria.Dummy);
+		this.plugin.getScoreboardManager().createObjective(groupKey, infoName, DisplaySlot.SIDEBAR, Criteria.Dummy);
+		this.plugin.getScoreboardManager().createObjective(groupKey, belowNameHealthName, DisplaySlot.BELOW_NAME, Criteria.Dummy);
 		
-		this.plugin.getScoreboardManager().setScore(arena, timeName, arena.getRepo().getScoreboardTime(), infoName);
-		
-		initTeams(arena, board);
+		initTeams(groupKey.getArena(), board);
 	}
 	
 	private void initTeams(Arena arena, Scoreboard board) {
@@ -94,27 +111,51 @@ public class ScoreboardDisplay implements Listener{
 		return created;
 	}
 	
-	private Team getTeamRed(Arena arena) {
-		return this.plugin.getScoreboardManager().getScoreboard(arena).getTeam(teamRed);
+	private Team getTeamMemberRed(PlayerGroupKey key) {
+		return this.plugin.getScoreboardManager().getScoreboard(key).getTeam(teamRed);
 	}
 	
-	private Team getTeamLeaderRed(Arena arena) {
-		return this.plugin.getScoreboardManager().getScoreboard(arena).getTeam(teamLeaderRed);
+	private Team getTeamLeaderRed(PlayerGroupKey key) {
+		return this.plugin.getScoreboardManager().getScoreboard(key).getTeam(teamLeaderRed);
 	}
 	
-	private Team getTeamBlue(Arena arena) {
-		return this.plugin.getScoreboardManager().getScoreboard(arena).getTeam(teamBlue);
+	private Team getTeamMemberBlue(PlayerGroupKey key) {
+		return this.plugin.getScoreboardManager().getScoreboard(key).getTeam(teamBlue);
 	}
 
-	private Team getTeamLeaderBlue(Arena arena) {
-		return this.plugin.getScoreboardManager().getScoreboard(arena).getTeam(teamLeaderBlue);
+	private Team getTeamLeaderBlue(PlayerGroupKey key) {
+		return this.plugin.getScoreboardManager().getScoreboard(key).getTeam(teamLeaderBlue);
 	}
 	
-	public void addViewer(Arena arena, Player p) {
-		if (!arena.getRepo().isScoreboardEnabled()) {
+	private Team getTeamMember(PlayerGroupKey groupKey, PlayerRole role) {
+		if (role == PlayerRole.Team1) {
+			return this.getTeamMemberRed(groupKey);
+		} else {
+			return this.getTeamMemberBlue(groupKey);
+		}
+	}
+	
+	private Team getTeamLeader(PlayerGroupKey groupKey, PlayerRole role) {
+		if (role == PlayerRole.Team1) {
+			return this.getTeamLeaderRed(groupKey);
+		} else {
+			return this.getTeamLeaderBlue(groupKey);
+		}
+	}
+	
+	private Team getTeam(PlayerGroupKey key, PlayerRole role, boolean isTeamLeader) {
+		if (isTeamLeader) {
+			return this.getTeamLeader(key, role);
+		} else {
+			return this.getTeamMember(key, role);
+		}
+	}
+	
+	public void addViewer(PlayerGroupKey key, Player p) {
+		if (!key.getArena().getRepo().isScoreboardEnabled()) {
 			return;
 		}
-		p.setScoreboard(this.plugin.getScoreboardManager().getScoreboard(arena));
+		p.setScoreboard(this.plugin.getScoreboardManager().getScoreboard(key));
 	}
 	
 	public void removeViewer(Arena arena, Player p) {
@@ -125,98 +166,61 @@ public class ScoreboardDisplay implements Listener{
 		p.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
 	}
 	
-	public void removeTeamMember(Arena arena, GroupMember member, PlayerRole team) {
+	public void removeTeamMember(Arena arena, GroupMember member, PlayerRole role) {
 		if (!arena.getRepo().isScoreboardEnabled()) {
 			return;
 		}
 		initScoreboard(arena);
 		OfflinePlayer player = member.getOfflinePlayer();
-		if(player.isOnline()){
-			Player onlineplayer = (Player)player;
-			if (team == PlayerRole.Team1) {
-				removeMemberFromTeam(arena, this.getTeamLeaderRed(arena), this.getTeamRed(arena), onlineplayer, member.isLeader());
+		removeMemberFromTeam(arena, player, member.isLeader(), role);
+		removeScore(arena, player.getName());
+		if (player.isOnline()) {
+			Player oPlayer = (Player)player;
+			Arena at = this.plugin.getArenaManager().getArenaAt(oPlayer.getLocation());
+			if (at == null) {
+				this.removeViewer(arena, oPlayer);
+			} else {
+				this.addViewer(arena.getGroupManager().getGroupKey(PlayerRole.Viewer), oPlayer);
 			}
-			else if (team == PlayerRole.Team2) {
-				removeMemberFromTeam(arena, this.getTeamLeaderBlue(arena), this.getTeamBlue(arena), onlineplayer, member.isLeader());
-			}
-			this.plugin.getScoreboardManager().removeScore(arena, onlineplayer.getPlayerListName());
-			if (this.isNicked(onlineplayer)) {
-				onlineplayer.setPlayerListName(onlineplayer.getDisplayName());
-			}
-		} else {
-			if (team == PlayerRole.Team1) {
-				removeMemberFromTeam(arena, this.getTeamLeaderRed(arena), this.getTeamRed(arena), player, member.isLeader());
-			}
-			else if (team == PlayerRole.Team2) {
-				removeMemberFromTeam(arena, this.getTeamLeaderBlue(arena), this.getTeamBlue(arena), player, member.isLeader());
-			}
-			this.plugin.getScoreboardManager().removeScore(arena, player.getName());
 		}
 	}
 	
-	private void removeMemberFromTeam(Arena arena, Team leader, Team memberTeam, OfflinePlayer player, boolean isTeamLeader) {
-		if (isTeamLeader) {
-			leader.removePlayer(player);
-		}
-		else {
-			memberTeam.removePlayer(player);
-		}
+	private void removeMemberFromTeam(Arena arena, OfflinePlayer player, boolean isTeamLeader, PlayerRole role) {
+		this.getTeam(arena.getGroupManager().getGroupKey(PlayerRole.Team1), role, isTeamLeader).removePlayer(player);
+		this.getTeam(arena.getGroupManager().getGroupKey(PlayerRole.Team2), role, isTeamLeader).removePlayer(player);
+		this.getTeam(arena.getGroupManager().getGroupKey(PlayerRole.Viewer), role, isTeamLeader).removePlayer(player);
 	}
 	
-	public void addTeamMember(Arena arena, GroupMember member, PlayerRole team) {
+	public void addTeamMember(Arena arena, GroupMember member, PlayerRole role) {
 		if (!arena.getRepo().isScoreboardEnabled()) {
 			return;
 		}
 		initScoreboard(arena);
 		Player player = member.getPlayer();
-		if (team == PlayerRole.Team1) {
-			addMemberToTeam(arena, this.getTeamLeaderRed(arena), this.getTeamRed(arena), player, member.isLeader());
+		addMemberToTeam(arena, player, member.isLeader(), role);
+		setScore(arena, player.getDisplayName(), (int)Math.ceil(player.getHealth()), this.healthName);
+		setScore(arena, player.getDisplayName(), (int)Math.ceil(player.getHealth()), belowNameHealthName);
+		
+		if (arena.contains(player.getLocation())) {
+			addViewer(arena.getGroupManager().getGroupKey(role), player);
 		}
-		else if (team == PlayerRole.Team2) {
-			addMemberToTeam(arena, this.getTeamLeaderBlue(arena), this.getTeamBlue(arena), player, member.isLeader());
-		}
-		if(this.isNicked(player)){
-			String nick = player.getDisplayName();
-			if(nick.length() > 11){
-				nick = nick.substring(0, 11);
-			}
-			if (team == PlayerRole.Team1) {
-				if(member.isLeader()){
-					player.setPlayerListName(this.getTeamLeaderRed(arena).getPrefix() + nick);
-				} else {
-					player.setPlayerListName(this.getTeamRed(arena).getPrefix() + nick);
-				}
-				
-			} else if (team == PlayerRole.Team2) {
-				if(member.isLeader()){
-					player.setPlayerListName(this.getTeamLeaderBlue(arena).getPrefix() + nick);
-				} else {
-					player.setPlayerListName(this.getTeamRed(arena).getPrefix() + nick);
-				}
-			}
-			this.plugin.getScoreboardManager().setScore(arena, player.getPlayerListName(), (int)Math.ceil(player.getHealth()), this.healthName);
-			
-		} else {
-			this.plugin.getScoreboardManager().setScore(arena, player.getDisplayName(), (int)Math.ceil(player.getHealth()), this.healthName);
-		}
-		this.plugin.getScoreboardManager().setScore(arena, player.getDisplayName(), (int)Math.ceil(player.getHealth()), belowNameHealthName);
 	}
 	
 	private boolean isNicked(Player player){
 		return !player.getName().equals(player.getDisplayName());
 	}
 	
-	private void addMemberToTeam(Arena arena, Team leader, Team memberTeam, Player player, boolean isTeamLeader) {
-		if (isTeamLeader) {
-			leader.addPlayer(player);
-		}
-		else {
-			memberTeam.addPlayer(player);
-		}
+	private void addMemberToTeam(Arena arena, OfflinePlayer player, boolean isTeamLeader, PlayerRole role) {
+		this.getTeam(arena.getGroupManager().getGroupKey(PlayerRole.Team1), role, isTeamLeader).addPlayer(player);
+		this.getTeam(arena.getGroupManager().getGroupKey(PlayerRole.Team2), role, isTeamLeader).addPlayer(player);
+		this.getTeam(arena.getGroupManager().getGroupKey(PlayerRole.Viewer), role, isTeamLeader).addPlayer(player);
 	}
 	
 	public void clearScoreboard(Arena arena) {
-		this.plugin.getScoreboardManager().clearScoreboard(arena);
+		GroupManager groupManager = arena.getGroupManager();
+		this.plugin.getScoreboardManager().clearScoreboard(groupManager.getGroupKey(PlayerRole.Team1));
+		this.plugin.getScoreboardManager().clearScoreboard(groupManager.getGroupKey(PlayerRole.Team2));
+		this.plugin.getScoreboardManager().clearScoreboard(groupManager.getGroupKey(PlayerRole.Viewer));
 	}
 	
 	public void updateHealthOfPlayer(Arena arena, Player player) {
@@ -226,16 +230,27 @@ public class ScoreboardDisplay implements Listener{
 		String name = player.getDisplayName();
 		if (arena.getGroupManager().isAlive(player)) {
 			int health = (int)Math.ceil(player.getHealth());
-			this.plugin.getScoreboardManager().setScore(arena, player.getPlayerListName(), health, this.healthName);
-			this.plugin.getScoreboardManager().setScore(arena, name, health, this.belowNameHealthName);
+			setScore(arena, player.getPlayerListName(), health, this.healthName);
+			setScore(arena, name, health, this.belowNameHealthName);
 		}
 		else {
-			this.plugin.getScoreboardManager().removeScore(arena, name);
+			removeScore(arena, name);
+		}
+	}
+	
+	public void updateCannons(Arena arena, PlayerRole role, int count) {
+		GroupManager groupManager = arena.getGroupManager();
+		if (role == PlayerRole.Team1) {
+			this.plugin.getScoreboardManager().setScore(groupManager.getGroupKey(PlayerRole.Viewer), team1CannonName, count, infoName);
+			this.plugin.getScoreboardManager().setScore(groupManager.getGroupKey(PlayerRole.Team1), team1CannonName, count, infoName);
+		} else {
+			this.plugin.getScoreboardManager().setScore(groupManager.getGroupKey(PlayerRole.Viewer), team2CannonName, count, infoName);
+			this.plugin.getScoreboardManager().setScore(groupManager.getGroupKey(PlayerRole.Team2), team2CannonName, count, infoName);
 		}
 	}
 	
 	public void updateTime(Arena arena, int time) {
-		this.plugin.getScoreboardManager().setScore(arena, timeName, time, this.infoName);
+		setScore(arena, timeName, time, this.infoName);
 	}
 	
 	void stopTimer(Arena arena) {
@@ -243,6 +258,20 @@ public class ScoreboardDisplay implements Listener{
 		if (task != null) {
 			task.cancel();
 		}
+	}
+	
+	private void setScore(Arena arena, String scoreName, int score, String objectiveName) {
+		GroupManager groupManager = arena.getGroupManager();
+		this.plugin.getScoreboardManager().setScore(groupManager.getGroupKey(PlayerRole.Team1), scoreName, score, objectiveName);
+		this.plugin.getScoreboardManager().setScore(groupManager.getGroupKey(PlayerRole.Team2), scoreName, score, objectiveName);
+		this.plugin.getScoreboardManager().setScore(groupManager.getGroupKey(PlayerRole.Viewer), scoreName, score, objectiveName);
+	}
+	
+	private void removeScore(Arena arena, String scoreName) {
+		GroupManager groupManager = arena.getGroupManager();
+		this.plugin.getScoreboardManager().removeScore(groupManager.getGroupKey(PlayerRole.Team1), scoreName);
+		this.plugin.getScoreboardManager().removeScore(groupManager.getGroupKey(PlayerRole.Team2), scoreName);
+		this.plugin.getScoreboardManager().removeScore(groupManager.getGroupKey(PlayerRole.Viewer), scoreName);
 	}
 	
 	@EventHandler (priority = EventPriority.LOWEST)
@@ -253,6 +282,12 @@ public class ScoreboardDisplay implements Listener{
 			return;
 		}
 		if (event.getTo() == State.Setup) {
+			for (UUID playerId : arena.getPlayers()) {
+				Player player = this.plugin.getServer().getPlayer(playerId);
+				if (player != null) {
+					this.addViewer(arena.getGroupManager().getGroupKey(player), player);
+				}
+			}
 			clearScoreboard(arena);
 			initScoreboard(arena);
 		}
@@ -260,7 +295,7 @@ public class ScoreboardDisplay implements Listener{
 			for (UUID playerId : arena.getPlayers()) {
 				Player player = this.plugin.getServer().getPlayer(playerId);
 				if (player != null) {
-					this.addViewer(arena, player);
+					this.addViewer(arena.getGroupManager().getGroupKey(player), player);
 				}
 			}
 		}

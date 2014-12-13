@@ -22,6 +22,7 @@ import de.pro_crafting.wg.arena.ArenaManager;
 import de.pro_crafting.wg.commands.ArenaCommands;
 import de.pro_crafting.wg.commands.TeamCommands;
 import de.pro_crafting.wg.commands.WarGearCommands;
+import de.pro_crafting.wg.group.PlayerGroupKey;
 import de.pro_crafting.wg.group.invite.InviteManager;
 import de.pro_crafting.wg.ui.ScoreboardDisplay;
 
@@ -37,7 +38,7 @@ public class WarGear extends JavaPlugin {
 	private WgListener wgListener;
 	private File arenaFolder;
 	private OfflineManager offlineManager;
-	private ScoreboardManager<Arena> scoreboardManager;
+	private ScoreboardManager<PlayerGroupKey> scoreboardManager;
 	private ScoreboardDisplay scoreboard;
 	private InviteManager inviteManager;
 	
@@ -57,7 +58,7 @@ public class WarGear extends JavaPlugin {
 		registerCommands();
 		this.wgListener = new WgListener(this);
 		this.offlineManager = new OfflineManager(this);
-		this.scoreboardManager = new ScoreboardManager<Arena>();
+		this.scoreboardManager = new ScoreboardManager<PlayerGroupKey>();
 		this.scoreboard = new ScoreboardDisplay(this);
 		
 		this.inviteManager = new InviteManager(this);
@@ -166,7 +167,7 @@ public class WarGear extends JavaPlugin {
 		return this.offlineManager;
 	}
 	
-	public ScoreboardManager<Arena> getScoreboardManager() {
+	public ScoreboardManager<PlayerGroupKey> getScoreboardManager() {
 		return this.scoreboardManager;
 	}
 	

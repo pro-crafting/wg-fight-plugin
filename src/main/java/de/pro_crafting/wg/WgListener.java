@@ -13,8 +13,10 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
@@ -36,9 +38,10 @@ import de.pro_crafting.wg.event.ArenaStateChangeEvent;
 import de.pro_crafting.wg.event.FightQuitEvent;
 import de.pro_crafting.wg.event.PlayerArenaChangeEvent;
 import de.pro_crafting.wg.event.WinQuitEvent;
-import de.pro_crafting.wg.group.PlayerRole;
-import de.pro_crafting.wg.group.GroupMember;
 import de.pro_crafting.wg.group.Group;
+import de.pro_crafting.wg.group.GroupMember;
+import de.pro_crafting.wg.group.PlayerGroupKey;
+import de.pro_crafting.wg.group.PlayerRole;
 import de.pro_crafting.wg.modes.KitMode;
 
 public class WgListener implements Listener {
@@ -279,8 +282,16 @@ public class WgListener implements Listener {
 	public void playerInteractHandler(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
 		Block block = event.getClickedBlock();
-		if (this.plugin.getArenaManager().getArenaOfTeamMember(player) != null && block != null && block.getType() == Material.CAKE_BLOCK) {
+		Arena arena = this.plugin.getArenaManager().getArenaOfTeamMember(player);
+		if (arena == null) {
+			return;
+		}
+		if (block != null && block.getType() == Material.CAKE_BLOCK) {
 			player.sendMessage("§7Du darfst kein Essen benutzen.");
+			event.setCancelled(true);
+		}
+		if (event.getAction() == Action.LEFT_CLICK_BLOCK && block.getType() == Material.JACK_O_LANTERN) {
+			player.sendMessage("§7Du darfst keine Kürbislaternen abbauen.");
 			event.setCancelled(true);
 		}
 	}
@@ -323,14 +334,13 @@ public class WgListener implements Listener {
 			event.setDeathMessage(null);
 			arena.broadcastMessage(message);
 			Bukkit.getScheduler().runTask(this.plugin, new Runnable() {
-				public void run() {
+				public void run() {            
 					WgListener.this.checkAlives(team, arena);
 				}
 			});
 		}
 	}
 	
-	 
 	private void checkAlives(Group team, Arena arena) {
 		if (!team.isAlive()) {
 			Group winnerTeam = arena.getGroupManager().getGroup1();
@@ -339,6 +349,29 @@ public class WgListener implements Listener {
 			}
 			String message = "Jeder aus dem ["+team.getRole().toString().toUpperCase()+"] ist tot.";
 			this.plugin.getServer().getPluginManager().callEvent(new WinQuitEvent(arena, message, winnerTeam, team, FightQuitReason.Death));
+		}
+	}
+	
+	@EventHandler (priority = EventPriority.MONITOR, ignoreCancelled=true)
+    public void entityExplodeHandler(EntityExplodeEvent event)
+	{
+		Arena arena = this.plugin.getArenaManager().getArenaAt(event.getLocation());
+		if (arena == null) {
+			return;
+		}
+		ArenaPosition position = arena.getPosition(event.getLocation());
+		if (position != ArenaPosition.Team1WG && position != ArenaPosition.Team2WG) {
+			return;
+		}
+		PlayerGroupKey group = arena.getGroupManager().getGroupKey(position == ArenaPosition.Team1WG ? PlayerRole.Team1 : PlayerRole.Team2);
+		for (Block b : event.blockList())
+		{
+			if (b.getType() == Material.JACK_O_LANTERN)
+			{
+				group.getGroup().setCannons(group.getGroup().getCannons()-1);
+				this.plugin.getScoreboard().updateCannons(arena, group.getRole(), group.getGroup().getCannons());
+				event.setYield(0);
+			}
 		}
 	}
 }

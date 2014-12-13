@@ -12,6 +12,7 @@ public class Group  {
 	private Map<UUID, GroupMember> member;
 	private boolean isReady;
 	private PlayerRole role;
+	private int cannons;
 	
 	public Group(PlayerRole role) {
 		this.role = role;
@@ -81,6 +82,14 @@ public class Group  {
 		return result;
 	}
 
+	public int getCannons() {
+		return this.cannons;
+	}
+
+	public void setCannons(int cannons) {
+		this.cannons = cannons;
+	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

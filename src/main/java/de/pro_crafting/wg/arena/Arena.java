@@ -1,10 +1,10 @@
 package de.pro_crafting.wg.arena;
 
-import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -14,7 +14,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
-import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldguard.bukkit.BukkitUtil;
@@ -23,14 +22,22 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 import de.pro_crafting.common.Point;
 import de.pro_crafting.common.Size;
+import de.pro_crafting.generator.BlockData;
+import de.pro_crafting.generator.JobState;
+import de.pro_crafting.generator.JobStateChangedCallback;
+import de.pro_crafting.generator.criteria.Criteria;
 import de.pro_crafting.generator.criteria.SingleBlockCriteria;
+import de.pro_crafting.generator.job.Job;
 import de.pro_crafting.generator.job.SimpleJob;
+import de.pro_crafting.generator.provider.BlockSearchProvider;
 import de.pro_crafting.generator.provider.SingleBlockProvider;
 import de.pro_crafting.wg.Util;
 import de.pro_crafting.wg.WarGear;
 import de.pro_crafting.wg.event.ArenaStateChangeEvent;
-import de.pro_crafting.wg.group.GroupManager;
 import de.pro_crafting.wg.group.Group;
+import de.pro_crafting.wg.group.GroupManager;
+import de.pro_crafting.wg.group.PlayerGroupKey;
+import de.pro_crafting.wg.group.PlayerRole;
 import de.pro_crafting.wg.modes.ChestMode;
 import de.pro_crafting.wg.modes.FightMode;
 import de.pro_crafting.wg.modes.KitMode;
@@ -110,7 +117,7 @@ public class Arena{
 		if (!this.players.contains(p.getUniqueId()))
 		{
 			this.players.add(p.getUniqueId());
-			this.plugin.getScoreboard().addViewer(this, p);
+			this.plugin.getScoreboard().addViewer(this.getGroupManager().getGroupKey(p), p);
 		}
 	}
 	
@@ -273,6 +280,39 @@ public class Arena{
 		this.setOpen(false);
 		this.getFightMode().start();
 		this.updateState(State.PreRunning);
+		countCannons();
+	}
+	
+	private void countCannons() {
+		startCannonCounterJob(this.getRepo().getTeam1Region(), this.getGroupManager().getGroupKey(PlayerRole.Team1));
+		startCannonCounterJob(this.getRepo().getTeam2Region(), this.getGroupManager().getGroupKey(PlayerRole.Team2));
+	}
+	
+	private void startCannonCounterJob(ProtectedRegion rg, final PlayerGroupKey groupKey) {
+		Point origin = new Point(rg.getMinimumPoint().getBlockX(), rg.getMinimumPoint().getBlockY(), rg.getMinimumPoint().getBlockZ());
+		Point max = new Point(rg.getMaximumPoint().getBlockX(), rg.getMaximumPoint().getBlockY(), rg.getMaximumPoint().getBlockZ());
+		Size size = new Size(max.getX()-origin.getX(), max.getY()-origin.getY(), max.getZ()-origin.getZ());
+		this.plugin.getGenerator().addJob(new SimpleJob(origin, size, getRepo().getWorld(), new JobStateChangedCallback() {
+			
+			public void jobStateChanged(Job job, JobState state) {
+				if (job.getState() == JobState.Finished) {
+					plugin.getScoreboard().updateCannons(groupKey.getArena(), groupKey.getRole(), groupKey.getGroup().getCannons());
+				}
+			}
+		}, new BlockSearchProvider(new Criteria() {
+			Group group = groupKey.getGroup();
+			public void wrap(Criteria arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			public boolean matches(Point point, BlockData data) {
+				if (data.getType() == Material.JACK_O_LANTERN) {
+					group.setCannons(group.getCannons()+1);
+				}
+				return true;
+			}
+		})));
 	}
 	
 	@Override
