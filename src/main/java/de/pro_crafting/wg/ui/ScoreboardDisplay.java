@@ -81,11 +81,6 @@ public class ScoreboardDisplay implements Listener{
 		init(arena.getGroupManager().getGroupKey(PlayerRole.Team2));
 		init(arena.getGroupManager().getGroupKey(PlayerRole.Viewer));
 		setScore(arena, timeName, arena.getRepo().getScoreboardTime(), infoName);
-		
-		/*this.plugin.getScoreboardManager().setScore(arena.getGroupManager().getGroupKey(PlayerRole.Team1), team1CannonName, 0, infoName);
-		this.plugin.getScoreboardManager().setScore(arena.getGroupManager().getGroupKey(PlayerRole.Viewer), team1CannonName, 0, infoName);
-		this.plugin.getScoreboardManager().setScore(arena.getGroupManager().getGroupKey(PlayerRole.Viewer), team2CannonName, 0, infoName);
-		this.plugin.getScoreboardManager().setScore(arena.getGroupManager().getGroupKey(PlayerRole.Team2), team2CannonName, 0, infoName);*/
 	}
 	
 	private void init(PlayerGroupKey groupKey) {
