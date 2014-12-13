@@ -97,7 +97,8 @@ public class WgListener implements Listener {
 	 @EventHandler (priority = EventPriority.HIGHEST, ignoreCancelled=true)
 	 public void playerRespawnHandler(PlayerRespawnEvent event) {
 		 final Player respawned = event.getPlayer();
-		 Arena arena = this.plugin.getArenaManager().getArenaAt(event.getPlayer().getLocation());
+		 
+		 Arena arena = this.plugin.getArenaManager().getArenaOfTeamMember(respawned);
 		 if (arena != null) {
 			 event.setRespawnLocation(arena.getSpawnLocation(respawned));
 			 
