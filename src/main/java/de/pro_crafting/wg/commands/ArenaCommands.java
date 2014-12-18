@@ -72,7 +72,6 @@ public class ArenaCommands {
 		sender.sendMessage("§7Auto Reset: §B" + arena.getRepo().getAutoReset());
 		sender.sendMessage("§7Region Team1: §B" + arena.getRepo().getTeam1Region().getId());
 		sender.sendMessage("§7Region Team2: §B" + arena.getRepo().getTeam2Region().getId());
-		sender.sendMessage("§7Region Inner: §B" + arena.getRepo().getInnerRegion().getId());
 		sender.sendMessage("§7Warp Team1: §B" + getStringFromLocation(arena.getRepo().getTeam1Warp()));
 		sender.sendMessage("§7Warp Team2: §B" + getStringFromLocation(arena.getRepo().getTeam2Warp()));
 		sender.sendMessage("§7Warp Fight Ende: §B" + getStringFromLocation(arena.getRepo().getSpawnWarp()));
