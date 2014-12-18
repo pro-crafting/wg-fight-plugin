@@ -176,6 +176,10 @@ public class ScoreboardDisplay implements Listener{
 		removeScore(arena, player.getName());
 		if (player.isOnline()) {
 			Player oPlayer = (Player)player;
+			if(this.isNicked(oPlayer)){
+				removeScore(arena, oPlayer.getPlayerListName());
+				oPlayer.setPlayerListName(oPlayer.getDisplayName());
+			}
 			Arena at = this.plugin.getArenaManager().getArenaAt(oPlayer.getLocation());
 			if (at == null) {
 				this.removeViewer(arena, oPlayer);
@@ -198,8 +202,14 @@ public class ScoreboardDisplay implements Listener{
 		initScoreboard(arena);
 		Player player = member.getPlayer();
 		addMemberToTeam(arena, player, member.isLeader(), role);
-		setScore(arena, player.getDisplayName(), (int)Math.ceil(player.getHealth()), this.healthName);
-		setScore(arena, player.getDisplayName(), (int)Math.ceil(player.getHealth()), belowNameHealthName);
+		if(this.isNicked(player)){
+			setNickedPlayerListName(arena, member, role);
+			setScore(arena, player.getPlayerListName(), (int)Math.ceil(player.getHealth()), this.healthName);
+		} else {
+			setScore(arena, player.getName(), (int)Math.ceil(player.getHealth()), this.healthName);
+		}
+		
+		setScore(arena, player.getName(), (int)Math.ceil(player.getHealth()), belowNameHealthName);
 		
 		if (arena.contains(player.getLocation())) {
 			addViewer(arena.getGroupManager().getGroupKey(role), player);
@@ -208,6 +218,28 @@ public class ScoreboardDisplay implements Listener{
 	
 	private boolean isNicked(Player player){
 		return !player.getName().equals(player.getDisplayName());
+	}
+	
+	private void setNickedPlayerListName(Arena arena, GroupMember member, PlayerRole role){
+		GroupManager groupmanager = arena.getGroupManager();
+		Player player = member.getPlayer();
+		String prefix = "(T)";
+		if(member.isLeader()){
+			prefix = "(C)";
+		}
+		
+		String playerlistname = groupmanager.getPrefix(PlayerRole.Team1) + prefix + player.getDisplayName();
+		
+		if(role == PlayerRole.Team2){
+			playerlistname = playerlistname.replaceFirst(groupmanager.getPrefix(PlayerRole.Team1), groupmanager.getPrefix(PlayerRole.Team2));
+		}
+		
+		
+		if(playerlistname.length() > 16){
+			playerlistname = playerlistname.substring(0, 16);
+		}
+		
+		player.setPlayerListName(playerlistname);
 	}
 	
 	private void addMemberToTeam(Arena arena, OfflinePlayer player, boolean isTeamLeader, PlayerRole role) {
