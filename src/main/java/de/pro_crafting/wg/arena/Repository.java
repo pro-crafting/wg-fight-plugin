@@ -12,6 +12,7 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 import de.pro_crafting.wg.Util;
 import de.pro_crafting.wg.WarGear;
+import de.pro_crafting.wg.group.GroupSide;
 
 public class Repository 
 {
@@ -385,6 +386,10 @@ public class Repository
 		{
 			this.team2Region = rg;
 		}
+	}
+	
+	public ProtectedRegion getTeamRegion(GroupSide side) {
+		return side == GroupSide.Team1 ? getTeam1Region() : getTeam2Region();
 	}
 	
 	public Location getTeam1Warp()

@@ -3,7 +3,6 @@ package de.pro_crafting.wg.arena;
 import java.io.File;
 import java.io.IOException;
 
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Arrow;
@@ -24,6 +23,7 @@ import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.data.DataException;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.schematic.MCEditSchematicFormat;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 import de.pro_crafting.common.Point;
 import de.pro_crafting.common.Size;
@@ -35,6 +35,7 @@ import de.pro_crafting.generator.job.SimpleJob;
 import de.pro_crafting.generator.provider.SingleBlockProvider;
 import de.pro_crafting.wg.WarGear;
 import de.pro_crafting.wg.event.ArenaStateChangeEvent;
+import de.pro_crafting.wg.group.GroupSide;
 
 public class Reseter implements Listener, JobStateChangedCallback
 {
@@ -124,5 +125,14 @@ public class Reseter implements Listener, JobStateChangedCallback
 		{
 			this.arena.updateState(State.Idle);
 		}
+	}
+	
+	public void cleanSide(GroupSide side) {
+		ProtectedRegion rg = this.arena.getRepo().getTeamRegion(side);
+		World world = this.arena.getRepo().getWorld();
+		Point origin = new Point(BukkitUtil.toLocation(world, rg.getMinimumPoint()));
+		origin.setY(groundHeight);
+		Size size = new Size(rg.getMaximumPoint().getBlockX()-rg.getMinimumPoint().getBlockX(), rg.getMaximumPoint().getBlockY()-rg.getMinimumPoint().getBlockY(), rg.getMaximumPoint().getBlockZ()-rg.getMinimumPoint().getBlockZ());
+		this.plugin.getGenerator().addJob(new SimpleJob(origin, size, world, null, new SingleBlockProvider(new CuboidCriteria(), Material.AIR,  (byte)0)));
 	}
 }
