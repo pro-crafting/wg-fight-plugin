@@ -123,6 +123,9 @@ public class ArenaManager {
 	public PlayerGroupKey getGroup(OfflinePlayer player) {
 		Arena arena = this.getArenaOfTeamMember(player);
 		PlayerRole role = PlayerRole.Viewer;
+		if (arena == null) {
+			return new PlayerGroupKey(null, role);
+		}
 		Group team = arena.getGroupManager().getGroupOfPlayer(player);
 		if (team != null) {
 			role = arena.getGroupManager().getGroupOfPlayer(player).getRole();
