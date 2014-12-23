@@ -26,8 +26,14 @@ public class SpectatorMode {
 
 	public void start() {
 		this.arena.broadcastMessage(ChatColor.GOLD+"Begutachtet die WarGears!");
-		prepareTeamSpectating(this.arena.getGroupManager().getGroup1());
-		prepareTeamSpectating(this.arena.getGroupManager().getGroup2());
+		Bukkit.getScheduler().runTaskLater(this.plugin, new Runnable() {
+
+			public void run() {
+				prepareTeamSpectating(SpectatorMode.this.arena.getGroupManager().getGroup1());
+				prepareTeamSpectating(SpectatorMode.this.arena.getGroupManager().getGroup2());
+			}
+			
+		}, 1);
 		counter = 0;
 		task = Bukkit.getScheduler().runTaskTimer(this.plugin, new Runnable(){
 			public void run()
