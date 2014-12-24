@@ -1,7 +1,5 @@
 package de.pro_crafting.wg;
 
-import java.util.AbstractMap.SimpleEntry;
-
 import net.gravitydevelopment.updater.Updater.UpdateResult;
 
 import org.bukkit.Bukkit;
@@ -323,14 +321,14 @@ public class WgListener implements Listener {
 	}
 	
 	@EventHandler (priority = EventPriority.HIGHEST, ignoreCancelled=true)
-    public void playerDeath(PlayerDeathEvent event) {
+    public void playerDeathHandler(PlayerDeathEvent event) {
 		Player player = event.getEntity();
-		final Arena arena = this.plugin.getArenaManager().getArenaAt(player.getLocation());
+		final Arena arena = this.plugin.getArenaManager().getArenaOfTeamMember(player);
 		if (arena == null || arena.getState() != State.Running) {
 			return;
 		}
 		final Group team = arena.getGroupManager().getGroupOfPlayer(player);
-		if (team != null && team.getMember(player).isAlive()) {
+		if (team.getMember(player).isAlive()) {
 			team.getMember(player).setAlive(false);
 			String color = arena.getGroupManager().getPrefix(team.getRole());
 			String message = "§8["+color+arena.getName()+"§8] "+ChatColor.DARK_GREEN+player.getDisplayName()+" ist gestorben.";
