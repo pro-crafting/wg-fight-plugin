@@ -1,5 +1,7 @@
 package de.pro_crafting.wg;
 
+import java.util.AbstractMap.SimpleEntry;
+
 import net.gravitydevelopment.updater.Updater.UpdateResult;
 
 import org.bukkit.Bukkit;
@@ -372,6 +374,10 @@ public class WgListener implements Listener {
 				group.getGroup().setCannons(group.getGroup().getCannons()-1);
 				this.plugin.getScoreboard().updateCannons(arena, group.getRole(), group.getGroup().getCannons());
 				event.setYield(0);
+			}
+			if (b.getType() != Material.WATER || b.getType() != Material.STATIONARY_WATER)
+			{
+				arena.getRemover().add(b.getLocation());
 			}
 		}
 	}
