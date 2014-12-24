@@ -271,6 +271,9 @@ public class ScoreboardDisplay implements Listener{
 	}
 	
 	public void updateCannons(Arena arena, PlayerRole role, int count) {
+		if (arena.getState() != State.Running) {
+			return;
+		}
 		GroupManager groupManager = arena.getGroupManager();
 		if (role == PlayerRole.Team1) {
 			this.plugin.getScoreboardManager().setScore(groupManager.getGroupKey(PlayerRole.Viewer), team1CannonName, count, infoName);
