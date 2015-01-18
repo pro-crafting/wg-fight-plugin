@@ -194,7 +194,7 @@ public class Arena{
 	    region.setFlag(DefaultFlag.PVP, value);
 	    region.setFlag(DefaultFlag.FIRE_SPREAD, value);
 	    region.setFlag(DefaultFlag.GHAST_FIREBALL, value);
-	    region.setFlag(DefaultFlag.CHEST_ACCESS, value);
+	    //region.setFlag(DefaultFlag.CHEST_ACCESS, value);
 	}
 
 	private void setOpeningFlags(ProtectedRegion region, com.sk89q.worldguard.protection.flags.StateFlag.State value) {
@@ -203,7 +203,7 @@ public class Arena{
 		region.setFlag(DefaultFlag.PVP, value);
 		region.setFlag(DefaultFlag.FIRE_SPREAD, value);
 		region.setFlag(DefaultFlag.GHAST_FIREBALL, value);
-		region.setFlag(DefaultFlag.CHEST_ACCESS, value);
+		//region.setFlag(DefaultFlag.CHEST_ACCESS, value);
 	}
 	
 	public void broadcastMessage(String message)
