@@ -82,6 +82,7 @@ public class SpectatorMode {
 				Player player = member.getPlayer();
 				arena.teleport(player);
 				Util.enableFly(player);
+				Util.clearPlayer(player);
 			}
 		};
 		this.plugin.getOfflineManager().run(teamSpectatingPreparer, team);

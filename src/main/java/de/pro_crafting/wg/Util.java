@@ -168,4 +168,9 @@ public class Util {
 		}
 		return ret;
 	}
+	
+	public static void clearPlayer(Player player) {
+		player.getInventory().clear();
+		player.getInventory().setArmorContents(null);
+	}
 }

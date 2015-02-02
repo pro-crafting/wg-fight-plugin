@@ -31,10 +31,9 @@ public abstract class FightBase implements FightMode, Listener {
 			
 			public void run(GroupMember member) {
 				Player player = member.getPlayer();
-				player.getInventory().clear();
-				player.getInventory().setArmorContents(null);
 				
 				player.setGameMode(GameMode.SURVIVAL);
+				Util.clearPlayer(player);
 				Util.disableFly(player);
 				Util.makeHealthy(player);
 				Util.removePotionEffects(player);
