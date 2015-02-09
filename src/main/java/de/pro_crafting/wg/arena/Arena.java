@@ -188,9 +188,9 @@ public class Arena{
 	}	
 	
 	private void setInnerRegionFlags(ProtectedRegion region, com.sk89q.worldguard.protection.flags.StateFlag.State value) {
-	    com.sk89q.worldguard.protection.flags.StateFlag.State forcedValue = com.sk89q.worldguard.protection.flags.StateFlag.State.ALLOW;
+	    com.sk89q.worldguard.protection.flags.StateFlag.State forcedValue = com.sk89q.worldguard.protection.flags.StateFlag.State.DENY;
 	    region.setFlag(DefaultFlag.TNT, value);
-	    region.setFlag(DefaultFlag.PVP, forcedValue);
+	    region.setFlag(DefaultFlag.PVP, value);
 	    region.setFlag(DefaultFlag.FIRE_SPREAD, forcedValue);
 	    region.setFlag(DefaultFlag.GHAST_FIREBALL, forcedValue);
 	    region.setFlag(DefaultFlag.BUILD, forcedValue);
