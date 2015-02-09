@@ -25,16 +25,15 @@ public abstract class FightBase implements FightMode, Listener {
 	public void start() { 
 		this.plugin.getServer().broadcastMessage(ChatColor.YELLOW+"Gleich: WarGear-Kampf in der "+this.arena.getName()+" Arena");
 		this.arena.broadcastOutside("§7Mit §B\"/wgk warp "+this.arena.getName().toLowerCase()+"\" §7 kommst du in die Arena.");
-		arena.getGroupManager().sendTeamOutput();
+		arena.getGroupManager().sendGroupOutput();
 		
 		OfflineRunable fightTeamPreparer = new OfflineRunable() {
 			
 			public void run(GroupMember member) {
 				Player player = member.getPlayer();
-				player.getInventory().clear();
-				player.getInventory().setArmorContents(null);
 				
 				player.setGameMode(GameMode.SURVIVAL);
+				Util.clearPlayer(player);
 				Util.disableFly(player);
 				Util.makeHealthy(player);
 				Util.removePotionEffects(player);
@@ -45,8 +44,8 @@ public abstract class FightBase implements FightMode, Listener {
 			}
 		};
 		
-		this.plugin.getOfflineManager().run(fightTeamPreparer, this.arena.getGroupManager().getTeam1());
-		this.plugin.getOfflineManager().run(fightTeamPreparer, this.arena.getGroupManager().getTeam2());
+		this.plugin.getOfflineManager().run(fightTeamPreparer, this.arena.getGroupManager().getGroup1());
+		this.plugin.getOfflineManager().run(fightTeamPreparer, this.arena.getGroupManager().getGroup2());
 		starter.run();
 	}
 

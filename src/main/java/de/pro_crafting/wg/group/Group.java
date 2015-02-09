@@ -8,83 +8,62 @@ import java.util.UUID;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
-public class Group 
-{
-	private Map<UUID, GroupMember> groupMember;
+public class Group  {
+	private Map<UUID, GroupMember> member;
 	private boolean isReady;
-	private PlayerRole teamName;
+	private PlayerRole role;
+	private int cannons;
 	
-	public Group(PlayerRole teamName)
-	{
-		this.teamName = teamName;
-		isReady = false;
-		this.groupMember = new HashMap<UUID, GroupMember>();
+	public Group(PlayerRole role) {
+		this.role = role;
+		this.isReady = false;
+		this.member = new HashMap<UUID, GroupMember>();
 	}
 	
-	public void add(Player p, boolean isLeader)
-	{
-		this.groupMember.put(p.getUniqueId(), new GroupMember(p, isLeader));
+	public void add(Player p, boolean isLeader) {
+		this.member.put(p.getUniqueId(), new GroupMember(p, isLeader));
 	}
 	
-	public void remove(OfflinePlayer p)
-	{
-		this.groupMember.remove(p.getUniqueId());
+	public void remove(OfflinePlayer p) {
+		this.member.remove(p.getUniqueId());
 	}
 	
-	public boolean isReady()
-	{
+	public boolean isReady() {
 		return this.isReady;
 	}
 	
-	public void setIsReady(boolean isReady)
-	{
+	public void setIsReady(boolean isReady) {
 		this.isReady = isReady;
 	}
 	
-	public PlayerRole getTeamName()
-	{
-		return this.teamName;
+	public PlayerRole getRole() {
+		return this.role;
 	}
 	
-	public Collection<GroupMember> getTeamMembers()
-	{
-		return this.groupMember.values();
+	public Collection<GroupMember> getMembers() {
+		return this.member.values();
 	}
 	
-	public GroupMember getTeamMember(OfflinePlayer player)
-	{
-		return this.groupMember.get(player.getUniqueId());
+	public GroupMember getMember(OfflinePlayer player) {
+		return this.member.get(player.getUniqueId());
 	}
 	
-	public boolean isAlive()
-	{
-		for (GroupMember current : this.groupMember.values())
-		{
-			if (current.isAlive())
-			{
+	public boolean isAlive() {
+		for (GroupMember current : this.member.values()) {
+			if (current.isAlive()) {
 				return true;
 			}
 		}
 		return false;
 	}
 	
-	public boolean hasTeamLeader()
-	{
-		for (GroupMember current : this.groupMember.values())
-		{
-			if (current.isTeamLeader())
-			{
-				return true;
-			}
-		}
-		return false;
+	public boolean hasLeader() {
+		return getLeader() != null;
 	}
 	
-	public GroupMember getTeamLeader() {
-		for (GroupMember current : this.groupMember.values())
-		{
-			if (current.isTeamLeader())
-			{
+	public GroupMember getLeader() {
+		for (GroupMember current : this.member.values()) {
+			if (current.isLeader()) {
 				return current;
 			}
 		}
@@ -97,12 +76,20 @@ public class Group
 		int result = 1;
 		result = prime * result + (isReady ? 1231 : 1237);
 		result = prime * result
-				+ ((groupMember == null) ? 0 : groupMember.hashCode());
+				+ ((member == null) ? 0 : member.hashCode());
 		result = prime * result
-				+ ((teamName == null) ? 0 : teamName.hashCode());
+				+ ((role == null) ? 0 : role.hashCode());
 		return result;
 	}
 
+	public int getCannons() {
+		return this.cannons;
+	}
+
+	public void setCannons(int cannons) {
+		this.cannons = cannons;
+	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -114,18 +101,18 @@ public class Group
 		Group other = (Group) obj;
 		if (isReady != other.isReady)
 			return false;
-		if (groupMember == null) {
-			if (other.groupMember != null)
+		if (member == null) {
+			if (other.member != null)
 				return false;
-		} else if (!groupMember.equals(other.groupMember))
+		} else if (!member.equals(other.member))
 			return false;
-		if (teamName != other.teamName)
+		if (role != other.role)
 			return false;
 		return true;
 	}
 
 	public boolean isOnline() {
-		for (GroupMember member : this.groupMember.values())
+		for (GroupMember member : this.member.values())
 		{
 			if (!member.isOnline())
 			{

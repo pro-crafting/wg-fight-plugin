@@ -1,5 +1,8 @@
 package de.pro_crafting.wg.group;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -11,43 +14,41 @@ import de.pro_crafting.wg.Util;
 import de.pro_crafting.wg.WarGear;
 import de.pro_crafting.wg.arena.Arena;
 
-public class GroupManager
-{
+public class GroupManager {
 	private WarGear plugin;
 	private Arena arena;
-	private Group team1;
-	private Group team2;
+	private Group group1;
+	private Group group2;
+	private Map<PlayerRole, PlayerGroupKey> groupKeys;
 	
-	public GroupManager(WarGear plugin, Arena arena)
-	{
+	public GroupManager(WarGear plugin, Arena arena) {
 		this.plugin = plugin;
-		this.team1 = new Group(PlayerRole.Team1);
-		this.team2 = new Group(PlayerRole.Team2);
+		this.group1 = new Group(PlayerRole.Team1);
+		this.group2 = new Group(PlayerRole.Team2);
 		this.arena = arena;
+		
+		this.groupKeys = new HashMap<PlayerRole, PlayerGroupKey>();
+		this.groupKeys.put(PlayerRole.Team1, new PlayerGroupKey(arena, PlayerRole.Team1));
+		this.groupKeys.put(PlayerRole.Team2, new PlayerGroupKey(arena, PlayerRole.Team2));
+		this.groupKeys.put(PlayerRole.Viewer, new PlayerGroupKey(arena, PlayerRole.Viewer));
 	}
 	
-	public Location getTeamSpawn(PlayerRole team)
-	{
-		if (team == PlayerRole.Team1)
-		{
+	public Location getGroupSpawn(PlayerRole role) {
+		if (role == PlayerRole.Team1) {
 			return arena.getRepo().getTeam1Warp();
-		}
-		else
-		{
+		} else {
 			return arena.getRepo().getTeam2Warp();
 		}
 	}
 	
-	public void quitFight()
-	{
-		quiteFightForTeam(this.team1);
-		quiteFightForTeam(this.team2);
-		this.team1 = new Group(PlayerRole.Team1);
-		this.team2 = new Group(PlayerRole.Team2);
+	public void quitFight() {
+		quiteFightFoGroup(this.group1);
+		quiteFightFoGroup(this.group2);
+		this.group1 = new Group(PlayerRole.Team1);
+		this.group2 = new Group(PlayerRole.Team2);
 	}
 	
-	private void quiteFightForTeam(Group team)
-	{
+	private void quiteFightFoGroup(Group group) {
 		final Location teleportLocation = this.arena.getRepo().getSpawnWarp();
 		OfflineRunable fightQuiter = new OfflineRunable() {
 			
@@ -56,20 +57,17 @@ public class GroupManager
 				member.getPlayer().teleport(teleportLocation, TeleportCause.PLUGIN);
 			}
 		};
-		this.plugin.getOfflineManager().run(fightQuiter, team);
+		this.plugin.getOfflineManager().run(fightQuiter, group);
 	}
 	
-	public void sendWinnerOutput(PlayerRole teamName)
-	{
-		String team = "["+teamName.toString()+"] "+concateTeamPlayers(this.getTeamOfName(teamName));
-		this.arena.broadcastMessage(ChatColor.DARK_GREEN + team + " hat gewonnen!");
+	public void sendWinnerOutput(PlayerRole role) {
+		String group = getRolePrefix(role)+"§2"+concateGroupPlayers(this.getTeamOfGroup(role));
+		this.arena.broadcastMessage(group + " hat gewonnen!");
 	}
 	
-	private String concateTeamPlayers(Group team)
-	{
+	private String concateGroupPlayers(Group group) {
 		String ret = "";
-		for (GroupMember member : team.getTeamMembers())
-		{
+		for (GroupMember member : group.getMembers()) {
 			if(member.isOnline()){
 				ret += member.getPlayer().getDisplayName()+ " ";
 			} else {
@@ -80,35 +78,33 @@ public class GroupManager
 		return ret.trim();
 	}
 	
-	public void sendTeamOutput()
-	{
-		String team1 = arena.getRepo().getTeam1Prefix()+
-				"[Team1]"+ ChatColor.YELLOW +""+ ChatColor.ITALIC+concateTeamPlayers(this.getTeam1());
-		String team2 = arena.getRepo().getTeam2Prefix()+
-				"[Team2]"+ ChatColor.YELLOW +""+ ChatColor.ITALIC+concateTeamPlayers(this.getTeam2());
-		this.arena.broadcastMessage(ChatColor.YELLOW +""+ ChatColor.ITALIC+team1);
-		this.arena.broadcastMessage(ChatColor.YELLOW +""+ ChatColor.ITALIC+team2);
+	public void sendGroupOutput() {
+		String group1 = arena.getRepo().getTeam1Prefix()+
+				getRolePrefix(PlayerRole.Team1)+ ChatColor.YELLOW +""+ ChatColor.ITALIC+concateGroupPlayers(this.getGroup1());
+		String group2 = arena.getRepo().getTeam2Prefix()+
+				getRolePrefix(PlayerRole.Team2)+ ChatColor.YELLOW +""+ ChatColor.ITALIC+concateGroupPlayers(this.getGroup2());
+		this.arena.broadcastMessage(ChatColor.YELLOW +""+ ChatColor.ITALIC+group1);
+		this.arena.broadcastMessage(ChatColor.YELLOW +""+ ChatColor.ITALIC+group2);
 	}
 	
-	public void healTeam(Group team)
-	{
+	private String getRolePrefix(PlayerRole role) {
+		return "§8["+getPrefix(role)+role.toString()+"§8]";
+	}
+	
+	public void healGroup(Group group) {
 		OfflineRunable healer = new OfflineRunable() {
 			public void run(GroupMember member) {
 				Util.makeHealthy(member.getPlayer());
 			}
 		};
-		this.plugin.getOfflineManager().run(healer, team);
+		this.plugin.getOfflineManager().run(healer, group);
 	}
 	 
-	public Group getTeamOfName(PlayerRole name)
-	{
-		if (name == PlayerRole.Team1)
-		{
-			return this.team1;
-		}
-		else
-		{
-			return this.team2;
+	public Group getTeamOfGroup(PlayerRole role) {
+		if (role == PlayerRole.Team1) {
+			return this.group1;
+		} else {
+			return this.group2;
 		}
 	}
 	
@@ -121,64 +117,66 @@ public class GroupManager
 		return "§7";
 	}
 	
-	public Group getTeamOfPlayer(OfflinePlayer p)
-	{
-		if (this.team1.getTeamMember(p) != null)
-		{
-			return this.team1;
+	public PlayerRole getRole(OfflinePlayer player) {
+		Group group = getGroupOfPlayer(player);
+		if (group != null) {
+			return group.getRole();
 		}
-		else if (this.team2.getTeamMember(p) != null)
-		{
-			return this.team2;
-		}
-		return null;
+		return PlayerRole.Viewer;
 	}
-	 
-	public Group getTeamWithOutLeader()
-	{
-		if (!this.team1.hasTeamLeader())
-		{
-			return this.team1;
-		}
-		else if (!this.team2.hasTeamLeader())
-		{
-			return this.team2;
-		}
-		return null;
-	}
-	 
-	public boolean areBothTeamsReady()
-	{
-		return this.team1.isReady() && this.team2.isReady();
-	}
-	 
-	public boolean isAlive(Player p)
-	{
-		if (this.getTeamOfPlayer(p) == null || this.getTeamOfPlayer(p).getTeamMember(p) == null)
-		{
-			 return false;
-		}
-		return this.getTeamOfPlayer(p).getTeamMember(p).isAlive();
-	}
-	 
-	public GroupMember getTeamMember(OfflinePlayer p)
-	{
-		if (this.team1.getTeamMember(p) != null)
-		{
-			return this.team1.getTeamMember(p);
-		}
-		if (this.team2.getTeamMember(p) != null)
-		{
-			return this.team2.getTeamMember(p);
+	
+	public Group getGroupOfPlayer(OfflinePlayer p) {
+		if (this.group1.getMember(p) != null) {
+			return this.group1;
+		} else if (this.group2.getMember(p) != null) {
+			return this.group2;
 		}
 		return null;
 	}
 	
-	public Group getTeam1() {
-		return team1;
+	public Group getGroupWithOutLeader() {
+		if (!this.group1.hasLeader()) {
+			return this.group1;
+		} else if (!this.group2.hasLeader()) {
+			return this.group2;
+		}
+		return null;
+	}
+	 
+	public boolean isReady() {
+		return this.group1.isReady() && this.group2.isReady();
+	}
+	 
+	public boolean isAlive(Player p) {
+		if (this.getGroupOfPlayer(p) == null || this.getGroupOfPlayer(p).getMember(p) == null) {
+			 return false;
+		}
+		return this.getGroupOfPlayer(p).getMember(p).isAlive();
+	}
+	 
+	public GroupMember getGroupMember(OfflinePlayer p) {
+		if (this.group1.getMember(p) != null) {
+			return this.group1.getMember(p);
+		}
+		if (this.group2.getMember(p) != null) {
+			return this.group2.getMember(p);
+		}
+		return null;
+	}
+	
+	public Group getGroup1() {
+		return group1;
 	}
 
-	public Group getTeam2() {
-		return team2;
+	public Group getGroup2() {
+		return group2;
+	}
+	
+	public PlayerGroupKey getGroupKey(OfflinePlayer player) {
+		return getGroupKey(this.getRole(player));
+	}
+	
+	public PlayerGroupKey getGroupKey(PlayerRole role) {
+		return this.groupKeys.get(role);
 	}
 }

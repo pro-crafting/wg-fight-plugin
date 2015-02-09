@@ -60,19 +60,8 @@ public class WaterRemover implements Listener
 		HandlerList.unregisterAll(this);
 	}
 	
-	@EventHandler (priority = EventPriority.MONITOR, ignoreCancelled=true)
-    public void entityExplodeHandler(EntityExplodeEvent event)
-	{
-		for (Block b : event.blockList())
-		{
-			if (b.getType() != Material.WATER || b.getType() != Material.STATIONARY_WATER)
-			{
-				if (this.arena.contains(b.getLocation()))
-				{
-					this.explodedBlocks.add(new SimpleEntry<Location, Integer>(b.getLocation(), 0));
-				}
-			}
-		}
+	public void add(Location loc) {
+		this.explodedBlocks.add(new SimpleEntry<Location, Integer>(loc, 0));
 	}
 	
 	private void wateredCheck()

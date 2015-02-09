@@ -19,6 +19,10 @@ public class PlayerGroupKey {
 		return this.role;
 	}
 	
+	public Group getGroup() {
+		return getArena().getGroupManager().getTeamOfGroup(getRole());
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

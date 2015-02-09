@@ -13,8 +13,10 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
@@ -36,9 +38,10 @@ import de.pro_crafting.wg.event.ArenaStateChangeEvent;
 import de.pro_crafting.wg.event.FightQuitEvent;
 import de.pro_crafting.wg.event.PlayerArenaChangeEvent;
 import de.pro_crafting.wg.event.WinQuitEvent;
-import de.pro_crafting.wg.group.PlayerRole;
-import de.pro_crafting.wg.group.GroupMember;
 import de.pro_crafting.wg.group.Group;
+import de.pro_crafting.wg.group.GroupMember;
+import de.pro_crafting.wg.group.PlayerGroupKey;
+import de.pro_crafting.wg.group.PlayerRole;
 import de.pro_crafting.wg.modes.KitMode;
 
 public class WgListener implements Listener {
@@ -69,8 +72,8 @@ public class WgListener implements Listener {
 			event.getArena().getSpectatorMode().start();
 		}
 		if (event.getTo() == State.Running) {
-			event.getArena().getGroupManager().healTeam(event.getArena().getGroupManager().getTeam1());
-			event.getArena().getGroupManager().healTeam(event.getArena().getGroupManager().getTeam2());
+			event.getArena().getGroupManager().healGroup(event.getArena().getGroupManager().getGroup1());
+			event.getArena().getGroupManager().healGroup(event.getArena().getGroupManager().getGroup2());
 		}
 		if (event.getTo() == State.PreRunning) {
 			event.getArena().replaceMG();
@@ -87,18 +90,15 @@ public class WgListener implements Listener {
 		if (arena == null) {
 			return;
 		}
-		String color = "";
-		Group team = arena.getGroupManager().getTeamOfPlayer(player);
-		if (team != null) {
-			color = arena.getGroupManager().getPrefix(team.getTeamName());
-		}
+		String color = arena.getGroupManager().getPrefix(arena.getGroupManager().getRole(player));
 		event.setFormat("§8["+color+arena.getName()+"§8]"+event.getFormat());
 	}
 	
 	 @EventHandler (priority = EventPriority.HIGHEST, ignoreCancelled=true)
 	 public void playerRespawnHandler(PlayerRespawnEvent event) {
 		 final Player respawned = event.getPlayer();
-		 Arena arena = this.plugin.getArenaManager().getArenaAt(event.getPlayer().getLocation());
+		 
+		 Arena arena = this.plugin.getArenaManager().getArenaOfTeamMember(respawned);
 		 if (arena != null) {
 			 event.setRespawnLocation(arena.getSpawnLocation(respawned));
 			 
@@ -122,7 +122,7 @@ public class WgListener implements Listener {
 		}
 		if (event instanceof WinQuitEvent) {
 			WinQuitEvent winEvent = (WinQuitEvent)event;
-			event.getArena().getGroupManager().sendWinnerOutput(winEvent.getWinnerTeam().getTeamName());
+			event.getArena().getGroupManager().sendWinnerOutput(winEvent.getWinnerTeam().getRole());
 		}
 		event.getArena().getFightMode().stop();
 		event.getArena().updateState(State.Spectate);
@@ -149,12 +149,12 @@ public class WgListener implements Listener {
 			
 			ArenaPosition to = arenaTo.getPosition(event.getTo());
 			ArenaPosition from = arenaTo.getPosition(event.getFrom());
-			Group team = arenaTo.getGroupManager().getTeamOfPlayer(player);
+			Group team = arenaTo.getGroupManager().getGroupOfPlayer(player);
 			if (team == null && to != ArenaPosition.Platform) {
 				resetPlayerMovement(to, from, event.getFrom(), player, arenaTo);
-			} else if (team != null && team.getTeamName() == PlayerRole.Team1 && (to == ArenaPosition.Team2PlayField || to == ArenaPosition.Team2WG)) {
+			} else if (team != null && team.getRole() == PlayerRole.Team1 && (to == ArenaPosition.Team2PlayField || to == ArenaPosition.Team2WG)) {
 				resetPlayerMovement(to, from, event.getFrom(), player, arenaTo);
-			} else if (team != null && team.getTeamName() == PlayerRole.Team2 && (to == ArenaPosition.Team1PlayField || to == ArenaPosition.Team1WG)) {
+			} else if (team != null && team.getRole() == PlayerRole.Team2 && (to == ArenaPosition.Team1PlayField || to == ArenaPosition.Team1WG)) {
 				resetPlayerMovement(to, from, event.getFrom(), player, arenaTo);
 			}
 		}
@@ -171,7 +171,7 @@ public class WgListener implements Listener {
 		if (!arenaTo.contains(to)) {
 			return;
 		}
-		GroupMember member = arenaTo.getGroupManager().getTeamMember(player);
+		GroupMember member = arenaTo.getGroupManager().getGroupMember(player);
 		if (member != null && member.isAlive()) {
 			player.damage(arenaTo.getRepo().getGroundDamage());
 			this.plugin.getScoreboard().updateHealthOfPlayer(arenaTo, player);
@@ -255,7 +255,7 @@ public class WgListener implements Listener {
 		} else if (event.getDamager() instanceof Player) {
 			damager = (Player) event.getDamager();
 		}
-		if (damager != null && arena.getGroupManager().getTeamOfPlayer(player).equals(arena.getGroupManager().getTeamOfPlayer(damager))) {
+		if (damager != null && arena.getGroupManager().getGroupOfPlayer(player).equals(arena.getGroupManager().getGroupOfPlayer(damager))) {
 			damager.sendMessage("§7Du darfst Spielern aus deinem Team keinen Schaden zufügen.");
 			event.setCancelled(true);
 		}
@@ -269,7 +269,7 @@ public class WgListener implements Listener {
 		final Player player = (Player)event.getEntity();
 		final Arena arena = this.plugin.getArenaManager().getArenaAt(player.getLocation());
 		if (arena != null) {
-			if (arena.getGroupManager().getTeamOfPlayer(player) != null) {
+			if (arena.getGroupManager().getGroupOfPlayer(player) != null) {
 				this.plugin.getServer().getScheduler().runTask(this.plugin, new Runnable(){
 					public void run() {
 						WgListener.this.plugin.getScoreboard().updateHealthOfPlayer(arena, player);
@@ -283,8 +283,16 @@ public class WgListener implements Listener {
 	public void playerInteractHandler(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
 		Block block = event.getClickedBlock();
-		if (this.plugin.getArenaManager().getArenaOfTeamMember(player) != null && block != null && block.getType() == Material.CAKE_BLOCK) {
+		Arena arena = this.plugin.getArenaManager().getArenaOfTeamMember(player);
+		if (arena == null) {
+			return;
+		}
+		if (block != null && block.getType() == Material.CAKE_BLOCK) {
 			player.sendMessage("§7Du darfst kein Essen benutzen.");
+			event.setCancelled(true);
+		}
+		if (event.getAction() == Action.LEFT_CLICK_BLOCK && block.getType() == Material.JACK_O_LANTERN) {
+			player.sendMessage("§7Du darfst keine Kürbislaternen abbauen.");
 			event.setCancelled(true);
 		}
 	}
@@ -313,36 +321,62 @@ public class WgListener implements Listener {
 	}
 	
 	@EventHandler (priority = EventPriority.HIGHEST, ignoreCancelled=true)
-    public void playerDeath(PlayerDeathEvent event) {
+    public void playerDeathHandler(PlayerDeathEvent event) {
 		Player player = event.getEntity();
-		final Arena arena = this.plugin.getArenaManager().getArenaAt(player.getLocation());
+		final Arena arena = this.plugin.getArenaManager().getArenaOfTeamMember(player);
 		if (arena == null || arena.getState() != State.Running) {
 			return;
 		}
-		final Group team = arena.getGroupManager().getTeamOfPlayer(player);
-		if (team != null && team.getTeamMember(player).isAlive()) {
-			team.getTeamMember(player).setAlive(false);
-			String color = arena.getGroupManager().getPrefix(team.getTeamName());
+		final Group team = arena.getGroupManager().getGroupOfPlayer(player);
+		if (team.getMember(player).isAlive()) {
+			team.getMember(player).setAlive(false);
+			String color = arena.getGroupManager().getPrefix(team.getRole());
 			String message = "§8["+color+arena.getName()+"§8] "+ChatColor.DARK_GREEN+player.getDisplayName()+" ist gestorben.";
 			event.setDeathMessage(null);
 			arena.broadcastMessage(message);
 			Bukkit.getScheduler().runTask(this.plugin, new Runnable() {
-				public void run() {
+				public void run() {            
 					WgListener.this.checkAlives(team, arena);
 				}
 			});
 		}
 	}
 	
-	 
 	private void checkAlives(Group team, Arena arena) {
 		if (!team.isAlive()) {
-			Group winnerTeam = arena.getGroupManager().getTeam1();
-			if (team.getTeamName() == PlayerRole.Team1) {
-				winnerTeam = arena.getGroupManager().getTeam2();
+			Group winnerTeam = arena.getGroupManager().getGroup1();
+			if (team.getRole() == PlayerRole.Team1) {
+				winnerTeam = arena.getGroupManager().getGroup2();
 			}
-			String message = "Jeder aus dem ["+team.getTeamName().toString().toUpperCase()+"] ist tot.";
+			String message = "Jeder aus dem ["+team.getRole().toString().toUpperCase()+"] ist tot.";
 			this.plugin.getServer().getPluginManager().callEvent(new WinQuitEvent(arena, message, winnerTeam, team, FightQuitReason.Death));
+		}
+	}
+	
+	@EventHandler (priority = EventPriority.MONITOR, ignoreCancelled=true)
+    public void entityExplodeHandler(EntityExplodeEvent event)
+	{
+		Arena arena = this.plugin.getArenaManager().getArenaAt(event.getLocation());
+		if (arena == null) {
+			return;
+		}
+		ArenaPosition position = arena.getPosition(event.getLocation());
+		if (position != ArenaPosition.Team1WG && position != ArenaPosition.Team2WG) {
+			return;
+		}
+		PlayerGroupKey group = arena.getGroupManager().getGroupKey(position == ArenaPosition.Team1WG ? PlayerRole.Team1 : PlayerRole.Team2);
+		for (Block b : event.blockList())
+		{
+			if (b.getType() == Material.JACK_O_LANTERN)
+			{
+				group.getGroup().setCannons(group.getGroup().getCannons()-1);
+				this.plugin.getScoreboard().updateCannons(arena, group.getRole(), group.getGroup().getCannons());
+				event.setYield(0);
+			}
+			if (b.getType() != Material.WATER || b.getType() != Material.STATIONARY_WATER)
+			{
+				arena.getRemover().add(b.getLocation());
+			}
 		}
 	}
 }

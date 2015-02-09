@@ -1,9 +1,7 @@
 package de.pro_crafting.wg.arena;
 
 import java.io.File;
-import java.io.IOException;
 
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Arrow;
@@ -13,17 +11,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
-import com.sk89q.worldedit.CuboidClipboard;
-import com.sk89q.worldedit.EditSession;
-import com.sk89q.worldedit.FilenameException;
 import com.sk89q.worldedit.LocalConfiguration;
-import com.sk89q.worldedit.MaxChangedBlocksException;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
-import com.sk89q.worldedit.bukkit.BukkitWorld;
-import com.sk89q.worldedit.data.DataException;
 import com.sk89q.worldedit.regions.CuboidRegion;
-import com.sk89q.worldedit.schematic.MCEditSchematicFormat;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 import de.pro_crafting.common.Point;
 import de.pro_crafting.common.Size;
@@ -32,9 +24,11 @@ import de.pro_crafting.generator.JobStateChangedCallback;
 import de.pro_crafting.generator.criteria.CuboidCriteria;
 import de.pro_crafting.generator.job.Job;
 import de.pro_crafting.generator.job.SimpleJob;
+import de.pro_crafting.generator.provider.SchematicProvider;
 import de.pro_crafting.generator.provider.SingleBlockProvider;
 import de.pro_crafting.wg.WarGear;
 import de.pro_crafting.wg.event.ArenaStateChangeEvent;
+import de.pro_crafting.wg.group.GroupSide;
 
 public class Reseter implements Listener, JobStateChangedCallback
 {
@@ -56,11 +50,11 @@ public class Reseter implements Listener, JobStateChangedCallback
 		World world = this.arena.getRepo().getWorld();
 		Point origin = new Point(BukkitUtil.toLocation(world, rg.getMinimumPoint()));
 		origin.setY(groundHeight);
-		Size size = new Size(rg.getWidth(), rg.getHeight(), rg.getLength());
+		Size size = new Size(rg.getWidth(), rg.getMaximumY()-groundHeight, rg.getLength());
 		this.plugin.getGenerator().addJob(new SimpleJob(origin, size, world, this, new SingleBlockProvider(new CuboidCriteria(), Material.AIR,  (byte)0)));
 	}
 	
-	private void pasteGround(World arenaWorld) throws FilenameException, IOException, DataException, MaxChangedBlocksException
+	private void pasteGround(World arenaWorld)
 	{
 	    WorldEdit we = this.plugin.getRepo().getWorldEdit().getWorldEdit();
         LocalConfiguration config = we.getConfiguration();
@@ -70,13 +64,8 @@ public class Reseter implements Listener, JobStateChangedCallback
         if (!schemName.contains(".schematic")) schemName = schemName+".schematic";
         File schematic = new File(dir, schemName);
         
-        EditSession es = new EditSession(new BukkitWorld(arenaWorld), config.maxChangeLimit);
-        CuboidClipboard cc = MCEditSchematicFormat.MCEDIT.load(schematic);
-        es.enableQueue();
-        es.setFastMode(true);
-        cc.place(es, cc.getOrigin(), false);
-        es.setFastMode(false);
-        es.flushQueue();
+        SchematicProvider provider = new SchematicProvider(new CuboidCriteria(), schematic);
+        this.plugin.getGenerator().addJob(new SimpleJob(provider.getOrigin(), arenaWorld, null, provider));
 	}
 	
 	private void removeItems(World arenaWorld)
@@ -124,5 +113,14 @@ public class Reseter implements Listener, JobStateChangedCallback
 		{
 			this.arena.updateState(State.Idle);
 		}
+	}
+	
+	public void cleanSide(GroupSide side) {
+		ProtectedRegion rg = this.arena.getRepo().getTeamRegion(side);
+		World world = this.arena.getRepo().getWorld();
+		Point origin = new Point(BukkitUtil.toLocation(world, rg.getMinimumPoint()));
+		origin.setY(groundHeight);
+		Size size = new Size(rg.getMaximumPoint().getBlockX()-rg.getMinimumPoint().getBlockX(), rg.getMaximumPoint().getBlockY()-rg.getMinimumPoint().getBlockY(), rg.getMaximumPoint().getBlockZ()-rg.getMinimumPoint().getBlockZ());
+		this.plugin.getGenerator().addJob(new SimpleJob(origin, size, world, null, new SingleBlockProvider(new CuboidCriteria(), Material.AIR,  (byte)0)));
 	}
 }

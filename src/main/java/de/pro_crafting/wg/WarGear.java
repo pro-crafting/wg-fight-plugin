@@ -7,7 +7,6 @@ import java.util.List;
 
 import net.gravitydevelopment.updater.Updater;
 
-import org.bukkit.command.CommandSender;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.MetricsLite;
@@ -23,6 +22,8 @@ import de.pro_crafting.wg.arena.ArenaManager;
 import de.pro_crafting.wg.commands.ArenaCommands;
 import de.pro_crafting.wg.commands.TeamCommands;
 import de.pro_crafting.wg.commands.WarGearCommands;
+import de.pro_crafting.wg.group.PlayerGroupKey;
+import de.pro_crafting.wg.group.invite.InviteManager;
 import de.pro_crafting.wg.ui.ScoreboardDisplay;
 
 public class WarGear extends JavaPlugin {
@@ -37,8 +38,9 @@ public class WarGear extends JavaPlugin {
 	private WgListener wgListener;
 	private File arenaFolder;
 	private OfflineManager offlineManager;
-	private ScoreboardManager<Arena> scoreboardManager;
+	private ScoreboardManager<PlayerGroupKey> scoreboardManager;
 	private ScoreboardDisplay scoreboard;
+	private InviteManager inviteManager;
 	
 	@Override
 	public void onEnable() {
@@ -56,8 +58,11 @@ public class WarGear extends JavaPlugin {
 		registerCommands();
 		this.wgListener = new WgListener(this);
 		this.offlineManager = new OfflineManager(this);
-		this.scoreboardManager = new ScoreboardManager<Arena>();
+		this.scoreboardManager = new ScoreboardManager<PlayerGroupKey>();
 		this.scoreboard = new ScoreboardDisplay(this);
+		
+		this.inviteManager = new InviteManager(this);
+		
 		this.getLogger().info("Plugin erfolgreich geladen!");
 	}
 	
@@ -68,6 +73,8 @@ public class WarGear extends JavaPlugin {
 		this.cmdFramework.registerCommands(new ArenaCommands(this));
 		this.cmdFramework.registerCommands(this);
 		this.cmdFramework.registerHelp();
+		
+		this.cmdFramework.setInGameOnlyMessage("Der Command muss von einem Spieler ausgeführt werden.");
 	}
 	
 	@Override
@@ -77,11 +84,6 @@ public class WarGear extends JavaPlugin {
 		this.arenaManager.unloadArenas();
 		this.getLogger().info("Plugin erfolgreich deaktiviert!");
 	}
-	
-	@Override
-    public boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String label, String[] args) {
-        return this.cmdFramework.handleCommand(sender, label, command, args);
-    }
 	
 	@Completer (name="wgk")
 	public List<String> completeCommands(CommandArgs args) {
@@ -165,11 +167,15 @@ public class WarGear extends JavaPlugin {
 		return this.offlineManager;
 	}
 	
-	public ScoreboardManager<Arena> getScoreboardManager() {
+	public ScoreboardManager<PlayerGroupKey> getScoreboardManager() {
 		return this.scoreboardManager;
 	}
 	
 	public ScoreboardDisplay getScoreboard() {
 		return this.scoreboard;
+	}
+	
+	public InviteManager getInviteManager() {
+		return this.inviteManager;
 	}
 }
