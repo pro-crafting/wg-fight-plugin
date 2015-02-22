@@ -65,6 +65,7 @@ public class ArenaCommands {
 		CommandSender sender = args.getSender();
 		sender.sendMessage("§a---Arena Info---");
 		sender.sendMessage("§7Arena Name: §B" + arena.getName());
+		sender.sendMessage("§7Status: §B" + arena.getState().toString());
 		sender.sendMessage("§7Welt: §B" + arena.getRepo().getWorld().getName());
 		sender.sendMessage("§7Fight Modus: §B" + arena.getRepo().getFightMode());
 		sender.sendMessage("§7Bodenhöhe: §B" + arena.getRepo().getGroundHeight());
