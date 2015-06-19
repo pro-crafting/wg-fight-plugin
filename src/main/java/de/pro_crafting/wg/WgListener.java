@@ -381,7 +381,7 @@ public class WgListener implements Listener {
 		}
 	}
 	
-	@EventHandler (priority = EventPriority.HIGH)
+	@EventHandler (priority = EventPriority.HIGHEST , ignoreCancelled=true)
     public void entityShootBowHandler(EntityShootBowEvent event){
 		
 		if(event.getEntityType() != EntityType.PLAYER){
@@ -400,4 +400,5 @@ public class WgListener implements Listener {
 		}
 		
 	}
+	
 }
