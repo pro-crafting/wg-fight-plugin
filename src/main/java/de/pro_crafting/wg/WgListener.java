@@ -396,7 +396,7 @@ public class WgListener implements Listener {
 		
 		if( this.plugin.getArenaManager().getArenaOfTeamMember( player ).getState() != State.Running){
 			event.setCancelled( true );
-			player.sendMessage("§cDu darfst nur in einem Kampf den Bogen benutzen!");
+			player.sendMessage("§cDu darfst erst nach Ablauf des Countdowns den Bogen benutzen!");
 		}
 		
 	}
