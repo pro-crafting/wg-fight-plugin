@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -206,9 +207,11 @@ public class Arena{
 	
 	public void broadcastMessage(String message)
 	{
-		for (Player player : Util.getPlayerOfRegion(this.repo.getArenaRegion()))
-		{
-			player.sendMessage(message);
+		for (UUID id : getPlayers()) {
+			Player player = Bukkit.getPlayer(id);
+			if (player != null) {
+				player.sendMessage(message);
+			}
 		}
 	}
 	
