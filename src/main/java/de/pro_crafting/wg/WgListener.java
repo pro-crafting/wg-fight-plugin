@@ -18,6 +18,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
+import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -379,4 +380,25 @@ public class WgListener implements Listener {
 			}
 		}
 	}
+	
+	@EventHandler (priority = EventPriority.HIGHEST , ignoreCancelled=true)
+    public void entityShootBowHandler(EntityShootBowEvent event){
+		
+		if(event.getEntityType() != EntityType.PLAYER){
+			return;
+		}
+		
+		Player player = (Player) event.getEntity();
+		
+		if(this.plugin.getArenaManager().getGroup( player ) == null ){
+			return;
+		}
+		
+		if( this.plugin.getArenaManager().getArenaOfTeamMember( player ).getState() != State.Running){
+			event.setCancelled( true );
+			player.sendMessage("§cDu darfst erst nach Ablauf des Countdowns den Bogen benutzen!");
+		}
+		
+	}
+	
 }
