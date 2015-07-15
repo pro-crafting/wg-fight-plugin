@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 public class Group  {
 	private Map<UUID, GroupMember> member;
 	private boolean isReady;
-	private PlayerRole role;
+	protected PlayerRole role;
 	private int cannons;
 	
 	public Group(PlayerRole role) {
