@@ -45,10 +45,11 @@ public class WarGear extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		this.loadConfig();
+		this.kitApi = new KitAPI();
 		this.repo = new Repository(this);
 		this.generator = new BlockGenerator(this, 50000);
 		this.arenaManager = new ArenaManager(this);
-		this.kitApi = new KitAPI();
+
 		if (this.repo.isEconomyEnabled())
 		{
 			this.eco = new WgEconomy(this);

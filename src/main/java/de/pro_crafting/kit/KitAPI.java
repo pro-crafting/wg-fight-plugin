@@ -6,6 +6,9 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.ServicePriority;
+import org.bukkit.plugin.ServicesManager;
 
 import de.pro_crafting.kit.plugins.AdminCmdProvider;
 import de.pro_crafting.kit.plugins.CommandBookProvider;
@@ -14,10 +17,12 @@ import de.pro_crafting.kit.plugins.EssentialsProvider;
 public class KitAPI 
 {
 	private List<KitProvider> kitProviders;
+	private ServicesManager sm;
 	
 	public KitAPI()
 	{
 		this.kitProviders = new ArrayList<KitProvider>();
+		this.sm = Bukkit.getServicesManager();
 		this.loadKitPlugins();
 	}
 	
@@ -30,50 +35,16 @@ public class KitAPI
 	
 	private void hookKitPlugin(String name, Class<? extends KitProvider> hookClass)
 	{
+		Plugin plugin = Bukkit.getPluginManager().getPlugin(name);
 		if (Bukkit.getPluginManager().getPlugin(name) != null)
 		{
 			try {
-				this.kitProviders.add(hookClass.getConstructor().newInstance());
+				KitProvider instance = hookClass.getConstructor().newInstance();
+				this.kitProviders.add(instance);
+				this.sm.register(KitProvider.class, instance, plugin, ServicePriority.Normal);
 			} catch (Exception ex) {
 				
 			}
 		}
-	}
-	
-	public boolean existsKit(String kitName)
-	{
-		boolean exists = false;
-		for (KitProvider curr : this.kitProviders)
-		{
-			if (!exists)
-			{
-				exists = curr.existsKit(kitName);
-			}
-		}
-		return exists;
-	}
-	
-	public void giveKit(String kitName, Player p)
-	{
-		for (KitProvider curr : this.kitProviders)
-		{
-			if (curr.existsKit(kitName))
-			{
-				curr.distribute(kitName, p);
-				return;
-			}
-		}
-	}
-	
-	public ItemStack[] getKitItems(String kitName)
-	{
-		for (KitProvider curr : this.kitProviders)
-		{
-			if (curr.existsKit(kitName))
-			{
-				return curr.getItems(kitName);
-			}
-		}
-		return new ItemStack[0];
 	}
 }

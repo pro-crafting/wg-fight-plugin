@@ -113,7 +113,7 @@ public class WarGearCommands {
 			return;
 		}
 		String kitName = args.getArgs(0);
-		if (!this.plugin.getKitApi().existsKit(kitName)) {
+		if (!this.plugin.getRepo().getKit().existsKit(kitName)) {
 			sender.sendMessage("§cDas Kit " + kitName + " gibt es nicht.");
 			return;
 		}

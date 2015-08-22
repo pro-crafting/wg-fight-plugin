@@ -10,14 +10,18 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
+import de.pro_crafting.kit.KitProvider;
+
 public class Repository {
 	private WarGear plugin;
 	private Economy eco;
+	private KitProvider kit;
 	
 	public Repository(WarGear plugin)
 	{
 		this.plugin = plugin;
 		this.eco = loadEco();
+		this.kit = loadKit();
 	}
 	
 	public String getDefaultKitName()
@@ -89,6 +93,20 @@ public class Repository {
 		RegisteredServiceProvider<Economy> economyProvider = this.plugin.getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
         if (economyProvider != null) {
         	return economyProvider.getProvider();
+        }
+        return null;
+	}
+	
+	public KitProvider getKit()
+	{
+		return this.kit;
+	}
+	
+	private KitProvider loadKit()
+	{
+		RegisteredServiceProvider<KitProvider> provider = this.plugin.getServer().getServicesManager().getRegistration(KitProvider.class);
+        if (provider != null) {
+        	return provider.getProvider();
         }
         return null;
 	}
