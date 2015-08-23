@@ -23,5 +23,8 @@ public class CommandBookProvider implements KitProvider{
 			CommandBook.inst().getComponentManager().getComponent(KitsComponent.class).getKitManager().getKit(kitName).distribute(player);
 		}
 	}
-
+	
+	public String getName() {
+		return "Commandbook";
+	}
 }

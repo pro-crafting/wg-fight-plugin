@@ -72,4 +72,8 @@ public class EssentialsProvider implements KitProvider
 	public void distribute(String kitName, Player player) {
 		player.getInventory().addItem(getItems(kitName));
 	}
+	
+	public String getName() {
+		return "Essentials";
+	}
 }

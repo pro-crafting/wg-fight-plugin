@@ -64,6 +64,12 @@ public class WarGear extends JavaPlugin {
 		
 		this.inviteManager = new InviteManager(this);
 		
+		if (this.repo.getKit() == null) {
+			this.getLogger().warning("Kein Kit Provider gefunden!");
+		} else {
+			this.getLogger().info(this.repo.getKit().getName() + " stellt die Kits bereit.");
+		}
+		
 		this.getLogger().info("Plugin erfolgreich geladen!");
 	}
 	

@@ -22,4 +22,8 @@ public class AdminCmdProvider implements KitProvider
 	public void distribute(String kitName, Player player) {
 		player.getInventory().addItem(getItems(kitName));
 	}
+
+	public String getName() {
+		return "Admincmd";
+	}
 }
