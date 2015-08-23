@@ -117,6 +117,10 @@ public class Repository
 		
 		this.team1Warp = Util.lookAt(this.team1Warp, this.team2Warp);
 		this.team2Warp = Util.lookAt(this.team2Warp, this.team1Warp);
+		
+		if ((mode.equalsIgnoreCase("kit") || mode.equalsIgnoreCase("chest")) && 
+				this.plugin.getRepo().getKit() == null) return false;
+		
 		return true;
 	}
 	
