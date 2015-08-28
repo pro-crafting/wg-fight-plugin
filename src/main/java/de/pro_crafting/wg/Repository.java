@@ -15,13 +15,11 @@ import de.pro_crafting.kit.KitProvider;
 public class Repository {
 	private WarGear plugin;
 	private Economy eco;
-	private KitProvider kit;
 	
 	public Repository(WarGear plugin)
 	{
 		this.plugin = plugin;
 		this.eco = loadEco();
-		this.kit = loadKit();
 	}
 	
 	public String getDefaultKitName()
@@ -99,10 +97,10 @@ public class Repository {
 	
 	public KitProvider getKit()
 	{
-		return this.kit;
+		return this.getKitProvider();
 	}
 	
-	private KitProvider loadKit()
+	private KitProvider getKitProvider()
 	{
 		RegisteredServiceProvider<KitProvider> provider = this.plugin.getServer().getServicesManager().getRegistration(KitProvider.class);
         if (provider != null) {
