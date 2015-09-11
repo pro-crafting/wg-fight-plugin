@@ -31,11 +31,11 @@ import de.pro_crafting.generator.job.Job;
 import de.pro_crafting.generator.job.SimpleJob;
 import de.pro_crafting.generator.provider.BlockSearchProvider;
 import de.pro_crafting.generator.provider.SingleBlockProvider;
-import de.pro_crafting.wg.Util;
 import de.pro_crafting.wg.WarGear;
 import de.pro_crafting.wg.event.ArenaStateChangeEvent;
 import de.pro_crafting.wg.group.Group;
 import de.pro_crafting.wg.group.GroupManager;
+import de.pro_crafting.wg.group.GroupMember;
 import de.pro_crafting.wg.group.PlayerGroupKey;
 import de.pro_crafting.wg.group.PlayerRole;
 import de.pro_crafting.wg.modes.ChestMode;
@@ -182,8 +182,8 @@ public class Arena{
 		this.isOpen = isOpen;
 		com.sk89q.worldguard.protection.flags.StateFlag.State value = isOpen ? com.sk89q.worldguard.protection.flags.StateFlag.State.ALLOW : com.sk89q.worldguard.protection.flags.StateFlag.State.DENY;
 		
-		setOpeningFlags(this.repo.getTeam1Region(), value);
-		setOpeningFlags(this.repo.getTeam2Region(), value);
+		setOpeningFlags(PlayerRole.Team1, value);
+		setOpeningFlags(PlayerRole.Team2, value);
 		
 		setInnerRegionFlags(this.repo.getInnerRegion(), value);
 	}	
@@ -197,12 +197,20 @@ public class Arena{
 	    region.setFlag(DefaultFlag.BUILD, forcedValue);
 	}
 
-	private void setOpeningFlags(ProtectedRegion region, com.sk89q.worldguard.protection.flags.StateFlag.State value) {
+	private void setOpeningFlags(PlayerRole role, com.sk89q.worldguard.protection.flags.StateFlag.State value) {
+		ProtectedRegion region = getGroupManager().getGroupKey(role).getRegion();
 		region.setFlag(DefaultFlag.TNT, value);
-		region.setFlag(DefaultFlag.BUILD, value);
 		region.setFlag(DefaultFlag.PVP, value);
 		region.setFlag(DefaultFlag.FIRE_SPREAD, value);
 		region.setFlag(DefaultFlag.GHAST_FIREBALL, value);
+	}
+	
+	public void updateRegion(PlayerRole role) {
+		PlayerGroupKey key = this.getGroupManager().getGroupKey(role);
+		key.getRegion().getOwners().removeAll();
+		for (GroupMember player : key.getGroup().getMembers()) {
+			key.getRegion().getOwners().addPlayer(player.getOfflinePlayer().getName());
+		}
 	}
 	
 	public void broadcastMessage(String message)
