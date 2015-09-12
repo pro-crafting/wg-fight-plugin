@@ -203,14 +203,25 @@ public class Arena{
 		region.setFlag(DefaultFlag.PVP, value);
 		region.setFlag(DefaultFlag.FIRE_SPREAD, value);
 		region.setFlag(DefaultFlag.GHAST_FIREBALL, value);
+		
+		removeOwners(role);
+		if (value == com.sk89q.worldguard.protection.flags.StateFlag.State.ALLOW) {
+			updateRegion(role);
+		}
 	}
 	
 	public void updateRegion(PlayerRole role) {
+		removeOwners(role);
 		PlayerGroupKey key = this.getGroupManager().getGroupKey(role);
-		key.getRegion().getOwners().removeAll();
 		for (GroupMember player : key.getGroup().getMembers()) {
-			key.getRegion().getOwners().addPlayer(player.getOfflinePlayer().getName());
+			if (player.isAlive()) {
+				key.getRegion().getOwners().addPlayer(player.getOfflinePlayer().getName());
+			}
 		}
+	}
+	
+	private void removeOwners(PlayerRole role) {
+		this.getGroupManager().getGroupKey(role).getRegion().getOwners().removeAll();;
 	}
 	
 	public void broadcastMessage(String message)

@@ -65,8 +65,6 @@ public class WgListener implements Listener {
 	
 	@EventHandler (priority = EventPriority.MONITOR, ignoreCancelled=true)
 	public void arenaStateChangedHandler(ArenaStateChangeEvent event) {
-		event.getArena().updateRegion(PlayerRole.Team1);
-		event.getArena().updateRegion(PlayerRole.Team2);
 		if (event.getTo() == State.Idle) {
 			event.getArena().getGroupManager().quitFight();
 			event.getArena().setFightMode(new KitMode(this.plugin, event.getArena()));
@@ -340,6 +338,7 @@ public class WgListener implements Listener {
 			Bukkit.getScheduler().runTask(this.plugin, new Runnable() {
 				public void run() {            
 					WgListener.this.checkAlives(team, arena);
+					arena.updateRegion(team.getRole());
 				}
 			});
 		}
