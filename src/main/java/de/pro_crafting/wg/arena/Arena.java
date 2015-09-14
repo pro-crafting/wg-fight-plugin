@@ -365,7 +365,8 @@ public class Arena{
 	
 	public Location getSpawnLocation(Player p)
 	{
-		if (this.state != State.Running)
+		if (this.state == State.Running || this.state == State.PreRunning
+				|| this.state == State.Setup || this.state == State.Spectate)
 		{
 			Group playerTeam = this.team.getGroupOfPlayer(p);
 			if (playerTeam != null)

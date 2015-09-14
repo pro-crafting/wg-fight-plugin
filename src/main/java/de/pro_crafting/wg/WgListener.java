@@ -1,7 +1,5 @@
 package de.pro_crafting.wg;
 
-import net.gravitydevelopment.updater.Updater.UpdateResult;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -32,6 +30,12 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
+import de.pro_crafting.common.Point;
+import de.pro_crafting.common.Size;
+import de.pro_crafting.generator.BlockGenerator;
+import de.pro_crafting.generator.criteria.SingleBlockCriteria;
+import de.pro_crafting.generator.job.SimpleJob;
+import de.pro_crafting.generator.provider.SingleBlockProvider;
 import de.pro_crafting.wg.arena.Arena;
 import de.pro_crafting.wg.arena.ArenaPosition;
 import de.pro_crafting.wg.arena.State;
@@ -44,6 +48,7 @@ import de.pro_crafting.wg.group.GroupMember;
 import de.pro_crafting.wg.group.PlayerGroupKey;
 import de.pro_crafting.wg.group.PlayerRole;
 import de.pro_crafting.wg.modes.KitMode;
+import net.gravitydevelopment.updater.Updater.UpdateResult;
 
 public class WgListener implements Listener {
 	private WarGear plugin;
@@ -180,17 +185,42 @@ public class WgListener implements Listener {
 	
 	@EventHandler (priority = EventPriority.MONITOR, ignoreCancelled=true)
 	public void playerJoinHandler(PlayerJoinEvent event) {
-		Arena arenaTo = this.plugin.getArenaManager().getArenaAt(event.getPlayer().getLocation());
+		Player player = event.getPlayer();
+		Arena arenaTo = this.plugin.getArenaManager().getArenaAt(player.getLocation());
 		if (arenaTo != null) {
-			arenaTo.join(event.getPlayer());
-			Bukkit.getPluginManager().callEvent(new PlayerArenaChangeEvent(event.getPlayer(), null, arenaTo));
+			arenaTo.join(player);
+			Bukkit.getPluginManager().callEvent(new PlayerArenaChangeEvent(player, null, arenaTo));
+			
+			Location loc = arenaTo.getSpawnLocation(player);
+			if (arenaTo.getState() == State.Running && arenaTo.getGroupManager().getRole(player) != PlayerRole.Viewer){
+				createSpawnPlatform(loc);
+				loc = loc.clone().add(0, 1, 0);
+			}
+			player.teleport(loc);
 		}
-		if (!event.getPlayer().hasPermission("wargear.update")) {
+		
+		if (!player.hasPermission("wargear.update")) {
 			return;
 		}
 		if (this.plugin.getUpdater() != null && this.plugin.getUpdater().getResult() == UpdateResult.UPDATE_AVAILABLE) {
-			event.getPlayer().sendMessage("§7Version "+this.plugin.getUpdater().getLatestName()+" von "+this.plugin.getName()+" ist veröffentlicht.");
+			player.sendMessage("§7Version "+this.plugin.getUpdater().getLatestName()+" von "+this.plugin.getName()+" ist veröffentlicht.");
 		}
+	}
+	
+	private void createSpawnPlatform(final Location loc) {
+		final Point origin = new Point(loc);
+		final Size size = new Size(2, 0, 2);
+		
+		final BlockGenerator gen = this.plugin.getGenerator();
+		gen.addJob(new SimpleJob(origin, size, loc.getWorld(), null, 
+				new SingleBlockProvider(new SingleBlockCriteria(Material.AIR), Material.IRON_BLOCK, (byte)0)));
+		
+		Bukkit.getScheduler().runTaskLater(this.plugin, new Runnable() {
+			public void run() {
+				gen.addJob(new SimpleJob(origin, size, loc.getWorld(), null, 
+				new SingleBlockProvider(new SingleBlockCriteria(Material.IRON_BLOCK), Material.AIR, (byte)0)));
+			}
+		}, 60*20);
 	}
 	
 	@EventHandler (priority = EventPriority.MONITOR, ignoreCancelled=true)
