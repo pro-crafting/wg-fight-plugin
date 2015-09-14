@@ -54,16 +54,6 @@ public class WgListener implements Listener {
 	}
 	
 	@EventHandler (priority = EventPriority.MONITOR, ignoreCancelled=true)
-	public void handlePlayerJoinEvent(PlayerJoinEvent event) {
-		if (!event.getPlayer().hasPermission("wargear.update")) {
-			return;
-		}
-		if (this.plugin.getUpdater() != null && this.plugin.getUpdater().getResult() == UpdateResult.UPDATE_AVAILABLE) {
-			event.getPlayer().sendMessage("§7Version "+this.plugin.getUpdater().getLatestName()+" von "+this.plugin.getName()+" ist veröffentlicht.");
-		}
-	}
-	
-	@EventHandler (priority = EventPriority.MONITOR, ignoreCancelled=true)
 	public void arenaStateChangedHandler(ArenaStateChangeEvent event) {
 		if (event.getTo() == State.Idle) {
 			event.getArena().getGroupManager().quitFight();
@@ -194,6 +184,12 @@ public class WgListener implements Listener {
 		if (arenaTo != null) {
 			arenaTo.join(event.getPlayer());
 			Bukkit.getPluginManager().callEvent(new PlayerArenaChangeEvent(event.getPlayer(), null, arenaTo));
+		}
+		if (!event.getPlayer().hasPermission("wargear.update")) {
+			return;
+		}
+		if (this.plugin.getUpdater() != null && this.plugin.getUpdater().getResult() == UpdateResult.UPDATE_AVAILABLE) {
+			event.getPlayer().sendMessage("§7Version "+this.plugin.getUpdater().getLatestName()+" von "+this.plugin.getName()+" ist veröffentlicht.");
 		}
 	}
 	
