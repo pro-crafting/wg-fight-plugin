@@ -289,16 +289,11 @@ public class Arena{
 				this.setKit(this.plugin.getRepo().getDefaultKitName());
 			}
 		}
-		if (!this.getFightMode().getName().equalsIgnoreCase(this.getRepo().getFightMode()))
-		{
-			if (this.getRepo().getFightMode().equalsIgnoreCase("kit"))
-			{
-				this.setFightMode(new KitMode(this.plugin, this));
-			}
-			else
-			{
-				this.setFightMode(new ChestMode(this.plugin, this));
-			}
+		this.setFightMode(plugin.getModes().get(this.getRepo().getFightMode(), this));
+		if (this.getFightMode() == null) {
+			Bukkit.getLogger().warning("Fightmode "+this.getRepo().getFightMode()+" unknown in arena "+this.getName()+"!");
+			Bukkit.getLogger().info("Falling back to kit mode");
+			this.setFightMode(new KitMode(this.plugin, this));
 		}
 		this.setOpen(false);
 		this.getFightMode().start();

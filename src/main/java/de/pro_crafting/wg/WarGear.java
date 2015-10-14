@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.pro_crafting.wg.modes.ModeManager;
 import net.gravitydevelopment.updater.Updater;
 
 import org.bukkit.event.HandlerList;
@@ -41,13 +42,15 @@ public class WarGear extends JavaPlugin {
 	private ScoreboardManager<PlayerGroupKey> scoreboardManager;
 	private ScoreboardDisplay scoreboard;
 	private InviteManager inviteManager;
-	
+	private ModeManager modes;
+
 	@Override
 	public void onEnable() {
 		this.loadConfig();
 		this.kitApi = new KitAPI();
 		this.repo = new Repository(this);
 		this.generator = new BlockGenerator(this, 50000);
+		this.modes = new ModeManager(this);
 		this.arenaManager = new ArenaManager(this);
 
 		if (this.repo.isEconomyEnabled())
@@ -184,5 +187,9 @@ public class WarGear extends JavaPlugin {
 	
 	public InviteManager getInviteManager() {
 		return this.inviteManager;
+	}
+
+	public ModeManager getModes() {
+		return modes;
 	}
 }
