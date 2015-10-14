@@ -51,7 +51,7 @@ public class Reseter implements Listener, JobStateChangedCallback
 		Point origin = new Point(BukkitUtil.toLocation(world, rg.getMinimumPoint()));
 		origin.setY(groundHeight);
 		Size size = new Size(rg.getWidth(), rg.getMaximumY()-groundHeight, rg.getLength());
-		this.plugin.getGenerator().addJob(new SimpleJob(origin, size, world, this, new SingleBlockProvider(new CuboidCriteria(), Material.AIR,  (byte)0)));
+		this.plugin.getGenerator().addJob(new SimpleJob(origin, size, world, this, new SingleBlockProvider(new CuboidCriteria(), Material.AIR,  (byte)0), true));
 	}
 	
 	private void pasteGround(World arenaWorld)

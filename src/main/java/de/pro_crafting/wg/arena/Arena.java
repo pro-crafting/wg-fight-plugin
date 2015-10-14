@@ -431,6 +431,6 @@ public class Arena{
 		Point origin = new Point(BukkitUtil.toLocation(world, innerRegion.getMinimumPoint()));
 		Size size = new Size(innerRegion.getWidth(), innerRegion.getHeight(), innerRegion.getLength());
 		this.plugin.getGenerator().addJob(new SimpleJob(origin, size, world, null, 
-				new SingleBlockProvider(new SingleBlockCriteria(Material.OBSIDIAN), Material.TNT, (byte)0)));
+				new SingleBlockProvider(new SingleBlockCriteria(Material.OBSIDIAN), Material.TNT, (byte)0), true));
 	}
 }
