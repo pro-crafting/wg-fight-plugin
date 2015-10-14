@@ -105,6 +105,13 @@
 			<version>0.1.1-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>de.pro_crafting</groupId>
+			<artifactId>kit</artifactId>
+			<version>0.1-SNAPSHOT</version>
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
 	<build>
         <resources>
