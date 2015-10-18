@@ -203,7 +203,8 @@ public class Arena{
 		region.setFlag(DefaultFlag.PVP, value);
 		region.setFlag(DefaultFlag.FIRE_SPREAD, value);
 		region.setFlag(DefaultFlag.GHAST_FIREBALL, value);
-		
+		region.setFlag(DefaultFlag.BUILD, value);
+
 		removeOwners(role);
 		if (value == com.sk89q.worldguard.protection.flags.StateFlag.State.ALLOW) {
 			updateRegion(role);
