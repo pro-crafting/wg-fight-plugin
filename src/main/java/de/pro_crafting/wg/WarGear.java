@@ -31,7 +31,6 @@ public class WarGear extends JavaPlugin {
 	private Repository repo;
 	private BlockGenerator generator;
 	private ArenaManager arenaManager;
-	private KitAPI kitApi;
 	private CommandFramework cmdFramework;
 	private WgEconomy eco;
 	private MetricsLite metrics;
@@ -43,11 +42,11 @@ public class WarGear extends JavaPlugin {
 	private ScoreboardDisplay scoreboard;
 	private InviteManager inviteManager;
 	private ModeManager modes;
+	private File modeFolder;
 
 	@Override
 	public void onEnable() {
 		this.loadConfig();
-		this.kitApi = new KitAPI();
 		this.repo = new Repository(this);
 		this.generator = new BlockGenerator(this, 50000);
 		this.modes = new ModeManager(this);
@@ -123,6 +122,11 @@ public class WarGear extends JavaPlugin {
 		if (!arenaFolder.exists()) {
 			this.saveResource("arenas/arena.yml", false);
 		}
+
+		modeFolder = new File(this.getDataFolder(), "modes/");
+		if (!modeFolder.exists()) {
+			this.saveResource("modes/mode.yml", false);
+		}
 	}
 	
 	private void startMetrics() {
@@ -156,10 +160,6 @@ public class WarGear extends JavaPlugin {
 		return this.arenaManager;
 	}
 	
-	public KitAPI getKitApi() {
-		return this.kitApi;
-	}
-	
 	public CommandFramework GetCmdFramework() {
 		return this.cmdFramework;
 	}
@@ -191,5 +191,9 @@ public class WarGear extends JavaPlugin {
 
 	public ModeManager getModes() {
 		return modes;
+	}
+
+	public File getModeFolder() {
+		return modeFolder;
 	}
 }
