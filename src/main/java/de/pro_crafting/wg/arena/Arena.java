@@ -278,9 +278,9 @@ public class Arena{
 	
 	public void startFight(CommandSender sender)
 	{
-		if (this.getKit() == null || this.getKit().length() == 0)
+		if (this.getKit() == null || this.getKit().isEmpty())
 		{
-			if (this.plugin.getRepo().getDefaultKitName() == null || this.plugin.getRepo().getDefaultKitName().length() == 0)
+			if (this.plugin.getRepo().getDefaultKitName() == null || this.plugin.getRepo().getDefaultKitName().isEmpty())
 			{
 				sender.sendMessage("§cEs wurde kein Kit ausgewählt oder ein Standard Kit angegeben.");
 				return;
