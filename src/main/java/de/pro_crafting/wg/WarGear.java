@@ -122,11 +122,6 @@ public class WarGear extends JavaPlugin {
 		if (!arenaFolder.exists()) {
 			this.saveResource("arenas/arena.yml", false);
 		}
-
-		modeFolder = new File(this.getDataFolder(), "modes/");
-		if (!modeFolder.exists()) {
-			this.saveResource("modes/mode.yml", false);
-		}
 	}
 	
 	private void startMetrics() {
