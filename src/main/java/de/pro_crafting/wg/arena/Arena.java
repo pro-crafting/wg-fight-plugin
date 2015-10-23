@@ -1,25 +1,11 @@
 package de.pro_crafting.wg.arena;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.event.HandlerList;
-import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
-
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldguard.bukkit.BukkitUtil;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
+import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-
 import de.pro_crafting.common.Point;
 import de.pro_crafting.common.Size;
 import de.pro_crafting.generator.BlockData;
@@ -33,14 +19,18 @@ import de.pro_crafting.generator.provider.BlockSearchProvider;
 import de.pro_crafting.generator.provider.SingleBlockProvider;
 import de.pro_crafting.wg.WarGear;
 import de.pro_crafting.wg.event.ArenaStateChangeEvent;
-import de.pro_crafting.wg.group.Group;
-import de.pro_crafting.wg.group.GroupManager;
-import de.pro_crafting.wg.group.GroupMember;
-import de.pro_crafting.wg.group.PlayerGroupKey;
-import de.pro_crafting.wg.group.PlayerRole;
-import de.pro_crafting.wg.modes.ChestMode;
+import de.pro_crafting.wg.group.*;
 import de.pro_crafting.wg.modes.FightMode;
 import de.pro_crafting.wg.modes.KitMode;
+import org.bukkit.*;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 public class Arena{
 	private WarGear plugin;
@@ -203,7 +193,7 @@ public class Arena{
 		region.setFlag(DefaultFlag.PVP, value);
 		region.setFlag(DefaultFlag.FIRE_SPREAD, value);
 		region.setFlag(DefaultFlag.GHAST_FIREBALL, value);
-		region.setFlag(DefaultFlag.BUILD, value);
+		region.setFlag(DefaultFlag.BUILD, value == StateFlag.State.ALLOW ? null : value);
 
 		removeOwners(role);
 		if (value == com.sk89q.worldguard.protection.flags.StateFlag.State.ALLOW) {
