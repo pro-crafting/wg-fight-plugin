@@ -357,6 +357,9 @@ public class Arena{
 			Group playerTeam = this.team.getGroupOfPlayer(p);
 			if (playerTeam != null)
 			{
+				if (this.state == State.Running && !playerTeam.getMember(p).isAlive()) {
+					return this.repo.getSpawnWarp();
+				}
 				return this.team.getGroupSpawn(playerTeam.getRole());
 			}
 		}
