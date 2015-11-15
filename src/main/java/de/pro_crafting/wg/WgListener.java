@@ -28,6 +28,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.StringUtil;
 import org.bukkit.util.Vector;
 
 import de.pro_crafting.common.Point;
@@ -131,14 +132,16 @@ public class WgListener implements Listener {
 		Arena arenaTo = this.plugin.getArenaManager().getArenaAt(event.getTo());
 		if (arenaFrom != null && !arenaFrom.equals(arenaTo)) {
 			arenaFrom.leave(player);
-			Bukkit.getPluginManager().callEvent(new PlayerArenaChangeEvent(player, arenaFrom, arenaTo));
+			callArenaChangeEvent(player, arenaFrom, arenaTo);
 		}
 		if (arenaTo != null) {
 			arenaTo.join(player);
 			doGroundDamage(event.getTo(), arenaTo, event.getPlayer());
-			
-			Bukkit.getPluginManager().callEvent(new PlayerArenaChangeEvent(player, arenaFrom, arenaTo));
-			
+
+			if (!arenaTo.equals(arenaFrom)) {
+				callArenaChangeEvent(player, arenaFrom, arenaTo);
+			}
+
 			if (player.hasPermission("wargear.arena.bypass")) {
 				return;
 			}
@@ -189,7 +192,7 @@ public class WgListener implements Listener {
 		Arena arenaTo = this.plugin.getArenaManager().getArenaAt(player.getLocation());
 		if (arenaTo != null) {
 			arenaTo.join(player);
-			Bukkit.getPluginManager().callEvent(new PlayerArenaChangeEvent(player, null, arenaTo));
+			callArenaChangeEvent(player, null, arenaTo);
 			
 			Location loc = arenaTo.getSpawnLocation(player);
 			if (arenaTo.getState() == State.Running && arenaTo.getGroupManager().getRole(player) != PlayerRole.Viewer){
@@ -228,7 +231,7 @@ public class WgListener implements Listener {
 		Arena arenaFrom = this.plugin.getArenaManager().getArenaAt(event.getPlayer().getLocation());
 		if (arenaFrom != null) {
 			arenaFrom.leave(event.getPlayer());
-			Bukkit.getPluginManager().callEvent(new PlayerArenaChangeEvent(event.getPlayer(), arenaFrom, null));
+			callArenaChangeEvent(event.getPlayer(), arenaFrom, null);
 		}
 	}
 	
@@ -238,14 +241,22 @@ public class WgListener implements Listener {
 		Arena arenaTo = this.plugin.getArenaManager().getArenaAt(event.getTo());
 		if (arenaFrom != null && !arenaFrom.equals(arenaTo)) {
 			arenaFrom.leave(event.getPlayer());
-			Bukkit.getPluginManager().callEvent(new PlayerArenaChangeEvent(event.getPlayer(), arenaFrom, arenaTo));
+			callArenaChangeEvent(event.getPlayer(), arenaFrom, arenaTo);
 		}
 		if (arenaTo != null && !arenaTo.equals(arenaFrom)) {
 			arenaTo.join(event.getPlayer());
-			Bukkit.getPluginManager().callEvent(new PlayerArenaChangeEvent(event.getPlayer(), arenaFrom, arenaTo));
+			callArenaChangeEvent(event.getPlayer(), arenaFrom, arenaTo);
 		}
 	}
-	
+
+	private void callArenaChangeEvent(Player player, Arena from, Arena to) {
+		PlayerArenaChangeEvent event = new PlayerArenaChangeEvent(player, from, to);
+		Bukkit.getPluginManager().callEvent(event);
+		if (event.getMessage() != null && !event.getMessage().isEmpty()) {
+			player.sendRawMessage(event.getMessage());
+		}
+	}
+
 	@EventHandler (priority = EventPriority.LOWEST)
 	public void entityDamgeHandler(EntityDamageEvent event) {
 		if (!(event.getEntity() instanceof Player)) {
