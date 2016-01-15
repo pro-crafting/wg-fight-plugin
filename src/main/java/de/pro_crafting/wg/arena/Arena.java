@@ -1,11 +1,9 @@
 package de.pro_crafting.wg.arena;
 
 import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 import com.sk89q.worldedit.regions.CuboidRegion;
-import com.sk89q.worldguard.bukkit.BukkitUtil;
-import com.sk89q.worldguard.protection.flags.DefaultFlag;
-import com.sk89q.worldguard.protection.flags.StateFlag;
-import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+
 import de.pro_crafting.common.Point;
 import de.pro_crafting.common.Size;
 import de.pro_crafting.generator.BlockData;
@@ -17,11 +15,15 @@ import de.pro_crafting.generator.job.Job;
 import de.pro_crafting.generator.job.SimpleJob;
 import de.pro_crafting.generator.provider.BlockSearchProvider;
 import de.pro_crafting.generator.provider.SingleBlockProvider;
+import de.pro_crafting.region.Region;
+import de.pro_crafting.region.flags.Flag;
+import de.pro_crafting.region.flags.StateValue;
 import de.pro_crafting.wg.WarGear;
 import de.pro_crafting.wg.event.ArenaStateChangeEvent;
 import de.pro_crafting.wg.group.*;
 import de.pro_crafting.wg.modes.FightMode;
 import de.pro_crafting.wg.modes.KitMode;
+
 import org.bukkit.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -170,33 +172,32 @@ public class Arena{
 	public void setOpen(Boolean isOpen)
 	{
 		this.isOpen = isOpen;
-		com.sk89q.worldguard.protection.flags.StateFlag.State value = isOpen ? com.sk89q.worldguard.protection.flags.StateFlag.State.ALLOW : com.sk89q.worldguard.protection.flags.StateFlag.State.DENY;
-		
+		StateValue value = isOpen ? StateValue.Allow : StateValue.Deny;
 		setOpeningFlags(PlayerRole.Team1, value);
 		setOpeningFlags(PlayerRole.Team2, value);
 		
 		setInnerRegionFlags(this.repo.getInnerRegion(), value);
 	}	
 	
-	private void setInnerRegionFlags(ProtectedRegion region, com.sk89q.worldguard.protection.flags.StateFlag.State value) {
-	    com.sk89q.worldguard.protection.flags.StateFlag.State forcedValue = com.sk89q.worldguard.protection.flags.StateFlag.State.DENY;
-	    region.setFlag(DefaultFlag.TNT, value);
-	    region.setFlag(DefaultFlag.PVP, value);
-	    region.setFlag(DefaultFlag.FIRE_SPREAD, forcedValue);
-	    region.setFlag(DefaultFlag.GHAST_FIREBALL, forcedValue);
-	    region.setFlag(DefaultFlag.BUILD, forcedValue);
+	private void setInnerRegionFlags(Region region, StateValue value) {
+		StateValue forcedValue = StateValue.Deny;
+	    region.setFlag(Flag.TNT, value);
+	    region.setFlag(Flag.PVP, value);
+	    region.setFlag(Flag.FIRE_SPREAD, forcedValue);
+	    region.setFlag(Flag.GHAST_FIREBALL, forcedValue);
+	    region.setFlag(Flag.Build, forcedValue); 
 	}
 
-	private void setOpeningFlags(PlayerRole role, com.sk89q.worldguard.protection.flags.StateFlag.State value) {
-		ProtectedRegion region = getGroupManager().getGroupKey(role).getRegion();
-		region.setFlag(DefaultFlag.TNT, value);
-		region.setFlag(DefaultFlag.PVP, value);
-		region.setFlag(DefaultFlag.FIRE_SPREAD, value);
-		region.setFlag(DefaultFlag.GHAST_FIREBALL, value);
-		region.setFlag(DefaultFlag.BUILD, value == StateFlag.State.ALLOW ? null : value);
+	private void setOpeningFlags(PlayerRole role, StateValue value) {
+		Region region = getGroupManager().getGroupKey(role).getRegion();
+		region.setFlag(Flag.TNT, value);
+		region.setFlag(Flag.PVP, value);
+		region.setFlag(Flag.FIRE_SPREAD, value);
+		region.setFlag(Flag.GHAST_FIREBALL, value);
+		region.setFlag(Flag.Build, value);
 
 		removeOwners(role);
-		if (value == com.sk89q.worldguard.protection.flags.StateFlag.State.ALLOW) {
+		if (value == StateValue.Allow) {
 			updateRegion(role);
 		}
 	}
@@ -206,13 +207,13 @@ public class Arena{
 		PlayerGroupKey key = this.getGroupManager().getGroupKey(role);
 		for (GroupMember player : key.getGroup().getMembers()) {
 			if (player.isAlive()) {
-				key.getRegion().getOwners().addPlayer(player.getOfflinePlayer().getName());
+				key.getRegion().getOwners().add( player.getOfflinePlayer());
 			}
 		}
 	}
 	
 	private void removeOwners(PlayerRole role) {
-		this.getGroupManager().getGroupKey(role).getRegion().getOwners().removeAll();;
+		this.getGroupManager().getGroupKey(role).getRegion().getOwners().clear();;
 	}
 	
 	public void broadcastMessage(String message)
@@ -257,7 +258,7 @@ public class Arena{
 	
 	public boolean contains(Location loc)
 	{
-		return this.repo.getArenaRegion().contains(BukkitUtil.toVector(loc)) &&
+		return this.repo.getArenaRegion().contains(loc) &&
 				this.getRepo().getWorld().getName().equals(loc.getWorld().getName());
 	}
 	
@@ -297,9 +298,9 @@ public class Arena{
 		startCannonCounterJob(this.getRepo().getTeam2Region(), this.getGroupManager().getGroupKey(PlayerRole.Team2));
 	}
 	
-	private void startCannonCounterJob(ProtectedRegion rg, final PlayerGroupKey groupKey) {
-		Point origin = new Point(rg.getMinimumPoint().getBlockX(), rg.getMinimumPoint().getBlockY(), rg.getMinimumPoint().getBlockZ());
-		Point max = new Point(rg.getMaximumPoint().getBlockX(), rg.getMaximumPoint().getBlockY(), rg.getMaximumPoint().getBlockZ());
+	private void startCannonCounterJob(Region rg, final PlayerGroupKey groupKey) {
+		Point origin = new Point(rg.getMin().getX(), rg.getMin().getY(), rg.getMin().getZ());
+		Point max = new Point(rg.getMax().getX(), rg.getMax().getY(), rg.getMax().getZ());
 		Size size = new Size(max.getX()-origin.getX(), max.getY()-origin.getY(), max.getZ()-origin.getZ());
 		this.plugin.getGenerator().addJob(new SimpleJob(origin, size, getRepo().getWorld(), new JobStateChangedCallback() {
 			
@@ -377,8 +378,10 @@ public class Arena{
 	}
 	
 	public CuboidRegion getPlayGroundRegion() {
-		ProtectedRegion innerRegion = this.repo.getInnerRegion();
-		return new CuboidRegion(innerRegion.getMinimumPoint(), innerRegion.getMaximumPoint());
+		Region innerRegion = this.repo.getInnerRegion();
+		Vector min = new Vector().add(innerRegion.getMin().getX() , innerRegion.getMin().getY() , innerRegion.getMin().getZ());
+		Vector max = new Vector().add(innerRegion.getMax().getX() , innerRegion.getMax().getY() , innerRegion.getMax().getZ());
+		return new CuboidRegion(min, max);
 	}
 	
 	public ArenaPosition getPosition(Location where) {
@@ -392,19 +395,21 @@ public class Arena{
 			return ArenaPosition.Platform;
 		}
 		
-		if (this.repo.getTeam1Region().contains(vector)) {
+		Region team1 = this.repo.getTeam1Region();
+		if (this.repo.getTeam1Region().contains(BukkitUtil.toLocation( team1.getWorld() , vector))) {
 			return ArenaPosition.Team1WG;
 		}
-		if (this.repo.getTeam2Region().contains(vector)) {
+		
+		Region team2 = this.repo.getTeam2Region();
+		if (team2.contains(BukkitUtil.toLocation(team2.getWorld(), vector))) {
 			return ArenaPosition.Team2WG;
 		}
 		
+		double distanceTeam1Squared = vector.distanceSq(BukkitUtil.toVector( team1.getMin().toLocation( team1.getWorld()))) + 
+				vector.distanceSq(BukkitUtil.toVector( team1.getMax().toLocation(team1.getWorld())));
 		
-		double distanceTeam1Squared = vector.distanceSq(this.repo.getTeam1Region().getMinimumPoint()) + 
-				vector.distanceSq(this.repo.getTeam1Region().getMaximumPoint());
-		
-		double distanceTeam2Squared = vector.distanceSq(this.repo.getTeam2Region().getMinimumPoint()) + 
-				vector.distanceSq(this.repo.getTeam2Region().getMaximumPoint());
+		double distanceTeam2Squared = vector.distanceSq(BukkitUtil.toVector( team2.getMin().toLocation( team2.getWorld()))) + 
+				vector.distanceSq(BukkitUtil.toVector( team2.getMax().toLocation(team2.getWorld())));
 		
 		if ((distanceTeam1Squared - distanceTeam2Squared) > 0) {
 			return ArenaPosition.Team2PlayField;

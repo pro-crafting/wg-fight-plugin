@@ -8,9 +8,10 @@ import net.milkbowl.vault.economy.Economy;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 import de.pro_crafting.kit.KitProvider;
+import de.pro_crafting.region.RegionManager;
+import de.pro_crafting.region.RegionsLibrary;
 
 public class Repository {
 	private WarGear plugin;
@@ -66,10 +67,6 @@ public class Repository {
 	public int getOfflineKickTime()
 	{
 		return this.plugin.getConfig().getInt("offline-kick-time", 30);
-	}
-	
-	public WorldGuardPlugin getWorldGuard() {
-		return (WorldGuardPlugin) this.plugin.getServer().getPluginManager().getPlugin("WorldGuard");
 	}
 	
 	public WorldEditPlugin getWorldEdit()

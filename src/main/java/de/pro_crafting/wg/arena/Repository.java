@@ -1,15 +1,14 @@
 package de.pro_crafting.wg.arena;
 
 import java.io.File;
+import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import com.sk89q.worldguard.protection.managers.RegionManager;
-import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-
+import de.pro_crafting.region.Region;
 import de.pro_crafting.wg.Util;
 import de.pro_crafting.wg.WarGear;
 import de.pro_crafting.wg.group.GroupSide;
@@ -21,13 +20,13 @@ public class Repository
 	private YamlConfiguration config;
 	
 	private String world;
-	private ProtectedRegion arenaRegion;
+	private Region arenaRegion;
 	private String mode;
 	private int groundHeight;
 	private String groundSchematic;
 	private boolean autoReset;
-	private ProtectedRegion team1Region;
-	private ProtectedRegion team2Region;
+	private Region team1Region;
+	private Region team2Region;
 	private Location team1Warp;
 	private Location team2Warp;
 	private Location spawnWarp;
@@ -39,7 +38,8 @@ public class Repository
 	private int spectatorModeTime;
 	private String team1Prefix;
 	private String team2Prefix;
-	private ProtectedRegion innerRegion;
+	private Region innerRegion;
+	private de.pro_crafting.region.RegionManager regionManager;
 	
 	private String worldPath;
 	private String arenaRegionPath;
@@ -66,6 +66,7 @@ public class Repository
 	{
 		this.plugin = plugin;
 		this.arenaConfig = new File(this.plugin.getArenaFolder(), arena.getName()+".yml");
+		this.regionManager = this.plugin.getRegionsManager();
 		
 		worldPath = "world";
 		modePath = "mode";
@@ -135,14 +136,14 @@ public class Repository
 	private boolean loadArenaRegion()
 	{
 		String id = this.config.getString(this.arenaRegionPath);
-		this.arenaRegion = this.getWorldGuardRegion(id);
+		this.arenaRegion = this.getRegion(id);
 		return this.arenaRegion != null;
 	}
 	
 	private boolean loadInnerRegion()
 	{
 		String id = this.config.getString(this.innerRegionPath);
-		this.innerRegion = this.getWorldGuardRegion(id);
+		this.innerRegion = this.getRegion(id);
 		return this.innerRegion != null;
 	}
 	
@@ -178,14 +179,14 @@ public class Repository
 	private boolean loadTeam1Region()
 	{
 		String id = this.config.getString(this.team1RegionPath);
-		this.team1Region = this.getWorldGuardRegion(id);
+		this.team1Region = this.getRegion(id);
 		return this.team1Region != null;
 	}
 	
 	private boolean loadTeam2Region()
 	{
 		String id = this.config.getString(this.team2RegionPath);
-		this.team2Region = this.getWorldGuardRegion(id);
+		this.team2Region = this.getRegion(id);
 		return this.team2Region != null;
 	}
 	
@@ -277,10 +278,13 @@ public class Repository
 		return this.plugin.getServer().getWorld(name) != null;
 	}
 	
-	private ProtectedRegion getWorldGuardRegion(String id)
+	private Region getRegion(String id)
 	{
-		RegionManager rm = this.plugin.getRepo().getWorldGuard().getRegionManager(this.getWorld());
-		return rm.getRegion(id);
+		List<Region> regions = this.regionManager.getRegions(id , this.getWorld());
+		if(!regions.isEmpty()){
+			return regions.get( 0 );
+		}
+		return null;
 	}
 	
 	public boolean save()
@@ -301,15 +305,14 @@ public class Repository
 		}
 	}
 	
-	public ProtectedRegion getArenaRegion()
+	public Region getArenaRegion()
 	{
 		return this.arenaRegion;
 	}
 	
 	public void setArenaRegion(String id)
 	{
-		RegionManager rm = this.plugin.getRepo().getWorldGuard().getRegionManager(this.getWorld());
-		ProtectedRegion rg = rm.getRegion(id);
+		Region rg = this.getRegion(id);
 		if (rg != null)
 		{
 			this.arenaRegion = rg;
@@ -359,37 +362,35 @@ public class Repository
 		this.autoReset = autoReset;
 	}
 	
-	public ProtectedRegion getTeam1Region()
+	public Region getTeam1Region()
 	{
 		return this.team1Region;
 	}
 	
 	public void setTeam1Region(String id)
 	{
-		RegionManager rm = this.plugin.getRepo().getWorldGuard().getRegionManager(this.getWorld());
-		ProtectedRegion rg = rm.getRegion(id);
+		Region rg = this.getRegion(id);
 		if (rg != null)
 		{
 			this.team1Region = rg;
 		}
 	}
 	
-	public ProtectedRegion getTeam2Region()
+	public Region getTeam2Region()
 	{
 		return this.team2Region;
 	}
 	
 	public void setTeam2Region(String id)
 	{
-		RegionManager rm = this.plugin.getRepo().getWorldGuard().getRegionManager(this.getWorld());
-		ProtectedRegion rg = rm.getRegion(id);
+		Region rg = this.getRegion(id);
 		if (rg != null)
 		{
 			this.team2Region = rg;
 		}
 	}
 	
-	public ProtectedRegion getTeamRegion(GroupSide side) {
+	public Region getTeamRegion(GroupSide side) {
 		return side == GroupSide.Team1 ? getTeam1Region() : getTeam2Region();
 	}
 	
@@ -482,7 +483,7 @@ public class Repository
 		return this.team2Prefix;
 	}
 	
-	public ProtectedRegion getInnerRegion() {
+	public Region getInnerRegion() {
 		return this.innerRegion;
 	}
 }

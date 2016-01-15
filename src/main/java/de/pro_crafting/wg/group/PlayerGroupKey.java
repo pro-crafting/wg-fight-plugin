@@ -1,7 +1,6 @@
 package de.pro_crafting.wg.group;
 
-import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-
+import de.pro_crafting.region.Region;
 import de.pro_crafting.wg.arena.Arena;
 
 public class PlayerGroupKey {
@@ -25,7 +24,7 @@ public class PlayerGroupKey {
 		return getArena().getGroupManager().getTeamOfGroup(getRole());
 	}
 	
-	public ProtectedRegion getRegion() {
+	public Region getRegion() {
 		if (role == PlayerRole.Team1) {
 			return this.arena.getRepo().getTeam1Region();
 		} else if (role == PlayerRole.Team2) {

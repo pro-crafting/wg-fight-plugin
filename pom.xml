@@ -29,10 +29,10 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.sk89q</groupId>
-			<artifactId>worldguard</artifactId>
-			<version>5.9</version>
-			<scope>provided</scope>
+			<groupId>de.pro_crafting</groupId>
+			<artifactId>RegionsLibrary</artifactId>
+			<version>0.1.2-SNAPSHOT</version>
+			<scope>compile</scope>
 		</dependency>
 
 		<dependency>
