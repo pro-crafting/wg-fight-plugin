@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.pro_crafting.region.RegionManager;
+import de.pro_crafting.region.RegionsLibrary;
 import de.pro_crafting.wg.modes.ModeManager;
 import net.gravitydevelopment.updater.Updater;
 
@@ -43,11 +45,13 @@ public class WarGear extends JavaPlugin {
 	private InviteManager inviteManager;
 	private ModeManager modes;
 	private File modeFolder;
+	private RegionManager regionsManager;
 
 	@Override
 	public void onEnable() {
 		this.loadConfig();
 		this.repo = new Repository(this);
+		this.regionsManager = new RegionsLibrary().getRegionManager();
 		this.generator = new BlockGenerator(this, 50000);
 		this.modes = new ModeManager(this);
 		this.arenaManager = new ArenaManager(this);
@@ -190,5 +194,9 @@ public class WarGear extends JavaPlugin {
 
 	public File getModeFolder() {
 		return modeFolder;
+	}
+	
+	public RegionManager getRegionsManager(){
+		return this.regionsManager;
 	}
 }
