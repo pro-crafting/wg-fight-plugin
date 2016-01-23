@@ -183,17 +183,17 @@ public class Arena{
 		StateValue forcedValue = StateValue.Deny;
 	    region.setFlag(Flag.TNT, value);
 	    region.setFlag(Flag.PVP, value);
-	    region.setFlag(Flag.FIRE_SPREAD, forcedValue);
-	    region.setFlag(Flag.GHAST_FIREBALL, forcedValue);
-	    region.setFlag(Flag.Build, forcedValue); 
+	    region.setFlag(Flag.Fire_Spread, forcedValue);
+	    region.setFlag(Flag.Ghast_Fireball, forcedValue);
+	    region.setFlag(Flag.Build, forcedValue);
 	}
 
 	private void setOpeningFlags(PlayerRole role, StateValue value) {
 		Region region = getGroupManager().getGroupKey(role).getRegion();
 		region.setFlag(Flag.TNT, value);
 		region.setFlag(Flag.PVP, value);
-		region.setFlag(Flag.FIRE_SPREAD, value);
-		region.setFlag(Flag.GHAST_FIREBALL, value);
+		region.setFlag(Flag.Fire_Spread, value);
+		region.setFlag(Flag.Ghast_Fireball, value);
 		region.setFlag(Flag.Build, value);
 
 		removeOwners(role);
