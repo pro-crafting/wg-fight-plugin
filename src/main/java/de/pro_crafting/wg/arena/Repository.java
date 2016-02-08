@@ -1,17 +1,16 @@
 package de.pro_crafting.wg.arena;
 
-import java.io.File;
-import java.util.List;
-
+import de.pro_crafting.region.Region;
+import de.pro_crafting.wg.Util;
+import de.pro_crafting.wg.WarGear;
+import de.pro_crafting.wg.group.GroupSide;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import de.pro_crafting.region.Region;
-import de.pro_crafting.wg.Util;
-import de.pro_crafting.wg.WarGear;
-import de.pro_crafting.wg.group.GroupSide;
+import java.io.File;
+import java.util.List;
 
 public class Repository 
 {

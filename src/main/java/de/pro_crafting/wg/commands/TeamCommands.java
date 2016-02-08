@@ -1,12 +1,5 @@
 package de.pro_crafting.wg.commands;
 
-import java.util.AbstractMap;
-import java.util.Map.Entry;
-
-import org.bukkit.OfflinePlayer;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import de.pro_crafting.commandframework.Command;
 import de.pro_crafting.commandframework.CommandArgs;
 import de.pro_crafting.wg.Util;
@@ -17,6 +10,12 @@ import de.pro_crafting.wg.group.Group;
 import de.pro_crafting.wg.group.GroupMember;
 import de.pro_crafting.wg.group.PlayerGroupKey;
 import de.pro_crafting.wg.group.PlayerRole;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import java.util.AbstractMap;
+import java.util.Map.Entry;
 
 public class TeamCommands {
 	private WarGear plugin;
@@ -83,6 +82,8 @@ public class TeamCommands {
 		p.sendMessage("§7Mit §B\"/wgk team remove <spieler>\" §7entfernst du Spieler aus deinem Team.");
 		p.sendMessage("§7Mit §B\"/wgk team ready\" §7schaltest du dein Team bereit.");
 		this.plugin.getScoreboard().addTeamMember(arena, team.getMember(p), team.getRole());
+		arena.updateRegion(PlayerRole.Team1);
+		arena.updateRegion(PlayerRole.Team2);
 	}
 	
 	@Command(name = "wgk.team.add", description = "Fügt ein Spieler zu deinem Team hinzu.",
@@ -99,6 +100,8 @@ public class TeamCommands {
 		p.sendMessage("§7Mit §8\"/wgk team leave\" §7verlässt du das Team.");
 		groupKey.getGroup().add(p, false);
 		this.plugin.getScoreboard().addTeamMember(groupKey.getArena(), groupKey.getGroup().getMember(p), groupKey.getRole());
+		groupKey.getArena().updateRegion(PlayerRole.Team1);
+		groupKey.getArena().updateRegion(PlayerRole.Team2);
 	}
 	
 	private Entry<PlayerGroupKey, Player> canBeAdded(CommandArgs args) {
@@ -167,7 +170,9 @@ public class TeamCommands {
 		PlayerGroupKey groupKey = entry.getKey();
 		Player p = entry.getValue();
 		
-		this.plugin.getInviteManager().addInvite(groupKey, p);	
+		this.plugin.getInviteManager().addInvite(groupKey, p);
+		groupKey.getArena().updateRegion(PlayerRole.Team1);
+		groupKey.getArena().updateRegion(PlayerRole.Team2);
 	}
 	
 	@Command(name = "wgk.team.remove", description = "Entfernt einen Spieler zu deinem Team hinzu.",
@@ -216,6 +221,8 @@ public class TeamCommands {
 		p.sendMessage("§B"+senderPlayer.getDisplayName()+"§7 ist nicht mehr in deinem Team.");
 		this.plugin.getScoreboard().removeTeamMember(arena, playerKey.getGroup().getMember(p), playerKey.getRole());
 		playerKey.getGroup().remove(p);
+		arena.updateRegion(PlayerRole.Team1);
+		arena.updateRegion(PlayerRole.Team2);
 	}
 
 	@Command(name = "wgk.team.accept", description = "Akzeptiert eine Einladung.",
@@ -252,6 +259,8 @@ public class TeamCommands {
 		this.plugin.getScoreboard().removeTeamMember(arena, team.getMember(senderPlayer), team.getRole());
 		team.remove(senderPlayer);
 		senderPlayer.sendMessage("§7Du bist raus aus dem Team.");
+		arena.updateRegion(PlayerRole.Team1);
+		arena.updateRegion(PlayerRole.Team2);
 	}
 	
 	@Command(name = "wgk.team.ready", description = "Schaltet dein Team bereit",

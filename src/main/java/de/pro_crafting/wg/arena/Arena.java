@@ -195,21 +195,18 @@ public class Arena{
 		region.setFlag(Flag.Fire_Spread, value);
 		region.setFlag(Flag.Ghast_Fireball, value);
 		region.setFlag(Flag.Build, value);
-
-		removeOwners(role);
-		if (value == StateValue.Allow) {
-			updateRegion(role);
-		}
 	}
 	
 	public void updateRegion(PlayerRole role) {
 		removeOwners(role);
+		List<UUID> players = new ArrayList<UUID>();
 		PlayerGroupKey key = this.getGroupManager().getGroupKey(role);
 		for (GroupMember player : key.getGroup().getMembers()) {
 			if (player.isAlive()) {
-				key.getRegion().getOwners().add( player.getOfflinePlayer());
+				players.add(player.getOfflinePlayer().getUniqueId());
 			}
 		}
+		key.getRegion().setOwners(players);
 	}
 	
 	private void removeOwners(PlayerRole role) {
@@ -258,8 +255,7 @@ public class Arena{
 	
 	public boolean contains(Location loc)
 	{
-		return this.repo.getArenaRegion().contains(loc) &&
-				this.getRepo().getWorld().getName().equals(loc.getWorld().getName());
+		return this.repo.getArenaRegion().contains(loc);
 	}
 	
 	public void teleport(Player player)

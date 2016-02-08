@@ -1,20 +1,20 @@
 package de.pro_crafting.wg.group.invite;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.UUID;
-
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
-
 import de.pro_crafting.wg.WarGear;
 import de.pro_crafting.wg.arena.Arena;
 import de.pro_crafting.wg.arena.State;
 import de.pro_crafting.wg.group.GroupMember;
 import de.pro_crafting.wg.group.PlayerGroupKey;
+import de.pro_crafting.wg.group.PlayerRole;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.UUID;
 
 public class InviteManager {
 	private Map<UUID, Invite> invites;
@@ -79,6 +79,8 @@ public class InviteManager {
 		
 		inv.getGroupKey().getGroup().add(invited, false);
 		this.plugin.getScoreboard().addTeamMember(arena, inv.getGroupKey().getGroup().getMember(invited), inv.getGroupKey().getRole());
+		arena.updateRegion(PlayerRole.Team1);
+		arena.updateRegion(PlayerRole.Team2);
 	}
 	
 	public void declineInvite(Player invited) {
