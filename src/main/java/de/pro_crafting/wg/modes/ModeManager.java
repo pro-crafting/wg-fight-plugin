@@ -1,11 +1,10 @@
 package de.pro_crafting.wg.modes;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.Map;
-
 import de.pro_crafting.wg.WarGear;
 import de.pro_crafting.wg.arena.Arena;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ModeManager {
 	private Map<String, Class<? extends FightMode>> modes;
@@ -19,7 +18,7 @@ public class ModeManager {
 		this.modes.put("chest", ChestMode.class);
 	}
 	
-	public void add(String mode, Class<FightMode> clazz) {
+	public void add(String mode, Class<? extends FightMode> clazz) {
 		this.modes.put(mode.toLowerCase(), clazz);
 	}
 	
