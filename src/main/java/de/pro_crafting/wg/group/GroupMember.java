@@ -7,23 +7,23 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 public class GroupMember {
-	private UUID playerId;
+	private OfflinePlayer player;
 	private Boolean alive;
 
 	private Boolean isLeader;
 	
 	public GroupMember(Player player, boolean isTeamLeader) {
-		this.playerId = player.getUniqueId();
+		this.player = player;
 		this.alive = true;
 		this.isLeader = isTeamLeader;
 	}
 	
 	public Player getPlayer() {
-		return Bukkit.getPlayer(this.playerId);
+		return this.player.getPlayer();
 	}
 	
 	public OfflinePlayer getOfflinePlayer() {
-		return Bukkit.getOfflinePlayer(this.playerId);
+		return this.player;
 	}
 	
 	public Boolean isAlive() {
@@ -53,12 +53,21 @@ public class GroupMember {
 
 		GroupMember that = (GroupMember) o;
 
-		return playerId.equals(that.playerId);
+		return player.equals(that.player);
 
 	}
 
 	@Override
 	public int hashCode() {
-		return playerId.hashCode();
+		return player.hashCode();
+	}
+
+	@Override
+	public String toString() {
+		return "GroupMember{" +
+				"player=" + player +
+				", alive=" + alive +
+				", isLeader=" + isLeader +
+				'}';
 	}
 }
