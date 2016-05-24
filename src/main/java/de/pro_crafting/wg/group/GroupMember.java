@@ -9,7 +9,6 @@ import org.bukkit.entity.Player;
 public class GroupMember {
 	private OfflinePlayer player;
 	private Boolean alive;
-
 	private Boolean isLeader;
 	
 	public GroupMember(Player player, boolean isTeamLeader) {
@@ -19,11 +18,15 @@ public class GroupMember {
 	}
 	
 	public Player getPlayer() {
-		return this.player.getPlayer();
+		return this.getOfflinePlayer().getPlayer();
 	}
 	
 	public OfflinePlayer getOfflinePlayer() {
-		return this.player;
+		Player player = Bukkit.getPlayer(this.player.getUniqueId());
+		if (player != null) {
+			this.player = player;
+		}
+		return this.player.getPlayer();
 	}
 	
 	public Boolean isAlive() {
