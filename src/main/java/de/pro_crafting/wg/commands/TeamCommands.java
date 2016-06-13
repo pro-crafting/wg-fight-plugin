@@ -10,6 +10,7 @@ import de.pro_crafting.wg.group.Group;
 import de.pro_crafting.wg.group.GroupMember;
 import de.pro_crafting.wg.group.PlayerGroupKey;
 import de.pro_crafting.wg.group.PlayerRole;
+import de.pro_crafting.wg.group.invitation.InvitationType;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -134,7 +135,7 @@ public class TeamCommands {
 			senderPlayer.sendMessage("§c"+p.getDisplayName()+" ist bereits in einem Team.");
 			return null;
 		}
-		if (args.length() == 1 || !senderPlayer.hasPermission("wargear.team.invite.other")) {
+		if (args.length() == 1 || !senderPlayer.hasPermission("wargear.team.invitation.other")) {
 			team = arena.getGroupManager().getGroupOfPlayer(senderPlayer);
 			if (team == null) {
 				senderPlayer.sendMessage("§cDafür musst du in einem Team sein.");
@@ -170,7 +171,7 @@ public class TeamCommands {
 		PlayerGroupKey groupKey = entry.getKey();
 		Player p = entry.getValue();
 		
-		this.plugin.getInviteManager().addInvite(groupKey, p);
+		this.plugin.getInviteManager().addInvitation(groupKey.getGroup().getLeader(), p, InvitationType.Team);
 		groupKey.getArena().updateRegion(PlayerRole.Team1);
 		groupKey.getArena().updateRegion(PlayerRole.Team2);
 	}
@@ -234,7 +235,7 @@ public class TeamCommands {
 	@Command(name = "wgk.team.decline", description = "Lehnt eine Einladung ab.",
 			usage = "/wgk team decline", permission="wargear.team.decline", inGameOnly=true)
 	public void decline(CommandArgs args) { 
-		this.plugin.getInviteManager().declineInvite(args.getPlayer());
+		this.plugin.getInviteManager().declineInvitation(args.getPlayer());
 	}
 	
 	@Command(name = "wgk.team.leave", description = "Entfernt dich aus dem Team.",

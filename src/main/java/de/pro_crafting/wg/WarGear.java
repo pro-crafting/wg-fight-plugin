@@ -12,7 +12,7 @@ import de.pro_crafting.wg.commands.ArenaCommands;
 import de.pro_crafting.wg.commands.TeamCommands;
 import de.pro_crafting.wg.commands.WarGearCommands;
 import de.pro_crafting.wg.group.PlayerGroupKey;
-import de.pro_crafting.wg.group.invite.InviteManager;
+import de.pro_crafting.wg.group.invitation.InvitationManager;
 import de.pro_crafting.wg.modes.ModeManager;
 import de.pro_crafting.wg.ui.ScoreboardDisplay;
 import net.gravitydevelopment.updater.Updater;
@@ -38,7 +38,7 @@ public class WarGear extends JavaPlugin {
 	private OfflineManager offlineManager;
 	private ScoreboardManager<PlayerGroupKey> scoreboardManager;
 	private ScoreboardDisplay scoreboard;
-	private InviteManager inviteManager;
+	private InvitationManager inviteManager;
 	private ModeManager modes;
 	private File modeFolder;
 	private RegionManager regionsManager;
@@ -64,7 +64,7 @@ public class WarGear extends JavaPlugin {
 		this.scoreboardManager = new ScoreboardManager<PlayerGroupKey>();
 		this.scoreboard = new ScoreboardDisplay(this);
 		
-		this.inviteManager = new InviteManager(this);
+		this.inviteManager = new InvitationManager(this);
 		
 		if (this.repo.getKit() == null) {
 			this.getLogger().warning("Kein Kit Provider gefunden!");
@@ -180,7 +180,7 @@ public class WarGear extends JavaPlugin {
 		return this.scoreboard;
 	}
 	
-	public InviteManager getInviteManager() {
+	public InvitationManager getInviteManager() {
 		return this.inviteManager;
 	}
 
