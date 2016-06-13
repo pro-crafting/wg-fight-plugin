@@ -36,31 +36,10 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.sk89q</groupId>
-			<artifactId>commandbook</artifactId>
-			<version>2.4</version>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>bukkit</artifactId>
 			<version>1.7.9-R0.2</version>
 			<type>jar</type>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>net.ess3</groupId>
-			<artifactId>Essentials</artifactId>
-			<version>2.13.1</version>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>be.Balor</groupId>
-			<artifactId>AdminCmd</artifactId>
-			<version>8.0.0-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 
