@@ -121,4 +121,12 @@ public class Group  {
 		}
 		return true;
 	}
+
+	public void broadcast(String message) {
+		for (GroupMember groupMember : this.member.values()) {
+			if (groupMember.isOnline()) {
+				groupMember.getPlayer().sendMessage(message);
+			}
+		}
+	}
 }

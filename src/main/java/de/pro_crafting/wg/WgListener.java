@@ -28,7 +28,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.StringUtil;
 import org.bukkit.util.Vector;
 
 import de.pro_crafting.common.Point;
@@ -79,16 +78,35 @@ public class WgListener implements Listener {
 	
 	@EventHandler (priority = EventPriority.HIGHEST)
 	public void asyncPlayerChatHandler(AsyncPlayerChatEvent event) {
-		if (!this.plugin.getRepo().isPrefixEnabled()) {
-			return;
-		}
 		Player player = event.getPlayer();
-		Arena arena = this.plugin.getArenaManager().getArenaAt(event.getPlayer().getLocation());
-		if (arena == null) {
+		PlayerGroupKey group = this.plugin.getArenaManager().getGroup(player);
+		String color = group.getArena().getGroupManager().getPrefix(group.getRole());
+		String groupChatSign = this.plugin.getRepo().getGroupChatSign();
+
+		if (this.plugin.getRepo().isGroupChatEnabled() &&
+				event.getMessage().startsWith(groupChatSign)) {
+			String message = event.getMessage().replaceFirst(groupChatSign, "");
+			String format = this.plugin.getRepo().getGroupChatFormat()
+					.replace("%gc", color)
+					.replace("%displayname", player.getDisplayName())
+					.replace("%message", "%2$s");
+			event.setFormat(format);
+			event.setMessage(message);
+
+			event.getRecipients().clear();
+			for (GroupMember groupMember : group.getGroup().getMembers()) {
+				if (groupMember.isOnline()) {
+					event.getRecipients().add(groupMember.getPlayer());
+				}
+			}
 			return;
 		}
-		String color = arena.getGroupManager().getPrefix(arena.getGroupManager().getRole(player));
-		event.setFormat("§8["+color+arena.getName()+"§8]"+event.getFormat());
+
+		if (!this.plugin.getRepo().isPrefixEnabled() || group.getArena() == null) {
+			return;
+		}
+
+		event.setFormat("§8["+color+group.getArena().getName()+"§8]"+event.getFormat());
 	}
 	
 	 @EventHandler (priority = EventPriority.HIGHEST, ignoreCancelled=true)

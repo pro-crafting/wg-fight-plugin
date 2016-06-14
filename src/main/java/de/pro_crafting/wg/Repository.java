@@ -68,7 +68,19 @@ public class Repository {
 	{
 		return this.plugin.getConfig().getInt("offline-kick-time", 30);
 	}
-	
+
+	public boolean isGroupChatEnabled() {
+		return this.plugin.getConfig().getBoolean("group-chat.enabled", true);
+	}
+
+	public String getGroupChatSign() {
+		return this.plugin.getConfig().getString("group-chat.sign", "#");
+	}
+
+	public String getGroupChatFormat() {
+		return this.plugin.getConfig().getString("group-chat.format", "%gc>§7%displayname: %message");
+	}
+
 	public WorldEditPlugin getWorldEdit()
 	{
 		return (WorldEditPlugin)this.plugin.getServer().getPluginManager().getPlugin("WorldEdit");
