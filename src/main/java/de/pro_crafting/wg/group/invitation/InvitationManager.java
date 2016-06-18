@@ -36,7 +36,7 @@ public class InvitationManager {
 		}
 
 		Group group = getGroup(invited);
-		if(group != null && group.getMember(invited).isLeader()){
+		if(group != null && !group.getMember(invited).isLeader()){
 			if (leader.isOnline()) {
 				leader.getPlayer().sendMessage("§b" + invited.getDisplayName() + " §7 ist bereits im Team von §b" + group.getLeader().getName() + "§b!");
 			}
