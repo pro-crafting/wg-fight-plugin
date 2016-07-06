@@ -32,18 +32,22 @@ public class WgEconomy implements Listener{
 		this.giveTeamMoney(event.getTeam2(), this.plugin.getRepo().getDrawAmount());
 	}
 	
-	private void giveTeamMoney(Group team, double amount)
+	protected void giveTeamMoney(Group team, double amount)
 	{
 		for (GroupMember member : team.getMembers())
 		{
-			if (amount < 0)
-			{
-				this.plugin.getRepo().getEco().withdrawPlayer(member.getOfflinePlayer(), amount);
-			}
-			else
-			{
-				this.plugin.getRepo().getEco().depositPlayer(member.getOfflinePlayer(), amount);
-			}
+			giveMoney(member, amount);
+		}
+	}
+	
+	protected void giveMoney(GroupMember member, double amount) {
+		if (amount < 0)
+		{
+			this.plugin.getRepo().getEco().withdrawPlayer(member.getOfflinePlayer(), amount);
+		}
+		else
+		{
+			this.plugin.getRepo().getEco().depositPlayer(member.getOfflinePlayer(), amount);
 		}
 	}
 }
