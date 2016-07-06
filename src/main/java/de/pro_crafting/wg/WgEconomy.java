@@ -41,13 +41,12 @@ public class WgEconomy implements Listener{
 	}
 	
 	protected void giveMoney(GroupMember member, double amount) {
-		if (amount < 0)
-		{
-			this.plugin.getRepo().getEco().withdrawPlayer(member.getOfflinePlayer(), amount);
-		}
-		else
-		{
-			this.plugin.getRepo().getEco().depositPlayer(member.getOfflinePlayer(), amount);
+		if (this.plugin.getRepo().getEco() != null) {
+			if (amount < 0) {
+				this.plugin.getRepo().getEco().withdrawPlayer(member.getOfflinePlayer(), amount);
+			} else {
+				this.plugin.getRepo().getEco().depositPlayer(member.getOfflinePlayer(), amount);
+			}
 		}
 	}
 }

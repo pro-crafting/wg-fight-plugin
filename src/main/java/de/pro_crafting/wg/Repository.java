@@ -30,8 +30,7 @@ public class Repository {
 
 	public boolean isEconomyEnabled()
 	{
-		return this.plugin.getConfig().getBoolean("economy.enabled", false) &&
-				this.getEco() != null;
+		return this.plugin.getConfig().getBoolean("economy.enabled", false);
 	}
 	
 	public double getWinAmount()
