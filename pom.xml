@@ -29,8 +29,8 @@
 		</dependency>
 
 		<dependency>
-			<artifactId>regionslibrary</artifactId>
 			<groupId>de.pro_crafting</groupId>
+			<artifactId>regionslibrary</artifactId>
 			<version>0.1.4-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>

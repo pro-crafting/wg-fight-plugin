@@ -5,7 +5,6 @@ import de.pro_crafting.commandframework.CommandFramework;
 import de.pro_crafting.commandframework.Completer;
 import de.pro_crafting.common.scoreboard.ScoreboardManager;
 import de.pro_crafting.generator.BlockGenerator;
-import de.pro_crafting.region.Accessor;
 import de.pro_crafting.region.RegionManager;
 import de.pro_crafting.wg.arena.ArenaManager;
 import de.pro_crafting.wg.commands.ArenaCommands;
@@ -47,7 +46,7 @@ public class WarGear extends JavaPlugin {
 	public void onEnable() {
 		this.loadConfig();
 		this.repo = new Repository(this);
-		this.regionsManager = Accessor.getRegionManagerInstance();
+		this.regionsManager = new RegionManager();
 		this.generator = new BlockGenerator(this, 50000);
 		this.modes = new ModeManager(this);
 		this.arenaManager = new ArenaManager(this);
