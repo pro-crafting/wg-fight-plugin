@@ -8,6 +8,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 
 import java.io.File;
 import java.util.List;
@@ -30,6 +31,7 @@ public class Repository
 	private Location team2Warp;
 	private Location spawnWarp;
 	private boolean waterRemove;
+	private boolean foodLevelChange;
 	private int groundDamage;
 	private boolean isScoreboardEnabled;
 	private int scoreboardTime;
@@ -52,6 +54,7 @@ public class Repository
 	private String team2Path;
 	private String spawnPath;
 	private String waterRemovePath;
+	private String foodLevelChangePath;
 	private String groundDamagePath;
 	private String scoreboardEnabledPath;
 	private String scoreboardTimePath;
@@ -74,6 +77,7 @@ public class Repository
 		groundDamagePath = "ground.damage";
 		autoResetPath = "auto-reset";
 		waterRemovePath = "water-remove";
+		foodLevelChangePath = "food-level-change";
 		team1RegionPath = "regions.team1";
 		team2RegionPath = "regions.team2";
 		arenaRegionPath = "regions.arena";
@@ -107,6 +111,7 @@ public class Repository
 		if (!this.loadSpawnWarp()) return false;
 		if (!this.loadGroundDamage()) return false;
 		if (!this.loadWaterRemove()) return false;
+		if (!this.loadFoodLevelChange()) return false;
 		if (!this.loadScoreboardEnabled()) return false;
 		if (!this.loadScoreboardTime()) return false;
 		if (!this.loadSpectatorModeEnabled()) return false;
@@ -216,6 +221,12 @@ public class Repository
 	private boolean loadWaterRemove()
 	{
 		this.waterRemove = this.config.getBoolean(waterRemovePath, true);
+		return true;
+	}
+
+	private boolean loadFoodLevelChange()
+	{
+		this.foodLevelChange = this.config.getBoolean(foodLevelChangePath, true);
 		return true;
 	}
 	
@@ -429,6 +440,14 @@ public class Repository
 
 	public void setWaterRemove(boolean waterRemove) {
 		this.waterRemove = waterRemove;
+	}
+
+	public boolean isFoodLevelChange() {
+		return this.foodLevelChange;
+	}
+
+	public void setFoodLevelChange(boolean foodLevelChange) {
+		this.foodLevelChange = foodLevelChange;
 	}
 
 	public int getGroundDamage() {

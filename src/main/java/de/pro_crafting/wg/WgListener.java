@@ -12,12 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.entity.EntityRegainHealthEvent;
-import org.bukkit.event.entity.EntityShootBowEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -455,6 +450,24 @@ public class WgListener implements Listener {
 			player.sendMessage("§cDu darfst erst nach Ablauf des Countdowns den Bogen benutzen!");
 		}
 		
+	}
+
+	@EventHandler (priority = EventPriority.HIGHEST , ignoreCancelled=true)
+	public void onFoodLevelChangeEvent(FoodLevelChangeEvent event){
+		if(!(event.getEntity() instanceof Player)){
+			return;
+		}
+		Player player = (Player) event.getEntity();
+		Arena arena = this.plugin.getArenaManager().getArenaAt( player.getLocation());
+		if(arena == null){
+			return;
+		}
+		GroupMember member = arena.getGroupManager().getGroupMember( player);
+		if(!arena.getRepo().isFoodLevelChange() || arena.getState() != State.Running || member == null || !member.isAlive()){
+			event.setCancelled(true);
+			Util.feed(player);
+			return;
+		}
 	}
 	
 }
