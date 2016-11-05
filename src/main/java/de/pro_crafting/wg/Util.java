@@ -1,71 +1,16 @@
 package de.pro_crafting.wg;
 
-import java.util.ArrayList;
-import java.util.List;
+import de.pro_crafting.region.Region;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.command.BlockCommandSender;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 
-import de.pro_crafting.region.Region;
-import de.pro_crafting.wg.arena.Arena;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Util {
-	public static Arena getArenaFromSender(WarGear plugin, CommandSender sender, String[] args)
-	{
-		boolean hasFoundArenaFlag = false;
-		Arena ret = null;
-		for (String argument : args)
-		{
-			if (hasFoundArenaFlag)
-			{
-				ret = plugin.getArenaManager().getArena(argument);
-			}
-			hasFoundArenaFlag = argument.equalsIgnoreCase("-a");
-		}
-		if (ret != null)
-		{
-			return ret;
-		}
-		if (!(sender instanceof ConsoleCommandSender))
-		{
-			if (sender instanceof Player)
-			{
-				ret = plugin.getArenaManager().getArenaAt(((Player)sender).getLocation());
-			}
-			else if (sender instanceof BlockCommandSender)
-			{
-				ret = plugin.getArenaManager().getArenaAt(((BlockCommandSender)sender).getBlock().getLocation());
-			}
-		}
-		return ret;
-	}
-	
-	public static String[] removeFlagsFromArgs(String[] args)
-	{
-		List<String> ret = new ArrayList<String>();
-		boolean removeNextArg = false;
-		for (String argument : args)
-		{
-			if (argument.equals("-a"))
-			{
-				removeNextArg = true;
-				continue;
-			}
-			if (removeNextArg)
-			{
-				removeNextArg = false;
-				continue;
-			}
-			ret.add(argument);
-		}
-		return ret.toArray(new String[0]);
-	}
-	
 	public static void makeHealthy(Player player)
 	{
 		feed(player);
