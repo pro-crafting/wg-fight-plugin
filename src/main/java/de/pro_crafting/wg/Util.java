@@ -11,9 +11,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 
-import com.sk89q.worldedit.bukkit.BukkitUtil;
-import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-
+import de.pro_crafting.region.Region;
 import de.pro_crafting.wg.arena.Arena;
 
 public class Util {
@@ -156,12 +154,12 @@ public class Util {
 		return s.replaceAll("&([0-9a-f])", "\u00A7$1");
 	}
 	
-	public static List<Player> getPlayerOfRegion(ProtectedRegion region)
+	public static List<Player> getPlayerOfRegion(Region region)
 	{
 		List<Player> ret = new ArrayList<Player>();
 		for (Player player : Bukkit.getOnlinePlayers())
 		{
-			if (region.contains(BukkitUtil.toVector(player.getLocation())))
+			if (region.contains(player.getLocation()))
 			{
 				ret.add(player);
 			}

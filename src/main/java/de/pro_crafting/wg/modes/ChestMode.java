@@ -62,7 +62,7 @@ public class ChestMode extends FightBase implements FightMode, Listener{
 		Location chestTwo = Util.move(chestOne, 1);
 		setChests(chestOne, chestTwo);
 		
-		ItemStack[] items = removeTNTStacks(this.plugin.getKitApi().getKitItems(this.arena.getKit()));
+		ItemStack[] items = removeTNTStacks(this.plugin.getRepo().getKit().getItems(this.arena.getKit()));
 		Inventory chestOneInv = ((Chest)chestOne.getBlock().getState()).getBlockInventory();
 		chestOneInv.setContents(items);
 		

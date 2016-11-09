@@ -2,6 +2,7 @@ world:
 mode: kit
 auto-reset: true
 water-remove: true
+food-level-change: true
 scoreboard:
     enabled: true
     time: 30

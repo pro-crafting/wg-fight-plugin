@@ -1,36 +1,33 @@
 package de.pro_crafting.wg;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import net.gravitydevelopment.updater.Updater;
-
-import org.bukkit.event.HandlerList;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.mcstats.MetricsLite;
-
 import de.pro_crafting.commandframework.CommandArgs;
 import de.pro_crafting.commandframework.CommandFramework;
 import de.pro_crafting.commandframework.Completer;
 import de.pro_crafting.common.scoreboard.ScoreboardManager;
 import de.pro_crafting.generator.BlockGenerator;
-import de.pro_crafting.kit.KitAPI;
-import de.pro_crafting.wg.arena.Arena;
+import de.pro_crafting.region.RegionManager;
 import de.pro_crafting.wg.arena.ArenaManager;
 import de.pro_crafting.wg.commands.ArenaCommands;
 import de.pro_crafting.wg.commands.TeamCommands;
 import de.pro_crafting.wg.commands.WarGearCommands;
 import de.pro_crafting.wg.group.PlayerGroupKey;
-import de.pro_crafting.wg.group.invite.InviteManager;
+import de.pro_crafting.wg.group.invitation.InvitationManager;
+import de.pro_crafting.wg.modes.ModeManager;
 import de.pro_crafting.wg.ui.ScoreboardDisplay;
+import net.gravitydevelopment.updater.Updater;
+import org.bukkit.event.HandlerList;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.mcstats.MetricsLite;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class WarGear extends JavaPlugin {
 	private Repository repo;
 	private BlockGenerator generator;
 	private ArenaManager arenaManager;
-	private KitAPI kitApi;
 	private CommandFramework cmdFramework;
 	private WgEconomy eco;
 	private MetricsLite metrics;
@@ -40,15 +37,20 @@ public class WarGear extends JavaPlugin {
 	private OfflineManager offlineManager;
 	private ScoreboardManager<PlayerGroupKey> scoreboardManager;
 	private ScoreboardDisplay scoreboard;
-	private InviteManager inviteManager;
-	
+	private InvitationManager inviteManager;
+	private ModeManager modes;
+	private File modeFolder;
+	private RegionManager regionsManager;
+
 	@Override
 	public void onEnable() {
 		this.loadConfig();
 		this.repo = new Repository(this);
+		this.regionsManager = new RegionManager();
 		this.generator = new BlockGenerator(this, 50000);
+		this.modes = new ModeManager(this);
 		this.arenaManager = new ArenaManager(this);
-		this.kitApi = new KitAPI();
+
 		if (this.repo.isEconomyEnabled())
 		{
 			this.eco = new WgEconomy(this);
@@ -61,7 +63,13 @@ public class WarGear extends JavaPlugin {
 		this.scoreboardManager = new ScoreboardManager<PlayerGroupKey>();
 		this.scoreboard = new ScoreboardDisplay(this);
 		
-		this.inviteManager = new InviteManager(this);
+		this.inviteManager = new InvitationManager(this);
+		
+		if (this.repo.getKit() == null) {
+			this.getLogger().warning("Kein Kit Provider gefunden!");
+		} else {
+			this.getLogger().info(this.repo.getKit().getName() + " stellt die Kits bereit.");
+		}
 		
 		this.getLogger().info("Plugin erfolgreich geladen!");
 	}
@@ -146,10 +154,6 @@ public class WarGear extends JavaPlugin {
 		return this.arenaManager;
 	}
 	
-	public KitAPI getKitApi() {
-		return this.kitApi;
-	}
-	
 	public CommandFramework GetCmdFramework() {
 		return this.cmdFramework;
 	}
@@ -175,7 +179,19 @@ public class WarGear extends JavaPlugin {
 		return this.scoreboard;
 	}
 	
-	public InviteManager getInviteManager() {
+	public InvitationManager getInviteManager() {
 		return this.inviteManager;
+	}
+
+	public ModeManager getModes() {
+		return modes;
+	}
+
+	public File getModeFolder() {
+		return modeFolder;
+	}
+	
+	public RegionManager getRegionsManager(){
+		return this.regionsManager;
 	}
 }

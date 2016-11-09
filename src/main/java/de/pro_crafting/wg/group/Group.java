@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 public class Group  {
 	private Map<UUID, GroupMember> member;
 	private boolean isReady;
-	private PlayerRole role;
+	protected PlayerRole role;
 	private int cannons;
 	
 	public Group(PlayerRole role) {
@@ -120,5 +120,13 @@ public class Group  {
 			}
 		}
 		return true;
+	}
+
+	public void broadcast(String message) {
+		for (GroupMember groupMember : this.member.values()) {
+			if (groupMember.isOnline()) {
+				groupMember.getPlayer().sendMessage(message);
+			}
+		}
 	}
 }

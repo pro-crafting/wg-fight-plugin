@@ -8,3 +8,7 @@ prefix-enabled: true
 metrics: true
 update-check: true
 offline-kick-time: 30
+group-chat:
+    enabled: true
+    sign: '#'
+    format: '%gc>§7%displayname: %message'

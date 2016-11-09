@@ -1,14 +1,14 @@
 package de.pro_crafting.wg.modes;
 
-import org.bukkit.ChatColor;
-
+import de.pro_crafting.kit.KitProvider;
 import de.pro_crafting.wg.OfflineRunable;
 import de.pro_crafting.wg.WarGear;
 import de.pro_crafting.wg.arena.Arena;
 import de.pro_crafting.wg.arena.State;
 import de.pro_crafting.wg.group.GroupMember;
+import org.bukkit.ChatColor;
 
- public class KitMode extends FightBase{
+public class KitMode extends FightBase{
 
 	private int counter;
 	private int taskId;
@@ -17,9 +17,14 @@ import de.pro_crafting.wg.group.GroupMember;
 	
 		super(plugin, arena);
 		preparer = new OfflineRunable() {
-			
+			KitProvider kit = KitMode.this.plugin.getRepo().getKit();
 			public void run(GroupMember member) {
-				KitMode.this.plugin.getKitApi().giveKit(KitMode.this.arena.getKit(), member.getPlayer());
+				if (kit.existsKit(KitMode.this.arena.getKit())) {
+					kit.distribute(KitMode.this.arena.getKit(), member.getPlayer());
+				} else {
+					KitMode.this.plugin.getLogger().severe("Fight in " + KitMode.this.arena.getName() + " could not be started " +
+							"with kitMode - kit "+ KitMode.this.arena.getKit()+" could not be found!");
+				}
 			}
 		};
 		starter =  new Runnable() {

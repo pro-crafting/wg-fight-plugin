@@ -8,7 +8,10 @@ import net.milkbowl.vault.economy.Economy;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+
+import de.pro_crafting.kit.KitProvider;
+import de.pro_crafting.region.RegionManager;
+import de.pro_crafting.region.RegionsLibrary;
 
 public class Repository {
 	private WarGear plugin;
@@ -27,8 +30,7 @@ public class Repository {
 
 	public boolean isEconomyEnabled()
 	{
-		return this.plugin.getConfig().getBoolean("economy.enabled", false) &&
-				this.getEco() != null;
+		return this.plugin.getConfig().getBoolean("economy.enabled", false);
 	}
 	
 	public double getWinAmount()
@@ -65,11 +67,19 @@ public class Repository {
 	{
 		return this.plugin.getConfig().getInt("offline-kick-time", 30);
 	}
-	
-	public WorldGuardPlugin getWorldGuard() {
-		return (WorldGuardPlugin) this.plugin.getServer().getPluginManager().getPlugin("WorldGuard");
+
+	public boolean isGroupChatEnabled() {
+		return this.plugin.getConfig().getBoolean("group-chat.enabled", true);
 	}
-	
+
+	public String getGroupChatSign() {
+		return this.plugin.getConfig().getString("group-chat.sign", "#");
+	}
+
+	public String getGroupChatFormat() {
+		return this.plugin.getConfig().getString("group-chat.format", "%gc>§7%displayname: %message");
+	}
+
 	public WorldEditPlugin getWorldEdit()
 	{
 		return (WorldEditPlugin)this.plugin.getServer().getPluginManager().getPlugin("WorldEdit");
@@ -89,6 +99,20 @@ public class Repository {
 		RegisteredServiceProvider<Economy> economyProvider = this.plugin.getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
         if (economyProvider != null) {
         	return economyProvider.getProvider();
+        }
+        return null;
+	}
+	
+	public KitProvider getKit()
+	{
+		return this.getKitProvider();
+	}
+	
+	private KitProvider getKitProvider()
+	{
+		RegisteredServiceProvider<KitProvider> provider = this.plugin.getServer().getServicesManager().getRegistration(KitProvider.class);
+        if (provider != null) {
+        	return provider.getProvider();
         }
         return null;
 	}

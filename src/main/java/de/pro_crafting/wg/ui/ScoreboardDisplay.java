@@ -260,7 +260,7 @@ public class ScoreboardDisplay implements Listener{
 			return;
 		}
 		String name = player.getDisplayName();
-		if (arena.getGroupManager().isAlive(player)) {
+		if (arena.getGroupManager().isAlive(player) && arena.getState() != State.Spectate) {
 			int health = (int)Math.ceil(player.getHealth());
 			setScore(arena, player.getPlayerListName(), health, this.healthName);
 			setScore(arena, name, health, this.belowNameHealthName);

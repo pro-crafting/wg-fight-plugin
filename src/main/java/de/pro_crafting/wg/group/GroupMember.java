@@ -7,22 +7,26 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 public class GroupMember {
-	private UUID playerId;
+	private OfflinePlayer player;
 	private Boolean alive;
 	private Boolean isLeader;
 	
 	public GroupMember(Player player, boolean isTeamLeader) {
-		this.playerId = player.getUniqueId();
+		this.player = player;
 		this.alive = true;
 		this.isLeader = isTeamLeader;
 	}
 	
 	public Player getPlayer() {
-		return Bukkit.getPlayer(this.playerId);
+		return this.getOfflinePlayer().getPlayer();
 	}
 	
 	public OfflinePlayer getOfflinePlayer() {
-		return Bukkit.getOfflinePlayer(this.playerId);
+		Player player = Bukkit.getPlayer(this.player.getUniqueId());
+		if (player != null) {
+			this.player = player;
+		}
+		return this.player.getPlayer();
 	}
 	
 	public Boolean isAlive() {
@@ -44,46 +48,29 @@ public class GroupMember {
 	public String getName() {
 		return this.isOnline() ? this.getPlayer().getDisplayName() : this.getOfflinePlayer().getName();
 	}
-	
+
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((this.alive == null) ? 0 : this.alive.hashCode());
-		result = prime
-				* result
-				+ ((this.isLeader == null) ? 0 : this.isLeader
-						.hashCode());
-		result = prime * result
-				+ ((this.playerId == null) ? 0 : this.playerId.hashCode());
-		return result;
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		GroupMember that = (GroupMember) o;
+
+		return player.equals(that.player);
+
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		GroupMember other = (GroupMember) obj;
-		if (this.alive == null) {
-			if (other.alive != null)
-				return false;
-		} else if (!this.alive.equals(other.alive))
-			return false;
-		if (this.isLeader == null) {
-			if (other.isLeader != null)
-				return false;
-		} else if (!this.isLeader.equals(other.isLeader))
-			return false;
-		if (this.playerId == null) {
-			if (other.playerId != null)
-				return false;
-		} else if (!this.playerId.equals(other.playerId))
-			return false;
-		return true;
+	public int hashCode() {
+		return player.hashCode();
+	}
+
+	@Override
+	public String toString() {
+		return "GroupMember{" +
+				"player=" + player +
+				", alive=" + alive +
+				", isLeader=" + isLeader +
+				'}';
 	}
 }
