@@ -40,6 +40,7 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 public class Arena{
@@ -152,10 +153,11 @@ public class Arena{
 		this.remover.stop();
 		this.broadcastMessage(ChatColor.GREEN + "Arena gesperrt!");
 	}
-	
-	public boolean load()
+
+	public Set<String> load()
 	{
-		if (this.repo.load())
+		Set<String> errors = this.repo.load();
+		if (errors.size() == 0)
 		{
 			this.team = new GroupManager(plugin, this);
 			this.setFightMode(new KitMode(this.plugin, this));
@@ -163,9 +165,8 @@ public class Arena{
 			this.remover = new WaterRemover(this.plugin, this);
 			this.spectator = new SpectatorMode(this.plugin, this);
 			this.setOpen(false);
-			return true;
 		}
-		return false;
+		return errors;
 	}
 	
 	public void unload()

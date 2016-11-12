@@ -42,11 +42,11 @@ public class Repository {
 		this.regionManager = this.plugin.getRegionsManager();
 	}
 
-	public boolean load() {
-		if (!this.arenaConfig.exists()) return false;
+	public Set<String> load() {
+		if (!this.arenaConfig.exists()) Sets.newHashSet("Configuration does not exist");
 		this.config = YamlConfiguration.loadConfiguration(this.arenaConfig);
 		this.configuration = new ArenaConfiguration(this.config.getValues(true));
-		return configuration.getErrors().size() == 0;
+		return configuration.getErrors();
 	}
 
 	public boolean save() {

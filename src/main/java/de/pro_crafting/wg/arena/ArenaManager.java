@@ -1,17 +1,17 @@
 package de.pro_crafting.wg.arena;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import de.pro_crafting.wg.WarGear;
+import de.pro_crafting.wg.group.Group;
+import de.pro_crafting.wg.group.PlayerGroupKey;
+import de.pro_crafting.wg.group.PlayerRole;
 
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 
-import de.pro_crafting.wg.WarGear;
-import de.pro_crafting.wg.group.PlayerGroupKey;
-import de.pro_crafting.wg.group.PlayerRole;
-import de.pro_crafting.wg.group.Group;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class ArenaManager {
 
@@ -21,7 +21,7 @@ public class ArenaManager {
 	public ArenaManager(WarGear plugin)
 	{
 		this.plugin = plugin;
-		this.arenas = new HashMap<String, Arena>();
+		this.arenas = new HashMap<>();
 		this.loadArenas();
 	}
 	
@@ -43,12 +43,13 @@ public class ArenaManager {
 			return;
 		}
 		Arena arena = new Arena(this.plugin, name);
-		if (arena.load())
-		{
+		Set<String> errors = arena.load();
+		if (errors.size() == 0) {
 			this.plugin.getLogger().info("Arena "+name+" geladen.");
 			this.arenas.put(name.toLowerCase(), arena);
 			return;
 		}
+		errors.forEach(System.out::println);
 		this.plugin.getLogger().info("Arena "+name+" konnte nicht geladen werden.");
 	}
 	
