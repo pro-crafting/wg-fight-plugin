@@ -14,7 +14,9 @@ import de.pro_crafting.wg.group.PlayerGroupKey;
 import de.pro_crafting.wg.group.invitation.InvitationManager;
 import de.pro_crafting.wg.modes.ModeManager;
 import de.pro_crafting.wg.ui.ScoreboardDisplay;
+
 import net.gravitydevelopment.updater.Updater;
+
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.MetricsLite;
@@ -60,7 +62,7 @@ public class WarGear extends JavaPlugin {
 		registerCommands();
 		this.wgListener = new WgListener(this);
 		this.offlineManager = new OfflineManager(this);
-		this.scoreboardManager = new ScoreboardManager<PlayerGroupKey>();
+		this.scoreboardManager = new ScoreboardManager<>();
 		this.scoreboard = new ScoreboardDisplay(this);
 		
 		this.inviteManager = new InvitationManager(this);
@@ -95,7 +97,7 @@ public class WarGear extends JavaPlugin {
 	
 	@Completer (name="wgk")
 	public List<String> completeCommands(CommandArgs args) {
-		List<String> ret = new ArrayList<String>();
+		List<String> ret = new ArrayList<>();
 		String label = args.getCommand().getLabel();
 		for (String arg : args.getArgs()) {
 			label += " " + arg;

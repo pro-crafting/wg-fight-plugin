@@ -1,507 +1,307 @@
 package de.pro_crafting.wg.arena;
 
+import com.google.common.collect.Sets;
+
 import de.pro_crafting.region.Region;
+import de.pro_crafting.region.RegionManager;
 import de.pro_crafting.wg.Util;
 import de.pro_crafting.wg.WarGear;
 import de.pro_crafting.wg.group.GroupSide;
-import org.bukkit.ChatColor;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.event.entity.FoodLevelChangeEvent;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-public class Repository 
-{
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.experimental.Delegate;
+
+public class Repository {
 	private WarGear plugin;
 	private File arenaConfig;
 	private YamlConfiguration config;
-	
-	private String world;
-	private Region arenaRegion;
-	private String mode;
-	private int groundHeight;
-	private String groundSchematic;
-	private boolean autoReset;
-	private Region team1Region;
-	private Region team2Region;
-	private Location team1Warp;
-	private Location team2Warp;
-	private Location spawnWarp;
-	private boolean waterRemove;
-	private boolean foodLevelChange;
-	private int groundDamage;
-	private boolean isScoreboardEnabled;
-	private int scoreboardTime;
-	private boolean isSpectatorModeEnabled;
-	private int spectatorModeTime;
-	private String team1Prefix;
-	private String team2Prefix;
-	private Region innerRegion;
-	private de.pro_crafting.region.RegionManager regionManager;
-	
-	private String worldPath;
-	private String arenaRegionPath;
-	private String modePath;
-	private String groundHeightPath;
-	private String groundSchematicPath;
-	private String autoResetPath;
-	private String team1RegionPath;
-	private String team2RegionPath;
-	private String team1Path;
-	private String team2Path;
-	private String spawnPath;
-	private String waterRemovePath;
-	private String foodLevelChangePath;
-	private String groundDamagePath;
-	private String scoreboardEnabledPath;
-	private String scoreboardTimePath;
-	private String spectatorModeEnabledPath;
-	private String spectatorModeTimePath;
-	private String team1PrefixPath;
-	private String team2PrefixPath;
-	private String innerRegionPath;
-	
-	public Repository(WarGear plugin, Arena arena)
-	{
+	private RegionManager regionManager;
+
+	@Delegate
+	private ArenaConfiguration configuration;
+
+	public Repository(WarGear plugin, Arena arena) {
 		this.plugin = plugin;
 		this.arenaConfig = new File(this.plugin.getArenaFolder(), arena.getName()+".yml");
 		this.regionManager = this.plugin.getRegionsManager();
-		
-		worldPath = "world";
-		modePath = "mode";
-		groundHeightPath = "ground.height";
-		groundSchematicPath = "ground.schematic";
-		groundDamagePath = "ground.damage";
-		autoResetPath = "auto-reset";
-		waterRemovePath = "water-remove";
-		foodLevelChangePath = "food-level-change";
-		team1RegionPath = "regions.team1";
-		team2RegionPath = "regions.team2";
-		arenaRegionPath = "regions.arena";
-		innerRegionPath = "regions.inner";
-		team1Path = "fightStart.team1";
-		team2Path = "fightStart.team2";
-		spawnPath = "spawn";
-		scoreboardEnabledPath = "scoreboard.enabled";
-		scoreboardTimePath = "scoreboard.time";
-		spectatorModeEnabledPath = "spectator-mode.enabled";
-		spectatorModeTimePath = "spectator-mode.time";
-		team1PrefixPath = "prefix.team1";
-		team2PrefixPath = "prefix.team2";
 	}
-	
-	public boolean load()
-	{
+
+	public boolean load() {
 		if (!this.arenaConfig.exists()) return false;
 		this.config = YamlConfiguration.loadConfiguration(this.arenaConfig);
-		
-		if (!this.loadWorld()) return false;
-		if (!this.loadArenaRegion()) return false;
-		if (!this.loadMode()) return false;
-		if (!this.loadGroundHeight()) return false;
-		if (!this.loadGroundSchematic()) return false;
-		if (!this.loadAutoReset()) return false;
-		if (!this.loadTeam1Region()) return false;
-		if (!this.loadTeam2Region()) return false;
-		if (!this.loadTeam1Warp()) return false;
-		if (!this.loadTeam2Warp()) return false;
-		if (!this.loadSpawnWarp()) return false;
-		if (!this.loadGroundDamage()) return false;
-		if (!this.loadWaterRemove()) return false;
-		if (!this.loadFoodLevelChange()) return false;
-		if (!this.loadScoreboardEnabled()) return false;
-		if (!this.loadScoreboardTime()) return false;
-		if (!this.loadSpectatorModeEnabled()) return false;
-		if (!this.loadSpectatorModeTime()) return false;
-		if (!this.loadTeam1Prefix()) return false;
-		if (!this.loadTeam2Prefix()) return false;
-		if (!this.loadInnerRegion()) return false;
-		
-		this.team1Warp = Util.lookAt(this.team1Warp, this.team2Warp);
-		this.team2Warp = Util.lookAt(this.team2Warp, this.team1Warp);
-		
-		return true;
-	}
-	
-	private boolean loadWorld()
-	{
-		String worldName = this.config.getString(this.worldPath);
-		if (!this.existsWorld(worldName))
-		{
-			return false;
-		}
-		this.world = worldName;
-		return true;
-	}
-	
-	private boolean loadArenaRegion()
-	{
-		String id = this.config.getString(this.arenaRegionPath);
-		this.arenaRegion = this.getRegion(id);
-		return this.arenaRegion != null;
-	}
-	
-	private boolean loadInnerRegion()
-	{
-		String id = this.config.getString(this.innerRegionPath);
-		this.innerRegion = this.getRegion(id);
-		return this.innerRegion != null;
-	}
-	
-	private boolean loadMode()
-	{
-		this.mode = this.config.getString(modePath, "kit");
-		return true;
-	}
-	
-	private boolean loadGroundHeight()
-	{
-		int groundHeight = this.config.getInt(groundHeightPath, -1);
-		if (groundHeight < 0 || groundHeight > this.getWorld().getMaxHeight())
-		{
-			return false;
-		}
-		this.groundHeight = groundHeight;
-		return true;
-	}
-	
-	private boolean loadGroundSchematic()
-	{
-		this.groundSchematic = this.config.getString(groundSchematicPath);
-		return true;
-	}
-	
-	private boolean loadAutoReset()
-	{
-		this.autoReset = this.config.getBoolean(autoResetPath, true);
-		return true;
-	}
-	
-	private boolean loadTeam1Region()
-	{
-		String id = this.config.getString(this.team1RegionPath);
-		this.team1Region = this.getRegion(id);
-		return this.team1Region != null;
-	}
-	
-	private boolean loadTeam2Region()
-	{
-		String id = this.config.getString(this.team2RegionPath);
-		this.team2Region = this.getRegion(id);
-		return this.team2Region != null;
-	}
-	
-	private boolean loadTeam1Warp()
-	{
-		this.team1Warp = this.loadLocation(this.team1Path, getWorld());
-		return this.team1Warp != null;
-	}
-	
-	private boolean loadTeam2Warp()
-	{
-		this.team2Warp = this.loadLocation(this.team2Path, getWorld());
-		return this.team2Warp != null;
-	}
-	
-	private boolean loadSpawnWarp()
-	{
-		this.spawnWarp = this.loadLocation(this.spawnPath, getWorld());
-		return this.spawnWarp != null;
-	}
-	
-	private boolean loadGroundDamage()
-	{
-		this.groundDamage = this.config.getInt(groundDamagePath, 4);
-		return true;
-	}
-	
-	private boolean loadWaterRemove()
-	{
-		this.waterRemove = this.config.getBoolean(waterRemovePath, true);
-		return true;
+		this.configuration = new ArenaConfiguration(this.config.getValues(true));
+		return configuration.getErrors().size() == 0;
 	}
 
-	private boolean loadFoodLevelChange()
-	{
-		this.foodLevelChange = this.config.getBoolean(foodLevelChangePath, true);
-		return true;
-	}
-	
-	private boolean loadScoreboardEnabled()
-	{
-		this.isScoreboardEnabled = this.config.getBoolean(scoreboardEnabledPath, true);
-		return true;
-	}
-	
-	private boolean loadScoreboardTime()
-	{
-		this.scoreboardTime = this.config.getInt(scoreboardTimePath, 30);
-		return true;
-	}
-	
-	private boolean loadSpectatorModeEnabled()
-	{
-		this.isSpectatorModeEnabled = this.config.getBoolean(spectatorModeEnabledPath, false);
-		return true;
-	}
-	
-	private boolean loadSpectatorModeTime()
-	{
-		this.spectatorModeTime = this.config.getInt(spectatorModeTimePath, 120);
-		return true;
-	}
-	
-	private boolean loadTeam1Prefix() {
-		this.team1Prefix = Util.convertColors(this.config.getString(team1PrefixPath, ChatColor.RED.toString()));
-		return true;
-	}
-	
-	private boolean loadTeam2Prefix() {
-		this.team2Prefix = Util.convertColors(this.config.getString(team2PrefixPath, ChatColor.BLUE.toString()));
-		return true;
-	}
-	
-	private Location loadLocation(String node, World world)
-	{
-		String location = this.config.getString(node, "");
-		String[] splited = location.split(";");
-		if (splited.length != 3)
-		{
-			return null;
-		}
-		try
-		{
-			return new Location(world, Double.parseDouble(splited[0]), Double.parseDouble(splited[1]), Double.parseDouble(splited[2]));
-		}
-		catch (Exception ex)
-		{
-			return null;
-		}
-	}
-	
-	private boolean existsWorld(String name)
-	{
-		if (name == null) return false;
-		return this.plugin.getServer().getWorld(name) != null;
-	}
-	
-	private Region getRegion(String id)
-	{
-		List<Region> regions = this.regionManager.getRegions(id , this.getWorld());
-		if(!regions.isEmpty()){
-			return regions.get( 0 );
-		}
-		return null;
-	}
-	
-	public boolean save()
-	{
+	public boolean save() {
 		return false;
 	}
-	
-	public World getWorld()
-	{
-		return this.plugin.getServer().getWorld(world);
-	}
-	
-	public void setWorld(String name)
-	{
-		if (this.existsWorld(name))
-		{
-			this.world = name;
-		}
-	}
-	
-	public Region getArenaRegion()
-	{
-		return this.arenaRegion;
-	}
-	
-	public void setArenaRegion(String id)
-	{
-		Region rg = this.getRegion(id);
-		if (rg != null)
-		{
-			this.arenaRegion = rg;
-		}
-	}
 
-	public String getFightMode()
-	{
-		return this.mode;
-	}
-	
-	public void setFightMode(String modeName)
-	{
-		this.mode = modeName;
-	}
-	
-	public int getGroundHeight()
-	{
-		return this.groundHeight;
-	}
-	
-	public void setGroundHeight(int height)
-	{
-		if (height >= 0 && height <= this.getWorld().getMaxHeight())
-		{
-			this.groundHeight = height;
-		}
-	}
-	
-	public String getGroundSchematic()
-	{
-		return this.groundSchematic;
-	}
-	
-	public void setGroundSchematic(String groundSchematic)
-	{
-		this.groundSchematic = groundSchematic;
-	}
-	
-	public boolean getAutoReset()
-	{
-		return this.autoReset;
-	}
-	
-	public void setAutoReset(boolean autoReset)
-	{
-		this.autoReset = autoReset;
-	}
-	
-	public Region getTeam1Region()
-	{
-		return this.team1Region;
-	}
-	
-	public void setTeam1Region(String id)
-	{
-		Region rg = this.getRegion(id);
-		if (rg != null)
-		{
-			this.team1Region = rg;
-		}
-	}
-	
-	public Region getTeam2Region()
-	{
-		return this.team2Region;
-	}
-	
-	public void setTeam2Region(String id)
-	{
-		Region rg = this.getRegion(id);
-		if (rg != null)
-		{
-			this.team2Region = rg;
-		}
-	}
-	
 	public Region getTeamRegion(GroupSide side) {
 		return side == GroupSide.Team1 ? getTeam1Region() : getTeam2Region();
 	}
-	
-	public Location getTeam1Warp()
-	{
-		return this.team1Warp;
-	}
-	
-	public void setTeam1Warp(Location warp)
-	{
-		this.team1Warp = warp;
-	}
-	
-	public Location getTeam2Warp()
-	{
-		return this.team2Warp;
-	}
-	
-	public void setTeam2Warp(Location warp)
-	{
-		this.team2Warp = warp;
-	}
-	
-	public Location getSpawnWarp()
-	{
-		return this.spawnWarp;
-	}
-	
-	public void setSpawnWarp(Location warp)
-	{
-		this.spawnWarp = warp;
-	}
 
-	public boolean isWaterRemove() {
-		return waterRemove;
-	}
+	@Getter
+	@Setter
+	@ToString
+	@EqualsAndHashCode
+	public class ArenaConfiguration {
+		public static final String WORLD = "world";
+		public static final String MODE = "mode";
+		public static final String AUTO_RESET = "auto-reset";
+		public static final String WATER_REMOVE = "water-remove";
+		public static final String FOOD_LEVEL_CHANGE = "food-level-change";
+		public static final String SCOREBOARD_ENABLED = "scoreboard.enabled";
+		public static final String SCOREBOARD_TIME = "scoreboard.time";
+		public static final String SPECTATOR_MODE_ENABLED = "spectator-mode.enabled";
+		public static final String SPECTATOR_MODE_TIME = "spectator-mode.time";
+		public static final String PREFIX_TEAM1 = "prefix.team1";
+		public static final String PREFIX_TEAM2 = "prefix.team2";
+		public static final String GROUND_HEIGHT = "ground.height";
+		public static final String GROUND_DAMAGE = "ground.damage";
+		public static final String GROUND_SCHEMATIC = "ground.schematic";
+		public static final String REGIONS_ARENA = "regions.arena";
+		public static final String REGIONS_INNER = "regions.inner";
+		public static final String REGIONS_TEAM1 = "regions.team1";
+		public static final String REGIONS_TEAM2 = "regions.team2";
+		public static final String FIGHT_START_TEAM1 = "fightStart.team1";
+		public static final String FIGHT_START_TEAM2 = "fightStart.team2";
+		public static final String SPAWN = "spawn";
 
-	public void setWaterRemove(boolean waterRemove) {
-		this.waterRemove = waterRemove;
-	}
+		@Setter(AccessLevel.NONE)
+		@Getter(AccessLevel.PACKAGE)
+		private Set<String> errors;
 
-	public boolean isFoodLevelChange() {
-		return this.foodLevelChange;
-	}
+		private Region arenaRegion;
+		private Region innerRegion;
+		private Region team1Region;
+		private Region team2Region;
 
-	public void setFoodLevelChange(boolean foodLevelChange) {
-		this.foodLevelChange = foodLevelChange;
-	}
+		private Location team1Warp;
+		private Location team2Warp;
+		private Location spawnWarp;
 
-	public int getGroundDamage() {
-		return groundDamage;
-	}
+		@Getter(AccessLevel.NONE)
+		@Setter(AccessLevel.NONE)
+		private String worldName;
+		private String fightMode;
+		private int groundHeight;
+		private String groundSchematic;
+		private boolean isAutoReset;
+		private boolean waterRemove;
+		private boolean foodLevelChange;
+		private int groundDamage;
+		private boolean isScoreboardEnabled;
+		private int scoreboardTime;
+		private boolean isSpectatorModeEnabled;
+		private int spectatorModeTime;
+		private String team1Prefix;
+		private String team2Prefix;
 
-	public void setGroundDamage(int groundDamage) {
-		this.groundDamage = groundDamage;
-	}
+		public ArenaConfiguration() {
+			errors = Sets.newHashSet();
+		}
 
-	public boolean isScoreboardEnabled() {
-		return this.isScoreboardEnabled;
-	}
+		public ArenaConfiguration(Map<String, Object> values) {
+			errors = new HashSet<>();
+			worldName = getWorldName(values, WORLD, errors);
+			fightMode = get(values, MODE, "kit", errors);
+			isAutoReset = get(values, AUTO_RESET, true, errors);
+			waterRemove = get(values, WATER_REMOVE, true, errors);
+			foodLevelChange = get(values, FOOD_LEVEL_CHANGE, true, errors);
+			isScoreboardEnabled = get(values, SCOREBOARD_ENABLED, true, errors);
+			scoreboardTime = get(values, SCOREBOARD_TIME, 30, errors);
+			isSpectatorModeEnabled = get(values, SPECTATOR_MODE_ENABLED, true, errors);
+			spectatorModeTime = get(values, SPECTATOR_MODE_TIME, 120, errors);
+			team1Prefix = Util.convertColors(get(values, PREFIX_TEAM1, "&c", errors));
+			team2Prefix = Util.convertColors(get(values, PREFIX_TEAM2, "&3", errors));
+			groundHeight = getGroundHeightValue(values, GROUND_HEIGHT, errors);
+			groundDamage = get(values, GROUND_DAMAGE, 4, errors);
+			groundSchematic = get(values, GROUND_SCHEMATIC, null, errors);
+			arenaRegion = getRegion(values, REGIONS_ARENA, errors);
+			innerRegion = getRegion(values, REGIONS_INNER, errors);
+			team1Region = getRegion(values, REGIONS_TEAM1, errors);
+			team2Region = getRegion(values, REGIONS_TEAM2, errors);
+			team1Warp = getLocation(values, FIGHT_START_TEAM1, errors);
+			team2Warp = getLocation(values, FIGHT_START_TEAM2, errors);
+			spawnWarp = getLocation(values, SPAWN, errors);
 
-	public void setScoreboardEnabled(boolean isScoreboardEnabled) {
-		this.isScoreboardEnabled = isScoreboardEnabled;
-	}
+			if (errors.size() == 0) {
+				this.team1Warp = Util.lookAt(this.team1Warp, this.team2Warp);
+				this.team2Warp = Util.lookAt(this.team2Warp, this.team1Warp);
+			}
+		}
 
-	public int getScoreboardTime() {
-		return this.scoreboardTime;
-	}
+		private <T extends Object> T get(Map<String, Object> values, String key, T defaultValue, Set<String> errors) {
+			try {
+				if (values.containsKey(key)) {
+					return (T) values.get(key);
+				}
+			} catch (Exception ignored) {
+			}
+			errors.add("Could not load " + key + " from configuration. Falling back to default of " + defaultValue);
+			return defaultValue;
+		}
 
-	public void setScoreboardTime(int scoreboardTime) {
-		this.scoreboardTime = scoreboardTime;
-	}
+		private Region getRegion(Map<String, Object> values, String key, Set<String> errors) {
+			String id = get(values, key, null, errors);
+			if (id != null) {
+				return getRegionById(id, errors);
+			}
+			return null;
+		}
 
-	public boolean isSpectatorModeEnabled() {
-		return this.isSpectatorModeEnabled;
-	}
+		private Region getRegionById(String id, Set<String> errors) {
+			if (worldName == null) {
+				return null;
+			}
+			List<Region> regions = Repository.this.regionManager.getRegions(id, this.getWorld());
+			if (!regions.isEmpty()) {
+				return regions.get(0);
+			}
+			errors.add("Unable to find region with id " + id);
+			return null;
+		}
 
-	public void setSpectatorModeEnabled(boolean isSpectatorModeEnabled) {
-		this.isSpectatorModeEnabled = isSpectatorModeEnabled;
-	}
+		private Location getLocation(Map<String, Object> values, String key, Set<String> errors) {
+			if (worldName == null) {
+				return null;
+			}
+			String location = get(values, key, null, errors);
+			if (location == null) {
+				return null;
+			}
+			String[] splited = location.split(";");
+			if (splited.length != 3) {
+				errors.add("Format of location wrong " + location);
+				return null;
+			}
+			try {
+				return new Location(this.getWorld(), Double.parseDouble(splited[0]), Double.parseDouble(splited[1]), Double.parseDouble(splited[2]));
+			} catch (Exception ex) {
+				errors.add("Location can't contain characters " + location);
+				return null;
+			}
+		}
 
-	public int getSpectatorModeTime() {
-		return this.spectatorModeTime;
-	}
+		private String getWorldName(Map<String, Object> values, String key, Set<String> errors) {
+			String worldName = get(values, key, null, errors);
+			if (worldName == null) {
+				return null;
+			}
+			if (!this.existsWorld(worldName)) {
+				errors.add("World '" + worldName + "' does not exist");
+				return null;
+			}
+			return worldName;
+		}
 
-	public void setSpectatorModeTime(int spectatorModeTime) {
-		this.spectatorModeTime = spectatorModeTime;
-	}
-	
-	
-	public String getTeam1Prefix()
-	{
-		return this.team1Prefix;
-	}
-	
-	public String getTeam2Prefix()
-	{
-		return this.team2Prefix;
-	}
-	
-	public Region getInnerRegion() {
-		return this.innerRegion;
+		private int getGroundHeightValue(Map<String, Object> values, String key, Set<String> errors) {
+			int groundHeight = get(values, GROUND_HEIGHT, -1, errors);
+			if (this.worldName == null || groundHeight < 0 || groundHeight > this.getWorld().getMaxHeight()) {
+				errors.add("Ground height needs to be within world boundaries.");
+				return -1;
+			}
+			return groundHeight;
+		}
+
+		private boolean existsWorld(String name) {
+			if (name == null) return false;
+			return Bukkit.getWorld(name) != null;
+		}
+
+		public World getWorld() {
+			return Bukkit.getWorld(worldName);
+		}
+
+		public void setWorld(String worldName) {
+			if (this.existsWorld(worldName)) {
+				this.worldName = worldName;
+			}
+		}
+
+		public void setArenaRegion(String id) {
+			Region rg = this.getRegionById(id, Sets.newHashSet());
+			if (rg != null) {
+				this.arenaRegion = rg;
+			}
+		}
+
+		public void setInnerRegion(String id) {
+			Region rg = this.getRegionById(id, Sets.newHashSet());
+			if (rg != null) {
+				this.innerRegion = rg;
+			}
+		}
+
+		public void setTeam1Region(String id) {
+			Region rg = this.getRegionById(id, Sets.newHashSet());
+			if (rg != null) {
+				this.team1Region = rg;
+			}
+		}
+
+		public void setTeam2Region(String id) {
+			Region rg = this.getRegionById(id, Sets.newHashSet());
+			if (rg != null) {
+				this.team2Region = rg;
+			}
+		}
+
+		public void setGroundHeight(int height) {
+			if (height >= 0 && height <= this.getWorld().getMaxHeight()) {
+				this.groundHeight = height;
+			}
+		}
+
+		private String serializeRegion(Region region) {
+			return region == null ? "" : region.getId();
+		}
+
+		private String serializeLocation(Location location) {
+			return location.getX() + ";" + location.getY() + ";" + location.getZ();
+		}
+
+		public Map<String, Object> serialize() {
+			Map<String, Object> values = new HashMap<>();
+			values.put(WORLD, this.worldName != null ? worldName : "");
+			values.put(MODE, this.fightMode);
+			values.put(AUTO_RESET, this.isAutoReset);
+			values.put(WATER_REMOVE, this.waterRemove);
+			values.put(FOOD_LEVEL_CHANGE, this.foodLevelChange);
+			values.put(SCOREBOARD_ENABLED, this.isScoreboardEnabled);
+			values.put(SCOREBOARD_TIME, this.scoreboardTime);
+			values.put(SPECTATOR_MODE_ENABLED, this.isSpectatorModeEnabled);
+			values.put(SPECTATOR_MODE_TIME, this.spectatorModeTime);
+			values.put(PREFIX_TEAM1, this.team1Prefix);
+			values.put(PREFIX_TEAM2, this.team2Prefix);
+			values.put(GROUND_HEIGHT, this.groundHeight);
+			values.put(GROUND_DAMAGE, this.groundDamage);
+			values.put(GROUND_SCHEMATIC, this.groundSchematic);
+			values.put(REGIONS_ARENA, serializeRegion(this.arenaRegion));
+			values.put(REGIONS_INNER, serializeRegion(this.innerRegion));
+			values.put(REGIONS_TEAM1, serializeRegion(this.team1Region));
+			values.put(REGIONS_TEAM2, serializeRegion(this.team2Region));
+			values.put(FIGHT_START_TEAM1, serializeLocation(team1Warp));
+			values.put(FIGHT_START_TEAM2, serializeLocation(team2Warp));
+			values.put(SPAWN, serializeLocation(spawnWarp));
+			return values;
+		}
 	}
 }
