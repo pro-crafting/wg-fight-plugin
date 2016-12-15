@@ -18,13 +18,22 @@ import de.pro_crafting.generator.provider.SingleBlockProvider;
 import de.pro_crafting.region.Region;
 import de.pro_crafting.region.flags.Flag;
 import de.pro_crafting.region.flags.StateValue;
+import de.pro_crafting.wg.ErrorMessages;
 import de.pro_crafting.wg.WarGear;
 import de.pro_crafting.wg.event.ArenaStateChangeEvent;
-import de.pro_crafting.wg.group.*;
+import de.pro_crafting.wg.group.Group;
+import de.pro_crafting.wg.group.GroupManager;
+import de.pro_crafting.wg.group.GroupMember;
+import de.pro_crafting.wg.group.PlayerGroupKey;
+import de.pro_crafting.wg.group.PlayerRole;
 import de.pro_crafting.wg.modes.FightMode;
 import de.pro_crafting.wg.modes.KitMode;
 
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
@@ -55,7 +64,7 @@ public class Arena{
 		
 		this.state = State.Idle;
 		this.kitname = "";
-		this.players = new ArrayList<UUID>();
+		this.players = new ArrayList<>();
 		this.repo = new Repository(this.plugin, this);
 	}
 	
@@ -144,10 +153,11 @@ public class Arena{
 		this.remover.stop();
 		this.broadcastMessage(ChatColor.GREEN + "Arena gesperrt!");
 	}
-	
-	public boolean load()
+
+	public ErrorMessages load()
 	{
-		if (this.repo.load())
+		ErrorMessages errors = this.repo.load();
+		if (!errors.hasErrors())
 		{
 			this.team = new GroupManager(plugin, this);
 			this.setFightMode(new KitMode(this.plugin, this));
@@ -155,9 +165,8 @@ public class Arena{
 			this.remover = new WaterRemover(this.plugin, this);
 			this.spectator = new SpectatorMode(this.plugin, this);
 			this.setOpen(false);
-			return true;
 		}
-		return false;
+		return errors;
 	}
 	
 	public void unload()
@@ -199,7 +208,7 @@ public class Arena{
 	
 	public void updateRegion(PlayerRole role) {
 		removeOwners(role);
-		List<UUID> players = new ArrayList<UUID>();
+		List<UUID> players = new ArrayList<>();
 		PlayerGroupKey key = this.getGroupManager().getGroupKey(role);
 		for (GroupMember player : key.getGroup().getMembers()) {
 			if (player.isAlive()) {
@@ -210,7 +219,7 @@ public class Arena{
 	}
 	
 	private void removeOwners(PlayerRole role) {
-		this.getGroupManager().getGroupKey(role).getRegion().getOwners().clear();;
+		this.getGroupManager().getGroupKey(role).getRegion().getOwners().clear();
 	}
 	
 	public void broadcastMessage(String message)
@@ -247,7 +256,7 @@ public class Arena{
 		if (to == State.Spectate && !this.repo.isScoreboardEnabled()) {
 			to = State.Resetting;
 		}
-		if (to == State.Resetting && !this.repo.getAutoReset()) {
+		if (to == State.Resetting && !this.repo.isAutoReset()) {
 			to = State.Idle;
 		}
 		return to;
@@ -279,7 +288,7 @@ public class Arena{
 		}
 		this.setFightMode(plugin.getModes().get(this.getRepo().getFightMode(), this));
 		if (this.getFightMode() == null) {
-			Bukkit.getLogger().warning("Fightmode "+this.getRepo().getFightMode()+" unknown in arena "+this.getName()+"!");
+			Bukkit.getLogger().warning("Fightmode " + this.getRepo().getFightMode() + " unknown in arena " + this.getName() + "!");
 			Bukkit.getLogger().info("Falling back to kit mode");
 			this.setFightMode(new KitMode(this.plugin, this));
 		}

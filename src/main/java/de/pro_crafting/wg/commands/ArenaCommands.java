@@ -1,15 +1,15 @@
 package de.pro_crafting.wg.commands;
 
-import java.util.Set;
-
-import org.bukkit.Location;
-import org.bukkit.command.CommandSender;
-
 import de.pro_crafting.commandframework.Command;
 import de.pro_crafting.commandframework.CommandArgs;
 import de.pro_crafting.wg.Util;
 import de.pro_crafting.wg.WarGear;
 import de.pro_crafting.wg.arena.Arena;
+
+import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
+
+import java.util.Set;
 
 public class ArenaCommands {
 	private WarGear plugin;
@@ -70,7 +70,7 @@ public class ArenaCommands {
 		sender.sendMessage("§7Fight Modus: §B" + arena.getRepo().getFightMode());
 		sender.sendMessage("§7Bodenhöhe: §B" + arena.getRepo().getGroundHeight());
 		sender.sendMessage("§7BodenSchematic: §B" + arena.getRepo().getGroundSchematic());
-		sender.sendMessage("§7Auto Reset: §B" + arena.getRepo().getAutoReset());
+		sender.sendMessage("§7Auto Reset: §B" + arena.getRepo().isAutoReset());
 		sender.sendMessage("§7Region Team1: §B" + arena.getRepo().getTeam1Region().getId());
 		sender.sendMessage("§7Region Team2: §B" + arena.getRepo().getTeam2Region().getId());
 		sender.sendMessage("§7Region Inner: §B" + arena.getRepo().getInnerRegion().getId());
