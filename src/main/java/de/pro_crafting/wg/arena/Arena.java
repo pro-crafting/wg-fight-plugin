@@ -207,7 +207,6 @@ public class Arena{
 	}
 	
 	public void updateRegion(PlayerRole role) {
-		removeOwners(role);
 		List<UUID> players = new ArrayList<>();
 		PlayerGroupKey key = this.getGroupManager().getGroupKey(role);
 		for (GroupMember player : key.getGroup().getMembers()) {
@@ -216,10 +215,6 @@ public class Arena{
 			}
 		}
 		key.getRegion().setOwners(players);
-	}
-	
-	private void removeOwners(PlayerRole role) {
-		this.getGroupManager().getGroupKey(role).getRegion().getOwners().clear();
 	}
 	
 	public void broadcastMessage(String message)
