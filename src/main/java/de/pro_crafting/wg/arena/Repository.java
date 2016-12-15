@@ -4,6 +4,7 @@ import com.google.common.collect.Sets;
 
 import de.pro_crafting.region.Region;
 import de.pro_crafting.region.RegionManager;
+import de.pro_crafting.wg.ErrorMessages;
 import de.pro_crafting.wg.Util;
 import de.pro_crafting.wg.WarGear;
 import de.pro_crafting.wg.group.GroupSide;
@@ -15,10 +16,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
@@ -42,7 +41,7 @@ public class Repository {
 		this.regionManager = this.plugin.getRegionsManager();
 	}
 
-	public Set<String> load() {
+	public ErrorMessages load() {
 		if (!this.arenaConfig.exists()) Sets.newHashSet("Configuration does not exist");
 		this.config = YamlConfiguration.loadConfiguration(this.arenaConfig);
 		this.configuration = new ArenaConfiguration(this.config.getValues(true));
@@ -86,7 +85,7 @@ public class Repository {
 
 		@Setter(AccessLevel.NONE)
 		@Getter(AccessLevel.PACKAGE)
-		private Set<String> errors;
+		private ErrorMessages errors;
 
 		private Region arenaRegion;
 		private Region innerRegion;
@@ -115,11 +114,11 @@ public class Repository {
 		private String team2Prefix;
 
 		public ArenaConfiguration() {
-			errors = Sets.newHashSet();
+			errors = new ErrorMessages();
 		}
 
 		public ArenaConfiguration(Map<String, Object> values) {
-			errors = new HashSet<>();
+			errors = new ErrorMessages();
 			worldName = getWorldName(values, WORLD, errors);
 			fightMode = get(values, MODE, "kit", errors);
 			isAutoReset = get(values, AUTO_RESET, true, errors);
@@ -142,24 +141,24 @@ public class Repository {
 			team2Warp = getLocation(values, FIGHT_START_TEAM2, errors);
 			spawnWarp = getLocation(values, SPAWN, errors);
 
-			if (errors.size() == 0) {
+			if (!errors.hasErrors()) {
 				this.team1Warp = Util.lookAt(this.team1Warp, this.team2Warp);
 				this.team2Warp = Util.lookAt(this.team2Warp, this.team1Warp);
 			}
 		}
 
-		private <T extends Object> T get(Map<String, Object> values, String key, T defaultValue, Set<String> errors) {
+		private <T extends Object> T get(Map<String, Object> values, String key, T defaultValue, ErrorMessages errors) {
 			try {
 				if (values.containsKey(key)) {
 					return (T) values.get(key);
 				}
 			} catch (Exception ignored) {
 			}
-			errors.add("Could not load " + key + " from configuration. Falling back to default of " + defaultValue);
+			errors.addWarning("Could not load " + key + " from configuration. Falling back to default of " + defaultValue);
 			return defaultValue;
 		}
 
-		private Region getRegion(Map<String, Object> values, String key, Set<String> errors) {
+		private Region getRegion(Map<String, Object> values, String key, ErrorMessages errors) {
 			String id = get(values, key, null, errors);
 			if (id != null) {
 				return getRegionById(id, errors);
@@ -167,7 +166,7 @@ public class Repository {
 			return null;
 		}
 
-		private Region getRegionById(String id, Set<String> errors) {
+		private Region getRegionById(String id, ErrorMessages errors) {
 			if (worldName == null) {
 				return null;
 			}
@@ -175,11 +174,11 @@ public class Repository {
 			if (!regions.isEmpty()) {
 				return regions.get(0);
 			}
-			errors.add("Unable to find region with id " + id);
+			errors.addError("Unable to find region with id " + id);
 			return null;
 		}
 
-		private Location getLocation(Map<String, Object> values, String key, Set<String> errors) {
+		private Location getLocation(Map<String, Object> values, String key, ErrorMessages errors) {
 			if (worldName == null) {
 				return null;
 			}
@@ -189,33 +188,33 @@ public class Repository {
 			}
 			String[] splited = location.split(";");
 			if (splited.length != 3) {
-				errors.add("Format of location wrong " + location);
+				errors.addError("Format of location wrong " + location);
 				return null;
 			}
 			try {
 				return new Location(this.getWorld(), Double.parseDouble(splited[0]), Double.parseDouble(splited[1]), Double.parseDouble(splited[2]));
 			} catch (Exception ex) {
-				errors.add("Location can't contain characters " + location);
+				errors.addError("Location can't contain characters " + location);
 				return null;
 			}
 		}
 
-		private String getWorldName(Map<String, Object> values, String key, Set<String> errors) {
+		private String getWorldName(Map<String, Object> values, String key, ErrorMessages errors) {
 			String worldName = get(values, key, null, errors);
 			if (worldName == null) {
 				return null;
 			}
 			if (!this.existsWorld(worldName)) {
-				errors.add("World '" + worldName + "' does not exist");
+				errors.addError("World '" + worldName + "' does not exist");
 				return null;
 			}
 			return worldName;
 		}
 
-		private int getGroundHeightValue(Map<String, Object> values, String key, Set<String> errors) {
+		private int getGroundHeightValue(Map<String, Object> values, String key, ErrorMessages errors) {
 			int groundHeight = get(values, GROUND_HEIGHT, -1, errors);
 			if (this.worldName == null || groundHeight < 0 || groundHeight > this.getWorld().getMaxHeight()) {
-				errors.add("Ground height needs to be within world boundaries.");
+				errors.addError("Ground height needs to be within world boundaries.");
 				return -1;
 			}
 			return groundHeight;
@@ -237,28 +236,28 @@ public class Repository {
 		}
 
 		public void setArenaRegion(String id) {
-			Region rg = this.getRegionById(id, Sets.newHashSet());
+			Region rg = this.getRegionById(id, new ErrorMessages());
 			if (rg != null) {
 				this.arenaRegion = rg;
 			}
 		}
 
 		public void setInnerRegion(String id) {
-			Region rg = this.getRegionById(id, Sets.newHashSet());
+			Region rg = this.getRegionById(id, new ErrorMessages());
 			if (rg != null) {
 				this.innerRegion = rg;
 			}
 		}
 
 		public void setTeam1Region(String id) {
-			Region rg = this.getRegionById(id, Sets.newHashSet());
+			Region rg = this.getRegionById(id, new ErrorMessages());
 			if (rg != null) {
 				this.team1Region = rg;
 			}
 		}
 
 		public void setTeam2Region(String id) {
-			Region rg = this.getRegionById(id, Sets.newHashSet());
+			Region rg = this.getRegionById(id, new ErrorMessages());
 			if (rg != null) {
 				this.team2Region = rg;
 			}

@@ -1,10 +1,12 @@
 package de.pro_crafting.wg.arena;
 
+import de.pro_crafting.wg.ErrorMessages;
 import de.pro_crafting.wg.WarGear;
 import de.pro_crafting.wg.group.Group;
 import de.pro_crafting.wg.group.PlayerGroupKey;
 import de.pro_crafting.wg.group.PlayerRole;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 
@@ -43,13 +45,14 @@ public class ArenaManager {
 			return;
 		}
 		Arena arena = new Arena(this.plugin, name);
-		Set<String> errors = arena.load();
-		if (errors.size() == 0) {
+		ErrorMessages errors = arena.load();
+		errors.getWarnings().forEach(Bukkit.getLogger()::warning);
+		errors.getErrors().forEach(Bukkit.getLogger()::severe);
+		if (!errors.hasErrors()) {
 			this.plugin.getLogger().info("Arena "+name+" geladen.");
 			this.arenas.put(name.toLowerCase(), arena);
 			return;
 		}
-		errors.forEach(System.out::println);
 		this.plugin.getLogger().info("Arena "+name+" konnte nicht geladen werden.");
 	}
 	

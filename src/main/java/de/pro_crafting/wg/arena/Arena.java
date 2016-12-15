@@ -18,6 +18,7 @@ import de.pro_crafting.generator.provider.SingleBlockProvider;
 import de.pro_crafting.region.Region;
 import de.pro_crafting.region.flags.Flag;
 import de.pro_crafting.region.flags.StateValue;
+import de.pro_crafting.wg.ErrorMessages;
 import de.pro_crafting.wg.WarGear;
 import de.pro_crafting.wg.event.ArenaStateChangeEvent;
 import de.pro_crafting.wg.group.Group;
@@ -40,7 +41,6 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 public class Arena{
@@ -154,10 +154,10 @@ public class Arena{
 		this.broadcastMessage(ChatColor.GREEN + "Arena gesperrt!");
 	}
 
-	public Set<String> load()
+	public ErrorMessages load()
 	{
-		Set<String> errors = this.repo.load();
-		if (errors.size() == 0)
+		ErrorMessages errors = this.repo.load();
+		if (!errors.hasErrors())
 		{
 			this.team = new GroupManager(plugin, this);
 			this.setFightMode(new KitMode(this.plugin, this));
