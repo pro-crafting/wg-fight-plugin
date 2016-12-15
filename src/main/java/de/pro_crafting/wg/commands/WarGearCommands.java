@@ -1,11 +1,5 @@
 package de.pro_crafting.wg.commands;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import de.pro_crafting.commandframework.Command;
 import de.pro_crafting.commandframework.CommandArgs;
 import de.pro_crafting.commandframework.Completer;
@@ -15,7 +9,14 @@ import de.pro_crafting.wg.WarGear;
 import de.pro_crafting.wg.arena.Arena;
 import de.pro_crafting.wg.arena.State;
 import de.pro_crafting.wg.event.DrawQuitEvent;
+import de.pro_crafting.wg.event.FightQuitEvent;
 import de.pro_crafting.wg.event.WinQuitEvent;
+
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class WarGearCommands {
 	private WarGear plugin;
@@ -133,16 +134,19 @@ public class WarGearCommands {
 			return;
 		}
 
+		FightQuitEvent event = null;
 		if (args.length() == 0) {
-			DrawQuitEvent event = new DrawQuitEvent(arena, "Unentschieden", arena.getGroupManager().getGroup1(), arena.getGroupManager().getGroup2(), FightQuitReason.FightLeader);
-			this.plugin.getServer().getPluginManager().callEvent(event);
+			event = new DrawQuitEvent(arena, "Unentschieden", arena.getGroupManager().getGroup1(), arena.getGroupManager().getGroup2(), FightQuitReason.FightLeader);
 		}
 		else if (args.getArgs(0).equalsIgnoreCase("team1")) {
-			WinQuitEvent event = new WinQuitEvent(arena, "", arena.getGroupManager().getGroup1(), arena.getGroupManager().getGroup2(), FightQuitReason.FightLeader);
-			this.plugin.getServer().getPluginManager().callEvent(event);
+			event = new WinQuitEvent(arena, "", arena.getGroupManager().getGroup1(), arena.getGroupManager().getGroup2(), FightQuitReason.FightLeader);
 		}
 		else if (args.getArgs(0).equalsIgnoreCase("team2")) {
-			WinQuitEvent event = new WinQuitEvent(arena, "", arena.getGroupManager().getGroup2(), arena.getGroupManager().getGroup1(), FightQuitReason.FightLeader);
+			event = new WinQuitEvent(arena, "", arena.getGroupManager().getGroup2(), arena.getGroupManager().getGroup1(), FightQuitReason.FightLeader);
+		}
+
+		if (event != null) {
+			this.plugin.getServer().getPluginManager().callEvent(event);
 		}
 	}
 	
