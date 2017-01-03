@@ -81,8 +81,10 @@ public class WgListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void asyncPlayerChatHandler(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
-        PlayerGroupKey group = this.plugin.getArenaManager().getGroup(player);
-        String color = group.getArena().getGroupManager().getPrefix(group.getRole());
+        Arena arena = this.plugin.getArenaManager().getArenaAt(player.getLocation());
+
+        PlayerGroupKey group = arena.getGroupManager().getGroupKey(player);
+        String color = arena.getGroupManager().getPrefix(group.getRole());
         String groupChatSign = this.plugin.getRepo().getGroupChatSign();
 
         if (this.plugin.getRepo().isGroupChatEnabled() &&
