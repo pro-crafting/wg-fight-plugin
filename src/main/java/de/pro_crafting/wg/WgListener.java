@@ -164,7 +164,7 @@ public class WgListener implements Listener {
                 callArenaChangeEvent(player, arenaFrom, arenaTo);
             }
 
-            if (player.hasPermission("wargear.arena.bypass")) {
+            if (player.hasPermission("wargear.arena.bypass,*")) {
                 return;
             }
 
@@ -176,6 +176,10 @@ public class WgListener implements Listener {
             } else if (team != null && team.getRole() == PlayerRole.Team1 && (to == ArenaPosition.Team2PlayField || to == ArenaPosition.Team2WG)) {
                 resetPlayerMovement(to, from, event.getFrom(), player, arenaTo);
             } else if (team != null && team.getRole() == PlayerRole.Team2 && (to == ArenaPosition.Team1PlayField || to == ArenaPosition.Team1WG)) {
+                resetPlayerMovement(to, from, event.getFrom(), player, arenaTo);
+            } else if (team == null && to == ArenaPosition.Team1PlayField && !player.hasPermission("wargear.arena.bypass.playField")){
+                resetPlayerMovement(to, from, event.getFrom(), player, arenaTo);
+            } else if(team != null && team.getRole() == PlayerRole.Viewer && to == ArenaPosition.Team1PlayField && !player.hasPermission("wargear.arena.bypass.playField")){
                 resetPlayerMovement(to, from, event.getFrom(), player, arenaTo);
             }
         }
