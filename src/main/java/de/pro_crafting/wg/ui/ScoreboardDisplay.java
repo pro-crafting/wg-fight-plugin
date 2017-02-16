@@ -40,8 +40,8 @@ public class ScoreboardDisplay implements Listener{
 	private final String teamLeaderBlue = "team_blue_leader";
 	
 	private final String timeName = ChatColor.GREEN+"Zeit (m):";
-	private final String team1CannonName = ChatColor.DARK_GREEN+"Kanonen";
-	private final String team2CannonName = ChatColor.AQUA+"Kanonen";
+	private final String team1CannonName = "Kanonen";
+	private final String team2CannonName = "Kanonen";
 	
 	private Map<Arena, BukkitTask> timers;
 	private BukkitTask objectiveSwitcher;
@@ -276,11 +276,11 @@ public class ScoreboardDisplay implements Listener{
 		}
 		GroupManager groupManager = arena.getGroupManager();
 		if (role == PlayerRole.Team1) {
-			this.plugin.getScoreboardManager().setScore(groupManager.getGroupKey(PlayerRole.Viewer), team1CannonName, count, infoName);
-			this.plugin.getScoreboardManager().setScore(groupManager.getGroupKey(PlayerRole.Team1), team1CannonName, count, infoName);
+			this.plugin.getScoreboardManager().setScore(groupManager.getGroupKey(PlayerRole.Viewer), this.getTeam1CannonName(arena), count, infoName);
+			this.plugin.getScoreboardManager().setScore(groupManager.getGroupKey(PlayerRole.Team1), this.getTeam1CannonName(arena), count, infoName);
 		} else {
-			this.plugin.getScoreboardManager().setScore(groupManager.getGroupKey(PlayerRole.Viewer), team2CannonName, count, infoName);
-			this.plugin.getScoreboardManager().setScore(groupManager.getGroupKey(PlayerRole.Team2), team2CannonName, count, infoName);
+			this.plugin.getScoreboardManager().setScore(groupManager.getGroupKey(PlayerRole.Viewer), this.getTeam2CannonName(arena), count, infoName);
+			this.plugin.getScoreboardManager().setScore(groupManager.getGroupKey(PlayerRole.Team2), this.getTeam2CannonName(arena), count, infoName);
 		}
 	}
 	
@@ -355,5 +355,13 @@ public class ScoreboardDisplay implements Listener{
 				}
 			}
 		}
+	}
+
+	private String getTeam1CannonName(Arena arena){
+		return arena.getRepo().getTeam1Prefix() + this.team1CannonName;
+	}
+
+	private String getTeam2CannonName(Arena arena){
+		return arena.getRepo().getTeam1Prefix() + this.team2CannonName;
 	}
 }
