@@ -84,6 +84,10 @@ public class WgListener implements Listener {
     Player player = event.getPlayer();
     Arena arena = this.plugin.getArenaManager().getArenaAt(player.getLocation());
 
+    if (arena == null) {
+      return;
+    }
+
     PlayerGroupKey group = arena.getGroupManager().getGroupKey(player);
     String color = arena.getGroupManager().getPrefix(group.getRole());
     String groupChatSign = this.plugin.getRepo().getGroupChatSign();
