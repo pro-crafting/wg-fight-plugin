@@ -164,7 +164,7 @@ public class WgListener implements Listener {
                 callArenaChangeEvent(player, arenaFrom, arenaTo);
             }
 
-            if (player.hasPermission("wargear.arena.bypass,*")) {
+            if (player.hasPermission("wargear.arena.bypass.*")) {
                 return;
             }
 
