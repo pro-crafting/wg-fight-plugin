@@ -31,6 +31,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
@@ -486,6 +488,24 @@ public class WgListener implements Listener {
         || !member.isAlive()) {
       event.setCancelled(true);
       Util.feed(player);
+    }
+  }
+
+  @EventHandler(ignoreCancelled = true)
+  public void onBlockPlace(BlockPlaceEvent event) {
+    if (plugin.getArenaManager().getArenaOfTeamMember(event.getPlayer()) != null && !plugin
+        .getArenaManager().getArenaOfTeamMember(event.getPlayer()).getState()
+        .equals(State.Running)) {
+      event.setCancelled(true);
+    }
+  }
+
+  @EventHandler(ignoreCancelled = true)
+  public void onBlockPlace(BlockBreakEvent event) {
+    if (plugin.getArenaManager().getArenaOfTeamMember(event.getPlayer()) != null && !plugin
+        .getArenaManager().getArenaOfTeamMember(event.getPlayer()).getState()
+        .equals(State.Running)) {
+      event.setCancelled(true);
     }
   }
 

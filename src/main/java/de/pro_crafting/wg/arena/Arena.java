@@ -161,12 +161,11 @@ public class Arena {
   }
 
   private void setInnerRegionFlags(Region region, StateValue value) {
-    StateValue forcedValue = StateValue.Deny;
     region.setFlag(Flag.TNT, value);
     region.setFlag(Flag.PVP, value);
-    region.setFlag(Flag.Fire_Spread, forcedValue);
-    region.setFlag(Flag.Ghast_Fireball, forcedValue);
-    region.setFlag(Flag.Build, forcedValue);
+    region.setFlag(Flag.Fire_Spread, StateValue.Deny);
+    region.setFlag(Flag.Ghast_Fireball, StateValue.Deny);
+    region.setFlag(Flag.Build, StateValue.Allow);
   }
 
   private void setOpeningFlags(PlayerRole role, StateValue value) {
@@ -175,7 +174,6 @@ public class Arena {
     region.setFlag(Flag.PVP, value);
     region.setFlag(Flag.Fire_Spread, value);
     region.setFlag(Flag.Ghast_Fireball, value);
-    region.setFlag(Flag.Build, value);
   }
 
   public void updateRegion(PlayerRole role) {
