@@ -11,9 +11,6 @@ buildNumber.properties
 
 # Eclipse
 /bin
-.settings
-.project
-.classpath
 
 # IntelliJ
 out/
