@@ -1,13 +1,24 @@
-/WarGear.iml
-/.idea
-*.class
-
-# Package Files #
-*.jar
-*.war
-*.ear
+# Maven
 target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
 dependency-reduced-pom.xml
-.settings/
+buildNumber.properties
+.mvn/timing.properties
+
+# Eclipse
+/bin
+.settings
 .project
 .classpath
+
+# IntelliJ
+out/
+.idea/
+*.iml
+
+# Misc
+.DS_Store
