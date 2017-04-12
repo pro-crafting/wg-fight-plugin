@@ -497,9 +497,8 @@ public class WgListener implements Listener {
 
   @EventHandler(ignoreCancelled = true)
   public void onBlockPlace(BlockPlaceEvent event) {
-    if (plugin.getArenaManager().getArenaOfTeamMember(event.getPlayer()) != null && !plugin
-        .getArenaManager().getArenaOfTeamMember(event.getPlayer()).getState()
-        .equals(State.Running)) {
+    Arena arena = plugin.getArenaManager().getArenaOfTeamMember(event.getPlayer());
+    if (arena != null && !arena.getState().equals(State.Running)) {
       event.setCancelled(true);
     }
   }
