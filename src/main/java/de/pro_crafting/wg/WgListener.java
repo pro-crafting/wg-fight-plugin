@@ -18,14 +18,13 @@ import de.pro_crafting.wg.group.GroupMember;
 import de.pro_crafting.wg.group.PlayerGroupKey;
 import de.pro_crafting.wg.group.PlayerRole;
 import de.pro_crafting.wg.modes.KitMode;
-
 import net.gravitydevelopment.updater.Updater.UpdateResult;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -33,6 +32,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityCombustByEntityEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
@@ -280,7 +280,7 @@ public class WgListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void entityDamgeHandler(EntityDamageEvent event) {
+    public void entityDamageHandler(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof Player)) {
             return;
         }
@@ -296,7 +296,9 @@ public class WgListener implements Listener {
         }
 
         if (event instanceof EntityDamageByEntityEvent) {
-            checkTeamDamaging((EntityDamageByEntityEvent) event, player, arena);
+            if (isTeamDamage(event.getEntity(), player, arena, false)) {
+                event.setCancelled(true);
+            }
         }
 
         Bukkit.getScheduler().runTask(this.plugin, new Runnable() {
@@ -306,16 +308,37 @@ public class WgListener implements Listener {
         });
     }
 
-    private void checkTeamDamaging(EntityDamageByEntityEvent event, Player player, Arena arena) {
+    private boolean isTeamDamage(Entity entity, Player damagee, Arena arena, boolean silent) {
         Player damager = null;
-        if (event.getDamager() instanceof Projectile
-                && ((Projectile) event.getDamager()).getShooter() instanceof Player) {
-            damager = (Player) ((Projectile) event.getDamager()).getShooter();
-        } else if (event.getDamager() instanceof Player) {
-            damager = (Player) event.getDamager();
+        if (entity instanceof Projectile
+            && ((Projectile) entity).getShooter() instanceof Player) {
+            damager = (Player) ((Projectile) entity).getShooter();
+        } else if (entity instanceof Player) {
+            damager = (Player) entity;
         }
-        if (damager != null && arena.getGroupManager().getGroupOfPlayer(player).equals(arena.getGroupManager().getGroupOfPlayer(damager))) {
-            damager.sendMessage("§7Du darfst Spielern aus deinem Team keinen Schaden zufügen.");
+
+        if (entity != null && arena.getGroupManager().getGroupOfPlayer(damagee)
+            .equals(arena.getGroupManager().getGroupOfPlayer(damager))) {
+            if (!silent) {
+                damagee.sendMessage("§7Du darfst Spielern aus deinem Team keinen Schaden zufügen.");
+            }
+            return true;
+        }
+        return false;
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void playerCombustByEntityHandler(EntityCombustByEntityEvent event) {
+        if (!(event.getEntity() instanceof Player)) {
+            return;
+        }
+        final Player player = (Player) event.getEntity();
+        final Arena arena = this.plugin.getArenaManager().getArenaOfTeamMember(player);
+        if (arena == null) {
+            return;
+        }
+
+        if (isTeamDamage(event.getCombuster(), player, arena, true)) {
             event.setCancelled(true);
         }
     }
