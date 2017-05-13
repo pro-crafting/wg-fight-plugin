@@ -10,7 +10,9 @@ import de.pro_crafting.wg.group.GroupManager;
 import de.pro_crafting.wg.group.GroupMember;
 import de.pro_crafting.wg.group.PlayerGroupKey;
 import de.pro_crafting.wg.group.PlayerRole;
-
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -22,10 +24,6 @@ import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
 public class ScoreboardDisplay implements Listener{
 	private WarGear plugin;	
@@ -271,7 +269,7 @@ public class ScoreboardDisplay implements Listener{
 	}
 	
 	public void updateCannons(Arena arena, PlayerRole role, int count) {
-		if (arena.getState() != State.Running) {
+		if (arena.getState() != State.Running && arena.getState() != State.PreRunning) {
 			return;
 		}
 		GroupManager groupManager = arena.getGroupManager();
@@ -335,7 +333,8 @@ public class ScoreboardDisplay implements Listener{
 			}
 		}
 		else if (event.getTo() == State.Running) {
-			BukkitTask task = Bukkit.getScheduler().runTaskTimer(this.plugin, (Runnable)new ArenaTimerRunnable(this.plugin, arena), 0, 20*60);
+			BukkitTask task = Bukkit.getScheduler().runTaskTimer(this.plugin,
+					new ArenaTimerRunnable(this.plugin, arena), 0, 20 * 60);
 			timers.put(arena, task);
 		}
 		else if (event.getTo() == State.Spectate) {
@@ -362,6 +361,6 @@ public class ScoreboardDisplay implements Listener{
 	}
 
 	private String getTeam2CannonName(Arena arena){
-		return arena.getRepo().getTeam1Prefix() + this.team2CannonName;
+		return arena.getRepo().getTeam2Prefix() + this.team2CannonName;
 	}
 }
