@@ -1,15 +1,14 @@
 package de.pro_crafting.wg.arena;
 
 import com.google.common.collect.Sets;
-import de.pro_crafting.region.Region;
-import de.pro_crafting.region.RegionManager;
+import de.pro_crafting.common.Point;
 import de.pro_crafting.wg.ErrorMessages;
 import de.pro_crafting.wg.Util;
 import de.pro_crafting.wg.WarGear;
 import de.pro_crafting.wg.group.GroupSide;
+import de.pro_crafting.wg.model.WgRegion;
 import java.io.File;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
@@ -27,7 +26,6 @@ public class Repository {
   private WarGear plugin;
   private File arenaConfig;
   private YamlConfiguration config;
-  private RegionManager regionManager;
 
   @Delegate
   private ArenaConfiguration configuration;
@@ -35,7 +33,6 @@ public class Repository {
   public Repository(WarGear plugin, Arena arena) {
     this.plugin = plugin;
     this.arenaConfig = new File(this.plugin.getArenaFolder(), arena.getName() + ".yml");
-    this.regionManager = this.plugin.getRegionsManager();
   }
 
   public ErrorMessages load() {
@@ -51,7 +48,7 @@ public class Repository {
     return false;
   }
 
-  public Region getTeamRegion(GroupSide side) {
+  public WgRegion getTeamRegion(GroupSide side) {
     return side == GroupSide.Team1 ? getTeam1Region() : getTeam2Region();
   }
 
@@ -75,10 +72,14 @@ public class Repository {
     public static final String GROUND_HEIGHT = "ground.height";
     public static final String GROUND_DAMAGE = "ground.damage";
     public static final String GROUND_SCHEMATIC = "ground.schematic";
-    public static final String REGIONS_ARENA = "regions.arena";
-    public static final String REGIONS_INNER = "regions.inner";
-    public static final String REGIONS_TEAM1 = "regions.team1";
-    public static final String REGIONS_TEAM2 = "regions.team2";
+    public static final String REGIONS_ARENA_MIN = "regions.arena.min";
+    public static final String REGIONS_ARENA_MAX = "regions.arena.max";
+    public static final String REGIONS_INNER_MIN = "regions.inner.min";
+    public static final String REGIONS_INNER_MAX = "regions.inner.max";
+    public static final String REGIONS_TEAM1_MIN = "regions.team1.min";
+    public static final String REGIONS_TEAM1_MAX = "regions.team1.max";
+    public static final String REGIONS_TEAM2_MIN = "regions.team2.min";
+    public static final String REGIONS_TEAM2_MAX = "regions.team2.max";
     public static final String FIGHT_START_TEAM1 = "fightStart.team1";
     public static final String FIGHT_START_TEAM2 = "fightStart.team2";
     public static final String SPAWN = "spawn";
@@ -87,10 +88,10 @@ public class Repository {
     @Getter(AccessLevel.PACKAGE)
     private ErrorMessages errors;
 
-    private Region arenaRegion;
-    private Region innerRegion;
-    private Region team1Region;
-    private Region team2Region;
+    private WgRegion arenaRegion;
+    private WgRegion innerRegion;
+    private WgRegion team1Region;
+    private WgRegion team2Region;
 
     private Location team1Warp;
     private Location team2Warp;
@@ -133,10 +134,10 @@ public class Repository {
       groundHeight = getGroundHeightValue(values, GROUND_HEIGHT, errors);
       groundDamage = get(values, GROUND_DAMAGE, 4, errors);
       groundSchematic = get(values, GROUND_SCHEMATIC, null, errors);
-      arenaRegion = getRegion(values, REGIONS_ARENA, errors);
-      innerRegion = getRegion(values, REGIONS_INNER, errors);
-      team1Region = getRegion(values, REGIONS_TEAM1, errors);
-      team2Region = getRegion(values, REGIONS_TEAM2, errors);
+      arenaRegion = getRegion(values, REGIONS_ARENA_MIN, REGIONS_ARENA_MAX, errors);
+      innerRegion = getRegion(values, REGIONS_INNER_MIN, REGIONS_INNER_MAX, errors);
+      team1Region = getRegion(values, REGIONS_TEAM1_MIN, REGIONS_TEAM1_MAX, errors);
+      team2Region = getRegion(values, REGIONS_TEAM2_MIN, REGIONS_TEAM2_MAX, errors);
       team1Warp = getLocation(values, FIGHT_START_TEAM1, errors);
       team2Warp = getLocation(values, FIGHT_START_TEAM2, errors);
       spawnWarp = getLocation(values, SPAWN, errors);
@@ -160,24 +161,16 @@ public class Repository {
       return defaultValue;
     }
 
-    private Region getRegion(Map<String, Object> values, String key, ErrorMessages errors) {
-      String id = get(values, key, null, errors);
-      if (id != null) {
-        return getRegionById(id, errors);
-      }
-      return null;
-    }
-
-    private Region getRegionById(String id, ErrorMessages errors) {
-      if (worldName == null) {
+    private WgRegion getRegion(Map<String, Object> values, String keyMin, String keyMax,
+        ErrorMessages errors) {
+      Location min = getLocation(values, keyMin, errors);
+      Location max = getLocation(values, keyMax, errors);
+      if (min == null || max == null) {
+        errors.addError(
+            "Region is defined wrongly! Look at the above for errors related to locations.");
         return null;
       }
-      List<Region> regions = Repository.this.regionManager.getRegions(id, this.getWorld());
-      if (!regions.isEmpty()) {
-        return regions.get(0);
-      }
-      errors.addError("Unable to find region with id " + id);
-      return null;
+      return WgRegion.from(this.getWorld(), min, max);
     }
 
     private Location getLocation(Map<String, Object> values, String key, ErrorMessages errors) {
@@ -215,7 +208,7 @@ public class Repository {
     }
 
     private int getGroundHeightValue(Map<String, Object> values, String key, ErrorMessages errors) {
-      int groundHeight = get(values, GROUND_HEIGHT, -1, errors);
+      int groundHeight = get(values, key, -1, errors);
       if (this.worldName == null || groundHeight < 0 || groundHeight > this.getWorld()
           .getMaxHeight()) {
         errors.addError("Ground height needs to be within world boundaries.");
@@ -241,31 +234,27 @@ public class Repository {
       }
     }
 
-    public void setArenaRegion(String id) {
-      Region rg = this.getRegionById(id, new ErrorMessages());
-      if (rg != null) {
-        this.arenaRegion = rg;
+    public void setArenaRegion(WgRegion region) {
+      if (region != null) {
+        this.arenaRegion = region;
       }
     }
 
-    public void setInnerRegion(String id) {
-      Region rg = this.getRegionById(id, new ErrorMessages());
-      if (rg != null) {
-        this.innerRegion = rg;
+    public void setInnerRegion(WgRegion region) {
+      if (region != null) {
+        this.innerRegion = region;
       }
     }
 
-    public void setTeam1Region(String id) {
-      Region rg = this.getRegionById(id, new ErrorMessages());
-      if (rg != null) {
-        this.team1Region = rg;
+    public void setTeam1Region(WgRegion region) {
+      if (region != null) {
+        this.team1Region = region;
       }
     }
 
-    public void setTeam2Region(String id) {
-      Region rg = this.getRegionById(id, new ErrorMessages());
-      if (rg != null) {
-        this.team2Region = rg;
+    public void setTeam2Region(WgRegion region) {
+      if (region != null) {
+        this.team2Region = region;
       }
     }
 
@@ -275,12 +264,12 @@ public class Repository {
       }
     }
 
-    private String serializeRegion(Region region) {
-      return region == null ? "" : region.getId();
-    }
-
     private String serializeLocation(Location location) {
       return location.getX() + ";" + location.getY() + ";" + location.getZ();
+    }
+
+    private String serializePoint(Point point) {
+      return point.getX() + ";" + point.getY() + ";" + point.getZ();
     }
 
     public Map<String, Object> serialize() {
@@ -299,10 +288,14 @@ public class Repository {
       values.put(GROUND_HEIGHT, this.groundHeight);
       values.put(GROUND_DAMAGE, this.groundDamage);
       values.put(GROUND_SCHEMATIC, this.groundSchematic);
-      values.put(REGIONS_ARENA, serializeRegion(this.arenaRegion));
-      values.put(REGIONS_INNER, serializeRegion(this.innerRegion));
-      values.put(REGIONS_TEAM1, serializeRegion(this.team1Region));
-      values.put(REGIONS_TEAM2, serializeRegion(this.team2Region));
+      values.put(REGIONS_ARENA_MIN, serializePoint(this.arenaRegion.getMin()));
+      values.put(REGIONS_ARENA_MAX, serializePoint(this.arenaRegion.getMax()));
+      values.put(REGIONS_INNER_MIN, serializePoint(this.innerRegion.getMin()));
+      values.put(REGIONS_INNER_MAX, serializePoint(this.innerRegion.getMax()));
+      values.put(REGIONS_TEAM1_MIN, serializePoint(this.team1Region.getMin()));
+      values.put(REGIONS_TEAM1_MAX, serializePoint(this.team1Region.getMax()));
+      values.put(REGIONS_TEAM2_MIN, serializePoint(this.team2Region.getMin()));
+      values.put(REGIONS_TEAM2_MAX, serializePoint(this.team2Region.getMax()));
       values.put(FIGHT_START_TEAM1, serializeLocation(team1Warp));
       values.put(FIGHT_START_TEAM2, serializeLocation(team2Warp));
       values.put(SPAWN, serializeLocation(spawnWarp));

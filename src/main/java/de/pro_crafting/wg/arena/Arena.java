@@ -14,9 +14,6 @@ import de.pro_crafting.generator.job.Job;
 import de.pro_crafting.generator.job.SimpleJob;
 import de.pro_crafting.generator.provider.BlockSearchProvider;
 import de.pro_crafting.generator.provider.SingleBlockProvider;
-import de.pro_crafting.region.Region;
-import de.pro_crafting.region.flags.Flag;
-import de.pro_crafting.region.flags.StateValue;
 import de.pro_crafting.wg.ErrorMessages;
 import de.pro_crafting.wg.WarGear;
 import de.pro_crafting.wg.event.ArenaStateChangeEvent;
@@ -25,6 +22,7 @@ import de.pro_crafting.wg.group.GroupManager;
 import de.pro_crafting.wg.group.GroupMember;
 import de.pro_crafting.wg.group.PlayerGroupKey;
 import de.pro_crafting.wg.group.PlayerRole;
+import de.pro_crafting.wg.model.WgRegion;
 import de.pro_crafting.wg.modes.FightMode;
 import de.pro_crafting.wg.modes.KitMode;
 import java.util.ArrayList;
@@ -160,24 +158,6 @@ public class Arena {
     this.plugin.getScoreboard().clearScoreboard(this);
   }
 
-  private void setInnerRegionFlags(Region region, StateValue value) {
-    StateValue forcedValue = StateValue.Deny;
-    region.setFlag(Flag.TNT, value);
-    region.setFlag(Flag.PVP, value);
-    region.setFlag(Flag.Fire_Spread, forcedValue);
-    region.setFlag(Flag.Ghast_Fireball, forcedValue);
-    region.setFlag(Flag.Build, forcedValue);
-  }
-
-  private void setOpeningFlags(PlayerRole role, StateValue value) {
-    Region region = getGroupManager().getGroupKey(role).getRegion();
-    region.setFlag(Flag.TNT, value);
-    region.setFlag(Flag.PVP, value);
-    region.setFlag(Flag.Fire_Spread, value);
-    region.setFlag(Flag.Ghast_Fireball, value);
-    region.setFlag(Flag.Build, value);
-  }
-
   public void updateRegion(PlayerRole role) {
     List<UUID> players = new ArrayList<>();
     PlayerGroupKey key = this.getGroupManager().getGroupKey(role);
@@ -186,7 +166,6 @@ public class Arena {
         players.add(player.getOfflinePlayer().getUniqueId());
       }
     }
-    key.getRegion().setOwners(players);
   }
 
   public void broadcastMessage(String message) {
@@ -264,7 +243,7 @@ public class Arena {
         this.getGroupManager().getGroupKey(PlayerRole.Team2));
   }
 
-  private void startCannonCounterJob(Region rg, final PlayerGroupKey groupKey) {
+  private void startCannonCounterJob(WgRegion rg, final PlayerGroupKey groupKey) {
     Point origin = new Point(rg.getMin().getX(), rg.getMin().getY(), rg.getMin().getZ());
     Point max = new Point(rg.getMax().getX(), rg.getMax().getY(), rg.getMax().getZ());
     Size size = new Size(max.getX() - origin.getX(), max.getY() - origin.getY(),
@@ -349,15 +328,10 @@ public class Arena {
 
   public void setOpen(Boolean isOpen) {
     this.isOpen = isOpen;
-    StateValue value = isOpen ? StateValue.Allow : StateValue.Deny;
-    setOpeningFlags(PlayerRole.Team1, value);
-    setOpeningFlags(PlayerRole.Team2, value);
-
-    setInnerRegionFlags(this.repo.getInnerRegion(), value);
   }
 
   public CuboidRegion getPlayGroundRegion() {
-    Region innerRegion = this.repo.getInnerRegion();
+    WgRegion innerRegion = this.repo.getInnerRegion();
     Vector min = new Vector()
         .add(innerRegion.getMin().getX(), innerRegion.getMin().getY(), innerRegion.getMin().getZ());
     Vector max = new Vector()
@@ -376,12 +350,12 @@ public class Arena {
       return ArenaPosition.Platform;
     }
 
-    Region team1 = this.repo.getTeam1Region();
+    WgRegion team1 = this.repo.getTeam1Region();
     if (this.repo.getTeam1Region().contains(BukkitUtil.toLocation(team1.getWorld(), vector))) {
       return ArenaPosition.Team1WG;
     }
 
-    Region team2 = this.repo.getTeam2Region();
+    WgRegion team2 = this.repo.getTeam2Region();
     if (team2.contains(BukkitUtil.toLocation(team2.getWorld(), vector))) {
       return ArenaPosition.Team2WG;
     }

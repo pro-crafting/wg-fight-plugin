@@ -6,7 +6,6 @@ import de.pro_crafting.commandframework.Completer;
 import de.pro_crafting.common.scoreboard.ScoreboardManager;
 import de.pro_crafting.generator.BlockGenerator;
 import de.pro_crafting.kit.KitAPI;
-import de.pro_crafting.region.RegionManager;
 import de.pro_crafting.wg.arena.ArenaManager;
 import de.pro_crafting.wg.commands.ArenaCommands;
 import de.pro_crafting.wg.commands.TeamCommands;
@@ -41,14 +40,13 @@ public class WarGear extends JavaPlugin {
   private InvitationManager inviteManager;
   private ModeManager modes;
   private File modeFolder;
-  private RegionManager regionsManager;
+  private WgRegionListener wgRegionListener;
 
   @Override
   public void onEnable() {
     KitAPI.getInstance().load();
     this.loadConfig();
     this.repo = new Repository(this);
-    this.regionsManager = new RegionManager();
     this.generator = new BlockGenerator(this, 50000);
     this.modes = new ModeManager(this);
     this.arenaManager = new ArenaManager(this);
@@ -60,6 +58,7 @@ public class WarGear extends JavaPlugin {
     startUpdater();
     registerCommands();
     this.wgListener = new WgListener(this);
+    this.wgRegionListener = new WgRegionListener(this);
     this.offlineManager = new OfflineManager(this);
     this.scoreboardManager = new ScoreboardManager<>();
     this.scoreboard = new ScoreboardDisplay(this);
@@ -90,6 +89,7 @@ public class WarGear extends JavaPlugin {
   public void onDisable() {
     HandlerList.unregisterAll(this.eco);
     HandlerList.unregisterAll(this.wgListener);
+    HandlerList.unregisterAll(this.wgRegionListener);
     this.arenaManager.unloadArenas();
     this.getLogger().info("Plugin erfolgreich deaktiviert!");
   }
@@ -191,9 +191,5 @@ public class WarGear extends JavaPlugin {
 
   public File getModeFolder() {
     return modeFolder;
-  }
-
-  public RegionManager getRegionsManager() {
-    return this.regionsManager;
   }
 }
