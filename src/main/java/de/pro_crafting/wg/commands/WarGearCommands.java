@@ -121,7 +121,7 @@ public class WarGearCommands {
 		arena.setKit(kitName);
 	}
 	
-	@Command(name="wgk.quit", description="Beendet einen Fight.", usage="/wgk quit <team1|team2>",permission="wargear.quit")
+	@Command(name="wgk.quit", description="Beendet einen Fight.", aliases = {"wgk.stop"}, usage="/wgk quit <team1|team2>",permission="wargear.quit")
 	public void quit(CommandArgs args) {
 		Arena arena = Util.getArenaFromSender(plugin, args.getSender(), args.getArgs());
 		if (arena == null) {
