@@ -5,6 +5,7 @@ import de.pro_crafting.commandframework.CommandFramework;
 import de.pro_crafting.commandframework.Completer;
 import de.pro_crafting.common.scoreboard.ScoreboardManager;
 import de.pro_crafting.generator.BlockGenerator;
+import de.pro_crafting.kit.KitAPI;
 import de.pro_crafting.region.RegionManager;
 import de.pro_crafting.wg.arena.ArenaManager;
 import de.pro_crafting.wg.commands.ArenaCommands;
@@ -14,17 +15,14 @@ import de.pro_crafting.wg.group.PlayerGroupKey;
 import de.pro_crafting.wg.group.invitation.InvitationManager;
 import de.pro_crafting.wg.modes.ModeManager;
 import de.pro_crafting.wg.ui.ScoreboardDisplay;
-
-import net.gravitydevelopment.updater.Updater;
-
-import org.bukkit.event.HandlerList;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.mcstats.MetricsLite;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import net.gravitydevelopment.updater.Updater;
+import org.bukkit.event.HandlerList;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.mcstats.MetricsLite;
 
 public class WarGear extends JavaPlugin {
 	private Repository repo;
@@ -46,6 +44,7 @@ public class WarGear extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
+		KitAPI.getInstance().load();
 		this.loadConfig();
 		this.repo = new Repository(this);
 		this.regionsManager = new RegionManager();
