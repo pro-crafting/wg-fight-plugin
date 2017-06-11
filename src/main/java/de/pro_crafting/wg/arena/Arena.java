@@ -19,7 +19,7 @@ import de.pro_crafting.wg.WarGear;
 import de.pro_crafting.wg.event.ArenaStateChangeEvent;
 import de.pro_crafting.wg.group.Group;
 import de.pro_crafting.wg.group.GroupManager;
-import de.pro_crafting.wg.group.GroupMember;
+import de.pro_crafting.wg.group.GroupUpdateCallback;
 import de.pro_crafting.wg.group.PlayerGroupKey;
 import de.pro_crafting.wg.group.PlayerRole;
 import de.pro_crafting.wg.model.WgRegion;
@@ -37,6 +37,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+import org.bukkit.plugin.RegisteredServiceProvider;
 
 public class Arena {
 
@@ -159,12 +160,11 @@ public class Arena {
   }
 
   public void updateRegion(PlayerRole role) {
-    List<UUID> players = new ArrayList<>();
-    PlayerGroupKey key = this.getGroupManager().getGroupKey(role);
-    for (GroupMember player : key.getGroup().getMembers()) {
-      if (player.isAlive()) {
-        players.add(player.getOfflinePlayer().getUniqueId());
-      }
+    RegisteredServiceProvider<GroupUpdateCallback> groupUpdater = Bukkit.getServicesManager()
+        .getRegistration(GroupUpdateCallback.class);
+
+    if (groupUpdater != null && groupUpdater.getProvider() != null) {
+      groupUpdater.getProvider().updateGroup(this.getGroupManager().getGroupKey(role).getGroup());
     }
   }
 
