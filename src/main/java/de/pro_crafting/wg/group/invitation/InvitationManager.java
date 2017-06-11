@@ -5,19 +5,23 @@ import de.pro_crafting.wg.group.Group;
 import de.pro_crafting.wg.group.GroupMember;
 import de.pro_crafting.wg.group.PlayerGroupKey;
 import de.pro_crafting.wg.group.PlayerRole;
+
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.UUID;
 
 public class InvitationManager {
 	private Map<UUID, Invitation> invites;
 	private JavaPlugin plugin;
 
 	public InvitationManager(JavaPlugin plugin) {
-		this.invites = new HashMap<UUID, Invitation>();
+		this.invites = new HashMap<>();
 		this.plugin = plugin;
 
 		Bukkit.getScheduler().runTaskTimer(this.plugin, new Runnable() {
@@ -164,7 +168,8 @@ public class InvitationManager {
 		GroupMember teamleader = invitation.getInviter();
 		OfflinePlayer invited = Bukkit.getOfflinePlayer(invitation.getInvited());
 		if (teamleader.isOnline()) {
-			teamleader.getPlayer().sendMessage("§B"+invited.getName()+"§7 hat deine Einladung nicht angenommen.");
+			String displayName = invited.isOnline() ? invited.getPlayer().getDisplayName() : invited.getName();
+			teamleader.getPlayer().sendMessage("§B" + displayName + "§7 hat deine Einladung nicht angenommen.");
 		}
 		if (invited.isOnline()) {
 			((Player)invited).sendMessage("§7Die Einladung von §B" +teamleader.getName()+ "§7 ist abgelaufen.");

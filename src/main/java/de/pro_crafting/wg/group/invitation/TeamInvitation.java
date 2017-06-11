@@ -5,6 +5,7 @@ import de.pro_crafting.wg.arena.Arena;
 import de.pro_crafting.wg.arena.State;
 import de.pro_crafting.wg.group.GroupMember;
 import de.pro_crafting.wg.group.PlayerGroupKey;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -47,6 +48,7 @@ public class TeamInvitation extends Invitation{
 
 			groupKey.getGroup().add(invited, false);
 			this.plugin.getScoreboard().addTeamMember(arena, groupKey.getGroup().getMember(invited), groupKey.getRole());
+			groupKey.getArena().updateRegion(groupKey.getRole());
 		}
 	}
 }
