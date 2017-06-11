@@ -13,10 +13,10 @@ import de.pro_crafting.generator.job.Job;
 import de.pro_crafting.generator.job.SimpleJob;
 import de.pro_crafting.generator.provider.SchematicProvider;
 import de.pro_crafting.generator.provider.SingleBlockProvider;
-import de.pro_crafting.region.Region;
 import de.pro_crafting.wg.WarGear;
 import de.pro_crafting.wg.event.ArenaStateChangeEvent;
 import de.pro_crafting.wg.group.GroupSide;
+import de.pro_crafting.wg.model.WgRegion;
 import java.io.File;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -105,7 +105,7 @@ public class Reseter implements Listener, JobStateChangedCallback {
   }
 
   public void cleanSide(GroupSide side) {
-    Region rg = this.arena.getRepo().getTeamRegion(side);
+    WgRegion rg = this.arena.getRepo().getTeamRegion(side);
     World world = this.arena.getRepo().getWorld();
     Point origin = rg.getMin();
     origin.setY(groundHeight);

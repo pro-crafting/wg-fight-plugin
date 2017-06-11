@@ -1,7 +1,7 @@
 package de.pro_crafting.wg.group;
 
-import de.pro_crafting.region.Region;
 import de.pro_crafting.wg.arena.Arena;
+import de.pro_crafting.wg.model.WgRegion;
 
 public class PlayerGroupKey {
 
@@ -25,7 +25,7 @@ public class PlayerGroupKey {
     return getArena().getGroupManager().getTeamOfGroup(getRole());
   }
 
-  public Region getRegion() {
+  public WgRegion getRegion() {
     if (role == PlayerRole.Team1) {
       return this.arena.getRepo().getTeam1Region();
     } else if (role == PlayerRole.Team2) {

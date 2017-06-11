@@ -18,9 +18,17 @@ ground:
     schematic:
 regions:
     arena:
+        min: x;y;z
+        max: x;y;z
     inner:
+        min: x;y;z
+        max: x;y;z
     team1:
+        min: x;y;z
+        max: x;y;z
     team2:
+        min: x;y;z
+        max: x;y;z
 fightStart:
     team1: x;y;z
     team2: x;y;z

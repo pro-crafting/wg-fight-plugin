@@ -1,7 +1,7 @@
 package de.pro_crafting.wg;
 
-import de.pro_crafting.region.Region;
 import de.pro_crafting.wg.arena.Arena;
+import de.pro_crafting.wg.model.WgRegion;
 import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.Bukkit;
@@ -135,7 +135,7 @@ public class Util {
     return s.replaceAll("&([0-9a-f])", "\u00A7$1");
   }
 
-  public static List<Player> getPlayerOfRegion(Region region) {
+  public static List<Player> getPlayerOfRegion(WgRegion region) {
     List<Player> ret = new ArrayList<>();
     for (Player player : Bukkit.getOnlinePlayers()) {
       if (region.contains(player.getLocation())) {
