@@ -4,8 +4,12 @@ import de.pro_crafting.wg.OfflineRunable;
 import de.pro_crafting.wg.Util;
 import de.pro_crafting.wg.WarGear;
 import de.pro_crafting.wg.arena.Arena;
+import de.pro_crafting.wg.event.GroupUpdateEvent;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -22,14 +26,15 @@ public class GroupManager {
 
   public GroupManager(WarGear plugin, Arena arena) {
     this.plugin = plugin;
-    this.group1 = new Group(PlayerRole.Team1);
-    this.group2 = new Group(PlayerRole.Team2);
     this.arena = arena;
 
     this.groupKeys = new HashMap<>();
     this.groupKeys.put(PlayerRole.Team1, new PlayerGroupKey(arena, PlayerRole.Team1));
     this.groupKeys.put(PlayerRole.Team2, new PlayerGroupKey(arena, PlayerRole.Team2));
     this.groupKeys.put(PlayerRole.Viewer, new PlayerGroupKey(arena, PlayerRole.Viewer));
+
+    this.group1 = new Group(getGroupKey(PlayerRole.Team1));
+    this.group2 = new Group(getGroupKey(PlayerRole.Team2));
   }
 
   public Location getGroupSpawn(PlayerRole role) {
@@ -43,9 +48,22 @@ public class GroupManager {
   public void quitFight() {
     quiteFightFoGroup(this.group1);
     quiteFightFoGroup(this.group2);
-    this.group1 = new Group(PlayerRole.Team1);
-    this.group2 = new Group(PlayerRole.Team2);
+
+    Bukkit.getPluginManager().callEvent(
+        new GroupUpdateEvent(Collections.unmodifiableCollection(this.group1.getMembers()),
+            new ArrayList<>(),
+            getGroupKey(PlayerRole.Team1))
+    );
+    this.group1 = new Group(getGroupKey(PlayerRole.Team1));
+
+    Bukkit.getPluginManager().callEvent(
+        new GroupUpdateEvent(Collections.unmodifiableCollection(this.group2.getMembers()),
+            new ArrayList<>(),
+            getGroupKey(PlayerRole.Team2))
+    );
+    this.group2 = new Group(getGroupKey(PlayerRole.Team2));
   }
+
 
   private void quiteFightFoGroup(Group group) {
     final Location teleportLocation = this.arena.getRepo().getSpawnWarp();

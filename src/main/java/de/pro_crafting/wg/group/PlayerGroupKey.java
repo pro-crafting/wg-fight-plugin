@@ -2,7 +2,11 @@ package de.pro_crafting.wg.group;
 
 import de.pro_crafting.wg.arena.Arena;
 import de.pro_crafting.wg.model.WgRegion;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
+@ToString
+@EqualsAndHashCode
 public class PlayerGroupKey {
 
   private Arena arena;
@@ -32,41 +36,5 @@ public class PlayerGroupKey {
       return this.arena.getRepo().getTeam2Region();
     }
     return this.arena.getRepo().getArenaRegion();
-  }
-
-  @Override
-  public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result
-        + ((this.arena == null) ? 0 : this.arena.hashCode());
-    result = prime * result
-        + ((this.role == null) ? 0 : this.role.hashCode());
-    return result;
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj) {
-      return true;
-    }
-    if (obj == null) {
-      return false;
-    }
-    if (getClass() != obj.getClass()) {
-      return false;
-    }
-    PlayerGroupKey other = (PlayerGroupKey) obj;
-    if (this.arena == null) {
-      if (other.arena != null) {
-        return false;
-      }
-    } else if (!this.arena.equals(other.arena)) {
-      return false;
-    }
-    if (this.role != other.role) {
-      return false;
-    }
-    return true;
   }
 }

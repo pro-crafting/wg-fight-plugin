@@ -49,7 +49,6 @@ public class TeamInvitation extends Invitation {
       groupKey.getGroup().add(invited, false);
       this.plugin.getScoreboard()
           .addTeamMember(arena, groupKey.getGroup().getMember(invited), groupKey.getRole());
-      groupKey.getArena().updateRegion(groupKey.getRole());
     }
   }
 }

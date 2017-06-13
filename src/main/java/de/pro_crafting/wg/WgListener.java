@@ -432,7 +432,6 @@ public class WgListener implements Listener {
       Bukkit.getScheduler().runTask(this.plugin, new Runnable() {
         public void run() {
           WgListener.this.checkAlives(team, arena);
-          arena.updateRegion(team.getRole());
         }
       });
     }
