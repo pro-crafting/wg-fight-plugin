@@ -1,31 +1,49 @@
 package de.pro_crafting.wg.group;
 
+import de.pro_crafting.wg.event.GroupUpdateEvent;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import lombok.EqualsAndHashCode;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
+@EqualsAndHashCode
 public class Group {
 
-  protected PlayerRole role;
-  private Map<UUID, GroupMember> member;
+  protected PlayerGroupKey playerGroupKey;
+  private Map<UUID, GroupMember> members;
   private boolean isReady;
   private int cannons;
 
-  public Group(PlayerRole role) {
-    this.role = role;
+  public Group(PlayerGroupKey playerGroupKey) {
+    this.playerGroupKey = playerGroupKey;
     this.isReady = false;
-    this.member = new HashMap<>();
+    this.members = new HashMap<>();
   }
 
   public void add(Player p, boolean isLeader) {
-    this.member.put(p.getUniqueId(), new GroupMember(p, isLeader));
+    Map<UUID, GroupMember> newMembers = new HashMap<>(members);
+    newMembers.put(p.getUniqueId(), new GroupMember(p, isLeader));
+
+    Bukkit.getPluginManager()
+        .callEvent(
+            new GroupUpdateEvent(members.values(), newMembers.values(), this.getPlayerGroupKey()));
+
+    this.members = newMembers;
   }
 
   public void remove(OfflinePlayer p) {
-    this.member.remove(p.getUniqueId());
+    Map<UUID, GroupMember> newMembers = new HashMap<>(members);
+    newMembers.remove(p.getUniqueId());
+
+    Bukkit.getPluginManager()
+        .callEvent(
+            new GroupUpdateEvent(members.values(), newMembers.values(), this.getPlayerGroupKey()));
+
+    this.members = newMembers;
   }
 
   public boolean isReady() {
@@ -37,19 +55,23 @@ public class Group {
   }
 
   public PlayerRole getRole() {
-    return this.role;
+    return this.playerGroupKey.getRole();
+  }
+
+  public PlayerGroupKey getPlayerGroupKey() {
+    return playerGroupKey;
   }
 
   public Collection<GroupMember> getMembers() {
-    return this.member.values();
+    return this.members.values();
   }
 
   public GroupMember getMember(OfflinePlayer player) {
-    return this.member.get(player.getUniqueId());
+    return this.members.get(player.getUniqueId());
   }
 
   public boolean isAlive() {
-    for (GroupMember current : this.member.values()) {
+    for (GroupMember current : this.members.values()) {
       if (current.isAlive()) {
         return true;
       }
@@ -62,24 +84,12 @@ public class Group {
   }
 
   public GroupMember getLeader() {
-    for (GroupMember current : this.member.values()) {
+    for (GroupMember current : this.members.values()) {
       if (current.isLeader()) {
         return current;
       }
     }
     return null;
-  }
-
-  @Override
-  public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + (isReady ? 1231 : 1237);
-    result = prime * result
-        + ((member == null) ? 0 : member.hashCode());
-    result = prime * result
-        + ((role == null) ? 0 : role.hashCode());
-    return result;
   }
 
   public int getCannons() {
@@ -90,36 +100,8 @@ public class Group {
     this.cannons = cannons;
   }
 
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj) {
-      return true;
-    }
-    if (obj == null) {
-      return false;
-    }
-    if (getClass() != obj.getClass()) {
-      return false;
-    }
-    Group other = (Group) obj;
-    if (isReady != other.isReady) {
-      return false;
-    }
-    if (member == null) {
-      if (other.member != null) {
-        return false;
-      }
-    } else if (!member.equals(other.member)) {
-      return false;
-    }
-    if (role != other.role) {
-      return false;
-    }
-    return true;
-  }
-
   public boolean isOnline() {
-    for (GroupMember member : this.member.values()) {
+    for (GroupMember member : this.members.values()) {
       if (!member.isOnline()) {
         return false;
       }
@@ -128,7 +110,7 @@ public class Group {
   }
 
   public void broadcast(String message) {
-    for (GroupMember groupMember : this.member.values()) {
+    for (GroupMember groupMember : this.members.values()) {
       if (groupMember.isOnline()) {
         groupMember.getPlayer().sendMessage(message);
       }

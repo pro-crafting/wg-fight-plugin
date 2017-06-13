@@ -83,7 +83,6 @@ public class TeamCommands {
     p.sendMessage("§7Mit §B\"/wgk team remove <spieler>\" §7entfernst du Spieler aus deinem Team.");
     p.sendMessage("§7Mit §B\"/wgk team ready\" §7schaltest du dein Team bereit.");
     this.plugin.getScoreboard().addTeamMember(arena, team.getMember(p), team.getRole());
-    arena.updateRegion(team.getRole());
   }
 
   @Command(name = "wgk.team.add", description = "Fügt ein Spieler zu deinem Team hinzu.",
@@ -100,7 +99,6 @@ public class TeamCommands {
     groupKey.getGroup().add(p, false);
     this.plugin.getScoreboard()
         .addTeamMember(groupKey.getArena(), groupKey.getGroup().getMember(p), groupKey.getRole());
-    groupKey.getArena().updateRegion(groupKey.getRole());
   }
 
   private Entry<PlayerGroupKey, Player> canBeAdded(CommandArgs args) {
@@ -220,7 +218,6 @@ public class TeamCommands {
     this.plugin.getScoreboard()
         .removeTeamMember(arena, playerKey.getGroup().getMember(p), playerKey.getRole());
     playerKey.getGroup().remove(p);
-    arena.updateRegion(playerKey.getRole());
   }
 
   @Command(name = "wgk.team.accept", description = "Akzeptiert eine Einladung.",
@@ -258,7 +255,6 @@ public class TeamCommands {
         .removeTeamMember(arena, team.getMember(senderPlayer), team.getRole());
     team.remove(senderPlayer);
     senderPlayer.sendMessage("§7Du bist raus aus dem Team.");
-    arena.updateRegion(team.getRole());
   }
 
   @Command(name = "wgk.team.ready", description = "Schaltet dein Team bereit",
