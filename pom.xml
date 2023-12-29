@@ -18,12 +18,30 @@
     <maven.compiler.release>17</maven.compiler.release>
     <project.build.number>-</project.build.number>
     <project.build.version>${version} Build:${project.build.number}</project.build.version>
+
+    <version.spigot-api>1.20.2-R0.1-SNAPSHOT</version.spigot-api>
   </properties>
 
   <repositories>
     <repository>
-      <id>postremus1996-snapshot</id>
-      <url>http://nexus.myplayplanet.net/content/groups/public/</url>
+      <id>spigot-repo</id>
+      <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+    </repository>
+    <repository>
+      <id>sk89q-repo</id>
+      <url>https://maven.enginehub.org/repo/</url>
+    </repository>
+    <repository>
+      <id>CodeMC</id>
+      <url>https://repo.codemc.org/repository/maven-public</url>
+    </repository>
+    <repository>
+      <id>ess-repo</id>
+      <url>https://ci.ender.zone/plugin/repository/everything/</url>
+    </repository>
+    <repository>
+      <id>paper-repo</id>
+      <url>https://papermc.io/repo/repository/maven-public/</url>
     </repository>
   </repositories>
 
@@ -36,9 +54,9 @@
     </dependency>
 
     <dependency>
-      <groupId>org.bukkit</groupId>
-      <artifactId>bukkit</artifactId>
-      <version>1.7.10-R0.1-SNAPSHOT</version>
+      <groupId>org.spigotmc</groupId>
+      <artifactId>spigot-api</artifactId>
+      <version>${version.spigot-api}</version>
       <scope>provided</scope>
     </dependency>
 
