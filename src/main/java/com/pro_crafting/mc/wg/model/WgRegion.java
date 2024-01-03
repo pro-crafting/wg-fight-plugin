@@ -1,6 +1,6 @@
 package com.pro_crafting.mc.wg.model;
 
-import de.pro_crafting.common.Point;
+import com.pro_crafting.mc.common.Point;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.bukkit.Location;

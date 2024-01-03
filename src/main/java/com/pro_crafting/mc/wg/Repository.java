@@ -1,7 +1,7 @@
 package com.pro_crafting.mc.wg;
 
+import com.pro_crafting.mc.kit.KitProvider;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-import de.pro_crafting.kit.KitProvider;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,10 +44,6 @@ public class Repository {
 
   public boolean areMetricsEnabled() {
     return this.plugin.getConfig().getBoolean("metrics", false);
-  }
-
-  public boolean isUpdateCheckEnabled() {
-    return this.plugin.getConfig().getBoolean("update-check", false);
   }
 
   public int getOfflineKickTime() {

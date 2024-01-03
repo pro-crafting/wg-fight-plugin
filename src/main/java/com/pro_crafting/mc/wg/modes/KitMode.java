@@ -1,7 +1,7 @@
 package com.pro_crafting.mc.wg.modes;
 
+import com.pro_crafting.mc.kit.KitProvider;
 import com.pro_crafting.mc.wg.group.GroupMember;
-import de.pro_crafting.kit.KitProvider;
 import com.pro_crafting.mc.wg.OfflineRunable;
 import com.pro_crafting.mc.wg.WarGear;
 import com.pro_crafting.mc.wg.arena.Arena;

@@ -1,5 +1,7 @@
 package com.pro_crafting.mc.wg.commands;
 
+import com.pro_crafting.mc.commandframework.Command;
+import com.pro_crafting.mc.commandframework.CommandArgs;
 import com.pro_crafting.mc.wg.Util;
 import com.pro_crafting.mc.wg.WarGear;
 import com.pro_crafting.mc.wg.arena.Arena;
@@ -9,8 +11,6 @@ import com.pro_crafting.mc.wg.group.GroupMember;
 import com.pro_crafting.mc.wg.group.PlayerGroupKey;
 import com.pro_crafting.mc.wg.group.PlayerRole;
 import com.pro_crafting.mc.wg.group.invitation.InvitationType;
-import de.pro_crafting.commandframework.Command;
-import de.pro_crafting.commandframework.CommandArgs;
 
 import java.util.AbstractMap;
 import java.util.Map.Entry;
