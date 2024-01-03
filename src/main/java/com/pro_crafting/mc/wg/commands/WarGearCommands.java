@@ -1,5 +1,8 @@
 package com.pro_crafting.mc.wg.commands;
 
+import com.pro_crafting.mc.commandframework.Command;
+import com.pro_crafting.mc.commandframework.CommandArgs;
+import com.pro_crafting.mc.commandframework.Completer;
 import com.pro_crafting.mc.wg.FightQuitReason;
 import com.pro_crafting.mc.wg.Util;
 import com.pro_crafting.mc.wg.WarGear;
@@ -8,9 +11,6 @@ import com.pro_crafting.mc.wg.arena.State;
 import com.pro_crafting.mc.wg.event.DrawQuitEvent;
 import com.pro_crafting.mc.wg.event.FightQuitEvent;
 import com.pro_crafting.mc.wg.event.WinQuitEvent;
-import de.pro_crafting.commandframework.Command;
-import de.pro_crafting.commandframework.CommandArgs;
-import de.pro_crafting.commandframework.Completer;
 
 import java.util.ArrayList;
 import java.util.List;

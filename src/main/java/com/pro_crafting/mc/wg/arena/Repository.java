@@ -1,8 +1,8 @@
 package com.pro_crafting.mc.wg.arena;
 
 import com.google.common.collect.Sets;
+import com.pro_crafting.mc.common.Point;
 import com.pro_crafting.mc.wg.group.GroupSide;
-import de.pro_crafting.common.Point;
 import com.pro_crafting.mc.wg.ErrorMessages;
 import com.pro_crafting.mc.wg.Util;
 import com.pro_crafting.mc.wg.WarGear;

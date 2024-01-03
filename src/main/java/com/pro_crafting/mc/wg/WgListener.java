@@ -1,5 +1,11 @@
 package com.pro_crafting.mc.wg;
 
+import com.pro_crafting.mc.blockgenerator.BlockGenerator;
+import com.pro_crafting.mc.blockgenerator.criteria.SingleBlockCriteria;
+import com.pro_crafting.mc.blockgenerator.job.SimpleJob;
+import com.pro_crafting.mc.blockgenerator.provider.SingleBlockProvider;
+import com.pro_crafting.mc.common.Point;
+import com.pro_crafting.mc.common.Size;
 import com.pro_crafting.mc.wg.arena.Arena;
 import com.pro_crafting.mc.wg.arena.ArenaPosition;
 import com.pro_crafting.mc.wg.arena.State;
@@ -12,13 +18,6 @@ import com.pro_crafting.mc.wg.group.GroupMember;
 import com.pro_crafting.mc.wg.group.PlayerGroupKey;
 import com.pro_crafting.mc.wg.group.PlayerRole;
 import com.pro_crafting.mc.wg.modes.KitMode;
-import de.pro_crafting.common.Point;
-import de.pro_crafting.common.Size;
-import de.pro_crafting.generator.BlockGenerator;
-import de.pro_crafting.generator.criteria.SingleBlockCriteria;
-import de.pro_crafting.generator.job.SimpleJob;
-import de.pro_crafting.generator.provider.SingleBlockProvider;
-import net.gravitydevelopment.updater.Updater.UpdateResult;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -231,12 +230,6 @@ public class WgListener implements Listener {
 
     if (!player.hasPermission("wargear.update")) {
       return;
-    }
-    if (this.plugin.getUpdater() != null
-        && this.plugin.getUpdater().getResult() == UpdateResult.UPDATE_AVAILABLE) {
-      player.sendMessage(
-          "§7Version " + this.plugin.getUpdater().getLatestName() + " von " + this.plugin.getName()
-              + " ist veröffentlicht.");
     }
   }
 

@@ -1,28 +1,27 @@
 package com.pro_crafting.mc.wg;
 
+import com.pro_crafting.mc.blockgenerator.BlockGenerator;
+import com.pro_crafting.mc.commandframework.CommandArgs;
+import com.pro_crafting.mc.commandframework.CommandFramework;
+import com.pro_crafting.mc.commandframework.Completer;
+import com.pro_crafting.mc.common.scoreboard.ScoreboardManager;
+import com.pro_crafting.mc.kit.KitAPI;
 import com.pro_crafting.mc.wg.arena.ArenaManager;
 import com.pro_crafting.mc.wg.group.PlayerGroupKey;
 import com.pro_crafting.mc.wg.group.invitation.InvitationManager;
 import com.pro_crafting.mc.wg.modes.ModeManager;
 import com.pro_crafting.mc.wg.ui.ScoreboardDisplay;
-import de.pro_crafting.commandframework.CommandArgs;
-import de.pro_crafting.commandframework.CommandFramework;
-import de.pro_crafting.commandframework.Completer;
-import de.pro_crafting.common.scoreboard.ScoreboardManager;
-import de.pro_crafting.generator.BlockGenerator;
-import de.pro_crafting.kit.KitAPI;
 import com.pro_crafting.mc.wg.commands.ArenaCommands;
 import com.pro_crafting.mc.wg.commands.TeamCommands;
 import com.pro_crafting.mc.wg.commands.WarGearCommands;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import net.gravitydevelopment.updater.Updater;
+
+import org.bstats.bukkit.Metrics;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.mcstats.MetricsLite;
 
 public class WarGear extends JavaPlugin {
 
@@ -31,8 +30,7 @@ public class WarGear extends JavaPlugin {
   private ArenaManager arenaManager;
   private CommandFramework cmdFramework;
   private WgEconomy eco;
-  private MetricsLite metrics;
-  private Updater updater;
+  private Metrics metrics;
   private WgListener wgListener;
   private File arenaFolder;
   private OfflineManager offlineManager;
@@ -56,7 +54,6 @@ public class WarGear extends JavaPlugin {
       this.eco = new WgEconomy(this);
     }
     startMetrics();
-    startUpdater();
     registerCommands();
     this.wgListener = new WgListener(this);
     this.wgRegionListener = new WgRegionListener(this);
@@ -92,6 +89,7 @@ public class WarGear extends JavaPlugin {
     HandlerList.unregisterAll(this.wgListener);
     HandlerList.unregisterAll(this.wgRegionListener);
     this.arenaManager.unloadArenas();
+    this.metrics.shutdown();
     this.getLogger().info("Plugin erfolgreich deaktiviert!");
   }
 
@@ -129,20 +127,8 @@ public class WarGear extends JavaPlugin {
 
   private void startMetrics() {
     if (repo.areMetricsEnabled()) {
-      try {
-        metrics = new MetricsLite(this);
-        if (metrics.start()) {
-          this.getLogger().info("Metrics gestartet!");
-        }
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-    }
-  }
-
-  private void startUpdater() {
-    if (repo.isUpdateCheckEnabled()) {
-      updater = new Updater(this, 66631, this.getFile(), Updater.UpdateType.NO_DOWNLOAD, false);
+        metrics = new Metrics(this, 20639);
+        this.getLogger().info("Metrics gestartet!");
     }
   }
 
@@ -160,10 +146,6 @@ public class WarGear extends JavaPlugin {
 
   public CommandFramework GetCmdFramework() {
     return this.cmdFramework;
-  }
-
-  public Updater getUpdater() {
-    return this.updater;
   }
 
   public File getArenaFolder() {
