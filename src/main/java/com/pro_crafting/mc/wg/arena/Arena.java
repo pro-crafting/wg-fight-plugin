@@ -2,6 +2,7 @@ package com.pro_crafting.mc.wg.arena;
 
 import com.pro_crafting.mc.blockgenerator.JobState;
 import com.pro_crafting.mc.blockgenerator.JobStateChangedCallback;
+import com.pro_crafting.mc.blockgenerator.criteria.Criteria;
 import com.pro_crafting.mc.blockgenerator.criteria.SingleBlockCriteria;
 import com.pro_crafting.mc.blockgenerator.job.Job;
 import com.pro_crafting.mc.blockgenerator.job.SimpleJob;
@@ -31,6 +32,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
@@ -254,7 +256,7 @@ public class Arena {
           }
 
           public boolean matches(Point point, BlockData data) {
-            if (data.getType() == Material.JACK_O_LANTERN) {
+            if (data.getMaterial() == Material.JACK_O_LANTERN) {
               group.setCannons(group.getCannons() + 1);
             }
             return true;
@@ -370,7 +372,7 @@ public class Arena {
     Point origin = new Point(BukkitUtil.toLocation(world, innerRegion.getMinimumPoint()));
     Size size = new Size(innerRegion.getWidth(), innerRegion.getHeight(), innerRegion.getLength());
     this.plugin.getGenerator().addJob(new SimpleJob(origin, size, world, null,
-        new SingleBlockProvider(new SingleBlockCriteria(Material.OBSIDIAN), Material.TNT, (byte) 0),
+        new SingleBlockProvider(new SingleBlockCriteria(Material.OBSIDIAN.createBlockData()), Material.TNT.createBlockData()),
         true));
   }
 }
