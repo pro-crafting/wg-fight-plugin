@@ -47,7 +47,7 @@ public class Reseter implements Listener, JobStateChangedCallback {
     origin.setY(groundHeight);
     Size size = new Size(rg.getWidth(), rg.getMaximumY() - groundHeight, rg.getLength());
     this.plugin.getGenerator().addJob(new SimpleJob(origin, size, world, this,
-        new SingleBlockProvider(new CuboidCriteria(), Material.AIR, (byte) 0), true));
+        new SingleBlockProvider(new CuboidCriteria(), Material.AIR.createBlockData()), true));
   }
 
   private void pasteGround(World arenaWorld) {
@@ -112,6 +112,6 @@ public class Reseter implements Listener, JobStateChangedCallback {
     Size size = new Size(rg.getMax().getX() - rg.getMin().getX(),
         rg.getMax().getY() - rg.getMin().getY(), rg.getMax().getZ() - rg.getMin().getZ());
     this.plugin.getGenerator().addJob(new SimpleJob(origin, size, world, null,
-        new SingleBlockProvider(new CuboidCriteria(), Material.AIR, (byte) 0)));
+        new SingleBlockProvider(new CuboidCriteria(), Material.AIR.createBlockData())));
   }
 }

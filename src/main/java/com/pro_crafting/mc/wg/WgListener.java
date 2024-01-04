@@ -23,6 +23,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.Waterlogged;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -239,14 +240,12 @@ public class WgListener implements Listener {
 
     final BlockGenerator gen = this.plugin.getGenerator();
     gen.addJob(new SimpleJob(origin, size, loc.getWorld(), null,
-        new SingleBlockProvider(new SingleBlockCriteria(Material.AIR), Material.IRON_BLOCK,
-            (byte) 0)));
+        new SingleBlockProvider(new SingleBlockCriteria(Material.AIR.createBlockData()), Material.IRON_BLOCK.createBlockData())));
 
     Bukkit.getScheduler().runTaskLater(this.plugin, new Runnable() {
       public void run() {
         gen.addJob(new SimpleJob(origin, size, loc.getWorld(), null,
-            new SingleBlockProvider(new SingleBlockCriteria(Material.IRON_BLOCK), Material.AIR,
-                (byte) 0)));
+            new SingleBlockProvider(new SingleBlockCriteria(Material.IRON_BLOCK.createBlockData()), Material.AIR.createBlockData())));
       }
     }, 60 * 20);
   }
@@ -372,7 +371,7 @@ public class WgListener implements Listener {
     if (arena == null) {
       return;
     }
-    if (block != null && block.getType() == Material.CAKE_BLOCK) {
+    if (block != null && block.getType().isEdible()) {
       player.sendMessage("§7Du darfst kein Essen benutzen.");
       event.setCancelled(true);
     }
@@ -461,7 +460,7 @@ public class WgListener implements Listener {
             .updateCannons(arena, group.getRole(), group.getGroup().getCannons());
         event.setYield(0);
       }
-      if (b.getType() != Material.WATER || b.getType() != Material.STATIONARY_WATER) {
+      if (b.getType() != Material.WATER || !(b.getBlockData() instanceof Waterlogged)) {
         arena.getRemover().add(b.getLocation());
       }
     }

@@ -8,6 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.Waterlogged;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitTask;
@@ -57,7 +58,7 @@ public class WaterRemover implements Listener {
     for (int i = this.explodedBlocks.size() - 1; i > -1; i--) {
       if (this.explodedBlocks.get(i).getValue() >= 15) {
         Block b = this.explodedBlocks.get(i).getKey().getBlock();
-        if (b.getType() == Material.WATER || b.getType() == Material.STATIONARY_WATER) {
+        if (b.getType() == Material.WATER || b.getBlockData() instanceof Waterlogged) {
           this.waterList.add(b);
         }
         this.explodedBlocks.remove(i);
@@ -91,7 +92,7 @@ public class WaterRemover implements Listener {
    * Einige kleinere �nderungen vorgenommen
    */
   public void collectBlocks(Block anchor, List<Block> collected, List<Block> visitedBlocks) {
-    if (!(anchor.getType() == Material.WATER || anchor.getType() == Material.STATIONARY_WATER)) {
+    if (!(anchor.getType() == Material.WATER || anchor.getType() == Material.WATER)) {
       return;
     }
 
@@ -99,7 +100,7 @@ public class WaterRemover implements Listener {
       return;
     }
     visitedBlocks.add(anchor);
-    if (anchor.getType() == Material.STATIONARY_WATER) {
+    if (anchor.getType() == Material.WATER) {
       collected.add(anchor);
     }
 
