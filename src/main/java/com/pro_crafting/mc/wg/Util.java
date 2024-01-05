@@ -27,11 +27,11 @@ public class Util {
       return ret;
     }
     if (!(sender instanceof ConsoleCommandSender)) {
-      if (sender instanceof Player) {
-        ret = plugin.getArenaManager().getArenaAt(((Player) sender).getLocation());
-      } else if (sender instanceof BlockCommandSender) {
+      if (sender instanceof Player player) {
+        ret = plugin.getArenaManager().getArenaAt(player.getLocation());
+      } else if (sender instanceof BlockCommandSender blockCommandSender) {
         ret = plugin.getArenaManager()
-            .getArenaAt(((BlockCommandSender) sender).getBlock().getLocation());
+            .getArenaAt(blockCommandSender.getBlock().getLocation());
       }
     }
     return ret;
