@@ -4,6 +4,6 @@ api-version: 1.20
 description: Postremus Wargear Fight Plugin
 website: http://dev.bukkit.org/bukkit-plugins/wargear-fight/
 author: postremus
-main: de.pro_crafting.wg.WarGear
+main: com.pro_crafting.mc.wg.WarGear
 depend: [WorldEdit]
 soft-depend: [Vault, AdminCmd, Essentials, CommandBook]
