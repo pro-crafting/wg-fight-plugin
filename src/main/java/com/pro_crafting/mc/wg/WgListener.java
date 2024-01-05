@@ -84,6 +84,10 @@ public class WgListener implements Listener {
     Player player = event.getPlayer();
     Arena arena = this.plugin.getArenaManager().getArenaAt(player.getLocation());
 
+    if (!this.plugin.getRepo().isPrefixEnabled() || arena == null) {
+      return;
+    }
+
     PlayerGroupKey group = arena.getGroupManager().getGroupKey(player);
     String color = arena.getGroupManager().getPrefix(group.getRole());
     String groupChatSign = this.plugin.getRepo().getGroupChatSign();
@@ -107,11 +111,7 @@ public class WgListener implements Listener {
       return;
     }
 
-    if (!this.plugin.getRepo().isPrefixEnabled() || group.getArena() == null) {
-      return;
-    }
-
-    event.setFormat("§8[" + color + group.getArena().getName() + "§8]" + event.getFormat());
+    event.setFormat("§8[" + color + arena.getName() + "§8]" + event.getFormat());
   }
 
   @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
