@@ -17,9 +17,6 @@ import com.pro_crafting.mc.wg.group.PlayerGroupKey;
 import com.pro_crafting.mc.wg.group.PlayerRole;
 import com.pro_crafting.mc.wg.modes.FightMode;
 import com.pro_crafting.mc.wg.modes.KitMode;
-import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
-import com.sk89q.worldedit.regions.CuboidRegion;
 import com.pro_crafting.mc.wg.ErrorMessages;
 import com.pro_crafting.mc.wg.WarGear;
 import com.pro_crafting.mc.wg.model.WgRegion;
@@ -320,43 +317,33 @@ public class Arena {
     this.isOpen = isOpen;
   }
 
-  public CuboidRegion getPlayGroundRegion() {
-    WgRegion innerRegion = this.repo.getInnerRegion();
-    Vector min = new Vector()
-        .add(innerRegion.getMin().getX(), innerRegion.getMin().getY(), innerRegion.getMin().getZ());
-    Vector max = new Vector()
-        .add(innerRegion.getMax().getX(), innerRegion.getMax().getY(), innerRegion.getMax().getZ());
-    return new CuboidRegion(min, max);
-  }
-
   public ArenaPosition getPosition(Location where) {
-    CuboidRegion innerRegion = getPlayGroundRegion();
-    Vector vector = BukkitUtil.toVector(where);
+    WgRegion innerRegion = repo.getInnerRegion();
 
     if (!contains(where)) {
       return ArenaPosition.Outside;
     }
-    if (!innerRegion.contains(vector)) {
+    if (!innerRegion.contains(where)) {
       return ArenaPosition.Platform;
     }
 
     WgRegion team1 = this.repo.getTeam1Region();
-    if (this.repo.getTeam1Region().contains(BukkitUtil.toLocation(team1.getWorld(), vector))) {
+    if (this.repo.getTeam1Region().contains(where)) {
       return ArenaPosition.Team1WG;
     }
 
     WgRegion team2 = this.repo.getTeam2Region();
-    if (team2.contains(BukkitUtil.toLocation(team2.getWorld(), vector))) {
+    if (team2.contains(where)) {
       return ArenaPosition.Team2WG;
     }
 
     double distanceTeam1Squared =
-        vector.distanceSq(BukkitUtil.toVector(team1.getMin().toLocation(team1.getWorld()))) +
-            vector.distanceSq(BukkitUtil.toVector(team1.getMax().toLocation(team1.getWorld())));
+            where.distanceSquared(team1.getMin().toLocation(team1.getWorld()))
+                    + where.distanceSquared(team1.getMax().toLocation(team1.getWorld()));
 
     double distanceTeam2Squared =
-        vector.distanceSq(BukkitUtil.toVector(team2.getMin().toLocation(team2.getWorld()))) +
-            vector.distanceSq(BukkitUtil.toVector(team2.getMax().toLocation(team2.getWorld())));
+            where.distanceSquared(team2.getMin().toLocation(team2.getWorld()))
+            + where.distanceSquared(team2.getMax().toLocation(team2.getWorld()));
 
     if ((distanceTeam1Squared - distanceTeam2Squared) > 0) {
       return ArenaPosition.Team2PlayField;
@@ -366,10 +353,9 @@ public class Arena {
   }
 
   public void replaceMG() {
-    //cuboid.wrap(new SingleBlockCriteria(Material.OBSIDIAN));
     World world = this.repo.getWorld();
-    CuboidRegion innerRegion = getPlayGroundRegion();
-    Point origin = new Point(BukkitUtil.toLocation(world, innerRegion.getMinimumPoint()));
+    WgRegion innerRegion = repo.getInnerRegion();
+    Point origin = innerRegion.getMin();
     Size size = new Size(innerRegion.getWidth(), innerRegion.getHeight(), innerRegion.getLength());
     this.plugin.getGenerator().addJob(new SimpleJob(origin, size, world, null,
         new SingleBlockProvider(new SingleBlockCriteria(Material.OBSIDIAN.createBlockData()), Material.TNT.createBlockData()),

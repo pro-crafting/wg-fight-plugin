@@ -12,8 +12,6 @@ import com.pro_crafting.mc.common.Size;
 import com.pro_crafting.mc.wg.group.GroupSide;
 import com.sk89q.worldedit.LocalConfiguration;
 import com.sk89q.worldedit.WorldEdit;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
-import com.sk89q.worldedit.regions.CuboidRegion;
 import com.pro_crafting.mc.wg.WarGear;
 import com.pro_crafting.mc.wg.event.ArenaStateChangeEvent;
 import com.pro_crafting.mc.wg.model.WgRegion;
@@ -41,11 +39,11 @@ public class Reseter implements Listener, JobStateChangedCallback {
   }
 
   public void reset() {
-    CuboidRegion rg = this.arena.getPlayGroundRegion();
+    WgRegion rg = this.arena.getRepo().getInnerRegion();
     World world = this.arena.getRepo().getWorld();
-    Point origin = new Point(BukkitUtil.toLocation(world, rg.getMinimumPoint()));
+    Point origin = rg.getMin();
     origin.setY(groundHeight);
-    Size size = new Size(rg.getWidth(), rg.getMaximumY() - groundHeight, rg.getLength());
+    Size size = new Size(rg.getWidth(), rg.getMax().getY() - groundHeight, rg.getLength());
     this.plugin.getGenerator().addJob(new SimpleJob(origin, size, world, this,
         new SingleBlockProvider(new CuboidCriteria(), Material.AIR.createBlockData()), true));
   }
@@ -67,9 +65,9 @@ public class Reseter implements Listener, JobStateChangedCallback {
   }
 
   private void removeItems(World arenaWorld) {
-    CuboidRegion rg = this.arena.getPlayGroundRegion();
+    WgRegion rg = this.arena.getRepo().getInnerRegion();
     for (Entity curr : arenaWorld.getEntitiesByClasses(Item.class, Arrow.class)) {
-      if (rg.contains(BukkitUtil.toVector(curr.getLocation()))) {
+      if (rg.contains(curr.getLocation())) {
         curr.remove();
       }
     }

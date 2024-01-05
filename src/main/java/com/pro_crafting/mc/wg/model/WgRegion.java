@@ -23,6 +23,18 @@ public class WgRegion {
     return ret;
   }
 
+  public int getWidth() {
+    return (int)(max.getX() - min.getX() + 1.0);
+  }
+
+  public int getHeight() {
+    return (int)(max.getY() - min.getY() + 1.0);
+  }
+
+  public int getLength() {
+    return (int)(max.getZ() - min.getZ() + 1.0);
+  }
+
   public boolean contains(Location location) {
     if (!this.getWorld().equals(location.getWorld())) {
       return false;

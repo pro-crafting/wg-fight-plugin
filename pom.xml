@@ -22,6 +22,7 @@
     <version.spigot-api>1.20.2-R0.1-SNAPSHOT</version.spigot-api>
     <version.vault>1.7.3</version.vault>
     <version.bstats>3.0.2</version.bstats>
+    <version.worldedit>7.2.18</version.worldedit>
     <version.commandframework>0.3.0</version.commandframework>
     <version.common>0.3.0</version.common>
   </properties>
@@ -55,9 +56,9 @@
 
   <dependencies>
     <dependency>
-      <groupId>com.sk89q</groupId>
-      <artifactId>worldedit</artifactId>
-      <version>5.6.2</version>
+      <groupId>com.sk89q.worldedit</groupId>
+      <artifactId>worldedit-bukkit</artifactId>
+      <version>${version.worldedit}</version>
       <scope>provided</scope>
     </dependency>
 
