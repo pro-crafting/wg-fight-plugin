@@ -19,12 +19,16 @@
     <project.build.number>-</project.build.number>
     <project.build.version>${version} Build:${project.build.number}</project.build.version>
 
+    <version.kit>0.3.1-SNAPSHOT</version.kit>
+    <version.blockgenerator>0.2.1-SNAPSHOT</version.blockgenerator>
+    <version.commandframework>0.3.0</version.commandframework>
+    <version.common>0.3.0</version.common>
+
+    <version.lombok>1.18.30</version.lombok>
     <version.spigot-api>1.20.2-R0.1-SNAPSHOT</version.spigot-api>
     <version.vault>1.7.3</version.vault>
     <version.bstats>3.0.2</version.bstats>
     <version.worldedit>7.2.18</version.worldedit>
-    <version.commandframework>0.3.0</version.commandframework>
-    <version.common>0.3.0</version.common>
   </properties>
 
   <repositories>
@@ -33,20 +37,8 @@
       <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
     </repository>
     <repository>
-      <id>paper-repo</id>
-      <url>https://papermc.io/repo/repository/maven-public/</url>
-    </repository>
-    <repository>
       <id>enginehub</id>
       <url>https://maven.enginehub.org/repo/</url>
-    </repository>
-    <repository>
-      <id>CodeMC</id>
-      <url>https://repo.codemc.org/repository/maven-public</url>
-    </repository>
-    <repository>
-      <id>ess-repo</id>
-      <url>https://ci.ender.zone/plugin/repository/everything/</url>
     </repository>
     <repository>
       <id>jitpack.io</id>
@@ -108,14 +100,14 @@
     <dependency>
       <groupId>com.pro-crafting.mc</groupId>
       <artifactId>kit</artifactId>
-      <version>0.3.1-SNAPSHOT</version>
+      <version>${version.kit}</version>
       <scope>compile</scope>
     </dependency>
 
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.18.30</version>
+      <version>${version.lombok}</version>
       <scope>provided</scope>
     </dependency>
   </dependencies>
@@ -136,10 +128,6 @@
                 <relocation>
                   <pattern>org.bstats</pattern>
                   <shadedPattern>com.pro_crafting.mc.wg.metrics</shadedPattern>
-                </relocation>
-                <relocation>
-                  <pattern>net.gravitydevelopment.updater</pattern>
-                  <shadedPattern>com.pro_crafting.mc.wg.updater</shadedPattern>
                 </relocation>
               </relocations>
             </configuration>
