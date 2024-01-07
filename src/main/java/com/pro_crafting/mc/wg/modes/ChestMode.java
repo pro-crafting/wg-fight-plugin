@@ -10,8 +10,9 @@ import java.util.List;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -45,20 +46,21 @@ public class ChestMode extends FightBase implements FightMode, Listener {
 
   @Override
   public void start() {
-    this.fillChest(this.arena.getRepo().getTeam1Warp());
-    this.fillChest(this.arena.getRepo().getTeam2Warp());
+    this.fillChest(this.arena.getRepo().getTeam1Warp(), BlockFace.WEST);
+    this.fillChest(this.arena.getRepo().getTeam2Warp(), BlockFace.EAST);
     this.plugin.getServer().getPluginManager().registerEvents(this, this.plugin);
     PlayerMoveEvent.getHandlerList().unregister(this);
     counter = 0;
     super.start();
   }
 
-  private void fillChest(Location loc) {
+  private void fillChest(Location loc, BlockFace facing) {
     Location l = loc.clone();
     l.setY(l.getY() - 1);
     Location chestOne = Util.move(l, 2);
     Location chestTwo = Util.move(chestOne, 1);
-    setChests(chestOne, chestTwo);
+    setChests(chestOne, org.bukkit.block.data.type.Chest.Type.LEFT, facing);
+    setChests(chestTwo, org.bukkit.block.data.type.Chest.Type.RIGHT, facing);
 
     ItemStack[] items = removeTNTStacks(
         this.plugin.getRepo().getKit().getItems(this.arena.getKit()));
@@ -91,9 +93,16 @@ public class ChestMode extends FightBase implements FightMode, Listener {
     }
   }
 
-  private void setChests(Location chestOne, Location chestTwo) {
-    chestOne.getBlock().setType(Material.CHEST);
-    chestTwo.getBlock().setType(Material.CHEST);
+  private void setChests(Location chestLoc, org.bukkit.block.data.type.Chest.Type type, BlockFace facing) {
+
+    Block block = chestLoc.getBlock();
+
+    block.setType(Material.CHEST);
+    org.bukkit.block.data.type.Chest chestData = (org.bukkit.block.data.type.Chest) block.getBlockData();
+    chestData.setType(type);
+    chestData.setFacing(facing);
+    block.setBlockData(chestData);
+
   }
 
   private void chestOpenCountdown() {

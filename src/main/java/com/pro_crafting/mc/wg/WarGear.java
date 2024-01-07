@@ -38,7 +38,6 @@ public class WarGear extends JavaPlugin {
   private ScoreboardDisplay scoreboard;
   private InvitationManager inviteManager;
   private ModeManager modes;
-  private File modeFolder;
   private WgRegionListener wgRegionListener;
 
   @Override
@@ -170,9 +169,5 @@ public class WarGear extends JavaPlugin {
 
   public ModeManager getModes() {
     return modes;
-  }
-
-  public File getModeFolder() {
-    return modeFolder;
   }
 }
