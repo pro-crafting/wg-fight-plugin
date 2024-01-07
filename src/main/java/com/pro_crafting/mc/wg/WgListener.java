@@ -473,15 +473,15 @@ public class WgListener implements Listener {
       return;
     }
 
-    Player player = (Player) event.getEntity();
+    Player shooter = (Player) event.getEntity();
 
-    if (this.plugin.getArenaManager().getGroup(player) == null) {
+    if (this.plugin.getArenaManager().getGroup(shooter).getRole() == PlayerRole.Viewer) {
       return;
     }
 
-    if (this.plugin.getArenaManager().getArenaOfTeamMember(player).getState() != State.Running) {
+    if (this.plugin.getArenaManager().getArenaOfTeamMember(shooter).getState() != State.Running) {
       event.setCancelled(true);
-      player.sendMessage("§cDu darfst erst nach Ablauf des Countdowns den Bogen benutzen!");
+      shooter.sendMessage("§cDu darfst erst nach Ablauf des Countdowns den Bogen benutzen!");
     }
 
   }
