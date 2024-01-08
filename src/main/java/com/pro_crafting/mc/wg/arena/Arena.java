@@ -152,6 +152,7 @@ public class Arena {
     this.remover.stop();
     this.players.clear();
     this.setOpen(false);
+    this.state = State.Idle;
     this.plugin.getScoreboard().clearScoreboard(this);
   }
 

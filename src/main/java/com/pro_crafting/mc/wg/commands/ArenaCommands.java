@@ -98,6 +98,18 @@ public class ArenaCommands {
     args.getSender().sendMessage("§7Arena §B" + arena.getName() + " §7wird resetet.");
   }
 
+  @Command(name = "wgk.arena.reset-ground", description = "Resetet die Arena",
+          usage = "/wgk arena reset-ground", permission = "wargear.arena.reset")
+  public void resetGround(CommandArgs args) {
+    Arena arena = Util.getArenaFromSender(plugin, args.getSender(), args.getArgs());
+    if (arena == null) {
+      args.getSender().sendMessage("§cDu stehst in keiner Arena, oder Sie existiert nicht.");
+      return;
+    }
+    arena.getReseter().pasteGround(arena.getRepo().getWorld());
+    args.getSender().sendMessage("§7Arena §B" + arena.getName() + " §7wird resetet.");
+  }
+
   @Command(name = "wgk.arena.list", description = "Listet die Arenen",
       usage = "/wgk arena list", permission = "wargear.arena.list")
   public void list(CommandArgs args) {
