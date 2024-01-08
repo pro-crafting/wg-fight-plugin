@@ -48,16 +48,22 @@ public class Reseter implements Listener, JobStateChangedCallback {
         new SingleBlockProvider(new CuboidCriteria(), Material.AIR.createBlockData()), true));
   }
 
-  private void pasteGround(World arenaWorld) {
+  public void pasteGround(World arenaWorld) {
     WorldEdit we = this.plugin.getRepo().getWorldEdit().getWorldEdit();
     LocalConfiguration config = we.getConfiguration();
 
     File dir = we.getWorkingDirectoryFile(config.saveDir);
     String schemName = this.arena.getRepo().getGroundSchematic();
-    if (!schemName.contains(".schematic")) {
-      schemName = schemName + ".schematic";
-    }
     File schematic = new File(dir, schemName);
+    if (!schematic.exists()) {
+      schemName += ".schem";
+    }
+
+    schematic = new File(dir, schemName);
+    if (!schematic.exists()) {
+      this.plugin.getLogger().info("Boden wird nicht gepasted. Schematic nicht gefunden.");
+      return;
+    }
 
     SchematicProvider provider = new SchematicProvider(new CuboidCriteria(), schematic);
     this.plugin.getGenerator()
