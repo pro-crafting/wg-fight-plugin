@@ -7,8 +7,8 @@ import org.bukkit.entity.Player;
 public class GroupMember {
 
   private OfflinePlayer player;
-  private Boolean alive;
-  private Boolean isLeader;
+  private boolean alive;
+  private boolean isLeader;
 
   public GroupMember(Player player, boolean isTeamLeader) {
     this.player = player;
@@ -28,15 +28,15 @@ public class GroupMember {
     return this.player.getPlayer();
   }
 
-  public Boolean isAlive() {
+  public boolean isAlive() {
     return this.alive;
   }
 
-  public void setAlive(Boolean alive) {
+  public void setAlive(boolean alive) {
     this.alive = alive;
   }
 
-  public Boolean isLeader() {
+  public boolean isLeader() {
     return this.isLeader;
   }
 

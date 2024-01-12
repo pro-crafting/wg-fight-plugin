@@ -7,6 +7,7 @@ import com.pro_crafting.mc.wg.arena.Arena;
 import com.pro_crafting.mc.wg.event.GroupUpdateEvent;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 import org.bukkit.Bukkit;
@@ -28,7 +29,7 @@ public class GroupManager {
     this.plugin = plugin;
     this.arena = arena;
 
-    this.groupKeys = new HashMap<>();
+    this.groupKeys = new EnumMap<>(PlayerRole.class);
     this.groupKeys.put(PlayerRole.Team1, new PlayerGroupKey(arena, PlayerRole.Team1));
     this.groupKeys.put(PlayerRole.Team2, new PlayerGroupKey(arena, PlayerRole.Team2));
     this.groupKeys.put(PlayerRole.Viewer, new PlayerGroupKey(arena, PlayerRole.Viewer));

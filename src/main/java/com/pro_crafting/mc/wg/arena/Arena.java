@@ -314,7 +314,7 @@ public class Arena {
     return this.isOpen;
   }
 
-  public void setOpen(Boolean isOpen) {
+  public void setOpen(boolean isOpen) {
     this.isOpen = isOpen;
   }
 
