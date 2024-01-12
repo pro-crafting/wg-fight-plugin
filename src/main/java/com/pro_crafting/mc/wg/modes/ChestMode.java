@@ -7,6 +7,10 @@ import com.pro_crafting.mc.wg.arena.State;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.pro_crafting.mc.wg.event.ArenaStateChangeEvent;
+import com.pro_crafting.mc.wg.group.Group;
+import com.pro_crafting.mc.wg.group.GroupMember;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -18,7 +22,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
@@ -31,25 +34,21 @@ public class ChestMode extends FightBase implements FightMode, Listener {
 
   public ChestMode(WarGear plugin, Arena arena) {
     super(plugin, arena);
-    starter = new Runnable() {
 
-      public void run() {
-        task = ChestMode.this.plugin.getServer().getScheduler()
-            .runTaskTimer(ChestMode.this.plugin, new Runnable() {
-              public void run() {
-                chestOpenCountdown();
-              }
-            }, 0, 20);
-      }
-    };
+    this.plugin.getServer().getPluginManager().registerEvents(this, this.plugin);
+
+    starter = () -> task = ChestMode.this.plugin.getServer().getScheduler()
+        .runTaskTimer(ChestMode.this.plugin, new Runnable() {
+          public void run() {
+            chestOpenCountdown();
+          }
+        }, 0, 20);
   }
 
   @Override
   public void start() {
     this.fillChest(this.arena.getRepo().getTeam1Warp(), BlockFace.WEST);
     this.fillChest(this.arena.getRepo().getTeam2Warp(), BlockFace.EAST);
-    this.plugin.getServer().getPluginManager().registerEvents(this, this.plugin);
-    PlayerMoveEvent.getHandlerList().unregister(this);
     counter = 0;
     super.start();
   }
@@ -147,16 +146,15 @@ public class ChestMode extends FightBase implements FightMode, Listener {
       int diff = 30 - counter;
       this.arena.broadcastMessage(ChatColor.AQUA + "" + diff + " Sekunden");
     } else if (counter == 30) {
+      closeInventories(arena.getGroupManager().getGroup1());
+      closeInventories(arena.getGroupManager().getGroup2());
+
       counter = 0;
       areChestsOpen = false;
       this.arena.broadcastMessage(ChatColor.AQUA + "Kisten geschlossen!");
       this.arena.broadcastMessage(ChatColor.AQUA + "Wargear betreten!");
       task.cancel();
-      task = this.plugin.getServer().getScheduler().runTaskTimer(this.plugin, new Runnable() {
-        public void run() {
-          fightStartCountdown();
-        }
-      }, 0, 20);
+      task = this.plugin.getServer().getScheduler().runTaskTimer(this.plugin, this::fightStartCountdown, 0, 20);
       return;
     }
     counter++;
@@ -180,8 +178,6 @@ public class ChestMode extends FightBase implements FightMode, Listener {
       this.arena.broadcastMessage(ChatColor.AQUA + "" + diff + " Sekunden");
     } else if (counter == 30) {
       task.cancel();
-      PlayerInteractEvent.getHandlerList().unregister(this);
-      this.plugin.getServer().getPluginManager().registerEvents(this, this.plugin);
       this.arena.updateState(State.Running);
       arena.open();
       return;
@@ -201,8 +197,11 @@ public class ChestMode extends FightBase implements FightMode, Listener {
     return "chest";
   }
 
-  @EventHandler(priority = EventPriority.HIGHEST)
+  @EventHandler(priority = EventPriority.MONITOR)
   public void playerInteractHandler(PlayerInteractEvent event) {
+    if (areChestsOpen) {
+      return;
+    }
     if (event.getAction() != Action.RIGHT_CLICK_BLOCK) {
       return;
     }
@@ -222,7 +221,15 @@ public class ChestMode extends FightBase implements FightMode, Listener {
     }
   }
 
-  private Boolean isItemChestLocation(Location value, Location checkAgainst) {
+  private void closeInventories(Group group) {
+    for (GroupMember member : group.getMembers()) {
+      if (member.isOnline()) {
+        member.getPlayer().closeInventory();
+      }
+    }
+  }
+
+  private boolean isItemChestLocation(Location value, Location checkAgainst) {
     Location l = checkAgainst.clone();
     l.setY(l.getY() - 1);
     Location chestOne = Util.move(l, 2);

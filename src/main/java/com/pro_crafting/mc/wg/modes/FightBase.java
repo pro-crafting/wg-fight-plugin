@@ -29,20 +29,17 @@ public abstract class FightBase implements FightMode, Listener {
         + "\" §7 kommst du in die Arena.");
     arena.getGroupManager().sendGroupOutput();
 
-    OfflineRunable fightTeamPreparer = new OfflineRunable() {
+    OfflineRunable fightTeamPreparer = member -> {
+      Player player = member.getPlayer();
 
-      public void run(GroupMember member) {
-        Player player = member.getPlayer();
-
-        player.setGameMode(GameMode.SURVIVAL);
-        Util.clearPlayer(player);
-        Util.disableFly(player);
-        Util.makeHealthy(player);
-        Util.removePotionEffects(player);
-        arena.teleport(player);
-        if (preparer != null) {
-          preparer.run(member);
-        }
+      player.setGameMode(GameMode.SURVIVAL);
+      Util.clearPlayer(player);
+      Util.disableFly(player);
+      Util.makeHealthy(player);
+      Util.removePotionEffects(player);
+      arena.teleport(player);
+      if (preparer != null) {
+        preparer.run(member);
       }
     };
 
