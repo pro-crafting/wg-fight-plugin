@@ -19,8 +19,8 @@
     <project.build.number>-</project.build.number>
     <project.build.version>${version} Build:${project.build.number}</project.build.version>
 
-    <version.kit>0.3.1-SNAPSHOT</version.kit>
-    <version.blockgenerator>0.2.1-SNAPSHOT</version.blockgenerator>
+    <version.kit>0.3.1</version.kit>
+    <version.blockgenerator>0.2.1</version.blockgenerator>
     <version.commandframework>0.3.0</version.commandframework>
     <version.common>0.3.0</version.common>
 
@@ -86,7 +86,7 @@
     <dependency>
       <groupId>com.pro-crafting.mc</groupId>
       <artifactId>blockgenerator</artifactId>
-      <version>0.2.1-SNAPSHOT</version>
+      <version>${version.blockgenerator}</version>
       <scope>compile</scope>
     </dependency>
 
