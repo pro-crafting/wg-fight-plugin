@@ -212,10 +212,10 @@ public class Arena {
     }
     this.setFightMode(plugin.getModes().get(this.getRepo().getFightMode(), this));
     if (this.getFightMode() == null) {
-      Bukkit.getLogger().warning(
+      plugin.getLogger().warning(
           "Fightmode " + this.getRepo().getFightMode() + " unknown in arena " + this.getName()
               + "!");
-      Bukkit.getLogger().info("Falling back to kit mode");
+      plugin.getLogger().info("Falling back to kit mode");
       this.setFightMode(new KitMode(this.plugin, this));
     }
     this.setOpen(false);
