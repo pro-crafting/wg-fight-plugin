@@ -40,8 +40,8 @@ public class ArenaManager {
     }
     Arena arena = new Arena(this.plugin, name);
     ErrorMessages errors = arena.load();
-    errors.getWarnings().forEach(Bukkit.getLogger()::warning);
-    errors.getErrors().forEach(Bukkit.getLogger()::severe);
+    errors.getWarnings().forEach(plugin.getLogger()::warning);
+    errors.getErrors().forEach(plugin.getLogger()::severe);
     if (!errors.hasErrors()) {
       this.plugin.getLogger().info("Arena " + name + " geladen.");
       this.arenas.put(name.toLowerCase(), arena);
