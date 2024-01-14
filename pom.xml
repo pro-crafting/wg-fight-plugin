@@ -7,7 +7,7 @@
     <version>15</version>
   </parent>
 
-  <groupId>com.pro_crafting.mc</groupId>
+  <groupId>com.pro-crafting.mc</groupId>
   <artifactId>wg-fight-plugin</artifactId>
   <version>0.13.1-SNAPSHOT</version>
 
