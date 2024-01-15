@@ -26,7 +26,7 @@ public class WarGearCommands {
   }
 
   @Command(name = "wgk", aliases = {
-      "wgk.help"}, description = "Zeigt die Hilfe an.", usage = "/wgk", permission = "wargear.help")
+      "wgk.help"}, description = "Zeigt die /wgk Hilfe an.", usage = "/wgk", permission = "wargear.help")
   public void WarGear(CommandArgs args) {
     CommandSender sender = args.getPlayer();
     sender.sendMessage("§c§LKein passender Befehl gefunden!");

@@ -27,7 +27,7 @@ public class TeamCommands {
   }
 
   @Command(name = "wgk.team", aliases = {
-      "wgk.team.help"}, description = "Zeigt die Hilfe an.", usage = "/wgk team", permission = "wargear.team")
+      "wgk.team.help"}, description = "Zeigt die /wgk team Hilfe an.", usage = "/wgk team", permission = "wargear.team")
   public void team(CommandArgs args) {
     CommandSender sender = args.getSender();
     sender.sendMessage("§c§LKein passender Befehl gefunden!");
@@ -80,7 +80,7 @@ public class TeamCommands {
     }
     team.add(p, true);
     p.teleport(arena.getGroupManager().getGroupSpawn(team.getRole()));
-    p.sendMessage("§7Mit §B\"/wgk team invite <spieler>\" §7lädst du Spieler in deinem Team ein.");
+    p.sendMessage("§7Mit §B\"/wgk team invite <spieler>\" §7lädst du Spieler in dein Team ein.");
     p.sendMessage("§7Mit §B\"/wgk team remove <spieler>\" §7entfernst du Spieler aus deinem Team.");
     p.sendMessage("§7Mit §B\"/wgk team ready\" §7schaltest du dein Team bereit.");
     this.plugin.getScoreboard().addTeamMember(arena, team.getMember(p), team.getRole());
@@ -96,7 +96,7 @@ public class TeamCommands {
     PlayerGroupKey groupKey = entry.getKey();
     Player p = entry.getValue();
 
-    p.sendMessage("§7Mit §8\"/wgk team leave\" §7verlässt du das Team.");
+    p.sendMessage("§7Mit §8\"/wgk team leave\" §7verlässt du dein Team.");
     groupKey.getGroup().add(p, false);
     this.plugin.getScoreboard()
         .addTeamMember(groupKey.getArena(), groupKey.getGroup().getMember(p), groupKey.getRole());
@@ -158,7 +158,7 @@ public class TeamCommands {
     return new AbstractMap.SimpleEntry<>(arena.getGroupManager().getGroupKey(leader), p);
   }
 
-  @Command(name = "wgk.team.invite", description = "Lädt einen Spieler zu dein Team ein",
+  @Command(name = "wgk.team.invite", description = "Lädt einen Spieler zu deinem Team ein",
       usage = "/wgk team invite <name>", permission = "wargear.team.invite", inGameOnly = true)
   public void invite(CommandArgs args) {
     Entry<PlayerGroupKey, Player> entry = canBeAdded(args);
@@ -172,7 +172,7 @@ public class TeamCommands {
         .addInvitation(groupKey.getGroup().getLeader(), p, InvitationType.Team);
   }
 
-  @Command(name = "wgk.team.remove", description = "Entfernt einen Spieler zu deinem Team hinzu.",
+  @Command(name = "wgk.team.remove", description = "Entfernt einen Spieler aus deinem Team.",
       usage = "/wgk team remove", permission = "wargear.team.remove", inGameOnly = true)
   public void remove(CommandArgs args) {
     if (args.length() == 0) {

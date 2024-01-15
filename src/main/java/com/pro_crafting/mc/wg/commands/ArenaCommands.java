@@ -19,7 +19,7 @@ public class ArenaCommands {
   }
 
   @Command(name = "wgk.arena", aliases = {
-      "wgk.arena.help"}, description = "Zeigt die Hilfe an.", usage = "/wgk arena", permission = "wargear.arena")
+      "wgk.arena.help"}, description = "Zeigt die /wgk arena Hilfe an.", usage = "/wgk arena", permission = "wargear.arena")
   public void arena(CommandArgs args) {
     CommandSender sender = args.getSender();
     sender.sendMessage("§c§LKein passender Befehl gefunden!");
@@ -82,8 +82,7 @@ public class ArenaCommands {
   }
 
   private String getStringFromLocation(Location loc) {
-    String ret = "x: %.2f; y: %.2f; z: %.2f";
-    return String.format(ret, new Object[]{loc.getX(), loc.getY(), loc.getZ()});
+    return "x: %.2f; y: %.2f; z: %.2f".formatted(loc.getX(), loc.getY(), loc.getZ());
   }
 
   @Command(name = "wgk.arena.reset", description = "Resetet die Arena",
