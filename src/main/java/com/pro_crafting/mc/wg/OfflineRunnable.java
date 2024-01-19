@@ -2,7 +2,7 @@ package com.pro_crafting.mc.wg;
 
 import com.pro_crafting.mc.wg.group.GroupMember;
 
-public interface OfflineRunable {
+public interface OfflineRunnable {
 
-  public void run(GroupMember member);
+  void run(GroupMember member);
 }

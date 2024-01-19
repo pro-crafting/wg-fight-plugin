@@ -26,7 +26,7 @@ public class Group {
 
   public void add(Player p, boolean isLeader) {
     Map<UUID, GroupMember> newMembers = new HashMap<>(members);
-    newMembers.put(p.getUniqueId(), new GroupMember(p, isLeader));
+    newMembers.put(p.getUniqueId(), new GroupMember(p.getUniqueId(), isLeader));
 
     Bukkit.getPluginManager()
         .callEvent(

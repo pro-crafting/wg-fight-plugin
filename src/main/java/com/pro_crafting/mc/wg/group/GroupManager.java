@@ -1,6 +1,6 @@
 package com.pro_crafting.mc.wg.group;
 
-import com.pro_crafting.mc.wg.OfflineRunable;
+import com.pro_crafting.mc.wg.OfflineRunnable;
 import com.pro_crafting.mc.wg.Util;
 import com.pro_crafting.mc.wg.WarGear;
 import com.pro_crafting.mc.wg.arena.Arena;
@@ -8,7 +8,6 @@ import com.pro_crafting.mc.wg.event.GroupUpdateEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -47,8 +46,8 @@ public class GroupManager {
   }
 
   public void quitFight() {
-    quiteFightFoGroup(this.group1);
-    quiteFightFoGroup(this.group2);
+    quiteFightForGroup(this.group1);
+    quiteFightForGroup(this.group2);
 
     Bukkit.getPluginManager().callEvent(
         new GroupUpdateEvent(Collections.unmodifiableCollection(this.group1.getMembers()),
@@ -66,16 +65,13 @@ public class GroupManager {
   }
 
 
-  private void quiteFightFoGroup(Group group) {
+  private void quiteFightForGroup(Group group) {
     final Location teleportLocation = this.arena.getRepo().getSpawnWarp();
-    OfflineRunable fightQuiter = new OfflineRunable() {
-
-      public void run(GroupMember member) {
-        member.getPlayer().getInventory().clear();
-        member.getPlayer().teleport(teleportLocation, TeleportCause.PLUGIN);
-      }
+    OfflineRunnable fightQuiter = member -> {
+      member.getPlayer().getInventory().clear();
+      member.getPlayer().teleport(teleportLocation, TeleportCause.PLUGIN);
     };
-    this.plugin.getOfflineManager().run(fightQuiter, group);
+    this.plugin.getOfflineManager().queueOnlineExecution(fightQuiter, group);
   }
 
   public void sendWinnerOutput(PlayerRole role) {
@@ -112,12 +108,8 @@ public class GroupManager {
   }
 
   public void healGroup(Group group) {
-    OfflineRunable healer = new OfflineRunable() {
-      public void run(GroupMember member) {
-        Util.makeHealthy(member.getPlayer());
-      }
-    };
-    this.plugin.getOfflineManager().run(healer, group);
+    OfflineRunnable healer = member -> Util.makeHealthy(member.getPlayer());
+    this.plugin.getOfflineManager().queueOnlineExecution(healer, group);
   }
 
   public Group getTeamOfGroup(PlayerRole role) {
