@@ -1,7 +1,6 @@
 package com.pro_crafting.mc.wg.modes;
 
-import com.pro_crafting.mc.wg.group.GroupMember;
-import com.pro_crafting.mc.wg.OfflineRunable;
+import com.pro_crafting.mc.wg.OfflineRunnable;
 import com.pro_crafting.mc.wg.Util;
 import com.pro_crafting.mc.wg.WarGear;
 import com.pro_crafting.mc.wg.arena.Arena;
@@ -14,7 +13,7 @@ public abstract class FightBase implements FightMode, Listener {
 
   protected WarGear plugin;
   protected Arena arena;
-  protected OfflineRunable preparer;
+  protected OfflineRunnable preparer;
   protected Runnable starter;
 
   public FightBase(WarGear plugin, Arena arena) {
@@ -29,7 +28,7 @@ public abstract class FightBase implements FightMode, Listener {
         + "\" §7 kommst du in die Arena.");
     arena.getGroupManager().sendGroupOutput();
 
-    OfflineRunable fightTeamPreparer = member -> {
+    OfflineRunnable fightTeamPreparer = member -> {
       Player player = member.getPlayer();
 
       player.setGameMode(GameMode.SURVIVAL);
@@ -44,9 +43,9 @@ public abstract class FightBase implements FightMode, Listener {
     };
 
     this.plugin.getOfflineManager()
-        .run(fightTeamPreparer, this.arena.getGroupManager().getGroup1());
+        .queueOnlineExecution(fightTeamPreparer, this.arena.getGroupManager().getGroup1());
     this.plugin.getOfflineManager()
-        .run(fightTeamPreparer, this.arena.getGroupManager().getGroup2());
+        .queueOnlineExecution(fightTeamPreparer, this.arena.getGroupManager().getGroup2());
     starter.run();
   }
 

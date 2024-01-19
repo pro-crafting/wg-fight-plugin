@@ -1,8 +1,7 @@
 package com.pro_crafting.mc.wg.arena;
 
 import com.pro_crafting.mc.wg.group.Group;
-import com.pro_crafting.mc.wg.group.GroupMember;
-import com.pro_crafting.mc.wg.OfflineRunable;
+import com.pro_crafting.mc.wg.OfflineRunnable;
 import com.pro_crafting.mc.wg.Util;
 import com.pro_crafting.mc.wg.WarGear;
 import org.bukkit.Bukkit;
@@ -26,20 +25,12 @@ public class SpectatorMode {
 
   public void start() {
     this.arena.broadcastMessage(ChatColor.GOLD + "Begutachtet die WarGears!");
-    Bukkit.getScheduler().runTaskLater(this.plugin, new Runnable() {
-
-      public void run() {
-        prepareTeamSpectating(SpectatorMode.this.arena.getGroupManager().getGroup1());
-        prepareTeamSpectating(SpectatorMode.this.arena.getGroupManager().getGroup2());
-      }
-
+    Bukkit.getScheduler().runTaskLater(this.plugin, () -> {
+      prepareTeamSpectating(SpectatorMode.this.arena.getGroupManager().getGroup1());
+      prepareTeamSpectating(SpectatorMode.this.arena.getGroupManager().getGroup2());
     }, 1);
     counter = 0;
-    task = Bukkit.getScheduler().runTaskTimer(this.plugin, new Runnable() {
-      public void run() {
-        spectateEndCountdown();
-      }
-    }, 0, 20);
+    task = Bukkit.getScheduler().runTaskTimer(this.plugin, this::spectateEndCountdown, 0, 20);
   }
 
   private void spectateEndCountdown() {
@@ -65,25 +56,21 @@ public class SpectatorMode {
   }
 
   private void prepareTeamSpectating(Group team) {
-    OfflineRunable teamSpectatingPreparer = new OfflineRunable() {
-      public void run(GroupMember member) {
-        Player player = member.getPlayer();
-        arena.teleport(player);
-        Util.enableFly(player);
-        Util.clearPlayer(player);
-      }
+    OfflineRunnable teamSpectatingPreparer = member -> {
+      Player player = member.getPlayer();
+      arena.teleport(player);
+      Util.enableFly(player);
+      Util.clearPlayer(player);
     };
-    this.plugin.getOfflineManager().run(teamSpectatingPreparer, team);
+    this.plugin.getOfflineManager().queueOnlineExecution(teamSpectatingPreparer, team);
   }
 
   private void finishTeamSpectating(Group team) {
-    OfflineRunable teamSpactatingFinisher = new OfflineRunable() {
-      public void run(GroupMember member) {
-        Player player = member.getPlayer();
-        Util.disableFly(player);
-        player.setGameMode(GameMode.SURVIVAL);
-      }
+    OfflineRunnable teamSpectatingFinisher = member -> {
+      Player player = member.getPlayer();
+      Util.disableFly(player);
+      player.setGameMode(GameMode.SURVIVAL);
     };
-    this.plugin.getOfflineManager().run(teamSpactatingFinisher, team);
+    this.plugin.getOfflineManager().queueOnlineExecution(teamSpectatingFinisher, team);
   }
 }
