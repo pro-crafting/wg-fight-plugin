@@ -150,13 +150,16 @@ public class WgListener implements Listener {
 
   @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
   public void playerMoveHandler(PlayerMoveEvent event) {
+
     Player player = event.getPlayer();
     Arena arenaFrom = this.plugin.getArenaManager().getArenaAt(event.getFrom());
     Arena arenaTo = this.plugin.getArenaManager().getArenaAt(event.getTo());
+
     if (arenaFrom != null && !arenaFrom.equals(arenaTo)) {
       arenaFrom.leave(player);
       callArenaChangeEvent(player, arenaFrom, arenaTo);
     }
+
     if (arenaTo != null) {
       arenaTo.join(player);
       doGroundDamage(event.getTo(), arenaTo, event.getPlayer());
@@ -171,15 +174,24 @@ public class WgListener implements Listener {
 
       ArenaPosition to = arenaTo.getPosition(event.getTo());
       ArenaPosition from = arenaTo.getPosition(event.getFrom());
-      Group team = arenaTo.getGroupManager().getGroupOfPlayer(player);
-      if (team == null && to != ArenaPosition.Platform) {
-        resetPlayerMovement(to, from, event.getFrom(), player, arenaTo);
-      } else if (team != null && team.getRole() == PlayerRole.Team1 && (
-          to == ArenaPosition.Team2PlayField || to == ArenaPosition.Team2WG)) {
-        resetPlayerMovement(to, from, event.getFrom(), player, arenaTo);
-      } else if (team != null && team.getRole() == PlayerRole.Team2 && (
-          to == ArenaPosition.Team1PlayField || to == ArenaPosition.Team1WG)) {
-        resetPlayerMovement(to, from, event.getFrom(), player, arenaTo);
+      PlayerRole role = arenaTo.getGroupManager().getRole(player);
+
+      if (role == PlayerRole.Viewer) {
+        if (to != ArenaPosition.Platform) {
+          resetPlayerMovement(to, from, event.getFrom(), player, arenaTo);
+        } else if (!player.hasPermission("wargear.arena.bypass.inner") && to == ArenaPosition.Team1PlayField) {
+          resetPlayerMovement(to, from, event.getFrom(), player, arenaTo);
+        } else if (!player.hasPermission("wargear.arena.bypass.inner") && to == ArenaPosition.Team2PlayField) {
+          resetPlayerMovement(to, from, event.getFrom(), player, arenaTo);
+        }
+      } else {
+        if (role == PlayerRole.Team1 && (
+                to == ArenaPosition.Team2PlayField || to == ArenaPosition.Team2WG)) {
+          resetPlayerMovement(to, from, event.getFrom(), player, arenaTo);
+        } else if (role == PlayerRole.Team2 && (
+                to == ArenaPosition.Team1PlayField || to == ArenaPosition.Team1WG)) {
+          resetPlayerMovement(to, from, event.getFrom(), player, arenaTo);
+        }
       }
     }
   }
