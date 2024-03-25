@@ -33,7 +33,7 @@
     <version.spigot-api>1.20.2-R0.1-SNAPSHOT</version.spigot-api>
     <version.vault>1.7.3</version.vault>
     <version.bstats>3.0.2</version.bstats>
-    <version.worldedit>7.2.18</version.worldedit>
+    <version.worldedit>7.3.0</version.worldedit>
   </properties>
 
   <repositories>
